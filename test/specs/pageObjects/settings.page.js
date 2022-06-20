@@ -1,4 +1,4 @@
-class Settings {
+class settingsPage {
   // Editable display name
   get userNameInput() {
     return $("~Username");
@@ -10,3 +10,4 @@ class Settings {
     return $("~Show recovery phrase");
   }
 }
+module.exports = new settingsPage();
