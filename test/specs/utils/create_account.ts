@@ -1,8 +1,7 @@
+import { multiremote } from "webdriverio";
 const landingPage = require("../pageObjects/landing-page.page.js");
 const registerPage = require("../pageObjects/register-page.page.js");
 const displayNamePage = require("../pageObjects/display-name.page.js");
-const messageNotifications = require("../pageObjects/message-notifications.page.js");
-const homePage = require("../pageObjects/home-page.page.js");
 const recoveryPhrasePage = require("../pageObjects/recovery-phrase.page.js");
 const navigation = require("../pageObjects/navigation.page.js");
 

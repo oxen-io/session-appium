@@ -7,6 +7,8 @@ import { newUser } from "./utils/create_account";
 describe("Account", () => {
   it("Create account and verify information", async () => {
     // Create new user
+    const windowA = await driver.newSession(driver.capabilities[1]);
+
     const userA = await newUser("test user");
     // Click on profile picture
     await homePage.profilePicture.click();
@@ -26,5 +28,8 @@ describe("Account", () => {
     );
     // // Exit recovery phrase modal
     await recoveryPhrasePage.cancelButton.click();
+
+    const userB = await driver.newSession(driver.capabilities[1]);
+    await userB.removeSession();
   });
 });

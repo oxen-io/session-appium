@@ -30,36 +30,50 @@ exports.config = {
     // 'path/to/excluded/files'
   ],
 
-  maxInstances: 2,
+  maxInstances: 1,
   //
   capabilities: [
     {
-      deviceOne: {
-        "appium:platformName": "Android",
-        "appium:platformVersion": "11",
-        "appium:deviceName": "Android Emulator 1",
-        "appium:app":
-          "/Users/emilyburton/Documents/session-android/app/build/outputs/apk/play/debug/session-1.13.1-x86.apk",
-        "appium:appPackage": "network.loki.messenger",
-        "appium:appActivity": "network.loki.messenger.RoutingActivity",
-        "appium:automationName": "Appium",
-        browserName: "Emulator-1",
-        // If outputDir is provided WebdriverIO can capture driver session logs
-        // it is possible to configure which logTypes to include/exclude.
-        // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
-        // excludeDriverLogs: ['bugreport', 'server'],
-      },
-      deviceTwo: {
-        "appium:platformName": "Android2",
-        "appium:platformVersion": "11",
-        "appium:deviceName": "Android Emulator 2",
-        "appium:app":
-          "/Users/emilyburton/Documents/session-android/app/build/outputs/apk/play/debug/session-1.13.1-x86.apk",
-        "appium:appPackage": "network.loki.messenger",
-        "appium:appActivity": "network.loki.messenger.RoutingActivity",
-        "appium:automationName": "Appium",
-        browserName: "Emulator-2",
-      },
+      // maxInstances can get overwritten per capability. So if you have an in-house Selenium
+      // grid with only 5 firefox instances available you can make sure that not more than
+      // 5 instances get started at a time.
+      maxInstances: 1,
+      //
+      "appium:platformName": "Android",
+      "appium:udid": "emulator-5556",
+
+      "appium:platformVersion": "11",
+      "appium:app":
+        "/Users/emilyburton/Documents/session-android/app/build/outputs/apk/play/debug/session-1.13.1-x86.apk",
+      "appium:appPackage": "network.loki.messenger",
+      "appium:appActivity": "network.loki.messenger.RoutingActivity",
+      "appium:automationName": "Appium",
+      browserName: "",
+      // If outputDir is provided WebdriverIO can capture driver session logs
+      // it is possible to configure which logTypes to include/exclude.
+      // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
+      // excludeDriverLogs: ['bugreport', 'server'],
+    },
+    {
+      // maxInstances can get overwritten per capability. So if you have an in-house Selenium
+      // grid with only 5 firefox instances available you can make sure that not more than
+      // 5 instances get started at a time.
+      maxInstances: 1,
+      //
+      "appium:platformName": "Android",
+      "appium:udid": "emulator-5554",
+
+      "appium:platformVersion": "11",
+      "appium:app":
+        "/Users/emilyburton/Documents/session-android/app/build/outputs/apk/play/debug/session-1.13.1-x86.apk",
+      "appium:appPackage": "network.loki.messenger",
+      "appium:appActivity": "network.loki.messenger.RoutingActivity",
+      "appium:automationName": "Appium",
+      browserName: "",
+      // If outputDir is provided WebdriverIO can capture driver session logs
+      // it is possible to configure which logTypes to include/exclude.
+      // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
+      // excludeDriverLogs: ['bugreport', 'server'],
     },
   ],
   //
