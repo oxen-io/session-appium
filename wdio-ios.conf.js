@@ -38,16 +38,18 @@ exports.config = {
       // grid with only 5 firefox instances available you can make sure that not more than
       // 5 instances get started at a time.
       maxInstances: 1,
-      //
-      "appium:platformName": "Android",
-      "appium:udid": "emulator-5556",
-      "appium:platformVersion": "11",
-      "appium:app":
-        "/Users/emilyburton/Documents/session-android/app/build/outputs/apk/play/debug/session-1.13.1-x86.apk",
-      "appium:appPackage": "network.loki.messenger",
-      "appium:appActivity": "network.loki.messenger.RoutingActivity",
+
+      "appium:platformName": "iOS",
+      "appium:platformVersion": "15.4",
+      "appium:deviceName": "iPhone Pro Max",
       "appium:automationName": "Appium",
-      browserName: "",
+      "appium:app":
+        "/Users/emilyburton/Library/Developer/Xcode/DerivedData/Session-bkhewuibvlxdsxevpurvxorzvqpd/Build/Products/App Store Release-iphonesimulator/Session.app",
+      "appium:bundleid": "com.loki-project.loki-messenger",
+      "appium:udid": "1BF4B7C5-6CD4-40C7-9C14-751A6BA79D6E",
+
+      //
+
       // If outputDir is provided WebdriverIO can capture driver session logs
       // it is possible to configure which logTypes to include/exclude.
       // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
@@ -57,18 +59,6 @@ exports.config = {
       // maxInstances can get overwritten per capability. So if you have an in-house Selenium
       // grid with only 5 firefox instances available you can make sure that not more than
       // 5 instances get started at a time.
-      maxInstances: 1,
-      //
-      "appium:platformName": "Android",
-      "appium:udid": "emulator-5554",
-
-      "appium:platformVersion": "11",
-      "appium:app":
-        "/Users/emilyburton/Documents/session-android/app/build/outputs/apk/play/debug/session-1.13.1-x86.apk",
-      "appium:appPackage": "network.loki.messenger",
-      "appium:appActivity": "network.loki.messenger.RoutingActivity",
-      "appium:automationName": "Appium",
-      browserName: "",
       // If outputDir is provided WebdriverIO can capture driver session logs
       // it is possible to configure which logTypes to include/exclude.
       // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs

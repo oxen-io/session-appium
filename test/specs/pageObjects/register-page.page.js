@@ -8,7 +8,7 @@ class RegisterPage {
   }
 
   get copyBtn() {
-    return $("~Copy");
+    return $("~Copy Session ID");
   }
 }
 module.exports = new RegisterPage();

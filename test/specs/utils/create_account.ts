@@ -1,11 +1,15 @@
-import { multiremote } from "webdriverio";
 const landingPage = require("../pageObjects/landing-page.page.js");
 const registerPage = require("../pageObjects/register-page.page.js");
 const displayNamePage = require("../pageObjects/display-name.page.js");
 const recoveryPhrasePage = require("../pageObjects/recovery-phrase.page.js");
 const navigation = require("../pageObjects/navigation.page.js");
 
-export const newUser = async (userName: string) => {
+export const newUser = async (
+  userName: string
+  // capabilitiesToUse: Record<string, any>
+) => {
+  // const window = await driver.newSession(capabilitiesToUse);
+
   await landingPage.createSessionIdBtn.click();
   // Save session ID as variable
   const sessionID = await registerPage.sessionId.getText();
