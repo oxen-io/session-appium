@@ -5,9 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "wdio wdio.conf.js",
+    "test-one": "wdio wdio.conf.js --mochaOpts.grep",
     "test-ios": "wdio wdio-ios.conf.js",
     "test2": "node server.js",
-    "test3": "mocha server.js"
+    "test3": "mocha server.js",
+    "testing": "ts-node --esm new_contact.test.js"
   },
   "keywords": [],
   "author": "",

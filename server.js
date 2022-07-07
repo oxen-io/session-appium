@@ -4,16 +4,17 @@ const { describe, it } = require("mocha");
 let wd = require("wd");
 let config = require("./wdio.conf.js");
 const landingPage = require("./test/specs/pageObjects/landing-page.page");
+// import { newUser } from "./utils/create_account";
 
 describe("Start server", () => {
   it("test should open server", async () => {
     let server = await Appium.main({
       port: 4723,
-      host: "0.0.0.0",
+      host: "localhost",
       setTimeout: 30000,
     });
-    let driver1 = await wd.promiseChainRemote("0.0.0.0", 4723);
-    let driver2 = await wd.promiseChainRemote("0.0.0.0", 4723);
+    let driver1 = await wd.promiseChainRemote("localhost", 4723);
+    let driver2 = await wd.promiseChainRemote("localhost", 4723);
     const capabilities1 = {
       platformName: "Android",
       udid: "emulator-5554",
@@ -42,6 +43,7 @@ describe("Start server", () => {
     console.log("TEST", sessionId1);
     console.log("Test", sessionId2);
 
+    // sessionId1 = await newUser("Test User");
     // server now running
     await server.close();
   }).timeout(300000);

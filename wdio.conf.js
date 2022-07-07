@@ -23,7 +23,7 @@ exports.config = {
   // then the current working directory is where your `package.json` resides, so `wdio`
   // will be called from there.
   //
-  specs: ["./test/specs/**/*.ts"],
+  specs: ["./test/specs/**.ts"],
   path: "/wd/hub",
   // Patterns to exclude.
   exclude: [
@@ -33,7 +33,7 @@ exports.config = {
   maxInstances: 1,
   //
   capabilities: [
-    {
+    (deviceOne = {
       // maxInstances can get overwritten per capability. So if you have an in-house Selenium
       // grid with only 5 firefox instances available you can make sure that not more than
       // 5 instances get started at a time.
@@ -52,8 +52,8 @@ exports.config = {
       // it is possible to configure which logTypes to include/exclude.
       // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
       // excludeDriverLogs: ['bugreport', 'server'],
-    },
-    {
+    }),
+    (deviceTwo = {
       // maxInstances can get overwritten per capability. So if you have an in-house Selenium
       // grid with only 5 firefox instances available you can make sure that not more than
       // 5 instances get started at a time.
@@ -73,7 +73,7 @@ exports.config = {
       // it is possible to configure which logTypes to include/exclude.
       // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
       // excludeDriverLogs: ['bugreport', 'server'],
-    },
+    }),
   ],
   //
   // ===================
@@ -116,7 +116,7 @@ exports.config = {
   connectionRetryTimeout: 120000,
   //
   // Default request retries count
-  connectionRetryCount: 3,
+  connectionRetryCount: 0,
 
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber

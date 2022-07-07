@@ -33,3 +33,5 @@ export const newUser = async (
 
   return { userName, sessionID, recoveryPhrase };
 };
+
+// export default newUser;
