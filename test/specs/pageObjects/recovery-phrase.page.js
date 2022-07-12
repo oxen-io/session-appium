@@ -1,5 +1,5 @@
 class RecoveryPhrasePage {
-  get recoveryPhrase() {
+  get recoveryPhrase(device) {
     return $("~Recovery Phrase");
   }
   get copyRecoveryPhrase() {

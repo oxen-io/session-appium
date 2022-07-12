@@ -30,14 +30,14 @@ exports.config = {
     // 'path/to/excluded/files'
   ],
 
-  maxInstances: 1,
+  maxInstances: 2,
   //
   capabilities: [
-    (deviceOne = {
+    {
       // maxInstances can get overwritten per capability. So if you have an in-house Selenium
       // grid with only 5 firefox instances available you can make sure that not more than
       // 5 instances get started at a time.
-      maxInstances: 1,
+      maxInstances: 2,
       //
       "appium:platformName": "Android",
       "appium:udid": "emulator-5556",
@@ -52,12 +52,12 @@ exports.config = {
       // it is possible to configure which logTypes to include/exclude.
       // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
       // excludeDriverLogs: ['bugreport', 'server'],
-    }),
-    (deviceTwo = {
+    },
+    {
       // maxInstances can get overwritten per capability. So if you have an in-house Selenium
       // grid with only 5 firefox instances available you can make sure that not more than
       // 5 instances get started at a time.
-      maxInstances: 1,
+      maxInstances: 2,
       //
       "appium:platformName": "Android",
       "appium:udid": "emulator-5554",
@@ -73,7 +73,7 @@ exports.config = {
       // it is possible to configure which logTypes to include/exclude.
       // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
       // excludeDriverLogs: ['bugreport', 'server'],
-    }),
+    },
   ],
   //
   // ===================

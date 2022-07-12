@@ -3,12 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "module": "CommonJS"
+  },
   "scripts": {
     "test": "wdio wdio.conf.js",
-    "test-one": "wdio wdio.conf.js --mochaOpts.grep",
+    "test-one": "wdio wdio.conf.js --spec ./test/specs/change_username.test.ts",
     "test-ios": "wdio wdio-ios.conf.js",
-    "test2": "node server.js",
-    "test3": "mocha server.js",
+    "test3": "ts-node ./test/specs/server.ts",
     "testing": "ts-node --esm new_contact.test.js"
   },
   "keywords": [],
@@ -23,6 +27,7 @@
     "mocha": "^10.0.0",
     "react-scripts": "^2.1.3",
     "wd": "^1.14.0",
+    "webdriverio": "^7.20.5",
     "yarn": "^1.22.18"
   },
   "devDependencies": {
