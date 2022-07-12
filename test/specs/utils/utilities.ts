@@ -1,19 +1,22 @@
-export const clickOnElement = async (device, accessibilityId) => {
+wd = require("wd");
+
+exports.clickOnElement = async (device, accessibilityId) => {
   const selector = await device.elementByAccessibilityId(accessibilityId);
   await selector.click();
+  return;
 };
 
-export const saveText = async (device, accessibilityId) => {
+exports.saveText = async (device, accessibilityId) => {
   const selector = await device.elementByAccessibilityId(accessibilityId);
   return await selector.text();
 };
 
-export const inputText = async (device, accessibilityId, text) => {
+exports.inputText = async (device, accessibilityId, text) => {
   const selector = await device.elementByAccessibilityId(accessibilityId);
   return await selector.type(text);
 };
 
-export const longPress = async (device, accessibilityId) => {
+exports.longPress = async (device, accessibilityId) => {
   const selector = await device.elementByAccessibilityId(accessibilityId);
   let action = new wd.TouchAction(device);
   action.longPress({ el: selector });

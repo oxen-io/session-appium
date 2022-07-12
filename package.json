@@ -3,16 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
-  "compilerOptions": {
-    "esModuleInterop": true,
-    "module": "CommonJS"
-  },
   "scripts": {
     "test": "wdio wdio.conf.js",
     "test-one": "wdio wdio.conf.js --spec ./test/specs/change_username.test.ts",
     "test-ios": "wdio wdio-ios.conf.js",
-    "test3": "ts-node ./test/specs/server.ts",
+    "test3": "mocha ./test/specs/server.ts",
     "testing": "ts-node --esm new_contact.test.js"
   },
   "keywords": [],
@@ -38,7 +33,7 @@
     "@wdio/mocha-framework": "^7.20.0",
     "@wdio/selenium-standalone-service": "^7.20.1",
     "@wdio/spec-reporter": "^7.20.0",
-    "ts-node": "^10.7.0",
+    "ts-node": "^10.8.2",
     "typescript": "^4.6.4",
     "wdio-image-comparison-service": "^3.1.1",
     "wdio-ui5-service": "^0.9.1",

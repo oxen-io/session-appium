@@ -1,37 +1,30 @@
-const landingPage = require("../pageObjects/landing-page.page.js");
-const registerPage = require("../pageObjects/register-page.page.js");
-const displayNamePage = require("../pageObjects/display-name.page.js");
-const recoveryPhrasePage = require("../pageObjects/recovery-phrase.page.js");
-const navigation = require("../pageObjects/navigation.page.js");
+const utils = require("./utilities.ts");
 
-export const newUser = async (
-  userName: string
-  // capabilitiesToUse: Record<string, any>
-) => {
-  // const window = await driver.newSession(capabilitiesToUse);
-
-  await landingPage.createSessionIdBtn.click();
-  // Save session ID as variable
-  const sessionID = await registerPage.sessionId.getText();
-  console.log(`Session ID: ${sessionID}`);
-  await registerPage.continueBtn.click();
+exports.newUser = async (device, userName) => {
+  // Click create session ID
+  await utils.clickOnElement(device, "Create Session ID");
+  // Wait for animation to generate session id
+  await device.setImplicitWaitTimeout(5000);
+  // save session id as variable
+  const sessionID = await utils.saveText(device, "Session ID");
+  console.log(sessionID);
+  // Click continue on session Id creation
+  await utils.clickOnElement(device, "Continue");
   // Input username
-  await displayNamePage.displayNameInput.addValue(userName);
+  await utils.inputText(device, "Enter display name", userName);
   // Click continue
-  await registerPage.continueBtn.click();
+  await utils.clickOnElement(device, "Continue");
   // Choose message notification options
-  await registerPage.continueBtn.click();
+  await utils.clickOnElement(device, "Continue with settings");
   // Click on 'continue' button to open recovery phrase modal
-  await registerPage.continueBtn.click();
+  await utils.clickOnElement(device, "Continue");
   // Long Press the recovery phrase to reveal recovery phrase
-  await recoveryPhrasePage.recoveryPhrase.touchAction("longPress");
+  await utils.longPress(device, "Recovery Phrase");
   // Save recovery phrase as variable
-  const recoveryPhrase = await recoveryPhrasePage.recoveryPhrase.getText();
-  console.log(`Recovery Phrase: ${recoveryPhrase}`);
-  // Exit modal
-  await navigation.goBack.click();
+  const recoveryPhrase = await utils.saveText(device, "Recovery Phrase");
+  console.log("Recovery Phrase is", recoveryPhrase);
+  // Exit Modal
+  await utils.clickOnElement(device, "Navigate up");
 
   return { userName, sessionID, recoveryPhrase };
 };
-
-// export default newUser;
