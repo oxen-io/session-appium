@@ -43,7 +43,7 @@ exports.config = {
       "appium:udid": "emulator-5556",
       "appium:platformVersion": "11",
       "appium:app":
-        "/Users/emilyburton/Documents/session-android/app/build/outputs/apk/play/debug/session-1.13.1-x86.apk",
+        "/Users/emilyburton/Documents/session-android/app/build/outputs/apk/play/debug/session-1.13.1-universal.apk",
       "appium:appPackage": "network.loki.messenger",
       "appium:appActivity": "network.loki.messenger.RoutingActivity",
       "appium:automationName": "Appium",
@@ -64,7 +64,7 @@ exports.config = {
 
       "appium:platformVersion": "11",
       "appium:app":
-        "/Users/emilyburton/Documents/session-android/app/build/outputs/apk/play/debug/session-1.13.1-x86.apk",
+        "/Users/emilyburton/Documents/session-android/app/build/outputs/apk/play/debug/session-1.13.1-universal.apk",
       "appium:appPackage": "network.loki.messenger",
       "appium:appActivity": "network.loki.messenger.RoutingActivity",
       "appium:automationName": "Appium",

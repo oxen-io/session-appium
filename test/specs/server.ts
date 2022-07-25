@@ -12,9 +12,9 @@ const createAccount = require("./utils/create_account.ts");
 
 const capabilities1 = {
   platformName: "Android",
-  udid: "emulator-5556",
+  udid: "emulator-5554",
   platformVersion: "11",
-  app: "/Users/emilyburton/Documents/session-android/app/build/outputs/apk/play/debug/session-1.13.1-x86.apk",
+  app: "/Users/emilyburton/Documents/session-android/app/build/outputs/apk/play/debug/session-1.13.1-universal.apk",
   appPackage: "network.loki.messenger",
   appActivity: "network.loki.messenger.RoutingActivity",
   automationName: "UiAutomator2",
@@ -23,9 +23,9 @@ const capabilities1 = {
 };
 const capabilities2 = {
   platformName: "Android",
-  udid: "emulator-5554",
+  udid: "emulator-5556",
   platformVersion: "11",
-  app: "/Users/emilyburton/Documents/session-android/app/build/outputs/apk/play/debug/session-1.13.1-x86.apk",
+  app: "/Users/emilyburton/Documents/session-android/app/build/outputs/apk/play/debug/session-1.13.1-universal.apk",
   appPackage: "network.loki.messenger",
   appActivity: "network.loki.messenger.RoutingActivity",
   automationName: "UiAutomator2",
@@ -41,40 +41,63 @@ describe("Start server", () => {
       setTimeout: 30000,
     });
 
-    let device1 = await wd.promiseChainRemote("localhost", 4723);
+    const device1Remote = wd.promiseChainRemote("localhost", 4723);
+    const device2Remote = wd.promiseChainRemote("localhost", 4723);
 
-    // let device2 = await wd.promiseChainRemote("localhost", 4723);
-    await device1.init(capabilities1);
+    let device1 = await device1Remote;
+    let device2 = await device2Remote;
 
-    // await device2.init(capabilities2);
-    await createAccount.newUser(device1, "User A");
-    // Create user in device 1
-    // await clickOnElement(device1, "Create Session ID");
-    // // Save session ID
-    // await device1.setImplicitWaitTimeout(5000);
-    // const sessionID = await saveText(device1, "Session ID");
-    // console.log(sessionID);
-    // // Click continue on session Id creation
-    // await clickOnElement(device1, "Continue");
-    // // type in display name
-    // await inputText(device1, "Enter display name", "User A");
-    // // click continue on display name page
-    // await clickOnElement(device1, "Continue");
-    // // click continue on message notification page
-    // await clickOnElement(device1, "Continue with settings");
-    // // click continue on recovery phrase banner
-    // await clickOnElement(device1, "Continue");
-    // // long press on recovery phrase to reveal
+    const device1Init = device1.init(capabilities1);
+    const device2Init = device2.init(capabilities2);
+    await device1Init;
+    await device2Init;
 
-    // await longPress(device1, "Recovery Phrase");
-    // // save recovery phrase
-    // const recoveryPhrase = await saveText(device1, "Recovery Phrase");
-    // console.log("Recovery Phrase is", recoveryPhrase);
-    // // Exit Modal
-    // await clickOnElement(device1, "Navigate up");
-    // clickOnElement(device2, "Create Session ID");
+    const createA = createAccount.newUser(device1, "User A");
+    const createB = createAccount.newUser(device2, "User B");
+    const userA = await createA;
+    const userB = await createB;
+    // USER A WORKFLOW
+    // Send message from User A to User B
+    // Click new conversation button
+    await clickOnElement(device1, "New conversation button");
+    // Select direct message option
+    await clickOnElement(device1, "New direct message");
+    // Enter in User B's session ID
+    await inputText(device1, "Session id input box", userB.sessionID);
+    // Click next
+    await clickOnElement(device1, "Next");
+    // Type in the message input box
+    await inputText(
+      device1,
+      "Message input box",
+      "Test-message-User-A-to-User-B"
+    );
+    // CLick send
+    await clickOnElement(device1, "Send message button");
+    await device1.setImplicitWaitTimeout(5000);
+    // Wait for tick
+    await device1.elementByAccessibilityId("Message sent status tick");
+    // Wait for response
+
+    // Verify config message states message request was accepted
+    // await device1.elementByAccessibilityId("Message request was accepted");
+    // USER B WORKFLOW
+    // Click on message request panel
+    await clickOnElement(device2, "Message requests banner");
+    // Select message from User A
+    await clickOnElement(device2, "Message request");
+    // Type into message input box
+    await inputText(
+      device2,
+      "Message input box",
+      "Test-message-User-B-to-User-A"
+    );
+    // Click send
+    await clickOnElement(device2, "Send message button");
+    // Wait for tick
 
     await device1.quit();
+    await device2.quit();
 
     await server.close;
   }).timeout(300000);
