@@ -1,11 +1,24 @@
 {
   "compilerOptions": {
     "moduleResolution": "node",
+    "sourceMap": true,
+    "module": "commonjs",
+    "removeComments": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+
+    "strictPropertyInitialization": true,
+    "strictNullChecks": true,
+    "esModuleInterop": true,
     "types": [
       "node",
       "webdriverio/async",
       "@wdio/mocha-framework",
-      "expect-webdriverio"
+      "expect-webdriverio",
+      "@wdio/selenium-standalone-service",
+      "@wdio/appium-service"
     ],
     "target": "es2019"
   }

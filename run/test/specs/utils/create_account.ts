@@ -1,6 +1,7 @@
-const utils = require("./utilities.ts");
+import { PromiseWebdriver } from "wd";
+import * as utils from "./utilities";
 
-exports.newUser = async (device, userName) => {
+export const newUser = async (device: PromiseWebdriver, userName: string) => {
   // Click create session ID
   await utils.clickOnElement(device, "Create Session ID");
   // Wait for animation to generate session id
