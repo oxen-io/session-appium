@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.openApp = void 0;
+exports.closeApp = exports.openApp = void 0;
 const appium_1 = require("appium");
 const wd = __importStar(require("wd"));
 const capabilities_1 = require("./capabilities");
@@ -46,4 +46,12 @@ const openApp = async () => {
     return [server, device1, device2];
 };
 exports.openApp = openApp;
+const closeApp = async (server, device1, device2) => {
+    await device1.quit();
+    await device2.quit();
+    console.info("waiting server close");
+    await server.close();
+    console.info(" server closed");
+};
+exports.closeApp = closeApp;
 //# sourceMappingURL=open_app.js.map

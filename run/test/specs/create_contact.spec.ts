@@ -1,13 +1,13 @@
 import { clickOnElement, inputText } from "./utils/utilities";
 import { newUser } from "./utils/create_account";
-import { openApp } from "./utils/open_app";
+import { openApp, closeApp } from "./utils/open_app";
 
-describe("Start server", () => {
-  it("test should open server", async () => {
+describe("Create contact", () => {
+  it("Create new contact", async () => {
     // first we want to install the app on each device with our custom call to run it
     const [server, device1, device2] = await openApp();
 
-    const [_userA, userB] = await Promise.all([
+    const [userA, userB] = await Promise.all([
       newUser(device1, "User A"),
       newUser(device2, "User B"),
     ]);
@@ -52,13 +52,6 @@ describe("Start server", () => {
     // Click send
     await clickOnElement(device2, "Send message button");
     // Wait for tick
-
-    await device1.quit();
-    await device2.quit();
-
-    console.info("waiting server close");
-
-    await server.close();
-    console.info(" server closed");
+    await closeApp(server, device1, device2);
   }).timeout(300000);
 });

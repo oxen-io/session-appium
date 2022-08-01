@@ -26,4 +26,4 @@ describe("Create contact", () => {
         await (0, open_app_1.closeApp)(server, device1, device2);
     }).timeout(300000);
 });
-//# sourceMappingURL=server.js.map
+//# sourceMappingURL=create_contact.spec.js.map

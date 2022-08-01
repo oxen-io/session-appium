@@ -26,3 +26,13 @@ export const openApp = async () => {
   await Promise.all([device1.init(capabilities1), device2.init(capabilities2)]);
   return [server, device1, device2];
 };
+
+export const closeApp = async (server: any, device1: any, device2: any) => {
+  await device1.quit();
+  await device2.quit();
+
+  console.info("waiting server close");
+
+  await server.close();
+  console.info(" server closed");
+};

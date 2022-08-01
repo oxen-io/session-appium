@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.androidAppFullPath = exports.emulator2Udid = exports.emulator1Udid = exports.capabilities2 = exports.capabilities1 = exports.sharedCapabilities = void 0;
 const binaries_1 = require("./binaries");
-const androidAppFullPath = `${(0, binaries_1.getAndroidBinariesRoot)()}/session-1.13.1-x86.apk`;
+const androidAppFullPath = `${(0, binaries_1.getAndroidBinariesRoot)()}/session-1.13.1-universal.apk`;
 exports.androidAppFullPath = androidAppFullPath;
 let sharedCapabilities = {
     platformName: "Android",

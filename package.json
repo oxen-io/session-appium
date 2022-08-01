@@ -2,7 +2,7 @@
   "scripts": {
     "tsc": "tsc",
     "tsc-watch": "tsc -w",
-    "test": "mocha ./run/test/specs/**.js",
+    "test": "mocha ./run/test/specs/**.spec.js",
     "build-and-test": "npm run tsc && npm run test"
   },
   "devDependencies": {
