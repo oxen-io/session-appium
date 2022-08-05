@@ -10,6 +10,20 @@ import {
 import { installAppToDeviceName } from "./utilities";
 
 export const openApp = async () => {
+  await installAppToDeviceName(androidAppFullPath, emulator1Udid);
+  let server = await appiumMain({
+    port: 4723,
+    host: "localhost",
+    setTimeout: 30000,
+  });
+  const device = await wd.promiseChainRemote("localhost", 4723);
+
+  await device.init(capabilities1);
+
+  return [server, device];
+};
+
+export const openAppTwoDevices = async () => {
   await Promise.all([
     installAppToDeviceName(androidAppFullPath, emulator1Udid),
     installAppToDeviceName(androidAppFullPath, emulator2Udid),
@@ -27,12 +41,12 @@ export const openApp = async () => {
   return [server, device1, device2];
 };
 
-export const closeApp = async (server: any, device1: any, device2: any) => {
+export const closeApp = async (server: any, device1: any, device2?: any) => {
   await device1.quit();
   await device2.quit();
 
   console.info("waiting server close");
 
   await server.close();
-  console.info(" server closed");
+  console.info("server closed");
 };

@@ -1,11 +1,11 @@
 import { clickOnElement, inputText } from "./utils/utilities";
 import { newUser } from "./utils/create_account";
-import { openApp, closeApp } from "./utils/open_app";
+import { closeApp, openAppTwoDevices } from "./utils/open_app";
 
 describe("Create contact", () => {
   it("Create new contact", async () => {
     // first we want to install the app on each device with our custom call to run it
-    const [server, device1, device2] = await openApp();
+    const [server, device1, device2] = await openAppTwoDevices();
 
     const [userA, userB] = await Promise.all([
       newUser(device1, "User A"),

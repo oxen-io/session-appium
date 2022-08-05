@@ -5,7 +5,7 @@ const create_account_1 = require("./utils/create_account");
 const open_app_1 = require("./utils/open_app");
 describe("Create contact", () => {
     it("Create new contact", async () => {
-        const [server, device1, device2] = await (0, open_app_1.openApp)();
+        const [server, device1, device2] = await (0, open_app_1.openAppTwoDevices)();
         const [userA, userB] = await Promise.all([
             (0, create_account_1.newUser)(device1, "User A"),
             (0, create_account_1.newUser)(device2, "User B"),

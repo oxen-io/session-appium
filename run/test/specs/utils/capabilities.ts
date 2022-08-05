@@ -1,7 +1,7 @@
 import { DesiredCapabilities } from "@wdio/types/build/Capabilities";
 import { getAndroidBinariesRoot } from "./binaries";
 
-const androidAppFullPath = `${getAndroidBinariesRoot()}/session-1.13.1-universal.apk`;
+const androidAppFullPath = `${getAndroidBinariesRoot()}/session-1.13.1-x86.apk`;
 
 let sharedCapabilities: DesiredCapabilities = {
   platformName: "Android",

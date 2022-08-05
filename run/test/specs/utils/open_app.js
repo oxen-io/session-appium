@@ -23,12 +23,24 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.closeApp = exports.openApp = void 0;
+exports.closeApp = exports.openAppTwoDevices = exports.openApp = void 0;
 const appium_1 = require("appium");
 const wd = __importStar(require("wd"));
 const capabilities_1 = require("./capabilities");
 const utilities_1 = require("./utilities");
 const openApp = async () => {
+    await (0, utilities_1.installAppToDeviceName)(capabilities_1.androidAppFullPath, capabilities_1.emulator1Udid);
+    let server = await (0, appium_1.main)({
+        port: 4723,
+        host: "localhost",
+        setTimeout: 30000,
+    });
+    const device = await wd.promiseChainRemote("localhost", 4723);
+    await device.init(capabilities_1.capabilities1);
+    return [server, device];
+};
+exports.openApp = openApp;
+const openAppTwoDevices = async () => {
     await Promise.all([
         (0, utilities_1.installAppToDeviceName)(capabilities_1.androidAppFullPath, capabilities_1.emulator1Udid),
         (0, utilities_1.installAppToDeviceName)(capabilities_1.androidAppFullPath, capabilities_1.emulator2Udid),
@@ -45,13 +57,13 @@ const openApp = async () => {
     await Promise.all([device1.init(capabilities_1.capabilities1), device2.init(capabilities_1.capabilities2)]);
     return [server, device1, device2];
 };
-exports.openApp = openApp;
+exports.openAppTwoDevices = openAppTwoDevices;
 const closeApp = async (server, device1, device2) => {
     await device1.quit();
     await device2.quit();
     console.info("waiting server close");
     await server.close();
-    console.info(" server closed");
+    console.info("server closed");
 };
 exports.closeApp = closeApp;
 //# sourceMappingURL=open_app.js.map

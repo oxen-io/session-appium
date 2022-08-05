@@ -7,6 +7,8 @@ export function sleepFor(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+export const findElement = async (device: any, accessibilityId: string) => {};
+
 export const clickOnElement = async (device: any, accessibilityId: string) => {
   const selector = await device.elementByAccessibilityId(accessibilityId);
   await selector.click();
