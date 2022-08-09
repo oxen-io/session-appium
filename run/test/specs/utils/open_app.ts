@@ -9,7 +9,10 @@ import {
 } from "./capabilities";
 import { installAppToDeviceName } from "./utilities";
 
-export const openApp = async () => {
+export const openApp = async (): Promise<{
+  server: any;
+  device: wd.PromiseWebdriver;
+}> => {
   await installAppToDeviceName(androidAppFullPath, emulator1Udid);
   let server = await appiumMain({
     port: 4723,
@@ -20,10 +23,14 @@ export const openApp = async () => {
 
   await device.init(capabilities1);
 
-  return [server, device];
+  return { server, device };
 };
 
-export const openAppTwoDevices = async () => {
+export const openAppTwoDevices = async (): Promise<{
+  server: any;
+  device1: wd.PromiseWebdriver;
+  device2: wd.PromiseWebdriver;
+}> => {
   await Promise.all([
     installAppToDeviceName(androidAppFullPath, emulator1Udid),
     installAppToDeviceName(androidAppFullPath, emulator2Udid),
@@ -38,12 +45,16 @@ export const openAppTwoDevices = async () => {
     await wd.promiseChainRemote("localhost", 4723),
   ]);
   await Promise.all([device1.init(capabilities1), device2.init(capabilities2)]);
-  return [server, device1, device2];
+  return { server, device1, device2 };
 };
 
-export const closeApp = async (server: any, device1: any, device2?: any) => {
-  await device1.quit();
-  await device2.quit();
+export const closeApp = async (
+  server: any,
+  device1?: wd.PromiseWebdriver,
+  device2?: wd.PromiseWebdriver
+) => {
+  await device1?.quit();
+  await device2?.quit();
 
   console.info("waiting server close");
 

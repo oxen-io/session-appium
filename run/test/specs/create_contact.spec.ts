@@ -5,7 +5,7 @@ import { closeApp, openAppTwoDevices } from "./utils/open_app";
 describe("Create contact", () => {
   it("Create new contact", async () => {
     // first we want to install the app on each device with our custom call to run it
-    const [server, device1, device2] = await openAppTwoDevices();
+    const { server, device1, device2 } = await openAppTwoDevices();
 
     const [userA, userB] = await Promise.all([
       newUser(device1, "User A"),
@@ -53,5 +53,5 @@ describe("Create contact", () => {
     await clickOnElement(device2, "Send message button");
     // Wait for tick
     await closeApp(server, device1, device2);
-  }).timeout(300000);
+  });
 });

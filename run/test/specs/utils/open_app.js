@@ -37,7 +37,7 @@ const openApp = async () => {
     });
     const device = await wd.promiseChainRemote("localhost", 4723);
     await device.init(capabilities_1.capabilities1);
-    return [server, device];
+    return { server, device };
 };
 exports.openApp = openApp;
 const openAppTwoDevices = async () => {
@@ -55,12 +55,12 @@ const openAppTwoDevices = async () => {
         await wd.promiseChainRemote("localhost", 4723),
     ]);
     await Promise.all([device1.init(capabilities_1.capabilities1), device2.init(capabilities_1.capabilities2)]);
-    return [server, device1, device2];
+    return { server, device1, device2 };
 };
 exports.openAppTwoDevices = openAppTwoDevices;
 const closeApp = async (server, device1, device2) => {
-    await device1.quit();
-    await device2.quit();
+    await (device1 === null || device1 === void 0 ? void 0 : device1.quit());
+    await (device2 === null || device2 === void 0 ? void 0 : device2.quit());
     console.info("waiting server close");
     await server.close();
     console.info("server closed");

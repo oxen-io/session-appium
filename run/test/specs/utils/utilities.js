@@ -23,14 +23,17 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.installAppToDeviceName = exports.longPress = exports.inputText = exports.saveText = exports.clickOnElement = exports.sleepFor = void 0;
+exports.installAppToDeviceName = exports.longPress = exports.inputText = exports.saveText = exports.clickOnElement = exports.findElement = exports.sleepFor = void 0;
 const wd = __importStar(require("wd"));
-const child_process_1 = require("child_process");
+const util = require("util");
+const exec = util.promisify(require("child_process").exec);
 const binaries_1 = require("./binaries");
 function sleepFor(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 exports.sleepFor = sleepFor;
+const findElement = async (device, accessibilityId) => { };
+exports.findElement = findElement;
 const clickOnElement = async (device, accessibilityId) => {
     const selector = await device.elementByAccessibilityId(accessibilityId);
     await selector.click();
@@ -54,19 +57,11 @@ const longPress = async (device, accessibilityId) => {
     await action.perform();
 };
 exports.longPress = longPress;
-function runScriptAndLog(toRun) {
+async function runScriptAndLog(toRun) {
     try {
-        (0, child_process_1.exec)(toRun, (error, stdout, stderr) => {
-            if (error) {
-                console.error(`error: ${error.message}`);
-                return;
-            }
-            if (stderr) {
-                console.error(`stderr: ${stderr}`);
-                return;
-            }
-            console.log(`stdout: ${stdout}`);
-        });
+        console.log("running ", toRun);
+        const result = await exec(toRun);
+        console.log(`result: ${result}`);
     }
     catch (e) {
         console.warn(e);
@@ -77,19 +72,19 @@ const installAppToDeviceName = async (appFullPath, emulatorName) => {
         throw new Error("emulatorName must be set");
     }
     const adb = (0, binaries_1.getAdbFullPath)();
-    runScriptAndLog(`${adb} -s ${emulatorName} uninstall io.appium.uiautomator2.server`);
-    runScriptAndLog(`${adb} -s ${emulatorName} uninstall io.appium.uiautomator2.server.test`);
-    runScriptAndLog(`${adb} -s ${emulatorName} uninstall io.appium.unlock`);
-    runScriptAndLog(`${adb} -s ${emulatorName} uninstall io.appium.settings`);
+    await runScriptAndLog(`${adb} -s ${emulatorName} uninstall io.appium.uiautomator2.server`);
+    await runScriptAndLog(`${adb} -s ${emulatorName} uninstall io.appium.uiautomator2.server.test`);
+    await runScriptAndLog(`${adb} -s ${emulatorName} uninstall io.appium.unlock`);
+    await runScriptAndLog(`${adb} -s ${emulatorName} uninstall io.appium.settings`);
     await sleepFor(500);
-    runScriptAndLog(`${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-debug-androidTest.apk`);
+    await runScriptAndLog(`${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-debug-androidTest.apk`);
     await sleepFor(500);
-    runScriptAndLog(`${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-v4.27.0.apk`);
+    await runScriptAndLog(`${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-v4.27.0.apk`);
     await sleepFor(500);
-    runScriptAndLog(`${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/io.appium.settings/apks/settings_apk-debug.apk`);
+    await runScriptAndLog(`${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/io.appium.settings/apks/settings_apk-debug.apk`);
     await sleepFor(500);
     await sleepFor(500);
-    runScriptAndLog(`${adb} -s ${emulatorName} install -g -t ${appFullPath}`);
+    await runScriptAndLog(`${adb} -s ${emulatorName} install -g -t ${appFullPath}`);
     await sleepFor(500);
 };
 exports.installAppToDeviceName = installAppToDeviceName;
