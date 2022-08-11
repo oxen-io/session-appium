@@ -2,14 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.newContact = void 0;
 const utilities_1 = require("./utilities");
-const create_account_1 = require("./create_account");
-const send_message_1 = require("./send_message");
-const newContact = async (device1, device2) => {
-    const [userA, userB] = await Promise.all([
-        (0, create_account_1.newUser)(device1, "User A"),
-        (0, create_account_1.newUser)(device2, "User B"),
-    ]);
-    await (0, send_message_1.sendMessage)(device1, userB);
+const send_new_message_1 = require("./send_new_message");
+const newContact = async (device1, userA, device2, userB) => {
+    await (0, send_new_message_1.sendNewMessage)(device1, userB);
     await (0, utilities_1.clickOnElement)(device2, "Message requests banner");
     await (0, utilities_1.clickOnElement)(device2, "Message request");
     await (0, utilities_1.inputText)(device2, "Message input box", "Test-message-User-B-to-User-A");

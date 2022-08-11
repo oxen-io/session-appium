@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.installAppToDeviceName = exports.longPress = exports.inputText = exports.saveText = exports.clickOnElement = exports.findElement = exports.sleepFor = void 0;
+exports.installAppToDeviceName = exports.longPress = exports.inputText = exports.saveText = exports.clickOnElement = exports.sleepFor = void 0;
 const wd = __importStar(require("wd"));
 const util = require("util");
 const exec = util.promisify(require("child_process").exec);
@@ -32,8 +32,6 @@ function sleepFor(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 exports.sleepFor = sleepFor;
-const findElement = async (device, accessibilityId) => { };
-exports.findElement = findElement;
 const clickOnElement = async (device, accessibilityId) => {
     const selector = await device.elementByAccessibilityId(accessibilityId);
     await selector.click();

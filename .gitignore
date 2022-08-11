@@ -16,3 +16,7 @@ apps/
 *.log
 chromeDriver
 .tmp
+
+
+*.js.map
+*spec.js

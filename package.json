@@ -2,8 +2,8 @@
   "scripts": {
     "tsc": "tsc",
     "tsc-watch": "tsc -w",
-    "test": "mocha --timeout 300000 --jobs 1 ./run/test/specs/**.spec.js ",
-    "test-one": "mocha --timeout 300000 --jobs 1 ./run/test/specs/**.spec.js -- -g",
+    "test": "mocha --timeout 300000 --jobs 1 ./run/test/specs/*.spec.js ",
+    "test-one": "mocha --timeout 300000 --jobs 1 ./run/test/specs/*.spec.js -- -g",
     "build-and-test": "npm run tsc && npm run test",
     "test-testing": "npx mocha --timeout 30000 --jobs 1 ./run/test/specs/experiment.spec.js"
   },

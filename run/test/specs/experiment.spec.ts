@@ -1,4 +1,4 @@
-import { sendMessage } from "./utils/send_message";
+import { sendNewMessage } from "./utils/send_new_message";
 import { closeApp, openAppTwoDevices } from "./utils/open_app";
 import { newUser } from "./utils/create_account";
 
@@ -11,7 +11,7 @@ describe("Experimental", () => {
       newUser(device2, "User B"),
     ]);
 
-    await sendMessage(device1, userB);
+    await sendNewMessage(device1, userB);
     await closeApp(server, device1);
   });
 });

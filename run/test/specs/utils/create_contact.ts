@@ -1,15 +1,13 @@
 import { clickOnElement, inputText } from "./utilities";
-import { newUser } from "./create_account";
-import { sendMessage } from "./send_message";
-import { openApp } from "./open_app";
+import { sendNewMessage } from "./send_new_message";
 
-export const newContact = async (device1: any, device2: any) => {
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "User A"),
-    newUser(device2, "User B"),
-  ]);
-
-  await sendMessage(device1, userB);
+export const newContact = async (
+  device1: any,
+  userA: any,
+  device2: any,
+  userB: any
+) => {
+  await sendNewMessage(device1, userB);
 
   // USER B WORKFLOW
   // Click on message request panel
