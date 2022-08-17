@@ -9,7 +9,7 @@ const newContact = async (device1, userA, device2, userB) => {
     await (0, utilities_1.clickOnElement)(device2, "Message request");
     await (0, utilities_1.inputText)(device2, "Message input box", "Test-message-User-B-to-User-A");
     await (0, utilities_1.clickOnElement)(device2, "Send message button");
-    await device1.elementByAccessibilityId("Message request was accepted");
+    await device1.elementByAccessibilityId("Message request has been accepted");
     return { userA, userB, device1, device2 };
 };
 exports.newContact = newContact;

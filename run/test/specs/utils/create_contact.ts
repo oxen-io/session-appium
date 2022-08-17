@@ -24,7 +24,7 @@ export const newContact = async (
   await clickOnElement(device2, "Send message button");
 
   // Verify config message states message request was accepted
-  await device1.elementByAccessibilityId("Message request was accepted");
+  await device1.elementByAccessibilityId("Message request has been accepted");
 
   return { userA, userB, device1, device2 };
 };

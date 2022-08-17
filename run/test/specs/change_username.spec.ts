@@ -2,6 +2,8 @@ import { openApp, closeApp } from "./utils/open_app";
 import { newUser } from "./utils/create_account";
 import { clickOnElement, inputText } from "./utils/utilities";
 
+// afterEach() => {}
+
 describe("Username", () => {
   it("Change username", async () => {
     // create user
