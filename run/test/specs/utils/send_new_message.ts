@@ -14,7 +14,7 @@ export const sendNewMessage = async (
   // Click next
   await clickOnElement(device, "Next");
   // Type message into message input box
-  await inputText(device, "Message input box", "Test-message-User-A-to-User-B");
+  await inputText(device, "Message input box", "howdy");
   // Click send
   await clickOnElement(device, "Send message button");
   // Wait for tick

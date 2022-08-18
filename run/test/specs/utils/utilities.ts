@@ -19,6 +19,30 @@ export const saveText = async (device: any, accessibilityId: string) => {
   return await selector.text();
 };
 
+export const getTextElement = async (
+  device: wd.PromiseWebdriver,
+  text: string
+) => {
+  const android = await isAndroid(device);
+  if (!android) {
+    // iOS
+    console.warn("not implemented yet");
+    const selector = await device.elementByIosPredicateString("something");
+    return await selector;
+  } else {
+    // Android
+    const selector = await device.elementByAndroidUIAutomatorOrNull(
+      `new UiSelector().text("${text}")`
+    );
+    return await selector;
+  }
+};
+
+export const isAndroid = async (device: wd.PromiseWebdriver) => {
+  const capabilities: any = await device.sessionCapabilities();
+  return capabilities.platformName === "Android";
+};
+
 export const inputText = async (
   device: wd.PromiseWebdriver,
   accessibilityId: string,

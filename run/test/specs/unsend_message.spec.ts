@@ -18,13 +18,14 @@ describe("Message checks", () => {
     // Create contact
     await newContact(device1, userA, device2, userB);
     // send message from User A to User B
-    await inputText(device1, "Message input box", "Test-message-Unsending");
+    const unsendMessage = "Test-message-unsending";
+    await inputText(device1, "Message input box", unsendMessage);
     // Click send
     await clickOnElement(device1, "Send message button");
     // Long press last sent message
 
     const longPressSelector = await device1.elementByXPath(
-      "//*[ text() = ‘Test-message-Unsending’]"
+      "//*[ text() = ‘Test-message-unsending’]"
     );
 
     console.warn("longPressSelector =", longPressSelector);

@@ -17,6 +17,5 @@ apps/
 chromeDriver
 .tmp
 
-
+run/**/*.js
 *.js.map
-*spec.js

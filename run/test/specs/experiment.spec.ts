@@ -1,6 +1,8 @@
 import { sendNewMessage } from "./utils/send_new_message";
 import { closeApp, openAppTwoDevices } from "./utils/open_app";
 import { newUser } from "./utils/create_account";
+import { getTextElement, longPress } from "./utils/utilities";
+import * as wd from "wd";
 
 describe("Experimental", () => {
   it("check test works", async () => {
@@ -12,6 +14,10 @@ describe("Experimental", () => {
     ]);
 
     await sendNewMessage(device1, userB);
-    await closeApp(server, device1);
+    const text = await getTextElement(device1, "howdy");
+    const action = new wd.TouchAction(device1);
+    action.longPress({ el: text });
+    await action.perform();
+    // await closeApp(server, device1);
   });
 });
