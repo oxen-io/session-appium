@@ -1,14 +1,18 @@
 import { openAppTwoDevices } from "./utils/open_app";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
-import { inputText, clickOnElement, longPress } from "./utils/utilities";
+
 import * as wd from "wd";
+import {
+  inputText,
+  clickOnElement,
+  findMessageWithBody,
+} from "./utils/utilities";
 
 describe("Message checks", () => {
   it("Unsend message", async () => {
     // Open App
-    const { server, device1, device2 } = await openAppTwoDevices();
-    // console.warn(device1);
+    const { device1, device2 } = await openAppTwoDevices();
 
     // Create two users
     const [userA, userB] = await Promise.all([
@@ -24,13 +28,14 @@ describe("Message checks", () => {
     await clickOnElement(device1, "Send message button");
     // Long press last sent message
 
-    const longPressSelector = await device1.elementByXPath(
-      "//*[ text() = ‘Test-message-unsending’]"
+    const foundMessage = await findMessageWithBody(
+      device1,
+      "Test-message-Unsending"
     );
 
-    console.warn("longPressSelector =", longPressSelector);
+    console.warn("longPressSelector =", foundMessage);
     const action = new wd.TouchAction(device1);
-    action.longPress({ el: longPressSelector });
+    action.longPress({ el: foundMessage });
     await action.perform();
     // Select 'Delete for me and User B'
     // Look in User B's chat for alert 'This message has been deleted?'

@@ -17,7 +17,7 @@ declare namespace wd {
      * @actions
      */
     longPress: (opts: {
-      el: PromiseWebdriver;
+      el: WebdriverIO.Element;
       x?: number;
       y?: number;
     }) => TouchAction;
