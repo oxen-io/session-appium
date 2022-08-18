@@ -5,7 +5,10 @@
 // if you need to find any other types, or make those more complete,
 // use https://github.com/admc/wd/search?q=<what you need to find as type>
 // this should help you find what is defined in the object in JS, which you need to add here so typescript finds it
-
+type Element = WebdriverIO.Element;
+type ElementArray = Array<WebdriverIO.Element>;
+type PromiseElementArray = Promise<ElementArray>;
+type PromiseElement = Promise<WebdriverIO.Element | undefined | null>;
 declare namespace wd {
   // the types for TouchAction are to be ourself from this file: https://github.com/admc/wd/blob/e74df30db9f452ab188371c5eb9a53d2fcd58895/lib/actions.js
   class TouchAction {
@@ -256,17 +259,17 @@ declare namespace wd {
     elementByClassName(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByCssSelector(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementById(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByName(
       value?: any,
@@ -276,103 +279,103 @@ declare namespace wd {
     elementByLinkText(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByPartialLinkText(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByTagName(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByXPath(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByCss(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByIosUIAutomation(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByIosClassChain(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByAndroidUIAutomator(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByAccessibilityId(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elements(
       using?: any,
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     elementsByClassName(
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     elementsByCssSelector(
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     elementsById(
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     elementsByName(
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     elementsByLinkText(
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     elementsByPartialLinkText(
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     elementsByTagName(
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     elementsByXPath(
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     elementsByCss(
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     elementsByIosUIAutomation(
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     elementsByIosClassChain(
       value?: any,
@@ -382,17 +385,17 @@ declare namespace wd {
     elementsByIosPredicateString(
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     elementsByAndroidUIAutomator(
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     elementsByAccessibilityId(
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     elementOrNull(
       using?: any,
@@ -403,72 +406,72 @@ declare namespace wd {
     elementByClassNameOrNull(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByCssSelectorOrNull(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByIdOrNull(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByNameOrNull(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByLinkTextOrNull(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByPartialLinkTextOrNull(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByTagNameOrNull(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByXPathOrNull(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByCssOrNull(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByIosUIAutomationOrNull(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByIosClassChainOrNull(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByIosPredicateStringOrNull(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByAndroidUIAutomatorOrNull(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByAccessibilityIdOrNull(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementIfExists(
       using?: any,
@@ -479,72 +482,72 @@ declare namespace wd {
     elementByClassNameIfExists(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByCssSelectorIfExists(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByIdIfExists(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByNameIfExists(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByLinkTextIfExists(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByPartialLinkTextIfExists(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByTagNameIfExists(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByXPathIfExists(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByCssIfExists(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByIosUIAutomationIfExists(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByIosClassChainIfExists(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByIosPredicateStringIfExists(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByAndroidUIAutomatorIfExists(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByAccessibilityIdIfExists(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     hasElement(
       using?: any,
@@ -633,83 +636,83 @@ declare namespace wd {
     elementByClassName(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByCssSelector(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementById(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByName(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByLinkText(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByPartialLinkText(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByTagName(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByXPath(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByCss(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByIosUIAutomation(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByIosClassChain(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByIosPredicateString(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByAndroidUIAutomator(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elementByAccessibilityId(
       value?: any,
       cb?: (err: any, element: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElement;
 
     elements(
       using?: any,
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     elementsByClassName(
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     elementsByCssSelector(
       value?: any,
@@ -719,52 +722,52 @@ declare namespace wd {
     elementsById(
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     elementsByName(
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     elementsByLinkText(
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     elementsByPartialLinkText(
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     elementsByTagName(
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     elementsByXPath(
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     elementsByCss(
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     elementsByIosUIAUtomation(
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     elementsByIosClassChain(
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     elementsByIosPredicateString(
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     elementsByAndroidUIAutomator(
       value?: any,
@@ -774,7 +777,7 @@ declare namespace wd {
     elementsByAccessibilityId(
       value?: any,
       cb?: (err: any, elements: any) => void
-    ): PromiseWebdriver;
+    ): PromiseElementArray;
 
     clickElement(element?: any, cb?: (err: any) => void): PromiseWebdriver;
 

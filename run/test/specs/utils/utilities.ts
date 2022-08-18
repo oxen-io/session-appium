@@ -1,3 +1,4 @@
+import { pick } from "lodash";
 import * as util from "util";
 import * as wd from "wd";
 
@@ -48,17 +49,28 @@ export const inputText = async (
   accessibilityId: string,
   text: string
 ) => {
-  const selector = await device.elementByAccessibilityId(accessibilityId);
-  return await selector.type(text);
+  const element = await device.elementByAccessibilityId(accessibilityId);
+  if (!element) {
+    throw new Error(
+      `inputText: Did not find accessibilityId: ${accessibilityId} `
+    );
+  }
+  // not sure what is the type of element here, but there is a type available for it...
+  return (element as any)?.type(text);
 };
 
 export const longPress = async (
   device: wd.PromiseWebdriver,
   accessibilityId: string
 ) => {
-  const selector = await device.elementByAccessibilityId(accessibilityId);
+  const el = await device.elementByAccessibilityId(accessibilityId);
+  if (!el) {
+    throw new Error(
+      `longPress: could not find this accessibilityId: ${accessibilityId}`
+    );
+  }
   const action = new wd.TouchAction(device);
-  action.longPress({ el: selector });
+  action.longPress({ el });
   await action.perform();
 };
 
@@ -79,8 +91,10 @@ export const findMatchingTextInElementArray = async (
   if (elements && elements.length) {
     const matching = await findAsync(elements, async (e) => {
       const text = await e?.text?.();
-      console.warn("found text", text);
-      return text && text === textToLookFor;
+      console.warn(
+        `Looking for text: "${textToLookFor}" and found text: "${text}"`
+      );
+      return text && text.toLowerCase() === textToLookFor.toLowerCase();
     });
 
     return matching || undefined;
@@ -108,9 +122,7 @@ export const findMatchingTextAndAccessibilityId = async (
     `Looking for all elements with accessibilityId: "${accessibilityId}" and text: "${textToLookFor}" `
   );
 
-  const elements = (await device.elementsByAccessibilityId(
-    accessibilityId
-  )) as any as Array<any>;
+  const elements = await device.elementsByAccessibilityId(accessibilityId);
 
   console.info(
     `found ${elements.length} matching accessibilityId ${accessibilityId}. Now filtering for text`
@@ -131,12 +143,23 @@ export const findMatchingTextAndAccessibilityId = async (
 
 async function runScriptAndLog(toRun: string) {
   try {
-    console.log("running ", toRun);
+    // console.log("running ", toRun);
     const result = await exec(toRun);
 
-    console.log(`result: `, result);
+    if (
+      result &&
+      result.stderr &&
+      !result.stderr.startsWith(
+        "All files should be loaded. Notifying the device"
+      )
+    ) {
+      console.log(`cmd which failed: "${toRun}"`);
+      console.log(`result: "${result.stderr}"`);
+    }
   } catch (e) {
-    console.warn(e);
+    const cmd = (e as any).cmd;
+    console.warn(`cmd which failed: "${cmd}"`);
+    console.warn(pick(e, ["stdout", "stderr"]));
   }
 }
 

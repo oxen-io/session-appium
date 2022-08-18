@@ -32,8 +32,7 @@ describe("Message checks", () => {
       device1,
       "Test-message-Unsending"
     );
-
-    console.warn("longPressSelector =", foundMessage);
+    console.info("doing long click on message");
     const action = new wd.TouchAction(device1);
     action.longPress({ el: foundMessage });
     await action.perform();

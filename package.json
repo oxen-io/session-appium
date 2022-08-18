@@ -3,8 +3,8 @@
     "tsc": "npm run clean-tsc && tsc",
     "clean-tsc": "find run/test/specs -type f -name '*.js' -delete",
     "tsc-watch": "tsc -w",
-    "test": "mocha --timeout 300000 --jobs 1 ./run/test/specs/*.spec.js ",
-    "test-one": "mocha --timeout 300000 --jobs 1 ./run/test/specs/*.spec.js -- --grep ",
+    "test": "mocha --timeout 300000 --retries 2 --jobs 1 ./run/test/specs/*.spec.js ",
+    "test-one": "mocha --timeout 300000 -retries 2 --jobs 1 ./run/test/specs/*.spec.js -- --grep ",
     "build-and-test": "npm run tsc && npm run test",
     "test-testing": "npx mocha --timeout 30000 --jobs 1 ./run/test/specs/experiment.spec.js"
   },
@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@wdio/types": "^7.20.7",
+    "lodash": "^4.17.21",
     "wd": "^1.14.0"
   }
 }
