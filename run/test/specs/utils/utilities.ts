@@ -1,5 +1,6 @@
+import { pick } from "lodash";
+import * as util from "util";
 import * as wd from "wd";
-const util = require("util");
 
 const exec = util.promisify(require("child_process").exec);
 import { getAdbFullPath } from "./binaries";
@@ -28,13 +29,13 @@ export const getTextElement = async (
     // iOS
     console.warn("not implemented yet");
     const selector = await device.elementByIosPredicateString("something");
-    return await selector;
+    return selector;
   } else {
     // Android
     const selector = await device.elementByAndroidUIAutomatorOrNull(
       `new UiSelector().text("${text}")`
     );
-    return await selector;
+    return selector;
   }
 };
 
@@ -48,28 +49,117 @@ export const inputText = async (
   accessibilityId: string,
   text: string
 ) => {
-  const selector = await device.elementByAccessibilityId(accessibilityId);
-  return await selector.type(text);
+  const element = await device.elementByAccessibilityId(accessibilityId);
+  if (!element) {
+    throw new Error(
+      `inputText: Did not find accessibilityId: ${accessibilityId} `
+    );
+  }
+  // not sure what is the type of element here, but there is a type available for it...
+  return (element as any)?.type(text);
 };
 
 export const longPress = async (
   device: wd.PromiseWebdriver,
   accessibilityId: string
 ) => {
-  const selector = await device.elementByAccessibilityId(accessibilityId);
+  const el = await device.elementByAccessibilityId(accessibilityId);
+  if (!el) {
+    throw new Error(
+      `longPress: could not find this accessibilityId: ${accessibilityId}`
+    );
+  }
   const action = new wd.TouchAction(device);
-  action.longPress({ el: selector });
+  action.longPress({ el });
   await action.perform();
+};
+
+async function findAsync(
+  arr: Array<any>,
+  asyncCallback: (opts?: any) => Promise<any>
+) {
+  const promises = arr.map(asyncCallback);
+  const results = await Promise.all(promises);
+  const index = results.findIndex((result) => result);
+  return arr[index];
+}
+
+export const findMatchingTextInElementArray = async (
+  elements: Array<WebdriverIO.Element>,
+  textToLookFor: string
+): Promise<WebdriverIO.Element | undefined> => {
+  if (elements && elements.length) {
+    const matching = await findAsync(elements, async (e) => {
+      const text = await e?.text?.();
+      console.warn(
+        `Looking for text: "${textToLookFor}" and found text: "${text}"`
+      );
+      return text && text.toLowerCase() === textToLookFor.toLowerCase();
+    });
+
+    return matching || undefined;
+  }
+  return undefined;
+};
+
+export const findMessageWithBody = async (
+  device: wd.PromiseWebdriver,
+  textToLookFor: string
+): Promise<WebdriverIO.Element> => {
+  return findMatchingTextAndAccessibilityId(
+    device,
+    "Message Body",
+    textToLookFor
+  );
+};
+
+export const findMatchingTextAndAccessibilityId = async (
+  device: wd.PromiseWebdriver,
+  accessibilityId: string,
+  textToLookFor: string
+): Promise<WebdriverIO.Element> => {
+  console.warn(
+    `Looking for all elements with accessibilityId: "${accessibilityId}" and text: "${textToLookFor}" `
+  );
+
+  const elements = await device.elementsByAccessibilityId(accessibilityId);
+
+  console.info(
+    `found ${elements.length} matching accessibilityId ${accessibilityId}. Now filtering for text`
+  );
+
+  const foundElementMatchingText = await findMatchingTextInElementArray(
+    elements,
+    textToLookFor
+  );
+  if (!foundElementMatchingText) {
+    throw new Error(
+      `Did not find element with accessibilityId ${accessibilityId} and text body: ${textToLookFor}`
+    );
+  }
+
+  return foundElementMatchingText;
 };
 
 async function runScriptAndLog(toRun: string) {
   try {
-    console.log("running ", toRun);
+    // console.log("running ", toRun);
     const result = await exec(toRun);
 
-    console.log(`result: ${result}`);
+    if (
+      result &&
+      result.stderr &&
+      !result.stderr.startsWith(
+        "All files should be loaded. Notifying the device"
+      )
+    ) {
+      console.log(`cmd which failed: "${toRun}"`);
+      console.log(`result: "${result.stderr}"`);
+    }
   } catch (e) {
-    console.warn(e);
+    const cmd = (e as any).cmd;
+    console.warn(`cmd which failed: "${cmd}"`);
+    console.warn(pick(e, ["stdout", "stderr"]));
   }
 }
 

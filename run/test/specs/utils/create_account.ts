@@ -1,14 +1,18 @@
-import { PromiseWebdriver } from "wd";
+// import { PromiseWebdriver } from "wd";
 import * as utils from "./utilities";
+import * as wd from "wd";
 
-export const newUser = async (device: PromiseWebdriver, userName: string) => {
+export const newUser = async (
+  device: wd.PromiseWebdriver,
+  userName: string
+) => {
   // Click create session ID
   await utils.clickOnElement(device, "Create Session ID");
   // Wait for animation to generate session id
   await device.setImplicitWaitTimeout(5000);
   // save session id as variable
   const sessionID = await utils.saveText(device, "Session ID");
-  console.log(sessionID);
+  console.log(`sessionID found: "${sessionID}"`);
   // Click continue on session Id creation
   await utils.clickOnElement(device, "Continue");
   // Input username
@@ -23,7 +27,7 @@ export const newUser = async (device: PromiseWebdriver, userName: string) => {
   await utils.longPress(device, "Recovery Phrase");
   // Save recovery phrase as variable
   const recoveryPhrase = await utils.saveText(device, "Recovery Phrase");
-  console.log("Recovery Phrase is", recoveryPhrase);
+  console.log(`Recovery Phrase is "${recoveryPhrase}"`);
   // Exit Modal
   await utils.clickOnElement(device, "Navigate up");
 

@@ -1,4 +1,5 @@
 import { clickOnElement, inputText } from "./utilities";
+import * as wd from "wd";
 
 export const sendNewMessage = async (
   device: wd.PromiseWebdriver,

@@ -1,5 +1,4 @@
 import { main as appiumMain } from "appium";
-import * as wd from "wd";
 import {
   capabilities1,
   capabilities2,
@@ -9,16 +8,19 @@ import {
 } from "./capabilities";
 import { installAppToDeviceName } from "./utilities";
 
+import * as wd from "wd";
+
 export const openApp = async (): Promise<{
   server: any;
   device: wd.PromiseWebdriver;
 }> => {
-  await installAppToDeviceName(androidAppFullPath, emulator1Udid);
-  let server = await appiumMain({
+  const server = await appiumMain({
     port: 4723,
     host: "localhost",
     setTimeout: 30000,
   });
+  await installAppToDeviceName(androidAppFullPath, emulator1Udid);
+
   const device = await wd.promiseChainRemote("localhost", 4723);
 
   await device.init(capabilities1);
@@ -31,15 +33,16 @@ export const openAppTwoDevices = async (): Promise<{
   device1: wd.PromiseWebdriver;
   device2: wd.PromiseWebdriver;
 }> => {
-  await Promise.all([
-    installAppToDeviceName(androidAppFullPath, emulator1Udid),
-    installAppToDeviceName(androidAppFullPath, emulator2Udid),
-  ]);
-  let server = await appiumMain({
+  const server = await appiumMain({
     port: 4723,
     host: "localhost",
     setTimeout: 30000,
   });
+  await Promise.all([
+    installAppToDeviceName(androidAppFullPath, emulator1Udid),
+    installAppToDeviceName(androidAppFullPath, emulator2Udid),
+  ]);
+
   const [device1, device2] = await Promise.all([
     await wd.promiseChainRemote("localhost", 4723),
     await wd.promiseChainRemote("localhost", 4723),
