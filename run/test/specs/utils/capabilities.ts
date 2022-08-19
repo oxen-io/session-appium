@@ -15,6 +15,7 @@ let sharedCapabilities: DesiredCapabilities = {
 };
 let emulator1Udid = "emulator-5554";
 let emulator2Udid = "emulator-5556";
+let emulator3Udid = "emulator-5558";
 
 const capabilities1: DesiredCapabilities = {
   ...sharedCapabilities,
@@ -25,11 +26,18 @@ const capabilities2: DesiredCapabilities = {
   udid: emulator2Udid,
 };
 
+const capabilities3: DesiredCapabilities = {
+  ...sharedCapabilities,
+  udid: emulator3Udid,
+};
+
 export {
   sharedCapabilities,
   capabilities1,
   capabilities2,
+  capabilities3,
   emulator1Udid,
   emulator2Udid,
+  emulator3Udid,
   androidAppFullPath,
 };

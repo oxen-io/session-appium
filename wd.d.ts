@@ -5,10 +5,10 @@
 // if you need to find any other types, or make those more complete,
 // use https://github.com/admc/wd/search?q=<what you need to find as type>
 // this should help you find what is defined in the object in JS, which you need to add here so typescript finds it
-type Element = WebdriverIO.Element;
-type ElementArray = Array<WebdriverIO.Element>;
-type PromiseElementArray = Promise<ElementArray>;
-type PromiseElement = Promise<WebdriverIO.Element | undefined | null>;
+type AppiumElement = WebdriverIO.Element;
+type AppiumElementArray = Array<AppiumElement>;
+type AppiumPromiseElementArray = Promise<AppiumElementArray>;
+type AppiumPromiseElement = Promise<AppiumElement | undefined | null>;
 declare namespace wd {
   // the types for TouchAction are to be ourself from this file: https://github.com/admc/wd/blob/e74df30db9f452ab188371c5eb9a53d2fcd58895/lib/actions.js
   class TouchAction {
@@ -20,7 +20,7 @@ declare namespace wd {
      * @actions
      */
     longPress: (opts: {
-      el: WebdriverIO.Element;
+      el: AppiumElement;
       x?: number;
       y?: number;
     }) => TouchAction;

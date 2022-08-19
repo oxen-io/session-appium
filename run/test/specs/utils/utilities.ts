@@ -15,6 +15,21 @@ export const clickOnElement = async (device: any, accessibilityId: string) => {
   return;
 };
 
+export const findElement = async (
+  device: wd.PromiseWebdriver,
+  accessibilityId: string
+) => {
+  const selector = await device.elementByAccessibilityId(accessibilityId);
+  if (!selector) {
+    throw new Error(
+      `findElement: Did not find accessibilityId: ${accessibilityId} `
+    );
+  }
+  console.warn(`"Element found", ${accessibilityId}`);
+  await selector;
+  return;
+};
+
 export const saveText = async (device: any, accessibilityId: string) => {
   const selector = await device.elementByAccessibilityId(accessibilityId);
   return await selector.text();
@@ -74,6 +89,15 @@ export const longPress = async (
   await action.perform();
 };
 
+export const longPressMessage = async (
+  device: wd.PromiseWebdriver,
+  selector: AppiumElement
+) => {
+  const action = new wd.TouchAction(device);
+  action.longPress({ el: selector });
+  await action.perform();
+};
+
 async function findAsync(
   arr: Array<any>,
   asyncCallback: (opts?: any) => Promise<any>
@@ -85,9 +109,9 @@ async function findAsync(
 }
 
 export const findMatchingTextInElementArray = async (
-  elements: Array<WebdriverIO.Element>,
+  elements: Array<AppiumElement>,
   textToLookFor: string
-): Promise<WebdriverIO.Element | undefined> => {
+): Promise<AppiumElement | undefined> => {
   if (elements && elements.length) {
     const matching = await findAsync(elements, async (e) => {
       const text = await e?.text?.();
@@ -105,7 +129,7 @@ export const findMatchingTextInElementArray = async (
 export const findMessageWithBody = async (
   device: wd.PromiseWebdriver,
   textToLookFor: string
-): Promise<WebdriverIO.Element> => {
+): Promise<AppiumElement> => {
   return findMatchingTextAndAccessibilityId(
     device,
     "Message Body",
@@ -117,7 +141,7 @@ export const findMatchingTextAndAccessibilityId = async (
   device: wd.PromiseWebdriver,
   accessibilityId: string,
   textToLookFor: string
-): Promise<WebdriverIO.Element> => {
+): Promise<AppiumElement> => {
   console.warn(
     `Looking for all elements with accessibilityId: "${accessibilityId}" and text: "${textToLookFor}" `
   );
