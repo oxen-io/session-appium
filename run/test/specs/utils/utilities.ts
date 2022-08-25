@@ -30,6 +30,20 @@ export const findElement = async (
   return;
 };
 
+export const selectByText = async (
+  device: wd.PromiseWebdriver,
+  accessibilityId: string,
+  text: string
+) => {
+  const selector = await findMatchingTextAndAccessibilityId(
+    device,
+    accessibilityId,
+    text
+  );
+  await selector.click();
+  return;
+};
+
 export const saveText = async (device: any, accessibilityId: string) => {
   const selector = await device.elementByAccessibilityId(accessibilityId);
   return await selector.text();
