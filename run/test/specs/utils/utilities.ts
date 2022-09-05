@@ -30,6 +30,39 @@ export const findElement = async (
   return;
 };
 
+export const hasElementBeenDeleted = async (
+  device: wd.PromiseWebdriver,
+  accessibilityId: string
+) => {
+  const selector = await device.elementByAccessibilityId(accessibilityId);
+
+  if (!selector) {
+    console.warn(selector + "has been deleted");
+    return;
+  } else {
+    throw new Error(selector + "has been found, oops");
+  }
+};
+
+export const hasTextElementBeenDeleted = async (
+  device: wd.PromiseWebdriver,
+  accessibilityId: string,
+  text: string
+) => {
+  const selector = await findMatchingTextAndAccessibilityId(
+    device,
+    accessibilityId,
+    text
+  );
+
+  if (!selector) {
+    console.warn(selector + "has been deleted");
+    return;
+  } else {
+    throw new Error(`'Found element that shouldnt exist'+ ${selector} `);
+  }
+};
+
 export const selectByText = async (
   device: wd.PromiseWebdriver,
   accessibilityId: string,
