@@ -13,7 +13,7 @@ import {
 describe("Message checks", () => {
   it("Unsend message", async () => {
     // Open App
-    const { server, device1, device2 } = await openAppTwoDevices();
+    const { server, device1, device2 } = await openAppTwoDevices("android");
 
     // Create two users
     const [userA, userB] = await Promise.all([

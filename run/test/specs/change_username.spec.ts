@@ -1,4 +1,4 @@
-import { closeApp, openAppOnPlatform } from "./utils/open_app";
+import { closeApp, openAppOnPlatformSingleDevice } from "./utils/open_app";
 import { newUser } from "./utils/create_account";
 import { clickOnElement, inputText } from "./utils/utilities";
 
@@ -7,7 +7,9 @@ import { clickOnElement, inputText } from "./utils/utilities";
 describe("Username", () => {
   it("Change username", async () => {
     // create user
-    const { server, device: device1 } = await openAppOnPlatform("android");
+    const { server, device: device1 } = await openAppOnPlatformSingleDevice(
+      "android"
+    );
 
     const userA = await newUser(device1, "User A");
     // click on settings/profile avatar

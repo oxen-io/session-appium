@@ -4,36 +4,70 @@ import {
   getAndroidCapabilities,
   getAndroidUuid,
 } from "./capabilities_android";
-import { iosCapabilities } from "./capabilities_ios";
+import {
+  CapabilitiesIndexType,
+  getIosCapabilities,
+  getIosUuid,
+  iosCapabilities,
+} from "./capabilities_ios";
 import { installAppToDeviceName, installiOSAppToDeviceName } from "./utilities";
 
 import * as wd from "wd";
+import { AppiumServer } from "../../../types/appiumServerType";
 
 const APPIUM_PORT = 4728;
 export const APPIUM_IOS_PORT = 8100;
 
 export type SupportedPlatformsType = "android" | "ios";
 
-export const openAppOnPlatform = async (
-  platform: SupportedPlatformsType
+const openAppOnPlatform = async (
+  platform: SupportedPlatformsType,
+  capabilitiesIndex: CapabilitiesIndexType,
+  server: AppiumServer | null
 ): Promise<{
-  server: any;
+  server: AppiumServer;
   device: wd.PromiseWebdriver;
 }> => {
-  return platform === "ios" ? openiOSApp() : openAndroidApp();
+  return platform === "ios"
+    ? openiOSApp(capabilitiesIndex, server)
+    : openAndroidApp(capabilitiesIndex, server);
+};
+
+export const openAppOnPlatformSingleDevice = async (
+  platform: SupportedPlatformsType
+): Promise<{
+  server: AppiumServer;
+  device: wd.PromiseWebdriver;
+}> => {
+  return openAppOnPlatform(platform, 0, null);
+};
+
+const openAppiumServerOnly = async (platform: SupportedPlatformsType) => {
+  if (platform === "android") {
+    return appiumMain({
+      port: APPIUM_PORT,
+      host: "localhost",
+      setTimeout: 30000,
+    });
+  }
+
+  return appiumMain({
+    port: APPIUM_IOS_PORT,
+    host: "127.0.0.1",
+    setTimeout: 30000,
+  });
 };
 
 const openAndroidApp = async (
-  capabilitiesIndex: 0 | 1 | 2
+  capabilitiesIndex: CapabilitiesIndexType,
+  server: AppiumServer | null
 ): Promise<{
-  server: any;
+  server: AppiumServer;
   device: wd.PromiseWebdriver;
 }> => {
-  const server = await appiumMain({
-    port: APPIUM_PORT,
-    host: "localhost",
-    setTimeout: 30000,
-  });
+  const newServer: AppiumServer =
+    server || (await openAppiumServerOnly("android"));
+
   await installAppToDeviceName(
     androidCapabilities.androidAppFullPath,
     getAndroidUuid(capabilitiesIndex)
@@ -43,105 +77,72 @@ const openAndroidApp = async (
 
   await device.init(getAndroidCapabilities(capabilitiesIndex));
 
-  return { server, device };
+  return { server: newServer, device };
 };
 
-const openiOSApp = async (): Promise<{
-  server: any;
+const openiOSApp = async (
+  capabilitiesIndex: CapabilitiesIndexType,
+  server: AppiumServer | null
+): Promise<{
+  server: AppiumServer;
   device: wd.PromiseWebdriver;
 }> => {
-  const server = await appiumMain({
-    port: APPIUM_IOS_PORT,
-    host: "127.0.0.1",
-    setTimeout: 30000,
-    // basePath: "/wd/hub/",
-  });
+  const newServer = server || (await openAppiumServerOnly("ios"));
   await installiOSAppToDeviceName(
     iosCapabilities.iosAppFullPath,
-    iosCapabilities.emulator1Udid
+    getIosUuid(capabilitiesIndex)
   );
 
   const device = await wd.promiseChainRemote("127.0.0.1", APPIUM_IOS_PORT);
 
-  await device.init(iosCapabilities.capabilities1);
+  await device.init(getIosCapabilities(capabilitiesIndex));
 
-  return { server, device };
+  return { server: newServer, device };
 };
 
-export const openAppTwoDevices = async (): Promise<{
-  server: any;
+export const openAppTwoDevices = async (
+  platform: SupportedPlatformsType
+): Promise<{
+  server: AppiumServer;
   device1: wd.PromiseWebdriver;
   device2: wd.PromiseWebdriver;
 }> => {
-  const server = await appiumMain({
-    port: APPIUM_PORT,
-    host: "localhost",
-    setTimeout: 30000,
-  });
-  await Promise.all([
-    installAppToDeviceName(
-      androidCapabilities.androidAppFullPath,
-      androidCapabilities.emulator1Udid
-    ),
-    installAppToDeviceName(
-      androidCapabilities.androidAppFullPath,
-      androidCapabilities.emulator2Udid
-    ),
+  const server = await openAppiumServerOnly(platform);
+
+  const [app1, app2] = await Promise.all([
+    openAppOnPlatform(platform, 0, server),
+    openAppOnPlatform(platform, 1, server),
   ]);
 
-  const [device1, device2] = await Promise.all([
-    await wd.promiseChainRemote("localhost", APPIUM_PORT),
-    await wd.promiseChainRemote("localhost", APPIUM_PORT),
-  ]);
-  await Promise.all([
-    device1.init(androidCapabilities.capabilities1),
-    device2.init(androidCapabilities.capabilities2),
-  ]);
-  return { server, device1, device2 };
+  return { server, device1: app1.device, device2: app2.device };
 };
 
 export const openAppThreeDevices = async (
   platform: SupportedPlatformsType
 ): Promise<{
-  server: any;
+  server: AppiumServer;
   device1: wd.PromiseWebdriver;
   device2: wd.PromiseWebdriver;
   device3: wd.PromiseWebdriver;
 }> => {
-  const server = await appiumMain({
-    port: APPIUM_PORT,
-    host: "localhost",
-    setTimeout: 30000,
-  });
-  await Promise.all([
-    installAppToDeviceName(
-      androidCapabilities.androidAppFullPath,
-      androidCapabilities.emulator1Udid
-    ),
-    installAppToDeviceName(
-      androidCapabilities.androidAppFullPath,
-      androidCapabilities.emulator2Udid
-    ),
-    installAppToDeviceName(
-      androidCapabilities.androidAppFullPath,
-      androidCapabilities.emulator3Udid
-    ),
+  const server = await openAppiumServerOnly(platform);
+
+  const [app1, app2, app3] = await Promise.all([
+    openAppOnPlatform(platform, 0, server),
+    openAppOnPlatform(platform, 1, server),
+    openAppOnPlatform(platform, 2, server),
   ]);
-  const [device1, device2, device3] = await Promise.all([
-    await wd.promiseChainRemote("localhost", APPIUM_PORT),
-    await wd.promiseChainRemote("localhost", APPIUM_PORT),
-    await wd.promiseChainRemote("localhost", APPIUM_PORT),
-  ]);
-  await Promise.all([
-    device1.init(androidCapabilities.capabilities1),
-    device2.init(androidCapabilities.capabilities2),
-    device3.init(androidCapabilities.capabilities3),
-  ]);
-  return { server, device1, device2, device3 };
+
+  return {
+    server,
+    device1: app1.device,
+    device2: app2.device,
+    device3: app3.device,
+  };
 };
 
 export const closeApp = async (
-  server: any,
+  server: AppiumServer,
   device1?: wd.PromiseWebdriver,
   device2?: wd.PromiseWebdriver,
   device3?: wd.PromiseWebdriver

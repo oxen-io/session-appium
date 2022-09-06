@@ -1,5 +1,6 @@
 import { DesiredCapabilities } from "@wdio/types/build/Capabilities";
 import { getAndroidBinariesRoot } from "./binaries";
+import { CapabilitiesIndexType } from "./capabilities_ios";
 
 const androidAppFullPath = `${getAndroidBinariesRoot()}/session-1.13.1-x86.apk`;
 
@@ -42,13 +43,15 @@ export const androidCapabilities = {
 
 const countOfAndroidCapabilities = capabilitiesList.length;
 
-export function getAndroidCapabilities(capabilitiesIndex: 0 | 1 | 2) {
+export function getAndroidCapabilities(
+  capabilitiesIndex: CapabilitiesIndexType
+) {
   if (capabilitiesIndex >= countOfAndroidCapabilities) {
     throw new Error(`Asked invalid android cap index: ${capabilitiesIndex}`);
   }
   return capabilitiesList[capabilitiesIndex];
 }
-export function getAndroidUuid(uuidIndex: 0 | 1 | 2) {
+export function getAndroidUuid(uuidIndex: CapabilitiesIndexType) {
   if (uuidIndex >= countOfAndroidCapabilities) {
     throw new Error(`Asked invalid android uuid index: ${uuidIndex}`);
   }

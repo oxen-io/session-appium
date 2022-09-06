@@ -6,7 +6,7 @@ import { sendNewMessage } from "./utils/send_new_message";
 describe("Create contact", () => {
   it("Create new contact", async () => {
     // first we want to install the app on each device with our custom call to run it
-    const { server, device1, device2 } = await openAppTwoDevices();
+    const { server, device1, device2 } = await openAppTwoDevices("android");
 
     const [userA, userB] = await Promise.all([
       newUser(device1, "User A"),

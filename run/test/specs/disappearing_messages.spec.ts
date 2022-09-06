@@ -12,7 +12,7 @@ import {
 describe.skip("Disappearing messages", () => {
   it("Set disappearing messages", async () => {
     // Open app
-    const { server, device1, device2 } = await openAppTwoDevices();
+    const { server, device1, device2 } = await openAppTwoDevices("android");
     // Create user A and user B
     const [userA, userB] = await Promise.all([
       newUser(device1, "User A"),

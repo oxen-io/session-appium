@@ -4,7 +4,9 @@
     "clean-tsc": "find run/test/specs -type f -name '*.js' -delete",
     "tsc-watch": "tsc -w",
     "test": "_TESTING=1 mocha --timeout 300000 --retries 2 --jobs 1 ./run/test/specs/*.spec.js ",
-    "test-one": "_TESTING=0 mocha --timeout 300000 -retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep ",
+    "test-one": "_TESTING=1 mocha --timeout 300000 -retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep ",
+    "test-ios": "_TESTING=1 mocha --timeout 300000 -retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep ios",
+    "test-android": "_TESTING=1 mocha --timeout 300000 -retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep android",
     "build-and-test": "npm run tsc && npm run test",
     "test-testing": "npx mocha --timeout 30000 --jobs 1 ./run/test/specs/experiment.spec.js"
   },

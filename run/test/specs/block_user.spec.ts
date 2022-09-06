@@ -10,7 +10,7 @@ import {
 describe.skip("Block", () => {
   it("Block contact", async () => {
     // Open App
-    const { server, device1, device2 } = await openAppTwoDevices();
+    const { server, device1, device2 } = await openAppTwoDevices("android");
     // Create user A
     // Create user B
     const [userA, userB] = await Promise.all([

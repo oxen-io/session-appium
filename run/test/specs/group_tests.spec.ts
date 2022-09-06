@@ -11,7 +11,9 @@ import {
 describe("Group Testing", () => {
   it("Create group", async () => {
     // Open app and start server
-    const { server, device1, device2, device3 } = await openAppThreeDevices();
+    const { server, device1, device2, device3 } = await openAppThreeDevices(
+      "android"
+    );
     // Create users
     // Create User A
     // Create User B
