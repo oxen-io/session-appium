@@ -293,3 +293,10 @@ export const installAppToDeviceName = async (
 
   await sleepFor(500);
 };
+
+export const installiOSAppToDeviceName = (
+  iosAppFullPath: string,
+  emulatorName: string
+) => {
+  console.warn("should install app on ios");
+};

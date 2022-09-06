@@ -7,7 +7,7 @@ import {
   hasElementBeenDeleted,
 } from "./utils/utilities";
 
-describe("Block", () => {
+describe.skip("Block", () => {
   it("Block contact", async () => {
     // Open App
     const { server, device1, device2 } = await openAppTwoDevices();
