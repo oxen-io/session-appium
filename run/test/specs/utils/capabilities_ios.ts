@@ -15,10 +15,39 @@ let sharediOSCapabilities: DesiredCapabilities = {
   // showXcodeLog: true,
   // showIOSLog: true,
 } as DesiredCapabilities;
+export type CapabilitiesIndexType = 0 | 1 | 2;
 
-let emulator1Udid = "6D6ED174-EEEF-47AD-A666-4501D5965FFF";
-let emulator2Udid = "9C3D1DFD-2861-457E-9E7B-FDD0542EEEC2";
-let emulator3Udid = "8D1E4AD6-059F-421C-94D4-45EAEBCE49E2";
+function getIOSSimulatorUUIDFromEnv(index: CapabilitiesIndexType): string {
+  switch (index) {
+    case 0:
+      if (process.env.IOS_FIRST_SIMULATOR) {
+        return process.env.IOS_FIRST_SIMULATOR;
+      }
+      throw new Error(
+        `getSimulatorUUIDFromEnv process.env.IOS_FIRST_SIMULATOR is not set`
+      );
+    case 1:
+      if (process.env.IOS_SECOND_SIMULATOR) {
+        return process.env.IOS_SECOND_SIMULATOR;
+      }
+      throw new Error(
+        `getSimulatorUUIDFromEnv process.env.IOS_SECOND_SIMULATOR is not set`
+      );
+    case 2:
+      if (process.env.IOS_THIRD_SIMULATOR) {
+        return process.env.IOS_THIRD_SIMULATOR;
+      }
+      throw new Error(
+        `getSimulatorUUIDFromEnv process.env.IOS_THIRD_SIMULATOR is not set`
+      );
+    default:
+      throw new Error(`getSimulatorUUIDFromEnv unknown index: ${index}`);
+  }
+}
+
+const emulator1Udid = getIOSSimulatorUUIDFromEnv(0);
+const emulator2Udid = getIOSSimulatorUUIDFromEnv(1);
+const emulator3Udid = getIOSSimulatorUUIDFromEnv(2);
 
 const capabilities1: DesiredCapabilities = {
   ...sharediOSCapabilities,
@@ -46,7 +75,6 @@ export const iosCapabilities = {
 };
 
 const countOfIosCapabilities = capabilitiesList.length;
-export type CapabilitiesIndexType = 0 | 1 | 2;
 
 export function getIosCapabilities(capabilitiesIndex: CapabilitiesIndexType) {
   if (capabilitiesIndex >= countOfIosCapabilities) {
