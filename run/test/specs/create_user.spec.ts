@@ -14,6 +14,6 @@ async function runOnPlatform(platform: SupportedPlatformsType) {
 }
 
 describe("User", () => {
-  iosIt("Create user", runOnPlatform);
-  androidIt("Create user", runOnPlatform);
+  iosIt("Create-user", runOnPlatform);
+  androidIt("Create-user", runOnPlatform);
 });

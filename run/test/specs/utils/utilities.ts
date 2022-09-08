@@ -224,13 +224,13 @@ async function runScriptAndLog(toRun: string) {
         "All files should be loaded. Notifying the device"
       )
     ) {
-      console.log(`cmd which failed: "${toRun}"`);
-      console.log(`result: "${result.stderr}"`);
+      // console.log(`cmd which failed: "${toRun}"`);
+      // console.log(`result: "${result.stderr}"`);
     }
   } catch (e) {
     const cmd = (e as any).cmd;
-    console.warn(`cmd which failed: "${cmd}"`);
-    console.warn(pick(e, ["stdout", "stderr"]));
+    // console.warn(`cmd which failed: "${cmd}"`);
+    // console.warn(pick(e, ["stdout", "stderr"]));
   }
 }
 
