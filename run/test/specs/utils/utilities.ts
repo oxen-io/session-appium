@@ -34,13 +34,15 @@ export const hasElementBeenDeleted = async (
   device: wd.PromiseWebdriver,
   accessibilityId: string
 ) => {
-  const selector = await device.elementByAccessibilityId(accessibilityId);
+  const fakeError = `${accessibilityId}: has been found, but shouldn't have been. OOPS`;
+  try {
+    await device.elementByAccessibilityId(accessibilityId);
 
-  if (!selector) {
-    console.warn(selector + "has been deleted");
-    return;
-  } else {
-    throw new Error(selector + "has been found, oops");
+    throw new Error(fakeError);
+  } catch (e: any) {
+    if (e.message === fakeError) {
+      throw e;
+    }
   }
 };
 
