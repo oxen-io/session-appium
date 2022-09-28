@@ -141,15 +141,44 @@ export const openAppThreeDevices = async (
   };
 };
 
+export const openAppFourDevices = async (
+  platform: SupportedPlatformsType
+): Promise<{
+  server: AppiumServer;
+  device1: wd.PromiseWebdriver;
+  device2: wd.PromiseWebdriver;
+  device3: wd.PromiseWebdriver;
+  device4: wd.PromiseWebdriver;
+}> => {
+  const server = await openAppiumServerOnly(platform);
+
+  const [app1, app2, app3, app4] = await Promise.all([
+    openAppOnPlatform(platform, 0, server),
+    openAppOnPlatform(platform, 1, server),
+    openAppOnPlatform(platform, 2, server),
+    openAppOnPlatform(platform, 3, server),
+  ]);
+
+  return {
+    server,
+    device1: app1.device,
+    device2: app2.device,
+    device3: app3.device,
+    device4: app4.device,
+  };
+};
+
 export const closeApp = async (
   server: AppiumServer,
   device1?: wd.PromiseWebdriver,
   device2?: wd.PromiseWebdriver,
-  device3?: wd.PromiseWebdriver
+  device3?: wd.PromiseWebdriver,
+  device4?: wd.PromiseWebdriver
 ) => {
   await device1?.quit();
   await device2?.quit();
   await device3?.quit();
+  await device4?.quit();
 
   console.info("waiting server close");
 

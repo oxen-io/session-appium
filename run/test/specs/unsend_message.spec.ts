@@ -15,7 +15,7 @@ import {
 } from "./utils/utilities";
 import { iosIt, androidIt } from "../../types/sessionIt";
 
-async function runOnPlatform(platform: SupportedPlatformsType) {
+async function unsendMessage(platform: SupportedPlatformsType) {
   const { server, device1, device2 } = await openAppTwoDevices(platform);
 
   // Create two users
@@ -32,7 +32,7 @@ async function runOnPlatform(platform: SupportedPlatformsType) {
   await clickOnElement(device1, "Send message button");
   // Long press last sent message
   const foundMessage = await findMessageWithBody(device1, unsendMessage);
-  console.info("doing long click on message");
+  console.info("doing long click on" + `${unsendMessage}`);
 
   const action = new wd.TouchAction(device1);
   action.longPress({ el: foundMessage });
@@ -48,6 +48,6 @@ async function runOnPlatform(platform: SupportedPlatformsType) {
 }
 
 describe("Message checks", () => {
-  iosIt("Create user", runOnPlatform);
-  androidIt("Create user", runOnPlatform);
+  iosIt("Unsend message", unsendMessage);
+  androidIt("Unsend message", unsendMessage);
 });

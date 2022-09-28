@@ -15,7 +15,7 @@ let sharediOSCapabilities: DesiredCapabilities = {
   // showXcodeLog: true,
   // showIOSLog: true,
 } as DesiredCapabilities;
-export type CapabilitiesIndexType = 0 | 1 | 2;
+export type CapabilitiesIndexType = 0 | 1 | 2 | 3;
 
 function getIOSSimulatorUUIDFromEnv(index: CapabilitiesIndexType): string {
   switch (index) {
@@ -40,6 +40,13 @@ function getIOSSimulatorUUIDFromEnv(index: CapabilitiesIndexType): string {
       throw new Error(
         `getSimulatorUUIDFromEnv process.env.IOS_THIRD_SIMULATOR is not set`
       );
+    case 3:
+      if (process.env.IOS_FOURTH_SIMULATOR) {
+        return process.env.IOS_FOURTH_SIMULATOR;
+      }
+      throw new Error(
+        `getSimulatorUUIDFromEnv process.env.IOS_THIRD_SIMULATOR is not set`
+      );
     default:
       throw new Error(`getSimulatorUUIDFromEnv unknown index: ${index}`);
   }
@@ -48,6 +55,7 @@ function getIOSSimulatorUUIDFromEnv(index: CapabilitiesIndexType): string {
 const emulator1Udid = getIOSSimulatorUUIDFromEnv(0);
 const emulator2Udid = getIOSSimulatorUUIDFromEnv(1);
 const emulator3Udid = getIOSSimulatorUUIDFromEnv(2);
+const emulator4Udid = getIOSSimulatorUUIDFromEnv(3);
 
 const capabilities1: DesiredCapabilities = {
   ...sharediOSCapabilities,
@@ -66,8 +74,19 @@ const capabilities3: DesiredCapabilities = {
   wdaLocalPort: 8106,
 } as DesiredCapabilities;
 
-const capabilitiesList = [capabilities1, capabilities2, capabilities3];
-const uuidsList = [emulator1Udid, emulator2Udid, emulator3Udid];
+const capabilities4: DesiredCapabilities = {
+  ...sharediOSCapabilities,
+  udid: emulator4Udid,
+  wdaLocalPort: 8108,
+} as DesiredCapabilities;
+
+const capabilitiesList = [
+  capabilities1,
+  capabilities2,
+  capabilities3,
+  capabilities4,
+];
+const uuidsList = [emulator1Udid, emulator2Udid, emulator3Udid, emulator4Udid];
 
 export const iosCapabilities = {
   sharediOSCapabilities,

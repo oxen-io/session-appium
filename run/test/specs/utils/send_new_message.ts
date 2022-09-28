@@ -15,10 +15,13 @@ export const sendNewMessage = async (
   // Click next
   await clickOnElement(device, "Next");
   // Type message into message input box
-  await inputText(device, "Message input box", "howdy");
+
+  const sentMessage = await inputText(device, "Message input box", "howdy");
   // Click send
   await clickOnElement(device, "Send message button");
   // Wait for tick
   await device.setImplicitWaitTimeout(20000);
   await device.elementByAccessibilityId("Message sent status tick");
+
+  return sentMessage;
 };

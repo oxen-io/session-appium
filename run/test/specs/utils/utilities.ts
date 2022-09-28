@@ -4,10 +4,29 @@ import * as wd from "wd";
 
 const exec = util.promisify(require("child_process").exec);
 import { getAdbFullPath } from "./binaries";
+import { SupportedPlatformsType } from "./open_app";
 
 export function sleepFor(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+export const runOnlyOnIOS = async (
+  platform: SupportedPlatformsType,
+  toRun: () => Promise<any>
+) => {
+  if (platform === "ios") {
+    await toRun();
+  }
+};
+
+export const runOnlyOnAndroid = async (
+  platform: SupportedPlatformsType,
+  toRun: () => Promise<any>
+) => {
+  if (platform === "android") {
+    await toRun();
+  }
+};
 
 export const clickOnElement = async (device: any, accessibilityId: string) => {
   const selector = await device.elementByAccessibilityId(accessibilityId);
@@ -51,17 +70,14 @@ export const hasTextElementBeenDeleted = async (
   accessibilityId: string,
   text: string
 ) => {
-  const selector = await findMatchingTextAndAccessibilityId(
-    device,
-    accessibilityId,
-    text
-  );
-
-  if (!selector) {
-    console.warn(selector + "has been deleted");
-    return;
-  } else {
-    throw new Error(`'Found element that shouldnt exist'+ ${selector} `);
+  const fakeError = `${accessibilityId}: has been found, but shouldn't have been. OOPS`;
+  try {
+    await findMatchingTextAndAccessibilityId(device, accessibilityId, text);
+    throw new Error(fakeError);
+  } catch (e: any) {
+    if (e.message === fakeError) {
+      throw e;
+    }
   }
 };
 
@@ -82,6 +98,12 @@ export const selectByText = async (
 export const saveText = async (device: any, accessibilityId: string) => {
   const selector = await device.elementByAccessibilityId(accessibilityId);
   return await selector.text();
+};
+
+export const deleteText = async (device: any, accessibilityId: string) => {
+  const selector = await device.elementByAccessibilityId(accessibilityId);
+  await selector.clear();
+  return;
 };
 
 export const getTextElement = async (
@@ -140,8 +162,23 @@ export const longPress = async (
 
 export const longPressMessage = async (
   device: wd.PromiseWebdriver,
-  selector: AppiumElement
+  textToLookFor: string
 ) => {
+  const selector = await findMessageWithBody(device, textToLookFor);
+  const action = new wd.TouchAction(device);
+  action.longPress({ el: selector });
+  await action.perform();
+};
+
+export const longPressConversation = async (
+  device: wd.PromiseWebdriver,
+  userName: string
+) => {
+  const selector = await findMatchingTextAndAccessibilityId(
+    device,
+    "Conversation list item",
+    userName
+  );
   const action = new wd.TouchAction(device);
   action.longPress({ el: selector });
   await action.perform();
