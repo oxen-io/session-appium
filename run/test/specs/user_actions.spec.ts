@@ -2,9 +2,12 @@ import {
   clickOnElement,
   findElement,
   findMatchingTextAndAccessibilityId,
+  findMessageWithBody,
   hasElementBeenDeleted,
+  hasTextElementBeenDeleted,
   inputText,
   longPressConversation,
+  runOnlyOnIOS,
   saveText,
   selectByText,
 } from "./utils/utilities";
@@ -61,13 +64,31 @@ async function blockUser(platform: SupportedPlatformsType) {
   await clickOnElement(device1, "Block");
   // Confirm block option
   await clickOnElement(device1, "Confirm block");
+  // On ios there is an alert that confirms that the user has been blocked
+  await runOnlyOnIOS(platform, () =>
+    clickOnElement(device1, "Confirm blocked user")
+  );
+  // On ios, you need to navigate back to conversation screen to confirm block
+  await runOnlyOnIOS(platform, () => clickOnElement(device1, "Navigate up"));
   // Look for alert at top of screen (User B is blocked. Unblock them?)
   await findElement(device1, "Blocked banner");
   console.warn("User has been blocked");
+  // Check if blocked user can send message (User B to User A)
+  const sentMessage = await sendMessage(device2);
+  // Check device 1 if message has come through (shouldn't exist)
+  await hasTextElementBeenDeleted(device1, "Message body", sentMessage);
   // Click on alert to unblock
   await clickOnElement(device1, "Blocked banner");
+  // on ios there is a confirm unblock alert, need to click 'unblock'
+  await runOnlyOnIOS(platform, () =>
+    clickOnElement(device1, "Confirm unblock")
+  );
   // Look for alert (shouldn't be there)
   await hasElementBeenDeleted(device1, "Blocked banner");
+  // Has capabilities returned to blocked user (can they send message)
+  const hasUserBeenUnblockedMessage = await sendMessage(device2);
+  // Check in device 1 for message
+  await findMessageWithBody(device1, hasUserBeenUnblockedMessage);
   // Close app
   await closeApp(server, device1, device2);
 }

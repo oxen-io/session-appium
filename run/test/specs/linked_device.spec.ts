@@ -194,6 +194,24 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
   await closeApp(server, device1, device2, device3);
 }
 
+async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
+  const { server, device1, device2, device3 } = await openAppThreeDevices(
+    platform
+  );
+  // link device
+  const userA = await linkedDevice(device1, device3, "User A");
+  // Create contact to block
+  const userB = await newUser(device2, "User B");
+  await newContact(device1, userA, device2, userB);
+  // Check that user synced on linked device
+  await findMatchingTextAndAccessibilityId(
+    device3,
+    "Conversation list item",
+    userB.userName
+  );
+  // Block user on device 1
+}
+
 // async function avatarRestored(platform: SupportedPlatformsType) {
 //   // open server and two devices
 //   const { server, device1, device2 } = await openAppTwoDevices(platform);
