@@ -46,7 +46,9 @@ async function createContact(platform: SupportedPlatformsType) {
   // Wait for tick
   await closeApp(server, device1, device2);
 }
-async function blockUser(platform: SupportedPlatformsType) {
+async function blockUserInConversationOptions(
+  platform: SupportedPlatformsType
+) {
   // Open App
   const { server, device1, device2 } = await openAppTwoDevices(platform);
   // Create user A
@@ -92,6 +94,25 @@ async function blockUser(platform: SupportedPlatformsType) {
   // Close app
   await closeApp(server, device1, device2);
 }
+
+// async function blockUserInConversationList(platform: SupportedPlatformsType) {
+//   // Open App
+//   const { server, device1, device2 } = await openAppTwoDevices(platform);
+//   // Create user A
+//   // Create user B
+//   const [userA, userB] = await Promise.all([
+//     newUser(device1, "User A"),
+//     newUser(device2, "User B"),
+//   ]);
+//   // Create contact
+//   await newContact(device1, userA, device2, userB);
+//   // Navigate back to conversation list
+//   await clickOnElement(device1, "Navigate up");
+//   // on ios swipe left on conversation
+//   await runOnlyOnIOS(platform, () =>
+//     swipeLeft(device1, "Conversation list item", userB.userName)
+//   );
+// }
 async function changeUsername(platform: SupportedPlatformsType) {
   const { server, device: device1 } = await openAppOnPlatformSingleDevice(
     platform
@@ -266,8 +287,11 @@ describe("User actions", () => {
   iosIt("Create contact", createContact);
   androidIt("Create contact", createContact);
 
-  iosIt("Block user", blockUser);
-  androidIt("Block user", blockUser);
+  iosIt("Block user in conversation options", blockUserInConversationOptions);
+  androidIt(
+    "Block user in conversation options",
+    blockUserInConversationOptions
+  );
 
   androidIt("Change username", changeUsername);
   iosIt("Change username", changeUsername);

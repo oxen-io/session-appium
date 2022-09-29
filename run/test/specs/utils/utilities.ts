@@ -106,25 +106,6 @@ export const deleteText = async (device: any, accessibilityId: string) => {
   return;
 };
 
-export const getTextElement = async (
-  device: wd.PromiseWebdriver,
-  text: string
-) => {
-  const android = await isAndroid(device);
-  if (!android) {
-    // iOS
-    console.warn("not implemented yet");
-    const selector = await device.elementByIosPredicateString("something");
-    return selector;
-  } else {
-    // Android
-    const selector = await device.elementByAndroidUIAutomatorOrNull(
-      `new UiSelector().text("${text}")`
-    );
-    return selector;
-  }
-};
-
 export const isAndroid = async (device: wd.PromiseWebdriver) => {
   const capabilities: any = await device.sessionCapabilities();
   return capabilities.platformName === "Android";
@@ -183,6 +164,27 @@ export const longPressConversation = async (
   action.longPress({ el: selector });
   await action.perform();
 };
+
+// export const swipeLeft = async (
+//   device: wd.PromiseWebdriver,
+//   accessibilityId: string,
+//   text: string
+// ) => {
+//   const selector = await findMatchingTextAndAccessibilityId(
+//     device,
+//     accessibilityId,
+//     text
+//   );
+
+//   let startingPoint = selector.getLocation();
+//   let newLocation = selector(startingPoint - 10);
+//   // const action0 = new wd.TouchAction(device).press(selector);
+//   // const action1 = new wd.TouchAction(device).moveTo(selector);
+
+//   const action = new wd.TouchAction(device);
+//   action.press({ el: selector });
+//   action.moveTo({});
+// };
 
 async function findAsync(
   arr: Array<any>,

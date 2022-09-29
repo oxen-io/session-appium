@@ -210,6 +210,36 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
     userB.userName
   );
   // Block user on device 1
+  await clickOnElement(device1, "More options");
+  // Select block (menu option for android and toggle for ios)
+  await clickOnElement(device1, "Block");
+  // Confirm block
+  await clickOnElement(device1, "Confirm block");
+  await runOnlyOnIOS(platform, () =>
+    clickOnElement(device1, "Confirm blocked user")
+  );
+  // On ios, you need to navigate back to conversation screen to confirm block
+  await runOnlyOnIOS(platform, () => clickOnElement(device1, "Navigate up"));
+  // Check on device 3 if user B is blocked
+  // Click on conversation with User B
+  await selectByText(device3, "Conversation list item", userB.userName);
+  // Look for blocked banner
+  await findElement(device3, "Blocked banner");
+  // Unblock on device 3 and check if unblocked on device 1
+  await clickOnElement(device3, "Blocked banner");
+  // On ios you need to click ok to confirm unblock
+  await runOnlyOnIOS(platform, () =>
+    clickOnElement(device3, "Confirm unblock")
+  );
+  // check on device 1 if user B is unblocked
+  await hasElementBeenDeleted(device1, "Blocked banner");
+  // Send message from user B to user A to see if unblock worked
+  const sentMessage = await sendMessage(device2);
+  // Check on device 1 if user A receives message
+  await findMessageWithBody(device1, sentMessage);
+
+  // Everything works then close app
+  await closeApp(server, device1, device2, device3);
 }
 
 // async function avatarRestored(platform: SupportedPlatformsType) {
@@ -243,6 +273,9 @@ describe("Linked device tests", () => {
 
   androidIt("Check deleted message syncs", deletedMessageLinkedDevice);
   iosIt("Check deleted message syncs", deletedMessageLinkedDevice);
+
+  iosIt("Check blocked user syncs", blockedUserLinkedDevice);
+  androidIt("Check blocked user syncs", blockedUserLinkedDevice);
 
   // iosIt("Check avatar is restored", avatarRestored);
   // androidIt("Check avatar is restored", avatarRestored);
