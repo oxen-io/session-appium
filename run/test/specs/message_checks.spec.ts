@@ -9,8 +9,11 @@ import {
 } from "./utils/open_app";
 import {
   clickOnElement,
+  findElement,
   findMatchingTextAndAccessibilityId,
   findMessageWithBody,
+  longPress,
+  pressAndHold,
   selectByText,
 } from "./utils/utilities";
 import { replyToMessage } from "./utils/reply_message";
@@ -87,7 +90,27 @@ async function sendVideo(platform: SupportedPlatformsType) {
   // Close app
   await closeApp(server, device1, device2);
 }
-
+async function sendVoiceMessage(platform: SupportedPlatformsType) {
+  // open devices and server
+  const { server, device1, device2 } = await openAppTwoDevices(platform);
+  // create user a and user b
+  const [userA, userB] = await Promise.all([
+    newUser(device1, "User A"),
+    newUser(device2, "User B"),
+  ]);
+  // create contact
+  await newContact(device1, userA, device2, userB);
+  // Long press microphone icon
+  await pressAndHold(device1, "New voice message");
+  // Click on 'untrusted attachments message'
+  await clickOnElement(device2, "Untrusted attachments message");
+  // Accept dialog 'Are you sure?'
+  await clickOnElement(device2, "Download media");
+  // Check for audio message
+  await findElement(device2, "Voice message");
+  // Close app
+  await closeApp(server, device1, device2);
+}
 async function sendDocument(platform: SupportedPlatformsType) {
   // Test sending a document
   // open devices and server
@@ -193,6 +216,9 @@ describe("Message checks", () => {
 
   iosIt("Send video and reply test", sendVideo);
   androidIt("Send video and reply test", sendVideo);
+
+  iosIt("Send voice message test", sendVoiceMessage);
+  androidIt("Send voice message test", sendVoiceMessage);
 
   iosIt("Send document and reply test", sendDocument);
   androidIt("Send document and reply test", sendDocument);

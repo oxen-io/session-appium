@@ -141,6 +141,25 @@ export const longPress = async (
   await action.perform();
 };
 
+export const pressAndHold = async (
+  device: wd.PromiseWebdriver,
+  accessibilityId: string
+) => {
+  const el = await device.elementByAccessibilityId(accessibilityId);
+  if (!el) {
+    throw new Error(
+      `pressAndHold: could not find this accessibilityID: ${accessibilityId}`
+    );
+  }
+  const actions = new wd.TouchAction(device);
+
+  actions.longPress({ el });
+  actions.wait(5000);
+  actions.release();
+
+  await actions.perform();
+};
+
 export const longPressMessage = async (
   device: wd.PromiseWebdriver,
   textToLookFor: string
