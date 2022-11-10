@@ -64,6 +64,6 @@ async function runOnPlatform(platform: SupportedPlatformsType) {
 }
 
 describe.skip("Disappearing messages", () => {
-  iosIt("Create user", runOnPlatform);
-  androidIt("Create user", runOnPlatform);
+  iosIt("Disappearing messages", runOnPlatform);
+  androidIt("Disappearing messages", runOnPlatform);
 });

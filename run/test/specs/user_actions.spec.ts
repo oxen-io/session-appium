@@ -10,6 +10,7 @@ import {
   runOnlyOnIOS,
   saveText,
   selectByText,
+  swipeLeft,
 } from "./utils/utilities";
 import { newUser } from "./utils/create_account";
 import {
@@ -95,24 +96,26 @@ async function blockUserInConversationOptions(
   await closeApp(server, device1, device2);
 }
 
-// async function blockUserInConversationList(platform: SupportedPlatformsType) {
-//   // Open App
-//   const { server, device1, device2 } = await openAppTwoDevices(platform);
-//   // Create user A
-//   // Create user B
-//   const [userA, userB] = await Promise.all([
-//     newUser(device1, "User A"),
-//     newUser(device2, "User B"),
-//   ]);
-//   // Create contact
-//   await newContact(device1, userA, device2, userB);
-//   // Navigate back to conversation list
-//   await clickOnElement(device1, "Navigate up");
-//   // on ios swipe left on conversation
-//   await runOnlyOnIOS(platform, () =>
-//     swipeLeft(device1, "Conversation list item", userB.userName)
-//   );
-// }
+async function blockUserInConversationList(platform: SupportedPlatformsType) {
+  // Open App
+  const { server, device1, device2 } = await openAppTwoDevices(platform);
+  // Create user A
+  // Create user B
+  const [userA, userB] = await Promise.all([
+    newUser(device1, "User A"),
+    newUser(device2, "User B"),
+  ]);
+  // Create contact
+  await newContact(device1, userA, device2, userB);
+  // Navigate back to conversation list
+  await clickOnElement(device1, "Navigate up");
+  // on ios swipe left on conversation
+  await runOnlyOnIOS(platform, () =>
+    swipeLeft(device1, "Conversation list item", userB.userName)
+  );
+  await clickOnElement(device1, "Block user");
+  await closeApp(server, device1, device2);
+}
 async function changeUsername(platform: SupportedPlatformsType) {
   const { server, device: device1 } = await openAppOnPlatformSingleDevice(
     platform
@@ -126,7 +129,7 @@ async function changeUsername(platform: SupportedPlatformsType) {
   console.warn("Element clicked?");
   // type in new username
 
-  const newUsername = await inputText(device1, "Username", "New username");
+  const newUsername = await inputText(device1, "Username text", "New username");
   console.warn(newUsername);
   // select tick
   await clickOnElement(device1, "Apply");
@@ -292,6 +295,9 @@ describe("User actions", () => {
     "Block user in conversation options",
     blockUserInConversationOptions
   );
+
+  iosIt("Block user in conversation list", blockUserInConversationList);
+  androidIt("Block user in conversation list", blockUserInConversationList);
 
   androidIt("Change username", changeUsername);
   iosIt("Change username", changeUsername);

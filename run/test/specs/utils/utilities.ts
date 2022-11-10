@@ -184,26 +184,39 @@ export const longPressConversation = async (
   await action.perform();
 };
 
-// export const swipeLeft = async (
-//   device: wd.PromiseWebdriver,
-//   accessibilityId: string,
-//   text: string
-// ) => {
-//   const selector = await findMatchingTextAndAccessibilityId(
-//     device,
-//     accessibilityId,
-//     text
-//   );
+export const scrollDown = async (device: wd.PromiseWebdriver) => {
+  const action = new wd.TouchAction(device);
+  action.press({ x: 760, y: 1500 });
+  action.moveTo({ x: 760, y: 710 });
+  action.release();
+  await action.perform();
+};
 
-//   let startingPoint = selector.getLocation();
-//   let newLocation = selector(startingPoint - 10);
-//   // const action0 = new wd.TouchAction(device).press(selector);
-//   // const action1 = new wd.TouchAction(device).moveTo(selector);
+export const swipeLeft = async (
+  device: wd.PromiseWebdriver,
+  accessibilityId: string,
+  text: string
+) => {
+  const selector = await findMatchingTextAndAccessibilityId(
+    device,
+    accessibilityId,
+    text
+  );
 
-//   const action = new wd.TouchAction(device);
-//   action.press({ el: selector });
-//   action.moveTo({});
-// };
+  try {
+    const action = new wd.TouchAction(device);
+    action
+      .press({ el: selector })
+      .wait(50)
+      .moveTo({ x: -100 })
+      .release()
+      .perform();
+    // let some time for swipe action to happen and UI to update
+    await sleepFor(300);
+  } catch (e: any) {
+    console.warn("error happened while trying to swipe: ", e.message);
+  }
+};
 
 async function findAsync(
   arr: Array<any>,

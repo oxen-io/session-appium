@@ -2,11 +2,11 @@ import { DesiredCapabilities } from "@wdio/types/build/Capabilities";
 import { getAndroidBinariesRoot } from "./binaries";
 import { CapabilitiesIndexType } from "./capabilities_ios";
 
-const androidAppFullPath = `${getAndroidBinariesRoot()}/session-1.15.2-x86.apk`;
+const androidAppFullPath = `${getAndroidBinariesRoot()}/session-1.15.3-x86.apk`;
 
 const sharedCapabilities: DesiredCapabilities = {
   platformName: "Android",
-  platformVersion: "11",
+  platformVersion: "12",
   app: androidAppFullPath,
   appPackage: "network.loki.messenger",
   appActivity: "network.loki.messenger.RoutingActivity",

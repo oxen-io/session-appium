@@ -10,7 +10,6 @@ import {
 import {
   clickOnElement,
   findElement,
-  findMatchingTextAndAccessibilityId,
   findMessageWithBody,
   longPress,
   pressAndHold,
@@ -90,6 +89,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
   // Close app
   await closeApp(server, device1, device2);
 }
+
 async function sendVoiceMessage(platform: SupportedPlatformsType) {
   // open devices and server
   const { server, device1, device2 } = await openAppTwoDevices(platform);
@@ -111,6 +111,7 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
   // Close app
   await closeApp(server, device1, device2);
 }
+
 async function sendDocument(platform: SupportedPlatformsType) {
   // Test sending a document
   // open devices and server

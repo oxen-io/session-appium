@@ -1,10 +1,10 @@
 import { DesiredCapabilities } from "@wdio/types/build/Capabilities";
 
-const iosAppFullPath = `/Users/emilyburton/Desktop/Session.app`;
+const iosAppFullPath = `/Users/emilyburton/Library/Developer/Xcode/DerivedData/Session-bkhewuibvlxdsxevpurvxorzvqpd/Build/Products/App Store Release-iphonesimulator/Session.app`;
 
 let sharediOSCapabilities: DesiredCapabilities = {
   platformName: "iOS",
-  platformVersion: "15.5",
+  platformVersion: "16.1",
   deviceName: "iPhone 13 Pro Max",
   automationName: "XCUITest",
   app: iosAppFullPath,

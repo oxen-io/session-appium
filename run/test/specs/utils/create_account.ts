@@ -7,7 +7,7 @@ export const newUser = async (
   userName: string
 ) => {
   // Click create session ID
-  await utils.clickOnElement(device, "Create Session ID");
+  await utils.clickOnElement(device, "Create session ID");
   // Wait for animation to generate session id
   await device.setImplicitWaitTimeout(5000);
   // save session id as variable
