@@ -20,8 +20,8 @@ async function unsendMessage(platform: SupportedPlatformsType) {
 
   // Create two users
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A"),
-    newUser(device2, "User B"),
+    newUser(device1, "User A", platform),
+    newUser(device2, "User B", platform),
   ]);
   // Create contact
   await newContact(device1, userA, device2, userB);

@@ -17,8 +17,8 @@ async function runOnPlatform(platform: SupportedPlatformsType) {
   const { server, device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and user B
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A"),
-    newUser(device2, "User B"),
+    newUser(device1, "User A", platform),
+    newUser(device2, "User B", platform),
   ]);
   // Create contact
   await newContact(device1, userA, device2, userB);

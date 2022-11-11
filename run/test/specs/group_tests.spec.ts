@@ -26,9 +26,9 @@ async function groupCreation(platform: SupportedPlatformsType) {
   );
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
-    newUser(device1, "User A"),
-    newUser(device2, "User B"),
-    newUser(device3, "User C"),
+    newUser(device1, "User A", platform),
+    newUser(device2, "User B", platform),
+    newUser(device3, "User C", platform),
   ]);
   const testGroupName = "The Manhattan Crew";
   // Create contact between User A and User B
@@ -70,9 +70,9 @@ async function changeGroupName(platform: SupportedPlatformsType) {
   );
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
-    newUser(device1, "User A"),
-    newUser(device2, "User B"),
-    newUser(device3, "User C"),
+    newUser(device1, "User A", platform),
+    newUser(device2, "User B", platform),
+    newUser(device3, "User C", platform),
   ]);
   // Create group
   const testGroupName = "Group to test changing group name";
@@ -129,9 +129,9 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     await openAppFourDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
-    newUser(device1, "User A"),
-    newUser(device2, "User B"),
-    newUser(device3, "User C"),
+    newUser(device1, "User A", platform),
+    newUser(device2, "User B", platform),
+    newUser(device3, "User C", platform),
   ]);
   const testGroupName = "Group to test adding contact";
   await createGroup(
@@ -143,7 +143,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
-  const userD = await newUser(device4, "User D");
+  const userD = await newUser(device4, "User D", platform);
   await newContact(device1, userA, device4, userD);
   // Exit to conversation list
   await clickOnElement(device1, "Navigate up");
@@ -197,9 +197,9 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
   );
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
-    newUser(device1, "User A"),
-    newUser(device2, "User B"),
-    newUser(device3, "User C"),
+    newUser(device1, "User A", platform),
+    newUser(device2, "User B", platform),
+    newUser(device3, "User C", platform),
   ]);
   const testGroupName = "Mentions test group";
   // Create contact between User A and User B

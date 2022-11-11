@@ -1,35 +1,53 @@
-// import { PromiseWebdriver } from "wd";
-import * as utils from "./utilities";
+import {
+  clickOnElement,
+  inputText,
+  saveText,
+  pressAndHold,
+  runOnlyOnIOS,
+  runOnlyOnAndroid,
+  saveTextFromClipboard,
+  getSessionID,
+} from "./utilities";
 import * as wd from "wd";
+import { SupportedPlatformsType } from "./open_app";
+import { iosIt } from "../../../types/sessionIt";
 
 export const newUser = async (
   device: wd.PromiseWebdriver,
-  userName: string
+  userName: string,
+  platform: SupportedPlatformsType
 ) => {
   // Click create session ID
-  await utils.clickOnElement(device, "Create session ID");
+  console.warn("232323");
+
+  await clickOnElement(device, "Create Session ID");
+
   // Wait for animation to generate session id
   await device.setImplicitWaitTimeout(5000);
+  console.warn("4444");
   // save session id as variable
-  const sessionID = await utils.saveText(device, "Session ID");
-  console.log(`sessionID found: "${sessionID}"`);
+
+  const sessionID = await getSessionID(platform, device);
+
+  console.log(`sessionID found: "${sessionID}" "${platform}"`);
+
   // Click continue on session Id creation
-  await utils.clickOnElement(device, "Continue");
+  await clickOnElement(device, "Continue");
   // Input username
-  await utils.inputText(device, "Enter display name", userName);
+  await inputText(device, "Enter display name", userName);
   // Click continue
-  await utils.clickOnElement(device, "Continue");
+  await clickOnElement(device, "Continue");
   // Choose message notification options
-  await utils.clickOnElement(device, "Continue with settings");
+  await clickOnElement(device, "Continue with settings");
   // Click on 'continue' button to open recovery phrase modal
-  await utils.clickOnElement(device, "Continue");
+  await clickOnElement(device, "Continue");
   // Long Press the recovery phrase to reveal recovery phrase
-  await utils.longPress(device, "Recovery Phrase");
+  await pressAndHold(device, "Recovery Phrase");
   // Save recovery phrase as variable
-  const recoveryPhrase = await utils.saveText(device, "Recovery Phrase");
+  const recoveryPhrase = await saveText(device, "Recovery Phrase");
   console.log(`Recovery Phrase is "${recoveryPhrase}"`);
   // Exit Modal
-  await utils.clickOnElement(device, "Navigate up");
+  await clickOnElement(device, "Navigate up");
 
   return { userName, sessionID, recoveryPhrase };
 };

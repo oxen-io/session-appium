@@ -15,7 +15,9 @@ export const runOnlyOnIOS = async (
   toRun: () => Promise<any>
 ) => {
   if (platform === "ios") {
-    await toRun();
+    const value = await toRun();
+
+    return value;
   }
 };
 
@@ -24,8 +26,39 @@ export const runOnlyOnAndroid = async (
   toRun: () => Promise<any>
 ) => {
   if (platform === "android") {
-    await toRun();
+    const value = await toRun();
+
+    return value;
   }
+};
+
+export const saveSessionIDIos = async (
+  platform: SupportedPlatformsType,
+  device: wd.PromiseWebdriver
+) => {
+  await clickOnElement(device, "Copy");
+  const selector = await saveTextFromClipboard(device);
+  console.warn("selector is " + selector);
+  return selector;
+};
+
+export const getSessionID = async (
+  platform: SupportedPlatformsType,
+  device: wd.PromiseWebdriver
+) => {
+  let sessionID;
+
+  if (platform === "android") {
+    sessionID = await Promise.all([
+      runOnlyOnAndroid(platform, () => saveText(device, "Session ID")),
+    ]);
+  } else if (platform === "ios") {
+    sessionID = await runOnlyOnIOS(platform, () =>
+      saveSessionIDIos(platform, device)
+    );
+  }
+
+  return sessionID;
 };
 
 export const clickOnElement = async (device: any, accessibilityId: string) => {
@@ -100,6 +133,10 @@ export const saveText = async (device: any, accessibilityId: string) => {
   return await selector.text();
 };
 
+export const saveTextFromClipboard = async (device: any) => {
+  return await device.getClipboard();
+};
+
 export const deleteText = async (device: any, accessibilityId: string) => {
   const selector = await device.elementByAccessibilityId(accessibilityId);
   await selector.clear();
@@ -167,6 +204,8 @@ export const longPressMessage = async (
   const selector = await findMessageWithBody(device, textToLookFor);
   const action = new wd.TouchAction(device);
   action.longPress({ el: selector });
+  action.wait(5000);
+  action.release();
   await action.perform();
 };
 
@@ -181,6 +220,8 @@ export const longPressConversation = async (
   );
   const action = new wd.TouchAction(device);
   action.longPress({ el: selector });
+  action.wait(5000);
+  action.release();
   await action.perform();
 };
 
@@ -365,11 +406,4 @@ export const installAppToDeviceName = async (
   );
 
   await sleepFor(500);
-};
-
-export const installiOSAppToDeviceName = (
-  iosAppFullPath: string,
-  emulatorName: string
-) => {
-  console.warn("should install app on ios");
 };

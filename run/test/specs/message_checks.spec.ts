@@ -23,8 +23,8 @@ async function sendImage(platform: SupportedPlatformsType) {
   const { server, device1, device2 } = await openAppTwoDevices(platform);
   // create user a and user b
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A"),
-    newUser(device2, "User B"),
+    newUser(device1, "User A", platform),
+    newUser(device2, "User B", platform),
   ]);
   // create contact
   await newContact(device1, userA, device2, userB);
@@ -60,8 +60,8 @@ async function sendVideo(platform: SupportedPlatformsType) {
   const { server, device1, device2 } = await openAppTwoDevices(platform);
   // create user a and user b
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A"),
-    newUser(device2, "User B"),
+    newUser(device1, "User A", platform),
+    newUser(device2, "User B", platform),
   ]);
   // create contact
   await newContact(device1, userA, device2, userB);
@@ -95,8 +95,8 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
   const { server, device1, device2 } = await openAppTwoDevices(platform);
   // create user a and user b
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A"),
-    newUser(device2, "User B"),
+    newUser(device1, "User A", platform),
+    newUser(device2, "User B", platform),
   ]);
   // create contact
   await newContact(device1, userA, device2, userB);
@@ -118,8 +118,8 @@ async function sendDocument(platform: SupportedPlatformsType) {
   const { server, device1, device2 } = await openAppTwoDevices(platform);
   // create user a and user b
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A"),
-    newUser(device2, "User B"),
+    newUser(device1, "User A", platform),
+    newUser(device2, "User B", platform),
   ]);
   // create contact
   await newContact(device1, userA, device2, userB);
@@ -157,8 +157,8 @@ async function sendGif(platform: SupportedPlatformsType) {
   const { server, device1, device2 } = await openAppTwoDevices(platform);
   // create user a and user b
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A"),
-    newUser(device2, "User B"),
+    newUser(device1, "User A", platform),
+    newUser(device2, "User B", platform),
   ]);
   // create contact
   await newContact(device1, userA, device2, userB);
@@ -196,8 +196,8 @@ async function sendLongMessage(platform: SupportedPlatformsType) {
   const { server, device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and User B
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A"),
-    newUser(device2, "User B"),
+    newUser(device1, "User A", platform),
+    newUser(device2, "User B", platform),
   ]);
   // Create contact
   await newContact(device1, userA, device2, userB);

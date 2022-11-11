@@ -4,7 +4,7 @@
     "clean-tsc": "find run/test/specs -type f -name '*.js' -delete",
     "tsc-watch": "tsc -w",
     "test": "_TESTING=1 mocha --timeout 300000 --retries 2 --jobs 1 ./run/test/specs/*.spec.js ",
-    "test-one": "_TESTING=1 mocha --timeout 300000 -retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep ",
+    "test-one": "_TESTING=1 mocha --timeout 300000 --retries 1 --jobs 1 ./run/test/specs/*.spec.js -- --grep ",
     "test-one-android": "node ./scripts/run_one.js android",
     "test-one-ios": "node ./scripts/run_one.js ios",
     "test-ios": "_TESTING=1 mocha --timeout 300000 -retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep ios",

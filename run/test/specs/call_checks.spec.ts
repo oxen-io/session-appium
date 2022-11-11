@@ -13,8 +13,8 @@ async function voiceCall(platform: SupportedPlatformsType) {
   const { server, device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and User B
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A"),
-    newUser(device2, "User B"),
+    newUser(device1, "User A", platform),
+    newUser(device2, "User B", platform),
   ]);
   // Try to make phone call with unapproved user
   // Look for phone icon (shouldnt be there)

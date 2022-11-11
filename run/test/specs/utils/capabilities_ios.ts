@@ -1,6 +1,6 @@
 import { DesiredCapabilities } from "@wdio/types/build/Capabilities";
 
-const iosAppFullPath = `/Users/emilyburton/Library/Developer/Xcode/DerivedData/Session-bkhewuibvlxdsxevpurvxorzvqpd/Build/Products/App Store Release-iphonesimulator/Session.app`;
+const iosAppFullPath = `/Users/emilyburton/Desktop/Session.app`;
 
 let sharediOSCapabilities: DesiredCapabilities = {
   platformName: "iOS",
@@ -10,6 +10,7 @@ let sharediOSCapabilities: DesiredCapabilities = {
   app: iosAppFullPath,
   bundleId: "com.loki-project.loki-messenger",
   autoAcceptAlerts: true,
+  newCommandTimeout: 30000,
   useNewWDA: true,
   // wdaLocalPort: 8102,
   // showXcodeLog: true,

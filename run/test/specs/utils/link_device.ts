@@ -1,12 +1,14 @@
 import { newUser } from "./create_account";
+import { SupportedPlatformsType } from "./open_app";
 import { clickOnElement, inputText } from "./utilities";
 
 export const linkedDevice = async (
   device1: wd.PromiseWebdriver,
   device2: wd.PromiseWebdriver,
-  userName: string
+  userName: string,
+  platform: SupportedPlatformsType
 ) => {
-  const user = await newUser(device1, userName);
+  const user = await newUser(device1, userName, platform);
   // Log in with recovery seed on device 2
   await clickOnElement(device2, "Link a device");
   // Enter recovery phrase into input box

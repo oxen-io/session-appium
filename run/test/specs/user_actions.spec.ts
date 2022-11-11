@@ -28,10 +28,17 @@ async function createContact(platform: SupportedPlatformsType) {
   // first we want to install the app on each device with our custom call to run it
   const { server, device1, device2 } = await openAppTwoDevices(platform);
 
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "User A"),
-    newUser(device2, "User B"),
-  ]);
+  console.warn("createContact done");
+
+  // const [userA, userB] = await Promise.all([
+  //   newUser(device1, "User A"),
+  //   newUser(device2, "User B"),
+  // ]);
+
+  const userA = await newUser(device1, "User A", platform);
+  const userB = await newUser(device2, "User B", platform);
+  console.warn("createContact newuser");
+
   await sendNewMessage(device1, userB);
   await clickOnElement(device2, "Message requests banner");
   // Select message from User A
@@ -55,8 +62,8 @@ async function blockUserInConversationOptions(
   // Create user A
   // Create user B
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A"),
-    newUser(device2, "User B"),
+    newUser(device1, "User A", platform),
+    newUser(device2, "User B", platform),
   ]);
   // Create contact
   await newContact(device1, userA, device2, userB);
@@ -102,8 +109,8 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   // Create user A
   // Create user B
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A"),
-    newUser(device2, "User B"),
+    newUser(device1, "User A", platform),
+    newUser(device2, "User B", platform),
   ]);
   // Create contact
   await newContact(device1, userA, device2, userB);
@@ -121,7 +128,7 @@ async function changeUsername(platform: SupportedPlatformsType) {
     platform
   );
 
-  await newUser(device1, "User A");
+  await newUser(device1, "User A", platform);
   // click on settings/profile avatar
   await clickOnElement(device1, "User settings");
   // select username
@@ -141,7 +148,7 @@ async function changeAvatar(platform: SupportedPlatformsType) {
   const { server, device } = await openAppOnPlatformSingleDevice(platform);
 
   // Create new user
-  const userA = newUser(device, "User A");
+  const userA = newUser(device, "User A", platform);
   // Click on settings/avatar
   await clickOnElement(device, "User settings");
   // Dismiss alert 'Allow Session to take pictures and record video?'
@@ -163,8 +170,8 @@ async function changeAvatar(platform: SupportedPlatformsType) {
 async function setNicknameAndroid(platform: SupportedPlatformsType) {
   const { server, device1, device2 } = await openAppTwoDevices(platform);
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A"),
-    newUser(device2, "User B"),
+    newUser(device1, "User A", platform),
+    newUser(device2, "User B", platform),
   ]);
   await newContact(device1, userA, device2, userB);
   // Go back to conversation list
@@ -227,8 +234,8 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
 async function setNicknameIos(platform: SupportedPlatformsType) {
   const { server, device1, device2 } = await openAppTwoDevices(platform);
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A"),
-    newUser(device2, "User B"),
+    newUser(device1, "User A", platform),
+    newUser(device2, "User B", platform),
   ]);
   await newContact(device1, userA, device2, userB);
   // Click on settings/more info

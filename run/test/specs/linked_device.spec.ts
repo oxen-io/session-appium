@@ -30,7 +30,7 @@ async function linkDevice(platform: SupportedPlatformsType) {
   // Open server and two devices
   const { server, device1, device2 } = await openAppTwoDevices(platform);
   // link device
-  const user = await linkedDevice(device1, device2, "User A");
+  const user = await linkedDevice(device1, device2, "User A", platform);
   // Check that 'Youre almost finished' reminder doesn't pop up on device2
   await hasElementBeenDeleted(device2, "Recovery phrase reminder");
   // Verify username and session ID match
@@ -49,9 +49,9 @@ async function contactsSyncLinkedDevice(platform: SupportedPlatformsType) {
     platform
   );
   // link device
-  const userA = await linkedDevice(device1, device3, "User A");
+  const userA = await linkedDevice(device1, device3, "User A", platform);
 
-  const userB = await newUser(device2, "User B");
+  const userB = await newUser(device2, "User B", platform);
 
   await newContact(device1, userA, device2, userB);
   // Check that user synced on linked device
@@ -67,11 +67,11 @@ async function groupCreationLinkedDevice(platform: SupportedPlatformsType) {
   const { server, device1, device2, device3, device4 } =
     await openAppFourDevices(platform);
 
-  const userA = await linkedDevice(device1, device4, "User A");
+  const userA = await linkedDevice(device1, device4, "User A", platform);
 
   const [userB, userC] = await Promise.all([
-    newUser(device2, "User B"),
-    newUser(device3, "User C"),
+    newUser(device2, "User B", platform),
+    newUser(device3, "User C", platform),
   ]);
   const testGroupName = "Linked device group";
   await createGroup(
@@ -146,7 +146,7 @@ async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
   // Open server and two devices
   const { server, device1, device2 } = await openAppTwoDevices(platform);
   // link device
-  const userA = await linkedDevice(device1, device2, "User A");
+  const userA = await linkedDevice(device1, device2, "User A", platform);
   // Change username on device 1
   await clickOnElement(device1, "User settings");
   // Select username
@@ -168,9 +168,9 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
     platform
   );
 
-  const userA = await linkedDevice(device1, device3, "User A");
+  const userA = await linkedDevice(device1, device3, "User A", platform);
 
-  const userB = await newUser(device2, "User B");
+  const userB = await newUser(device2, "User B", platform);
 
   await newContact(device1, userA, device2, userB);
   // Send message from user a to user b
@@ -199,9 +199,9 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
     platform
   );
   // link device
-  const userA = await linkedDevice(device1, device3, "User A");
+  const userA = await linkedDevice(device1, device3, "User A", platform);
   // Create contact to block
-  const userB = await newUser(device2, "User B");
+  const userB = await newUser(device2, "User B", platform);
   await newContact(device1, userA, device2, userB);
   // Check that user synced on linked device
   await findMatchingTextAndAccessibilityId(

@@ -11,7 +11,7 @@ import { clickOnElement, longPress } from "./utils/utilities";
 async function tinyTest(platform: SupportedPlatformsType) {
   const { server, device } = await openAppOnPlatformSingleDevice(platform);
 
-  const user = await newUser(device, "Bob");
+  const user = await newUser(device, "Bob", platform);
 
   await clickOnElement(device, "User settings");
 
