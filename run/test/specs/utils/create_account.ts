@@ -19,7 +19,7 @@ export const newUser = async (
 ) => {
   // Click create session ID
   console.warn("232323");
-
+  await device.setImplicitWaitTimeout(5000);
   await clickOnElement(device, "Create Session ID");
 
   // Wait for animation to generate session id

@@ -36,8 +36,8 @@ export const saveSessionIDIos = async (
   platform: SupportedPlatformsType,
   device: wd.PromiseWebdriver
 ) => {
-  await clickOnElement(device, "Copy");
-  const selector = await saveTextFromClipboard(device);
+  const selector = await saveText(device, "Session ID generated");
+
   console.warn("selector is " + selector);
   return selector;
 };
@@ -59,6 +59,21 @@ export const getSessionID = async (
   }
 
   return sessionID;
+};
+
+export const getRecoveryPhrase = async (
+  platform: SupportedPlatformsType,
+  device: wd.PromiseWebdriver
+) => {
+  let recoveryPhrase;
+
+  if (platform === "android") {
+    recoveryPhrase = await Promise.all([
+      runOnlyOnAndroid(platform, () => saveText(device, "Recovery Phrase")),
+    ]);
+    // } else if (platform === "ios") {
+    //   recoveryPhrase = await runOnlyOnIOS(platform, () => )
+  }
 };
 
 export const clickOnElement = async (device: any, accessibilityId: string) => {
@@ -134,7 +149,8 @@ export const saveText = async (device: any, accessibilityId: string) => {
 };
 
 export const saveTextFromClipboard = async (device: any) => {
-  return await device.getClipboard();
+  const selector = await device.getClipboardText();
+  return selector;
 };
 
 export const deleteText = async (device: any, accessibilityId: string) => {

@@ -28,13 +28,6 @@ async function createContact(platform: SupportedPlatformsType) {
   // first we want to install the app on each device with our custom call to run it
   const { server, device1, device2 } = await openAppTwoDevices(platform);
 
-  console.warn("createContact done");
-
-  // const [userA, userB] = await Promise.all([
-  //   newUser(device1, "User A"),
-  //   newUser(device2, "User B"),
-  // ]);
-
   const userA = await newUser(device1, "User A", platform);
   const userB = await newUser(device2, "User B", platform);
   console.warn("createContact newuser");

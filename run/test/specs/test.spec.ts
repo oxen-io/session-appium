@@ -13,8 +13,6 @@ async function tinyTest(platform: SupportedPlatformsType) {
 
   const user = await newUser(device, "Bob", platform);
 
-  await clickOnElement(device, "User settings");
-
   await closeApp(server, device);
 }
 
