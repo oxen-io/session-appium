@@ -61,21 +61,6 @@ export const getSessionID = async (
   return sessionID;
 };
 
-export const getRecoveryPhrase = async (
-  platform: SupportedPlatformsType,
-  device: wd.PromiseWebdriver
-) => {
-  let recoveryPhrase;
-
-  if (platform === "android") {
-    recoveryPhrase = await Promise.all([
-      runOnlyOnAndroid(platform, () => saveText(device, "Recovery Phrase")),
-    ]);
-    // } else if (platform === "ios") {
-    //   recoveryPhrase = await runOnlyOnIOS(platform, () => )
-  }
-};
-
 export const clickOnElement = async (device: any, accessibilityId: string) => {
   const selector = await device.elementByAccessibilityId(accessibilityId);
   await selector.click();

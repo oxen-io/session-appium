@@ -33,8 +33,10 @@ async function createContact(platform: SupportedPlatformsType) {
   console.warn("createContact newuser");
 
   await sendNewMessage(device1, userB);
+  await device2.setImplicitWaitTimeout(10000);
   await clickOnElement(device2, "Message requests banner");
   // Select message from User A
+  await device2.setImplicitWaitTimeout(10000);
   await clickOnElement(device2, "Message request");
   // Type into message input box
   await inputText(
