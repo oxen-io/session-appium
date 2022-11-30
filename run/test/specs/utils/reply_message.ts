@@ -16,7 +16,7 @@ export const replyToMessage = async (
   // Select 'Reply' option
   await clickOnElement(device, "Reply to message");
   // Send message
-  const sentMessage = await sendNewMessage(device, user);
+  const sentMessage = await sendNewMessage(device, user, "howdy");
 
   return sentMessage;
 };

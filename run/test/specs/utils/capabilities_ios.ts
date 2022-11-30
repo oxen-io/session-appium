@@ -12,9 +12,6 @@ let sharediOSCapabilities: DesiredCapabilities = {
   autoAcceptAlerts: true,
   newCommandTimeout: 30000,
   useNewWDA: true,
-  // wdaLocalPort: 8102,
-  // showXcodeLog: true,
-  // showIOSLog: true,
 } as DesiredCapabilities;
 export type CapabilitiesIndexType = 0 | 1 | 2 | 3;
 

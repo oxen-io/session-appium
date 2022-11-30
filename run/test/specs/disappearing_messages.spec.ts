@@ -13,7 +13,7 @@ import {
 } from "./utils/utilities";
 import { iosIt, androidIt } from "../../types/sessionIt";
 
-async function runOnPlatform(platform: SupportedPlatformsType) {
+async function disappearingMessages(platform: SupportedPlatformsType) {
   const { server, device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and user B
   const [userA, userB] = await Promise.all([
@@ -33,13 +33,13 @@ async function runOnPlatform(platform: SupportedPlatformsType) {
   // Check config message for User A
   await selectByText(
     device1,
-    "Control message",
+    "Configuration message",
     "You set the disappearing message timer to 5 seconds"
   );
   // Check config message for User B
   await selectByText(
     device1,
-    "Control message",
+    "Configuration message",
     `${userA.userName} set the disappearing message timer to 5 seconds`
   );
   // Send message
@@ -64,6 +64,6 @@ async function runOnPlatform(platform: SupportedPlatformsType) {
 }
 
 describe.skip("Disappearing messages", () => {
-  iosIt("Disappearing messages", runOnPlatform);
-  androidIt("Disappearing messages", runOnPlatform);
+  iosIt("Disappearing messages", disappearingMessages);
+  androidIt("Disappearing messages", disappearingMessages);
 });

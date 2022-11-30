@@ -202,7 +202,7 @@ async function sendLongMessage(platform: SupportedPlatformsType) {
   // Create contact
   await newContact(device1, userA, device2, userB);
   // Send a long message from User A to User B
-  await sendNewMessage(device1, longText);
+  await sendNewMessage(device1, userB, longText);
   // Reply to message
   const sentMessage = await replyToMessage(device2, userA, longText);
   // Check reply came through on device1

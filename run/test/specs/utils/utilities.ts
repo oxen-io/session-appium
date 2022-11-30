@@ -61,10 +61,37 @@ export const getSessionID = async (
   return sessionID;
 };
 
-export const clickOnElement = async (device: any, accessibilityId: string) => {
-  const selector = await device.elementByAccessibilityId(accessibilityId);
-  await selector.click();
+export const clickOnElement = async (
+  device: wd.PromiseWebdriver,
+  accessibilityId: string
+) => {
+  const el = await device.elementByAccessibilityId(accessibilityId);
+  if (!el) {
+    throw new Error(
+      `tap: could not find this accessibilityId: ${accessibilityId}`
+    );
+  }
+
+  const action = new wd.TouchAction(device);
+  action.tap({ el });
+  await action.perform();
   return;
+};
+
+export const tapOnElement = async (
+  device: wd.PromiseWebdriver,
+  accessibilityId: string
+) => {
+  const el = await device.elementByAccessibilityId(accessibilityId);
+  if (!el) {
+    throw new Error(
+      `tap: could not find this accessibilityId: ${accessibilityId}`
+    );
+  }
+  device.waitForElementByAccessibilityId(accessibilityId);
+  const action = new wd.TouchAction(device);
+  action.tap({ el });
+  await action.perform();
 };
 
 export const findElement = async (
@@ -144,11 +171,6 @@ export const deleteText = async (device: any, accessibilityId: string) => {
   return;
 };
 
-export const isAndroid = async (device: wd.PromiseWebdriver) => {
-  const capabilities: any = await device.sessionCapabilities();
-  return capabilities.platformName === "Android";
-};
-
 export const inputText = async (
   device: wd.PromiseWebdriver,
   accessibilityId: string,
@@ -177,6 +199,8 @@ export const longPress = async (
   const action = new wd.TouchAction(device);
   action.longPress({ el });
   await action.perform();
+
+  return;
 };
 
 export const pressAndHold = async (
@@ -214,13 +238,13 @@ export const longPressConversation = async (
   device: wd.PromiseWebdriver,
   userName: string
 ) => {
-  const selector = await findMatchingTextAndAccessibilityId(
+  const el = await findMatchingTextAndAccessibilityId(
     device,
     "Conversation list item",
     userName
   );
   const action = new wd.TouchAction(device);
-  action.longPress({ el: selector });
+  action.longPress({ el });
   action.wait(5000);
   action.release();
   await action.perform();
@@ -239,20 +263,21 @@ export const swipeLeft = async (
   accessibilityId: string,
   text: string
 ) => {
-  const selector = await findMatchingTextAndAccessibilityId(
+  const el = await findMatchingTextAndAccessibilityId(
     device,
     accessibilityId,
     text
   );
 
   try {
-    const action = new wd.TouchAction(device);
-    action
-      .press({ el: selector })
-      .wait(50)
-      .moveTo({ x: -100 })
-      .release()
-      .perform();
+    const actions = new wd.TouchAction(device);
+
+    actions.longPress({ el });
+    actions.moveTo({ x: -100 });
+    actions.release();
+
+    await actions.perform();
+    console.warn("Swiped left on " + el);
     // let some time for swipe action to happen and UI to update
     await sleepFor(300);
   } catch (e: any) {
@@ -292,11 +317,12 @@ export const findMessageWithBody = async (
   device: wd.PromiseWebdriver,
   textToLookFor: string
 ): Promise<AppiumElement> => {
-  return findMatchingTextAndAccessibilityId(
+  const message = await findMatchingTextAndAccessibilityId(
     device,
     "Message Body",
     textToLookFor
   );
+  return message;
 };
 
 export const findMatchingTextAndAccessibilityId = async (
@@ -325,6 +351,18 @@ export const findMatchingTextAndAccessibilityId = async (
   }
 
   return foundElementMatchingText;
+};
+
+export const findConfigurationMessage = async (
+  device: wd.PromiseWebdriver,
+  messageText: string
+) => {
+  console.warn(`Looking for configuration message with` + messageText);
+  return findMatchingTextAndAccessibilityId(
+    device,
+    "Configuration message",
+    messageText
+  );
 };
 
 async function runScriptAndLog(toRun: string) {

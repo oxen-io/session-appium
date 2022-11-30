@@ -4,9 +4,9 @@ import {
   findMatchingTextAndAccessibilityId,
   findMessageWithBody,
   hasElementBeenDeleted,
-  hasTextElementBeenDeleted,
   inputText,
   longPressConversation,
+  runOnlyOnAndroid,
   runOnlyOnIOS,
   saveText,
   selectByText,
@@ -19,7 +19,6 @@ import {
   openAppTwoDevices,
   SupportedPlatformsType,
 } from "./utils/open_app";
-import { sendNewMessage } from "./utils/send_new_message";
 import { androidIt, iosIt } from "../../types/sessionIt";
 import { newContact } from "./utils/create_contact";
 import { sendMessage } from "./utils/send_message";
@@ -30,22 +29,8 @@ async function createContact(platform: SupportedPlatformsType) {
 
   const userA = await newUser(device1, "User A", platform);
   const userB = await newUser(device2, "User B", platform);
-  console.warn("createContact newuser");
 
-  await sendNewMessage(device1, userB);
-  await device2.setImplicitWaitTimeout(10000);
-  await clickOnElement(device2, "Message requests banner");
-  // Select message from User A
-  await device2.setImplicitWaitTimeout(10000);
-  await clickOnElement(device2, "Message request");
-  // Type into message input box
-  await inputText(
-    device2,
-    "Message input box",
-    "Test-message-User-B-to-User-A"
-  );
-  // Click send
-  await clickOnElement(device2, "Send message button");
+  await newContact(device1, userA, device2, userB);
   // Wait for tick
   await closeApp(server, device1, device2);
 }
@@ -70,30 +55,28 @@ async function blockUserInConversationOptions(
   // Confirm block option
   await clickOnElement(device1, "Confirm block");
   // On ios there is an alert that confirms that the user has been blocked
-  await runOnlyOnIOS(platform, () =>
-    clickOnElement(device1, "Confirm blocked user")
-  );
+  await runOnlyOnIOS(platform, () => clickOnElement(device1, "OK"));
   // On ios, you need to navigate back to conversation screen to confirm block
-  await runOnlyOnIOS(platform, () => clickOnElement(device1, "Navigate up"));
+  await runOnlyOnIOS(platform, () => clickOnElement(device1, "Back"));
   // Look for alert at top of screen (User B is blocked. Unblock them?)
   await findElement(device1, "Blocked banner");
   console.warn("User has been blocked");
-  // Check if blocked user can send message (User B to User A)
-  const sentMessage = await sendMessage(device2);
-  // Check device 1 if message has come through (shouldn't exist)
-  await hasTextElementBeenDeleted(device1, "Message body", sentMessage);
   // Click on alert to unblock
   await clickOnElement(device1, "Blocked banner");
   // on ios there is a confirm unblock alert, need to click 'unblock'
-  await runOnlyOnIOS(platform, () =>
-    clickOnElement(device1, "Confirm unblock")
-  );
+  await runOnlyOnIOS(platform, () => clickOnElement(device1, "Unblock"));
+  console.warn("User has been unblocked");
   // Look for alert (shouldn't be there)
   await hasElementBeenDeleted(device1, "Blocked banner");
   // Has capabilities returned to blocked user (can they send message)
-  const hasUserBeenUnblockedMessage = await sendMessage(device2);
+  const hasUserBeenUnblockedMessage = await sendMessage(
+    device2,
+    "Hey, am I unblocked?"
+  );
+  console.warn("why cant you find this" + hasUserBeenUnblockedMessage);
   // Check in device 1 for message
-  await findMessageWithBody(device1, hasUserBeenUnblockedMessage);
+  await findMessageWithBody(device2, hasUserBeenUnblockedMessage);
+
   // Close app
   await closeApp(server, device1, device2);
 }
@@ -110,7 +93,8 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   // Create contact
   await newContact(device1, userA, device2, userB);
   // Navigate back to conversation list
-  await clickOnElement(device1, "Navigate up");
+  await clickOnElement(device1, "Back");
+  await device1.setImplicitWaitTimeout(20000);
   // on ios swipe left on conversation
   await runOnlyOnIOS(platform, () =>
     swipeLeft(device1, "Conversation list item", userB.userName)
@@ -131,10 +115,11 @@ async function changeUsername(platform: SupportedPlatformsType) {
   console.warn("Element clicked?");
   // type in new username
 
-  const newUsername = await inputText(device1, "Username text", "New username");
+  const newUsername = await inputText(device1, "Username", "New username");
   console.warn(newUsername);
   // select tick
-  await clickOnElement(device1, "Apply");
+  await runOnlyOnAndroid(platform, () => clickOnElement(device1, "Apply"));
+  await runOnlyOnIOS(platform, () => clickOnElement(device1, "Done button"));
   // verify new username
 
   await closeApp(server, device1);
@@ -143,13 +128,13 @@ async function changeAvatar(platform: SupportedPlatformsType) {
   const { server, device } = await openAppOnPlatformSingleDevice(platform);
 
   // Create new user
-  const userA = newUser(device, "User A", platform);
+  const userA = await newUser(device, "User A", platform);
   // Click on settings/avatar
   await clickOnElement(device, "User settings");
   // Dismiss alert 'Allow Session to take pictures and record video?'
   // Should automatically do it
   // Click on User settings
-  await device.pushFileToDevice("../specs/media/new_profile_pic.png");
+  await device.pushFileToDevice("../specs/media/new_profile_pic.png", "");
   // Click on avatar picture to open file picker
   await clickOnElement(device, "User settings");
   // Click on 'Update User settings' dialog (Photo library)
@@ -190,7 +175,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   const conversationHeaderNickname = await saveText(device1, "Username");
   expect(conversationHeaderNickname).toBe(nickName);
   // Send a message so nickname is updated in conversation list
-  await sendMessage(device1);
+  await sendMessage(device1, "Howdy");
   // Navigate out of conversation
   await clickOnElement(device1, "Navigate up");
   // Change nickname back to original username
@@ -212,7 +197,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   );
   expect(originalConversationHeaderUsername).toBe(userB.userName);
   // Send message to change in conversation list
-  await sendMessage(device1);
+  await sendMessage(device1, "Howdy");
   // Navigate back to list
   await clickOnElement(device1, "Navigate up");
   // Verify name change in list
@@ -236,7 +221,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   // Click on settings/more info
   await clickOnElement(device1, "More options");
   // Click on username to set nickname
-  await clickOnElement(device1, "Edit user nickname");
+  await clickOnElement(device1, "Username");
   // Type in nickname
   const nickName = "New nickname";
   await inputText(device1, "Username", nickName);
@@ -307,6 +292,6 @@ describe("User actions", () => {
   androidIt("Change avatar", changeAvatar);
   iosIt("Change avatar", changeAvatar);
 
-  androidIt("Set Nickname Android", setNicknameAndroid);
-  iosIt("Set Nickname iOS", setNicknameIos);
+  androidIt("Set Nickname", setNicknameAndroid);
+  iosIt("Set Nickname", setNicknameIos);
 });

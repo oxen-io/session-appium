@@ -1,8 +1,11 @@
 import { clickOnElement, inputText } from "./utilities";
 import * as wd from "wd";
 
-export const sendMessage = async (device: wd.PromiseWebdriver) => {
-  const message = await inputText(device, "Message input box", "howdy");
+export const sendMessage = async (
+  device: wd.PromiseWebdriver,
+  message: string
+) => {
+  await inputText(device, "Message input box", message);
   // Click send
   await clickOnElement(device, "Send message button");
   // Wait for tick

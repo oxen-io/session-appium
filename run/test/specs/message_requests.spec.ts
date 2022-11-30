@@ -22,7 +22,7 @@ async function acceptRequest(platform: SupportedPlatformsType) {
     newUser(device2, "User B", platform),
   ]);
   // Send message from User A to User B
-  await sendNewMessage(device1, userB);
+  await sendNewMessage(device1, userB, "howdy");
   // Wait for banner to appear
   await device2.setImplicitWaitTimeout(5000);
   // User B clicks on message request banner
@@ -46,7 +46,7 @@ async function declineRequest(platform: SupportedPlatformsType) {
     newUser(device2, "User B", platform),
   ]);
   // Send message from User A to User B
-  await sendNewMessage(device1, userB);
+  await sendNewMessage(device1, userB, "howdy");
   // Wait for banner to appear
   await device2.setImplicitWaitTimeout(5000);
   // User B clicks on message request banner
@@ -70,7 +70,7 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
     newUser(device2, "User B", platform),
   ]);
   // Send message from User A to User B
-  await sendNewMessage(device1, userB);
+  await sendNewMessage(device1, userB, "howdy");
   // Wait for banner to appear
   await device2.setImplicitWaitTimeout(5000);
   // User B clicks on message request banner
@@ -78,7 +78,7 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
   // User B clicks on request conversation item
   await clickOnElement(device2, "Message request");
   // Send message from User B to User A
-  await sendNewMessage(device2, userA);
+  await sendNewMessage(device2, userA, "howdy");
   // Check config
   await findElement(device1, "Message request has been accepted");
   // Close app

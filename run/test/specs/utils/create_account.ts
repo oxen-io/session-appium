@@ -7,6 +7,7 @@ import {
   runOnlyOnAndroid,
   saveTextFromClipboard,
   getSessionID,
+  tapOnElement,
 } from "./utilities";
 import * as wd from "wd";
 import { SupportedPlatformsType } from "./open_app";
@@ -40,6 +41,7 @@ export const newUser = async (
   // Choose message notification options
   await clickOnElement(device, "Continue with settings");
   // Click on 'continue' button to open recovery phrase modal
+  await device.setImplicitWaitTimeout(5000);
   await clickOnElement(device, "Continue");
   // Long Press the recovery phrase to reveal recovery phrase
   await pressAndHold(device, "Recovery Phrase");

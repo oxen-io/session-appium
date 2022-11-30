@@ -174,7 +174,7 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
 
   await newContact(device1, userA, device2, userB);
   // Send message from user a to user b
-  const sentMessage = await sendMessage(device1);
+  const sentMessage = await sendMessage(device1, "Howdy");
   // Check message came through on linked device(3)
   // Enter conversation with user B on device 3
   await selectByText(device3, "Conversation list item", userB.userName);
@@ -234,7 +234,7 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
   // check on device 1 if user B is unblocked
   await hasElementBeenDeleted(device1, "Blocked banner");
   // Send message from user B to user A to see if unblock worked
-  const sentMessage = await sendMessage(device2);
+  const sentMessage = await sendMessage(device2, "Howdy");
   // Check on device 1 if user A receives message
   await findMessageWithBody(device1, sentMessage);
 
@@ -280,3 +280,8 @@ describe("Linked device tests", () => {
   // iosIt("Check avatar is restored", avatarRestored);
   // androidIt("Check avatar is restored", avatarRestored);
 });
+
+// TESTS TO WRITE FOR LINKED DEVICE
+// You're almost finished not there
+// Leave group
+// Message requests

@@ -3,7 +3,8 @@ import * as wd from "wd";
 
 export const sendNewMessage = async (
   device: wd.PromiseWebdriver,
-  user: any
+  user: any,
+  message: string
 ) => {
   // Sender workflow
   // Click on plus button
@@ -16,12 +17,12 @@ export const sendNewMessage = async (
   await clickOnElement(device, "Next");
   // Type message into message input box
 
-  const sentMessage = await inputText(device, "Message input box", "howdy");
+  await inputText(device, "Message input box", message);
   // Click send
   await clickOnElement(device, "Send message button");
   // Wait for tick
   await device.setImplicitWaitTimeout(20000);
   await device.elementByAccessibilityId("Message sent status tick");
 
-  return sentMessage;
+  return message;
 };
