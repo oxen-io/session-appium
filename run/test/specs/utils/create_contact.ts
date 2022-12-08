@@ -28,13 +28,6 @@ export const newContact = async (
     device2,
     `Reply-message-${user2.userName}-to-${user1.userName}`
   );
-  // await inputText(
-  //   device2,
-  //   "Message input box",
-  //   `Reply-message-${user2.userName}-to-${user1.userName}`
-  // );
-  // Click send
-  // await clickOnElement(device2, "Send message button");
 
   // Verify config message states message request was accepted
   await findConfigurationMessage(
