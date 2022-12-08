@@ -38,7 +38,6 @@ export const saveSessionIDIos = async (
 ) => {
   const selector = await saveText(device, "Session ID generated");
 
-  console.warn("selector is " + selector);
   return selector;
 };
 
@@ -73,7 +72,7 @@ export const clickOnElement = async (
   }
 
   const action = new wd.TouchAction(device);
-  action.tap({ el });
+  await action.tap({ el });
   await action.perform();
   return;
 };
@@ -155,19 +154,21 @@ export const selectByText = async (
   return;
 };
 
-export const saveText = async (device: any, accessibilityId: string) => {
+export const saveText = async (
+  device: wd.PromiseWebdriver,
+  accessibilityId: string
+) => {
   const selector = await device.elementByAccessibilityId(accessibilityId);
   return await selector.text();
 };
 
-export const saveTextFromClipboard = async (device: any) => {
-  const selector = await device.getClipboardText();
-  return selector;
-};
-
-export const deleteText = async (device: any, accessibilityId: string) => {
+export const deleteText = async (
+  device: wd.PromiseWebdriver,
+  accessibilityId: string
+) => {
   const selector = await device.elementByAccessibilityId(accessibilityId);
   await selector.clear();
+  console.warn(`text has been cleared` + selector);
   return;
 };
 
@@ -357,7 +358,7 @@ export const findConfigurationMessage = async (
   device: wd.PromiseWebdriver,
   messageText: string
 ) => {
-  console.warn(`Looking for configuration message with` + messageText);
+  console.warn(`Looking for configuration message with ` + messageText);
   return findMatchingTextAndAccessibilityId(
     device,
     "Configuration message",

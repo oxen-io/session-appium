@@ -1,5 +1,6 @@
 import {
   clickOnElement,
+  deleteText,
   findElement,
   findMatchingTextAndAccessibilityId,
   findMessageWithBody,
@@ -55,10 +56,15 @@ async function blockUserInConversationOptions(
   // Confirm block option
   await clickOnElement(device1, "Confirm block");
   // On ios there is an alert that confirms that the user has been blocked
-  await runOnlyOnIOS(platform, () => clickOnElement(device1, "OK"));
+  await runOnlyOnIOS(platform, () =>
+    clickOnElement(device1, "Copy Session ID")
+  );
+  console.warn(`${userB.userName}` + " has been blocked");
+
   // On ios, you need to navigate back to conversation screen to confirm block
   await runOnlyOnIOS(platform, () => clickOnElement(device1, "Back"));
   // Look for alert at top of screen (User B is blocked. Unblock them?)
+  await device1.setImplicitWaitTimeout(5000);
   await findElement(device1, "Blocked banner");
   console.warn("User has been blocked");
   // Click on alert to unblock
@@ -155,7 +161,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   ]);
   await newContact(device1, userA, device2, userB);
   // Go back to conversation list
-  await clickOnElement(device1, "Navigate up");
+  await clickOnElement(device1, "Back");
   // Select conversation in list with User B
   await longPressConversation(device1, userB.userName);
   // Select 'Details' option
@@ -177,7 +183,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Send a message so nickname is updated in conversation list
   await sendMessage(device1, "Howdy");
   // Navigate out of conversation
-  await clickOnElement(device1, "Navigate up");
+  await clickOnElement(device1, "Back");
   // Change nickname back to original username
   // Long press on contact conversation
   await longPressConversation(device1, nickName);
@@ -199,7 +205,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Send message to change in conversation list
   await sendMessage(device1, "Howdy");
   // Navigate back to list
-  await clickOnElement(device1, "Navigate up");
+  await clickOnElement(device1, "Back");
   // Verify name change in list
   // Save text of conversation list item?
   const conversationListUsername = await findMatchingTextAndAccessibilityId(
@@ -213,62 +219,56 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
 }
 async function setNicknameIos(platform: SupportedPlatformsType) {
   const { server, device1, device2 } = await openAppTwoDevices(platform);
+  const nickName = "New nickname";
   const [userA, userB] = await Promise.all([
     newUser(device1, "User A", platform),
     newUser(device2, "User B", platform),
   ]);
+
   await newContact(device1, userA, device2, userB);
   // Click on settings/more info
   await clickOnElement(device1, "More options");
   // Click on username to set nickname
   await clickOnElement(device1, "Username");
   // Type in nickname
-  const nickName = "New nickname";
   await inputText(device1, "Username", nickName);
   // Click apply/done
-  await clickOnElement(device1, "Apply");
-  // Verify change
-  const conversationNickname = await saveText(device1, "Username");
-  expect(conversationNickname).toBe(nickName);
+  await clickOnElement(device1, "Done");
   // Check it's changed in heading also
-  await clickOnElement(device1, "Navigate up");
-  const conversationHeaderNickname = await saveText(device1, "Username");
-  expect(conversationHeaderNickname).toBe(nickName);
+  await clickOnElement(device1, "Back");
+  const newNickname = await saveText(device1, "Username");
+  await findMatchingTextAndAccessibilityId(device1, "Username", newNickname);
   // Check in conversation list also
-  await clickOnElement(device1, "Navigate up");
+  await clickOnElement(device1, "Back");
   // Save text of conversation list item?
-  const conversationListUsername = findMatchingTextAndAccessibilityId(
+  await findMatchingTextAndAccessibilityId(
     device1,
     "Conversation list item",
     nickName
   );
-  expect(conversationListUsername).toBe(nickName);
   // Set nickname back to original username
   await selectByText(device1, "Conversation list item", nickName);
   // Click on settings/more info
   await clickOnElement(device1, "More options");
   // Click on edit
-  await clickOnElement(device1, "Edit user nickname");
-  // Click done without typing anything in
-  await clickOnElement(device1, "Apply");
-  // Verify change in settings page
-  const originalUsername = await saveText(device1, "Username");
-  expect(originalUsername).toBe(userB.userName);
+  await clickOnElement(device1, "Username");
+  // Empty username input
+  await deleteText(device1, "Nickname");
+  await clickOnElement(device1, "Done");
   // Check in conversation header
-  await clickOnElement(device1, "Navigate up");
-  const originalConversationHeaderUsername = await saveText(
-    device1,
-    "Username"
-  );
-  expect(originalConversationHeaderUsername).toBe(userB.userName);
+  await clickOnElement(device1, "Back");
+  const revertedNickname = await saveText(device1, "Username");
+  console.warn(`revertedNickname:` + revertedNickname);
+  if (revertedNickname !== userB.userName) {
+    throw new Error(`revertedNickname doesn't match user B's username`);
+  }
+  await clickOnElement(device1, "Back");
   // Check in conversation list aswell
-  const originalConversationListUsername =
-    await findMatchingTextAndAccessibilityId(
-      device1,
-      "Conversation list item",
-      userB.userName
-    );
-  expect(originalConversationListUsername).toBe(userB.userName);
+  await findMatchingTextAndAccessibilityId(
+    device1,
+    "Conversation list item",
+    userB.userName
+  );
   // Close app
   await closeApp(server, device1, device2);
 }

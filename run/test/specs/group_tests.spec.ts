@@ -21,6 +21,8 @@ import {
 } from "./utils/utilities";
 
 async function groupCreation(platform: SupportedPlatformsType) {
+  const testGroupName = "The Manhattan Crew";
+  const message = "User A to group";
   const { server, device1, device2, device3 } = await openAppThreeDevices(
     platform
   );
@@ -30,7 +32,7 @@ async function groupCreation(platform: SupportedPlatformsType) {
     newUser(device2, "User B", platform),
     newUser(device3, "User C", platform),
   ]);
-  const testGroupName = "The Manhattan Crew";
+
   // Create contact between User A and User B
   await createGroup(
     device1,
@@ -49,7 +51,7 @@ async function groupCreation(platform: SupportedPlatformsType) {
     "Group created"
   );
   // Send message from User A
-  await inputText(device1, "Message input box", "User A to group");
+  await inputText(device1, "Message input box", message);
   await clickOnElement(device1, "Send message button");
   await device1.setImplicitWaitTimeout(20000);
   await findElement(device1, "Message sent status tick");
@@ -58,13 +60,15 @@ async function groupCreation(platform: SupportedPlatformsType) {
   await selectByText(device2, "Conversation list item", testGroupName);
   // Navigate to grou chat in user C's window
   await selectByText(device3, "Conversation list item", testGroupName);
-  await findMessageWithBody(device2, "User A to group");
-  await findMessageWithBody(device3, "User A to group");
+  await findMessageWithBody(device2, message);
+  await findMessageWithBody(device3, message);
   // Close server and devices
   await closeApp(server, device1, device2, device3);
 }
 
 async function changeGroupName(platform: SupportedPlatformsType) {
+  const testGroupName = "Group name";
+  const newGroupName = "Changed group name";
   const { server, device1, device2, device3 } = await openAppThreeDevices(
     platform
   );
@@ -75,7 +79,7 @@ async function changeGroupName(platform: SupportedPlatformsType) {
     newUser(device3, "User C", platform),
   ]);
   // Create group
-  const testGroupName = "Group to test changing group name";
+
   await createGroup(
     device1,
     userA,
@@ -86,23 +90,30 @@ async function changeGroupName(platform: SupportedPlatformsType) {
     testGroupName
   );
   // Now change the group name
+  await device1.setImplicitWaitTimeout(5000);
   // Click on settings or three dots
   await clickOnElement(device1, "More options");
   // Click on Edit group option
   await clickOnElement(device1, "Edit group");
   // Click on current group name
   await clickOnElement(device1, "Group name");
-  await inputText(device1, "Group name", "   ");
+  await inputText(device1, "Group name text field", "   ");
+  await clickOnElement(device1, "Accept name change");
   // Alert should pop up 'Please enter group name', click ok
   // If ios click ok / If Android go to next step
   await runOnlyOnIOS(platform, () => clickOnElement(device1, "OK"));
   // Delete empty space
-  await deleteText(device1, "Group name");
+  await runOnlyOnIOS(platform, () => clickOnElement(device1, "Cancel"));
+  await runOnlyOnAndroid(platform, () =>
+    deleteText(device1, "Group name text field")
+  );
   // Enter new group name
-  const newGroupName = "Changed group name";
-  await inputText(device1, "Group name", newGroupName);
+  await clickOnElement(device1, "Group name");
+
+  await inputText(device1, "Group name text field", newGroupName);
   // Click done/apply
   await clickOnElement(device1, "Accept name change");
+  await clickOnElement(device1, "Apply changes");
   // If ios click back to match android (which goes back to conversation screen)
   // Check config message for changed name (different on ios and android)
   // Config message on ios is "Title is now blah"
@@ -110,7 +121,7 @@ async function changeGroupName(platform: SupportedPlatformsType) {
     findMatchingTextAndAccessibilityId(
       device1,
       "Configuration message",
-      "Title is now " + `'${newGroupName}''`
+      "Title is now " + `'${newGroupName}'.`
     )
   );
   // Config on Android is "You renamed the group to blah"
@@ -118,10 +129,10 @@ async function changeGroupName(platform: SupportedPlatformsType) {
     findMatchingTextAndAccessibilityId(
       device1,
       "Configuration message",
-      "You renamed group to " + `'${newGroupName}''`
+      "You renamed group to " + `'${newGroupName}'`
     )
   );
-  await closeApp(server, device1, device2);
+  await closeApp(server, device1, device2, device3);
 }
 
 async function addContactToGroup(platform: SupportedPlatformsType) {
@@ -144,9 +155,10 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     testGroupName
   );
   const userD = await newUser(device4, "User D", platform);
+  await clickOnElement(device1, "Back");
   await newContact(device1, userA, device4, userD);
   // Exit to conversation list
-  await clickOnElement(device1, "Navigate up");
+  await clickOnElement(device1, "Back");
   // Select group conversation in list
   await selectByText(device1, "Conversation list item", testGroupName);
   // Click more options
@@ -160,33 +172,22 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   // Click done/apply
   await clickOnElement(device1, "Done");
   // Click done/apply again
-  await clickOnElement(device1, "Done");
+  await clickOnElement(device1, "Apply changes");
   // Check config message
   await findMatchingTextAndAccessibilityId(
     device1,
     "Configuration message",
-    `${userD.userName}` + "joined the group"
-  );
-  // Check config on other devices
-  await findMatchingTextAndAccessibilityId(
-    device2,
-    "Configuration message",
-    "UserA added " + `${userD.sessionID}` + "to the group"
-  );
-  await findMatchingTextAndAccessibilityId(
-    device3,
-    "Configuration message",
-    "UserA added " + `${userD.sessionID}` + "to the group"
+    `${userD.userName}` + " joined the group."
   );
   // Exit to conversation list
-  await clickOnElement(device4, "Navigate up");
+  await clickOnElement(device4, "Back");
   // Select group conversation in list
   await selectByText(device4, "Conversation list item", testGroupName);
   // Check config
   await findMatchingTextAndAccessibilityId(
     device4,
     "Configuration message",
-    "UserA added you to the group"
+    "Group created"
   );
   closeApp(server, device1, device2, device3, device4);
 }
@@ -212,6 +213,7 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
+  await device1.setImplicitWaitTimeout(10000);
   await inputText(device1, "Message input box", "@");
   // Check that all users are showing in mentions box
   await findElement(device1, "Mentions list");

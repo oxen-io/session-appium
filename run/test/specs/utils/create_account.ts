@@ -3,34 +3,35 @@ import {
   inputText,
   saveText,
   pressAndHold,
-  runOnlyOnIOS,
-  runOnlyOnAndroid,
-  saveTextFromClipboard,
   getSessionID,
-  tapOnElement,
 } from "./utilities";
 import * as wd from "wd";
 import { SupportedPlatformsType } from "./open_app";
-import { iosIt } from "../../../types/sessionIt";
+
+export interface User {
+  userName: string;
+  sessionID: string;
+  recoveryPhrase: string;
+}
 
 export const newUser = async (
   device: wd.PromiseWebdriver,
   userName: string,
   platform: SupportedPlatformsType
-) => {
+): Promise<User> => {
   // Click create session ID
-  console.warn("232323");
   await device.setImplicitWaitTimeout(5000);
   await clickOnElement(device, "Create Session ID");
-
   // Wait for animation to generate session id
   await device.setImplicitWaitTimeout(5000);
-  console.warn("4444");
+
   // save session id as variable
 
   const sessionID = await getSessionID(platform, device);
 
-  console.log(`sessionID found: "${sessionID}" "${platform}"`);
+  console.log(
+    `sessionID found: "${sessionID}" "${platform}" for "${userName}"`
+  );
 
   // Click continue on session Id creation
   await clickOnElement(device, "Continue");

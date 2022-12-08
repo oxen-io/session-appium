@@ -1,6 +1,6 @@
 import { newUser } from "./create_account";
 import { SupportedPlatformsType } from "./open_app";
-import { clickOnElement, inputText } from "./utilities";
+import { clickOnElement, inputText, sleepFor } from "./utilities";
 
 export const linkedDevice = async (
   device1: wd.PromiseWebdriver,
@@ -13,8 +13,15 @@ export const linkedDevice = async (
   await clickOnElement(device2, "Link a device");
   // Enter recovery phrase into input box
   await inputText(device2, "Enter your recovery phrase", user.recoveryPhrase);
+  // Continue with recovery phrase
+  await clickOnElement(device2, "Continue");
   // Click continue on message notification settings
+
+  await clickOnElement(device2, "Continue");
+  // Wait for any notifications to disappear
+  await sleepFor(10000);
   await clickOnElement(device2, "Continue with settings");
+  console.warn("Device 3 linked");
 
   return user;
 };

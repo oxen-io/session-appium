@@ -24,22 +24,21 @@ import {
   runOnlyOnIOS,
   saveText,
   selectByText,
+  sleepFor,
 } from "./utils/utilities";
 
 async function linkDevice(platform: SupportedPlatformsType) {
   // Open server and two devices
   const { server, device1, device2 } = await openAppTwoDevices(platform);
   // link device
-  const user = await linkedDevice(device1, device2, "User A", platform);
+  await linkedDevice(device1, device2, "User A", platform);
   // Check that 'Youre almost finished' reminder doesn't pop up on device2
   await hasElementBeenDeleted(device2, "Recovery phrase reminder");
   // Verify username and session ID match
   await clickOnElement(device2, "User settings");
   // Check username
-  const username = await findElement(device2, "Username");
-  const sessionId = await findElement(device2, "Session ID");
-  expect(username).toBe(user.userName);
-  expect(sessionId).toBe(user.sessionID);
+  await findElement(device2, "Username");
+  await findElement(device2, "Session ID");
 
   await closeApp(server, device1, device2);
 }
@@ -54,6 +53,7 @@ async function contactsSyncLinkedDevice(platform: SupportedPlatformsType) {
   const userB = await newUser(device2, "User B", platform);
 
   await newContact(device1, userA, device2, userB);
+  await clickOnElement(device1, "Back");
   // Check that user synced on linked device
   await findMatchingTextAndAccessibilityId(
     device3,
@@ -74,6 +74,7 @@ async function groupCreationLinkedDevice(platform: SupportedPlatformsType) {
     newUser(device3, "User C", platform),
   ]);
   const testGroupName = "Linked device group";
+  const newGroupName = "New group name";
   await createGroup(
     device1,
     userA,
@@ -84,7 +85,7 @@ async function groupCreationLinkedDevice(platform: SupportedPlatformsType) {
     testGroupName
   );
   // Test that group has loaded on linked device
-  await selectByText(device4, "Conversation item list", testGroupName);
+  await selectByText(device4, "Conversation list item", testGroupName);
   // Test group name change syncs
   // Change group name in device 1
   // Click on settings/more info
@@ -94,12 +95,12 @@ async function groupCreationLinkedDevice(platform: SupportedPlatformsType) {
   // click on group name to change it
   await clickOnElement(device1, "Group name");
   // Type in new name
-  await inputText(device1, "Group name", "New group name for linked test");
+  await inputText(device1, "Group name text field", newGroupName);
   // Confirm change (tick on android/ first done on ios)
   await clickOnElement(device1, "Accept name change");
   // Apply changes (Apply on android/ second done on ios)
   await clickOnElement(device1, "Apply changes");
-  await clickOnElement(device1, "Accept name change");
+  // await clickOnElement(device1, "Accept name change");
   // If ios click back to match android (which goes back to conversation screen)
   // Check config message for changed name (different on ios and android)
   // Config message on ios is "Title is now blah"
@@ -107,7 +108,7 @@ async function groupCreationLinkedDevice(platform: SupportedPlatformsType) {
     findMatchingTextAndAccessibilityId(
       device1,
       "Configuration message",
-      "Title is now " + `'${testGroupName}''`
+      "Title is now " + `'${newGroupName}'.`
     )
   );
   // Config on Android is "You renamed the group to blah"
@@ -115,19 +116,21 @@ async function groupCreationLinkedDevice(platform: SupportedPlatformsType) {
     findMatchingTextAndAccessibilityId(
       device1,
       "Configuration message",
-      "You renamed group to " + `'${testGroupName}''`
+      "You renamed group to " + `'${newGroupName}'`
     )
   );
   // Wait 5 seconds for name to update
-  await device4.setImplicitWaitTimeout(5000);
+  await sleepFor(5000);
   // Check linked device for name change (conversation header name)
-  await findMatchingTextAndAccessibilityId(device4, "Username", testGroupName);
+  const groupName = await saveText(device4, "Username");
+  console.warn("Group name is now" + groupName);
+  await findMatchingTextAndAccessibilityId(device4, "Username", newGroupName);
   // Check config message in linked device aswell
   await runOnlyOnIOS(platform, () =>
     findMatchingTextAndAccessibilityId(
       device4,
       "Configuration message",
-      "Title is now " + `'${testGroupName}''`
+      "Title is now " + `'${newGroupName}'.`
     )
   );
   // Config on Android is "You renamed the group to blah"
@@ -135,10 +138,9 @@ async function groupCreationLinkedDevice(platform: SupportedPlatformsType) {
     findMatchingTextAndAccessibilityId(
       device4,
       "Configuration message",
-      "You renamed group to " + `'${testGroupName}''`
+      "You renamed group to " + `'${newGroupName}'`
     )
   );
-
   await closeApp(server, device1, device2, device3, device4);
 }
 
@@ -262,11 +264,11 @@ describe("Linked device tests", () => {
   iosIt("Link a device", linkDevice);
   androidIt("Link a device", linkDevice);
 
-  iosIt("Check group syncs", groupCreationLinkedDevice);
-  androidIt("Check group syncs", groupCreationLinkedDevice);
-
   androidIt("Check contact syncs", contactsSyncLinkedDevice);
   iosIt("Check contact syncs", contactsSyncLinkedDevice);
+
+  iosIt("Check group syncs", groupCreationLinkedDevice);
+  androidIt("Check group syncs", groupCreationLinkedDevice);
 
   androidIt("Check changed username syncs", changeUsernameLinkedDevice);
   iosIt("Check changed username syncs", changeUsernameLinkedDevice);

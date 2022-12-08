@@ -3,15 +3,17 @@ import {
   findConfigurationMessage,
   inputText,
 } from "./utilities";
+import { User } from "./create_account";
 import { sendNewMessage } from "./send_new_message";
+import { sendMessage } from "./send_message";
 
 export const newContact = async (
-  device1: any,
-  userA: any,
-  device2: any,
-  userB: any
+  device1: wd.PromiseWebdriver,
+  user1: User,
+  device2: wd.PromiseWebdriver,
+  user2: User
 ) => {
-  await sendNewMessage(device1, userB, "howdy");
+  await sendNewMessage(device1, user2, "howdy");
 
   // USER B WORKFLOW
   // Click on message request panel
@@ -22,13 +24,17 @@ export const newContact = async (
   await device2.setImplicitWaitTimeout(10000);
   await clickOnElement(device2, "Message request");
   // Type into message input box
-  await inputText(
+  await sendMessage(
     device2,
-    "Message input box",
-    "Test-message-User-B-to-User-A"
+    `Reply-message-${user2.userName}-to-${user1.userName}`
   );
+  // await inputText(
+  //   device2,
+  //   "Message input box",
+  //   `Reply-message-${user2.userName}-to-${user1.userName}`
+  // );
   // Click send
-  await clickOnElement(device2, "Send message button");
+  // await clickOnElement(device2, "Send message button");
 
   // Verify config message states message request was accepted
   await findConfigurationMessage(
@@ -36,5 +42,6 @@ export const newContact = async (
     "Your message request has been accepted."
   );
 
-  return { userA, userB, device1, device2 };
+  console.warn(`${user1.userName} and ${user2.userName} are now contacts`);
+  return { user1, user2, device1, device2 };
 };
