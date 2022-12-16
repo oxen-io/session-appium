@@ -1,7 +1,6 @@
 import {
   clickOnElement,
   deleteText,
-  findElement,
   findMatchingTextAndAccessibilityId,
   findMessageWithBody,
   hasElementBeenDeleted,
@@ -11,7 +10,10 @@ import {
   runOnlyOnIOS,
   saveText,
   selectByText,
+  sleepFor,
   swipeLeft,
+  waitForElementToBePresent,
+  waitForTextElementToBePresent,
 } from "./utils/utilities";
 import { newUser } from "./utils/create_account";
 import {
@@ -28,8 +30,8 @@ async function createContact(platform: SupportedPlatformsType) {
   // first we want to install the app on each device with our custom call to run it
   const { server, device1, device2 } = await openAppTwoDevices(platform);
 
-  const userA = await newUser(device1, "User A", platform);
-  const userB = await newUser(device2, "User B", platform);
+  const userA = await newUser(device1, "Alice", platform);
+  const userB = await newUser(device2, "Bob", platform);
 
   await newContact(device1, userA, device2, userB);
   // Wait for tick
@@ -41,10 +43,10 @@ async function blockUserInConversationOptions(
   // Open App
   const { server, device1, device2 } = await openAppTwoDevices(platform);
   // Create user A
-  // Create user B
+  // Create Bob
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A", platform),
-    newUser(device2, "User B", platform),
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
   ]);
   // Create contact
   await newContact(device1, userA, device2, userB);
@@ -56,16 +58,15 @@ async function blockUserInConversationOptions(
   // Confirm block option
   await clickOnElement(device1, "Confirm block");
   // On ios there is an alert that confirms that the user has been blocked
-  await runOnlyOnIOS(platform, () =>
-    clickOnElement(device1, "Copy Session ID")
-  );
+  await sleepFor(1000);
+  await runOnlyOnIOS(platform, () => clickOnElement(device1, "OK_BUTTON"));
+  // await runOnlyOnIOS(platform, () => clickOnXAndYCoordinates(device1));
   console.warn(`${userB.userName}` + " has been blocked");
 
   // On ios, you need to navigate back to conversation screen to confirm block
   await runOnlyOnIOS(platform, () => clickOnElement(device1, "Back"));
-  // Look for alert at top of screen (User B is blocked. Unblock them?)
-  await device1.setImplicitWaitTimeout(5000);
-  await findElement(device1, "Blocked banner");
+  // Look for alert at top of screen (Bob is blocked. Unblock them?)
+  await waitForElementToBePresent(device1, "Blocked banner");
   console.warn("User has been blocked");
   // Click on alert to unblock
   await clickOnElement(device1, "Blocked banner");
@@ -79,9 +80,13 @@ async function blockUserInConversationOptions(
     device2,
     "Hey, am I unblocked?"
   );
-  console.warn("why cant you find this" + hasUserBeenUnblockedMessage);
   // Check in device 1 for message
-  await findMessageWithBody(device2, hasUserBeenUnblockedMessage);
+  await waitForTextElementToBePresent(
+    device1,
+    "Message Body",
+    hasUserBeenUnblockedMessage
+  );
+  console.log(`Message came through from ${userB.userName}`);
 
   // Close app
   await closeApp(server, device1, device2);
@@ -90,11 +95,11 @@ async function blockUserInConversationOptions(
 async function blockUserInConversationList(platform: SupportedPlatformsType) {
   // Open App
   const { server, device1, device2 } = await openAppTwoDevices(platform);
-  // Create user A
-  // Create user B
+  // Create Alice
+  // Create Bob
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A", platform),
-    newUser(device2, "User B", platform),
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
   ]);
   // Create contact
   await newContact(device1, userA, device2, userB);
@@ -113,7 +118,7 @@ async function changeUsername(platform: SupportedPlatformsType) {
     platform
   );
 
-  await newUser(device1, "User A", platform);
+  await newUser(device1, "Alice", platform);
   // click on settings/profile avatar
   await clickOnElement(device1, "User settings");
   // select username
@@ -134,7 +139,7 @@ async function changeAvatar(platform: SupportedPlatformsType) {
   const { server, device } = await openAppOnPlatformSingleDevice(platform);
 
   // Create new user
-  const userA = await newUser(device, "User A", platform);
+  const userA = await newUser(device, "Alice", platform);
   // Click on settings/avatar
   await clickOnElement(device, "User settings");
   // Dismiss alert 'Allow Session to take pictures and record video?'
@@ -156,13 +161,13 @@ async function changeAvatar(platform: SupportedPlatformsType) {
 async function setNicknameAndroid(platform: SupportedPlatformsType) {
   const { server, device1, device2 } = await openAppTwoDevices(platform);
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A", platform),
-    newUser(device2, "User B", platform),
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
   ]);
   await newContact(device1, userA, device2, userB);
   // Go back to conversation list
   await clickOnElement(device1, "Back");
-  // Select conversation in list with User B
+  // Select conversation in list with Bob
   await longPressConversation(device1, userB.userName);
   // Select 'Details' option
   await selectByText(device1, "Long press menu", "Details");
@@ -221,8 +226,8 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   const { server, device1, device2 } = await openAppTwoDevices(platform);
   const nickName = "New nickname";
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A", platform),
-    newUser(device2, "User B", platform),
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
   ]);
 
   await newContact(device1, userA, device2, userB);
@@ -260,7 +265,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   const revertedNickname = await saveText(device1, "Username");
   console.warn(`revertedNickname:` + revertedNickname);
   if (revertedNickname !== userB.userName) {
-    throw new Error(`revertedNickname doesn't match user B's username`);
+    throw new Error(`revertedNickname doesn't match Bob's username`);
   }
   await clickOnElement(device1, "Back");
   // Check in conversation list aswell

@@ -4,8 +4,8 @@ const iosAppFullPath = `/Users/emilyburton/Desktop/Session.app`;
 
 let sharediOSCapabilities: DesiredCapabilities = {
   platformName: "iOS",
-  platformVersion: "16.1",
-  deviceName: "iPhone 13 Pro Max",
+  platformVersion: "16.2",
+  deviceName: "iPhone 14 Pro Max",
   automationName: "XCUITest",
   app: iosAppFullPath,
   bundleId: "com.loki-project.loki-messenger",

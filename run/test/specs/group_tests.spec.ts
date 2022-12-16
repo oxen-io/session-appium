@@ -18,19 +18,19 @@ import {
   runOnlyOnAndroid,
   runOnlyOnIOS,
   selectByText,
+  waitForTextElementToBePresent,
 } from "./utils/utilities";
 
 async function groupCreation(platform: SupportedPlatformsType) {
   const testGroupName = "The Manhattan Crew";
-  const message = "User A to group";
   const { server, device1, device2, device3 } = await openAppThreeDevices(
     platform
   );
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
-    newUser(device1, "User A", platform),
-    newUser(device2, "User B", platform),
-    newUser(device3, "User C", platform),
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+    newUser(device3, "Carl", platform),
   ]);
 
   // Create contact between User A and User B
@@ -45,23 +45,11 @@ async function groupCreation(platform: SupportedPlatformsType) {
   );
   // Check config message of group creation is correct
   // android and ios are different here
-  await findMatchingTextAndAccessibilityId(
+  await waitForTextElementToBePresent(
     device1,
     "Configuration message",
     "Group created"
   );
-  // Send message from User A
-  await inputText(device1, "Message input box", message);
-  await clickOnElement(device1, "Send message button");
-  await device1.setImplicitWaitTimeout(20000);
-  await findElement(device1, "Message sent status tick");
-  // Verify in user b and user c's window
-  // Navigate to group chat in user B's window
-  await selectByText(device2, "Conversation list item", testGroupName);
-  // Navigate to grou chat in user C's window
-  await selectByText(device3, "Conversation list item", testGroupName);
-  await findMessageWithBody(device2, message);
-  await findMessageWithBody(device3, message);
   // Close server and devices
   await closeApp(server, device1, device2, device3);
 }
@@ -74,9 +62,9 @@ async function changeGroupName(platform: SupportedPlatformsType) {
   );
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
-    newUser(device1, "User A", platform),
-    newUser(device2, "User B", platform),
-    newUser(device3, "User C", platform),
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+    newUser(device3, "Carl", platform),
   ]);
   // Create group
 
@@ -90,7 +78,7 @@ async function changeGroupName(platform: SupportedPlatformsType) {
     testGroupName
   );
   // Now change the group name
-  await device1.setImplicitWaitTimeout(5000);
+
   // Click on settings or three dots
   await clickOnElement(device1, "More options");
   // Click on Edit group option
@@ -118,7 +106,7 @@ async function changeGroupName(platform: SupportedPlatformsType) {
   // Check config message for changed name (different on ios and android)
   // Config message on ios is "Title is now blah"
   await runOnlyOnIOS(platform, () =>
-    findMatchingTextAndAccessibilityId(
+    waitForTextElementToBePresent(
       device1,
       "Configuration message",
       "Title is now " + `'${newGroupName}'.`
@@ -126,7 +114,7 @@ async function changeGroupName(platform: SupportedPlatformsType) {
   );
   // Config on Android is "You renamed the group to blah"
   await runOnlyOnAndroid(platform, () =>
-    findMatchingTextAndAccessibilityId(
+    waitForTextElementToBePresent(
       device1,
       "Configuration message",
       "You renamed group to " + `'${newGroupName}'`
@@ -140,9 +128,9 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     await openAppFourDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
-    newUser(device1, "User A", platform),
-    newUser(device2, "User B", platform),
-    newUser(device3, "User C", platform),
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+    newUser(device3, "Carl", platform),
   ]);
   const testGroupName = "Group to test adding contact";
   await createGroup(
@@ -154,7 +142,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
-  const userD = await newUser(device4, "User D", platform);
+  const userD = await newUser(device4, "Derek", platform);
   await clickOnElement(device1, "Back");
   await newContact(device1, userA, device4, userD);
   // Exit to conversation list
@@ -174,7 +162,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   // Click done/apply again
   await clickOnElement(device1, "Apply changes");
   // Check config message
-  await findMatchingTextAndAccessibilityId(
+  await waitForTextElementToBePresent(
     device1,
     "Configuration message",
     `${userD.userName}` + " joined the group."
@@ -184,7 +172,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   // Select group conversation in list
   await selectByText(device4, "Conversation list item", testGroupName);
   // Check config
-  await findMatchingTextAndAccessibilityId(
+  await waitForTextElementToBePresent(
     device4,
     "Configuration message",
     "Group created"
@@ -198,9 +186,9 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
   );
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
-    newUser(device1, "User A", platform),
-    newUser(device2, "User B", platform),
-    newUser(device3, "User C", platform),
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+    newUser(device3, "Carl", platform),
   ]);
   const testGroupName = "Mentions test group";
   // Create contact between User A and User B
@@ -213,7 +201,6 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
-  await device1.setImplicitWaitTimeout(10000);
   await inputText(device1, "Message input box", "@");
   // Check that all users are showing in mentions box
   await findElement(device1, "Mentions list");

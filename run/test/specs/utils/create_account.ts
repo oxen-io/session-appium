@@ -4,15 +4,11 @@ import {
   saveText,
   pressAndHold,
   getSessionID,
+  waitForElementToBePresent,
 } from "./utilities";
 import * as wd from "wd";
 import { SupportedPlatformsType } from "./open_app";
-
-export interface User {
-  userName: string;
-  sessionID: string;
-  recoveryPhrase: string;
-}
+import { User } from "../../../types/testing";
 
 export const newUser = async (
   device: wd.PromiseWebdriver,
@@ -20,18 +16,16 @@ export const newUser = async (
   platform: SupportedPlatformsType
 ): Promise<User> => {
   // Click create session ID
-  await device.setImplicitWaitTimeout(5000);
+  await waitForElementToBePresent(device, "Create Session ID");
   await clickOnElement(device, "Create Session ID");
   // Wait for animation to generate session id
-  await device.setImplicitWaitTimeout(5000);
+  await waitForElementToBePresent(device, "Session ID generated");
 
   // save session id as variable
 
   const sessionID = await getSessionID(platform, device);
 
-  console.log(
-    `sessionID found: "${sessionID}" "${platform}" for "${userName}"`
-  );
+  console.log(`${userName}s sessionID found: "${sessionID}" "${platform}"`);
 
   // Click continue on session Id creation
   await clickOnElement(device, "Continue");
@@ -42,13 +36,13 @@ export const newUser = async (
   // Choose message notification options
   await clickOnElement(device, "Continue with settings");
   // Click on 'continue' button to open recovery phrase modal
-  await device.setImplicitWaitTimeout(5000);
+  await waitForElementToBePresent(device, "Continue");
   await clickOnElement(device, "Continue");
   // Long Press the recovery phrase to reveal recovery phrase
   await pressAndHold(device, "Recovery Phrase");
   // Save recovery phrase as variable
   const recoveryPhrase = await saveText(device, "Recovery Phrase");
-  console.log(`Recovery Phrase is "${recoveryPhrase}"`);
+  console.log(`${userName}s recovery phrase is "${recoveryPhrase}"`);
   // Exit Modal
   await clickOnElement(device, "Navigate up");
 

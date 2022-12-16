@@ -1,6 +1,12 @@
 import { newUser } from "./create_account";
+import { User } from "../../../types/testing";
 import { SupportedPlatformsType } from "./open_app";
-import { clickOnElement, inputText, sleepFor } from "./utilities";
+import {
+  clickOnElement,
+  inputText,
+  sleepFor,
+  waitForElementToBePresent,
+} from "./utilities";
 
 export const linkedDevice = async (
   device1: wd.PromiseWebdriver,
@@ -15,12 +21,14 @@ export const linkedDevice = async (
   await inputText(device2, "Enter your recovery phrase", user.recoveryPhrase);
   // Continue with recovery phrase
   await clickOnElement(device2, "Continue");
-  // Click continue on message notification settings
-
-  await clickOnElement(device2, "Continue");
   // Wait for any notifications to disappear
-  await sleepFor(10000);
+  await waitForElementToBePresent(device2, "Message Notifications");
+  // Wait for transitiion animation between the two pages
+  await sleepFor(250);
+  // Click continue on message notification settings
   await clickOnElement(device2, "Continue with settings");
+  // Check that button was clicked
+  await waitForElementToBePresent(device2, "New conversation button");
   console.warn("Device 3 linked");
 
   return user;

@@ -1,4 +1,8 @@
-import { clickOnElement, inputText } from "./utilities";
+import {
+  clickOnElement,
+  inputText,
+  waitForElementToBePresent,
+} from "./utilities";
 import * as wd from "wd";
 
 export const sendMessage = async (
@@ -9,7 +13,7 @@ export const sendMessage = async (
   // Click send
   await clickOnElement(device, "Send message button");
   // Wait for tick
-  await device.setImplicitWaitTimeout(20000);
+  await waitForElementToBePresent(device, "Message sent status tick");
   await device.elementByAccessibilityId("Message sent status tick");
 
   return message;

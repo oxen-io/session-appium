@@ -70,3 +70,16 @@ sudo apt remove android-tools-adb
 `which adb` should not return anything.
 
 Somehow, appium asks for the sdk tools but do not force the adb binary to come from the sdk tools folder. Making sure that there is no adb in your path should solve this.
+
+## Running tests on iOS Emulators
+
+First you need to get correct branch of Session that you want to test from Github. See [(https://github.com/oxen-io/session-ios/releases/)] and download the latest **ipa** under **Assets**
+
+Then to access the **.app** file that Appium needs for testing you need to build in Xcode and then find .app in your **Derived Data** folder for Xcode.
+
+For Mac users this file will exist in:
+
+Macintosh HD > Username > Library > Developer > Xcode > Derived Data > (Then there will be a version of Session with a very long line of letters) > Build > Products > Debug-iphonesimulator > Session.app
+
+Then Copy and Paste then app file onto Desktop (or anywhere you can access easily) then each time you build, navigate back to the file in Derived Data and copy and paste back to Desktop.
+Then set the path to Session.app in your ios capabilities file.

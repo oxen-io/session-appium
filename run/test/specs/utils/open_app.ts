@@ -4,12 +4,7 @@ import {
   getAndroidCapabilities,
   getAndroidUuid,
 } from "./capabilities_android";
-import {
-  CapabilitiesIndexType,
-  getIosCapabilities,
-  getIosUuid,
-  iosCapabilities,
-} from "./capabilities_ios";
+import { CapabilitiesIndexType, getIosCapabilities } from "./capabilities_ios";
 import { installAppToDeviceName } from "./utilities";
 
 import * as wd from "wd";

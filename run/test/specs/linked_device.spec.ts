@@ -25,6 +25,8 @@ import {
   saveText,
   selectByText,
   sleepFor,
+  waitForElementToBePresent,
+  waitForTextElementToBePresent,
 } from "./utils/utilities";
 
 async function linkDevice(platform: SupportedPlatformsType) {
@@ -148,15 +150,16 @@ async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
   // Open server and two devices
   const { server, device1, device2 } = await openAppTwoDevices(platform);
   // link device
-  const userA = await linkedDevice(device1, device2, "User A", platform);
+  const userA = await linkedDevice(device1, device2, "Alice", platform);
   // Change username on device 1
   await clickOnElement(device1, "User settings");
   // Select username
   await clickOnElement(device1, "Username");
   const newUsername = await inputText(device1, "Username", "New username");
-  console.warn(newUsername);
+
   // Select apply
-  await clickOnElement(device1, "Accept name change");
+  await runOnlyOnAndroid(platform, () => clickOnElement(device1, "Apply"));
+  await runOnlyOnIOS(platform, () => clickOnElement(device1, "Done button"));
   // Check on linked device if name has updated
   await clickOnElement(device2, "User settings");
   const changedUsername = await saveText(device2, "Username");
@@ -170,15 +173,17 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
     platform
   );
 
-  const userA = await linkedDevice(device1, device3, "User A", platform);
+  const userA = await linkedDevice(device1, device3, "Alice", platform);
 
-  const userB = await newUser(device2, "User B", platform);
+  const userB = await newUser(device2, "Bob", platform);
 
   await newContact(device1, userA, device2, userB);
   // Send message from user a to user b
   const sentMessage = await sendMessage(device1, "Howdy");
   // Check message came through on linked device(3)
   // Enter conversation with user B on device 3
+  // Need to wait for notifications to disappear
+  await waitForElementToBePresent(device3, "Conversation list item");
   await selectByText(device3, "Conversation list item", userB.userName);
   // Find message
   await findMessageWithBody(device3, sentMessage);
@@ -188,8 +193,10 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
   await clickOnElement(device1, "Delete message");
   // Select delete for everyone
   await clickOnElement(device1, "Delete for everyone");
-  // Look for deleted message config in device2
-  await findElement(device2, "Deleted message");
+
+  // await waitForLoadingAnimation(device1);
+
+  await waitForElementToBePresent(device2, "Deleted message");
   // Check linked device for deleted message
   await hasTextElementBeenDeleted(device3, "Message body", sentMessage);
   // Close app
@@ -217,16 +224,16 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
   await clickOnElement(device1, "Block");
   // Confirm block
   await clickOnElement(device1, "Confirm block");
-  await runOnlyOnIOS(platform, () =>
-    clickOnElement(device1, "Confirm blocked user")
-  );
+  await sleepFor(1000);
+  await runOnlyOnIOS(platform, () => clickOnElement(device1, "OK_BUTTON"));
+  console.log(`${userB.userName}` + " has been blocked");
   // On ios, you need to navigate back to conversation screen to confirm block
-  await runOnlyOnIOS(platform, () => clickOnElement(device1, "Navigate up"));
+  await runOnlyOnIOS(platform, () => clickOnElement(device1, "Back"));
   // Check on device 3 if user B is blocked
   // Click on conversation with User B
   await selectByText(device3, "Conversation list item", userB.userName);
   // Look for blocked banner
-  await findElement(device3, "Blocked banner");
+  await waitForElementToBePresent(device3, "Blocked banner");
   // Unblock on device 3 and check if unblocked on device 1
   await clickOnElement(device3, "Blocked banner");
   // On ios you need to click ok to confirm unblock
@@ -238,7 +245,7 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
   // Send message from user B to user A to see if unblock worked
   const sentMessage = await sendMessage(device2, "Howdy");
   // Check on device 1 if user A receives message
-  await findMessageWithBody(device1, sentMessage);
+  await waitForTextElementToBePresent(device1, "Message Body", sentMessage);
 
   // Everything works then close app
   await closeApp(server, device1, device2, device3);

@@ -1,12 +1,16 @@
 import { androidIt, iosIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
+import { linkedDevice } from "./utils/link_device";
 
 import {
   closeApp,
+  openAppOnPlatformSingleDevice,
+  openAppThreeDevices,
   openAppTwoDevices,
   SupportedPlatformsType,
 } from "./utils/open_app";
+import { sendMessage } from "./utils/send_message";
 import { sendNewMessage } from "./utils/send_new_message";
 import {
   clickOnElement,
@@ -20,12 +24,12 @@ import {
 async function tinyTest(platform: SupportedPlatformsType) {
   const { server, device1, device2 } = await openAppTwoDevices(platform);
 
-  const userA = await newUser(device1, "Alice", platform);
-  const userc = await newUser(device2, "Bob", platform);
+  const [userA, userB] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+  ]);
 
-  console.warn(`${userc.userName}`);
-
-  await newContact(device1, userA, device2, userc);
+  await newContact(device1, userA, device2, userB);
 }
 
 describe("Tiny test", () => {

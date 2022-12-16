@@ -1,11 +1,7 @@
-import {
-  clickOnElement,
-  findConfigurationMessage,
-  inputText,
-} from "./utilities";
-import { User } from "./create_account";
+import { clickOnElement, findConfigurationMessage } from "./utilities";
 import { sendNewMessage } from "./send_new_message";
 import { sendMessage } from "./send_message";
+import { User } from "../../../types/testing";
 
 export const newContact = async (
   device1: wd.PromiseWebdriver,
@@ -18,10 +14,8 @@ export const newContact = async (
   // USER B WORKFLOW
   // Click on message request panel
   // Wait for push notification to disappear (otherwise appium can't find element)
-  await device2.setImplicitWaitTimeout(20000);
   await clickOnElement(device2, "Message requests banner");
   // Select message from User A
-  await device2.setImplicitWaitTimeout(10000);
   await clickOnElement(device2, "Message request");
   // Type into message input box
   await sendMessage(

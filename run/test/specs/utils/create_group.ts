@@ -1,7 +1,13 @@
-import { User } from "./create_account";
+import { User } from "../../../types/testing";
 import { newContact } from "./create_contact";
 import { sendMessage } from "./send_message";
-import { clickOnElement, inputText, selectByText } from "./utilities";
+import {
+  clickOnElement,
+  findConfigurationMessage,
+  inputText,
+  selectByText,
+  sendMessageTo,
+} from "./utilities";
 
 export const createGroup = async (
   device1: wd.PromiseWebdriver,
@@ -12,7 +18,7 @@ export const createGroup = async (
   userC: User,
   groupName: string
 ) => {
-  const message = "User A to group";
+  const userAMessage = `${userA.userName} to group`;
   // Create contact between User A and User B
   await newContact(device1, userA, device2, userB);
   await clickOnElement(device1, "Back");
@@ -34,6 +40,12 @@ export const createGroup = async (
   await selectByText(device1, "Contact", userC.userName);
   // Select tick
   await clickOnElement(device1, "Create group");
+  await findConfigurationMessage(device1, "Group created");
   // Send message from User a to group to verify all working
-  await sendMessage(device1, message);
+  await sendMessage(device1, userAMessage);
+  // Check group was created in device 2 by selecting group from list
+  await Promise.all([
+    sendMessageTo(device2, userB, groupName),
+    sendMessageTo(device3, userC, groupName),
+  ]);
 };

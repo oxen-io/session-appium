@@ -1,14 +1,94 @@
-import { pick } from "lodash";
 import * as util from "util";
 import * as wd from "wd";
 
 const exec = util.promisify(require("child_process").exec);
 import { getAdbFullPath } from "./binaries";
 import { SupportedPlatformsType } from "./open_app";
+import { User } from "./../../../types/testing";
+import { sendMessage } from "../utils/send_message";
 
 export function sleepFor(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+export const waitForElementToBePresent = async (
+  device: wd.PromiseWebdriver,
+  accessibilityId: string,
+  maxWait?: number
+) => {
+  const maxWaitMSec = maxWait || 30000;
+  let currentWait = 0;
+  const waitPerLoop = 100;
+  let selector = null;
+
+  while (selector === null) {
+    try {
+      console.log(`Waiting for '${accessibilityId}' to be present`);
+
+      selector = await device.elementByAccessibilityId(accessibilityId);
+    } catch (e) {
+      await sleepFor(waitPerLoop);
+      currentWait += waitPerLoop;
+      // console.log("Waiting...");
+
+      if (currentWait >= maxWaitMSec) {
+        console.log("Waited for too long");
+        throw new Error(`waited for too long looking for '${accessibilityId}'`);
+      }
+    }
+  }
+  console.log(`'${accessibilityId}' has been found`);
+};
+
+export const waitForTextElementToBePresent = async (
+  device: wd.PromiseWebdriver,
+  accessibilityId: string,
+  text: string,
+  maxWait?: number
+) => {
+  let selector = null;
+  let maxWaitMSec = maxWait || 3000;
+  let currentWait = 0;
+  let waitPerLoop = 100;
+
+  while (selector === null) {
+    try {
+      console.log(`Waiting for '${accessibilityId} to be present with ${text}`);
+
+      const elements = await device.elementsByAccessibilityId(accessibilityId);
+
+      selector = await findMatchingTextInElementArray(elements, text);
+    } catch (e) {
+      await sleepFor(waitPerLoop);
+      currentWait += waitPerLoop;
+      console.log("Waiting...");
+
+      if (currentWait >= maxWaitMSec) {
+        console.log("Waited too long");
+        throw new Error(
+          `Waited for too long looking for '${accessibilityId}' and '${text}`
+        );
+      }
+    }
+  }
+  console.log(`'${accessibilityId}' and '${text}' has been found`);
+};
+
+export const sendMessageTo = async (
+  device: wd.PromiseWebdriver,
+  sender: User,
+  receiver: string
+) => {
+  const message = `'${sender.userName}' to ${receiver}`;
+  await waitForTextElementToBePresent(
+    device,
+    "Conversation list item",
+    receiver
+  );
+  await selectByText(device, "Conversation list item", receiver);
+  console.log(`'${sender.userName}' + " sent message to ${receiver}`);
+  await sendMessage(device, message);
+};
 
 export const runOnlyOnIOS = async (
   platform: SupportedPlatformsType,
@@ -64,11 +144,10 @@ export const clickOnElement = async (
   device: wd.PromiseWebdriver,
   accessibilityId: string
 ) => {
+  await waitForElementToBePresent(device, accessibilityId);
   const el = await device.elementByAccessibilityId(accessibilityId);
   if (!el) {
-    throw new Error(
-      `tap: could not find this accessibilityId: ${accessibilityId}`
-    );
+    throw new Error(`Tap: Couldnt find accessibilityId: ${accessibilityId}`);
   }
 
   const action = new wd.TouchAction(device);
@@ -83,9 +162,7 @@ export const tapOnElement = async (
 ) => {
   const el = await device.elementByAccessibilityId(accessibilityId);
   if (!el) {
-    throw new Error(
-      `tap: could not find this accessibilityId: ${accessibilityId}`
-    );
+    throw new Error(`Tap: Couldnt find accessibilityId: ${accessibilityId}`);
   }
   device.waitForElementByAccessibilityId(accessibilityId);
   const action = new wd.TouchAction(device);
@@ -103,7 +180,7 @@ export const findElement = async (
       `findElement: Did not find accessibilityId: ${accessibilityId} `
     );
   }
-  console.warn(`"Element found", ${accessibilityId}`);
+  console.warn(`"Element found": ${accessibilityId}`);
   await selector;
   return;
 };
@@ -168,7 +245,7 @@ export const deleteText = async (
 ) => {
   const selector = await device.elementByAccessibilityId(accessibilityId);
   await selector.clear();
-  console.warn(`text has been cleared` + selector);
+  console.warn(`Text has been cleared` + selector);
   return;
 };
 
@@ -177,6 +254,7 @@ export const inputText = async (
   accessibilityId: string,
   text: string
 ) => {
+  await waitForElementToBePresent(device, accessibilityId);
   const element = await device.elementByAccessibilityId(accessibilityId);
   if (!element) {
     throw new Error(
@@ -194,7 +272,7 @@ export const longPress = async (
   const el = await device.elementByAccessibilityId(accessibilityId);
   if (!el) {
     throw new Error(
-      `longPress: could not find this accessibilityId: ${accessibilityId}`
+      `longPress: Could not find accessibilityId: ${accessibilityId}`
     );
   }
   const action = new wd.TouchAction(device);
@@ -211,13 +289,13 @@ export const pressAndHold = async (
   const el = await device.elementByAccessibilityId(accessibilityId);
   if (!el) {
     throw new Error(
-      `pressAndHold: could not find this accessibilityID: ${accessibilityId}`
+      `pressAndHold: Could not find accessibilityId: ${accessibilityId}`
     );
   }
   const actions = new wd.TouchAction(device);
 
   actions.longPress({ el });
-  actions.wait(5000);
+  actions.wait(100);
   actions.release();
 
   await actions.perform();
@@ -230,7 +308,7 @@ export const longPressMessage = async (
   const selector = await findMessageWithBody(device, textToLookFor);
   const action = new wd.TouchAction(device);
   action.longPress({ el: selector });
-  action.wait(5000);
+  action.wait(100);
   action.release();
   await action.perform();
 };
@@ -246,7 +324,7 @@ export const longPressConversation = async (
   );
   const action = new wd.TouchAction(device);
   action.longPress({ el });
-  action.wait(5000);
+  action.wait(100);
   action.release();
   await action.perform();
 };
@@ -286,6 +364,16 @@ export const swipeLeft = async (
   }
 };
 
+export const clickOnXAndYCoordinates = async (device: wd.PromiseWebdriver) => {
+  const actions = new wd.TouchAction(device);
+
+  actions.tap({ x: 85, y: 90 });
+  actions.release();
+
+  await actions.perform();
+  console.log(`Tapped coordinates`);
+};
+
 async function findAsync(
   arr: Array<any>,
   asyncCallback: (opts?: any) => Promise<any>
@@ -303,9 +391,9 @@ export const findMatchingTextInElementArray = async (
   if (elements && elements.length) {
     const matching = await findAsync(elements, async (e) => {
       const text = await e?.text?.();
-      console.warn(
-        `Looking for text: "${textToLookFor}" and found text: "${text}"`
-      );
+      // console.warn(
+      //   `Looking for text: "${textToLookFor}" and found text: "${text}"`
+      // );
       return text && text.toLowerCase() === textToLookFor.toLowerCase();
     });
 
@@ -359,11 +447,16 @@ export const findConfigurationMessage = async (
   messageText: string
 ) => {
   console.warn(`Looking for configuration message with ` + messageText);
-  return findMatchingTextAndAccessibilityId(
+  await waitForElementToBePresent(device, "Configuration message");
+  const configMessage = findMatchingTextAndAccessibilityId(
     device,
     "Configuration message",
     messageText
   );
+  if (!configMessage) {
+    throw new Error(`Couldnt find ${configMessage}`);
+  }
+  return configMessage;
 };
 
 async function runScriptAndLog(toRun: string) {

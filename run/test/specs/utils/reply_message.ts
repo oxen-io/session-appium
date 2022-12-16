@@ -1,13 +1,10 @@
+import { User } from "../../../types/testing";
 import { sendNewMessage } from "./send_new_message";
-import {
-  longPressMessage,
-  clickOnElement,
-  findMessageWithBody,
-} from "./utilities";
+import { longPressMessage, clickOnElement } from "./utilities";
 
 export const replyToMessage = async (
   device: wd.PromiseWebdriver,
-  user: any,
+  user: User,
   selector: any
 ) => {
   // Reply to media message from user B
