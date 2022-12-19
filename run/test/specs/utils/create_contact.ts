@@ -1,4 +1,8 @@
-import { clickOnElement, findConfigurationMessage } from "./utilities";
+import {
+  clickOnElement,
+  findConfigurationMessage,
+  sleepFor,
+} from "./utilities";
 import { sendNewMessage } from "./send_new_message";
 import { sendMessage } from "./send_message";
 import { User } from "../../../types/testing";
@@ -9,7 +13,11 @@ export const newContact = async (
   device2: wd.PromiseWebdriver,
   user2: User
 ) => {
-  await sendNewMessage(device1, user2, "howdy");
+  await sendNewMessage(
+    device1,
+    user2,
+    `${user1.userName} to ${user2.userName}`
+  );
 
   // USER B WORKFLOW
   // Click on message request panel

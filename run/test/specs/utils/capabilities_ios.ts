@@ -9,7 +9,6 @@ let sharediOSCapabilities: DesiredCapabilities = {
   automationName: "XCUITest",
   app: iosAppFullPath,
   bundleId: "com.loki-project.loki-messenger",
-  autoAcceptAlerts: true,
   newCommandTimeout: 30000,
   useNewWDA: true,
 } as DesiredCapabilities;

@@ -208,12 +208,12 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
     platform
   );
   // link device
-  const userA = await linkedDevice(device1, device3, "User A", platform);
+  const userA = await linkedDevice(device1, device3, "Alice", platform);
   // Create contact to block
-  const userB = await newUser(device2, "User B", platform);
+  const userB = await newUser(device2, "Bob", platform);
   await newContact(device1, userA, device2, userB);
   // Check that user synced on linked device
-  await findMatchingTextAndAccessibilityId(
+  await waitForTextElementToBePresent(
     device3,
     "Conversation list item",
     userB.userName
@@ -233,17 +233,17 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
   // Click on conversation with User B
   await selectByText(device3, "Conversation list item", userB.userName);
   // Look for blocked banner
-  await waitForElementToBePresent(device3, "Blocked banner");
+  // await waitForElementToBePresent(device3, "Blocked banner");
   // Unblock on device 3 and check if unblocked on device 1
   await clickOnElement(device3, "Blocked banner");
   // On ios you need to click ok to confirm unblock
-  await runOnlyOnIOS(platform, () =>
-    clickOnElement(device3, "Confirm unblock")
-  );
+  await runOnlyOnIOS(platform, () => clickOnElement(device3, "Confirm block"));
   // check on device 1 if user B is unblocked
+  await sleepFor(1250);
   await hasElementBeenDeleted(device1, "Blocked banner");
   // Send message from user B to user A to see if unblock worked
-  const sentMessage = await sendMessage(device2, "Howdy");
+
+  const sentMessage = await sendMessage(device2, "Unsend message");
   // Check on device 1 if user A receives message
   await waitForTextElementToBePresent(device1, "Message Body", sentMessage);
 

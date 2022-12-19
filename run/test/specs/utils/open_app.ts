@@ -144,6 +144,9 @@ const openiOSApp = async (
   await device.init(getIosCapabilities(capabilitiesIndex));
   console.warn("openiOSAp init ");
 
+  await device.dismissAlert();
+  console.warn("Alerts dismissed");
+
   return { server: newServer, device };
 };
 

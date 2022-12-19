@@ -6,10 +6,17 @@ import {
   closeApp,
 } from "./utils/open_app";
 import { sendNewMessage } from "./utils/send_new_message";
+import { sendMessage } from "./utils/send_message";
 import {
   clickOnElement,
   findElement,
   hasElementBeenDeleted,
+  hasTextElementBeenDeleted,
+  runOnlyOnAndroid,
+  runOnlyOnIOS,
+  sleepFor,
+  waitForElementToBePresent,
+  waitForTextElementToBePresent,
 } from "./utils/utilities";
 
 async function acceptRequest(platform: SupportedPlatformsType) {
@@ -22,9 +29,13 @@ async function acceptRequest(platform: SupportedPlatformsType) {
     newUser(device2, "User B", platform),
   ]);
   // Send message from User A to User B
-  await sendNewMessage(device1, userB, "howdy");
+  await sendNewMessage(
+    device1,
+    userB,
+    `${userA.userName} to ${userB.userName}`
+  );
   // Wait for banner to appear
-  await device2.setImplicitWaitTimeout(5000);
+
   // User B clicks on message request banner
   await clickOnElement(device2, "Message requests banner");
   // User B clicks on request conversation item
@@ -32,7 +43,11 @@ async function acceptRequest(platform: SupportedPlatformsType) {
   // User B clicks accept button
   await clickOnElement(device2, "Accept message request");
   // Verify config message for User A 'Your message request has been accepted'
-  await findElement(device1, "Message request has been accepted");
+  await waitForTextElementToBePresent(
+    device1,
+    "Configuration message",
+    "Your message request has been accepted."
+  );
   // Close app
   await closeApp(server, device1, device2);
 }
@@ -46,17 +61,25 @@ async function declineRequest(platform: SupportedPlatformsType) {
     newUser(device2, "User B", platform),
   ]);
   // Send message from User A to User B
-  await sendNewMessage(device1, userB, "howdy");
+  await sendNewMessage(
+    device1,
+    userB,
+    `${userA.userName} to ${userB.userName}`
+  );
   // Wait for banner to appear
-  await device2.setImplicitWaitTimeout(5000);
   // User B clicks on message request banner
   await clickOnElement(device2, "Message requests banner");
   // User B clicks on request conversation item
   await clickOnElement(device2, "Message request");
   // Click on decline button
   await clickOnElement(device2, "Decline message request");
-  // Look for message request list item
-  await hasElementBeenDeleted(device2, "Message request");
+  // Are you sure you want to delete message request only for ios
+  await runOnlyOnIOS(platform, () => clickOnElement(device2, "Delete"));
+  // Navigate back to home page
+  await clickOnElement(device2, "Back");
+  // Look for new conversation button to make sure it all worked
+  await waitForElementToBePresent(device2, "New conversation button");
+
   // Close app
   await closeApp(server, device1, device2);
 }
@@ -70,48 +93,71 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
     newUser(device2, "User B", platform),
   ]);
   // Send message from User A to User B
-  await sendNewMessage(device1, userB, "howdy");
+  await sendNewMessage(
+    device1,
+    userB,
+    `${userA.userName} to ${userB.userName}`
+  );
   // Wait for banner to appear
-  await device2.setImplicitWaitTimeout(5000);
   // User B clicks on message request banner
   await clickOnElement(device2, "Message requests banner");
   // User B clicks on request conversation item
   await clickOnElement(device2, "Message request");
   // Send message from User B to User A
-  await sendNewMessage(device2, userA, "howdy");
+  await sendMessage(device2, `${userB.userName} to ${userA.userName}`);
   // Check config
-  await findElement(device1, "Message request has been accepted");
+  await waitForTextElementToBePresent(
+    device1,
+    "Configuration message",
+    "Your message request has been accepted."
+  );
   // Close app
   await closeApp(server, device1, device2);
 }
 
-// async function blockRequest(platform: SupportedPlatformsType) {
-//   const { server, device1, device2 } = await openAppTwoDevices(platform);
-//   const [userA, userB] = await Promise.all([
-//     newUser(device1, "User A"),
-//     newUser(device2, "User B"),
-//   ]);
-//   // Send message from User A to User B
-//   await sendNewMessage(device1, userB);
-//   // Wait for banner to appear
-//   await device2.setImplicitWaitTimeout(5000);
-//   // User B clicks on message request banner
-//   await clickOnElement(device2, "Message requests banner");
-//   // User B clicks on request conversation item
-//   await clickOnElement(device2, "Message request");
-//   // User B clicks on block option
-//   await clickOnElement(device2, "Block message request");
-//   // Close app
-//   await closeApp(server, device1, device2);
-// }
+async function blockRequest(platform: SupportedPlatformsType) {
+  const { server, device1, device2 } = await openAppTwoDevices(platform);
+  const [userA, userB] = await Promise.all([
+    newUser(device1, "User A", platform),
+    newUser(device2, "User B", platform),
+  ]);
+  // Send message from User A to User B
+  await sendNewMessage(
+    device1,
+    userB,
+    `${userA.userName} to ${userB.userName}`
+  );
+  // Wait for banner to appear
+  // User B clicks on message request banner
+  await clickOnElement(device2, "Message requests banner");
+  // User B clicks on request conversation item
+  await clickOnElement(device2, "Message request");
+  // User B clicks on block option
+  await clickOnElement(device2, "Block message request");
+  // Confirm block on android
+  await runOnlyOnIOS(platform, () => clickOnElement(device2, "Block"));
+  // Make sure no messages can get through to user B
+  const blockedMessage = `${userA.userName} to ${userB.userName} - shouldn't get through`;
+  await sendMessage(device1, blockedMessage);
+  await clickOnElement(device2, "Back");
+  await waitForElementToBePresent(device2, "New conversation button");
+  // Need to wait to see if message gets through
+  await sleepFor(10000);
+  await hasTextElementBeenDeleted(device2, "Message Body", blockedMessage);
+  // Close app
+  await closeApp(server, device1, device2);
+}
 
 describe("Message", () => {
-  iosIt("Message requests decline", acceptRequest);
-  androidIt("Message requests decline", acceptRequest);
+  iosIt("Message requests accept", acceptRequest);
+  androidIt("Message requests accept", acceptRequest);
 
   iosIt("Message requests decline", declineRequest);
   androidIt("Message requests decline", declineRequest);
 
-  iosIt("Message requests decline", acceptRequestWithText);
-  androidIt("Message requests decline", acceptRequestWithText);
+  iosIt("Message requests text reply", acceptRequestWithText);
+  androidIt("Message requests text reply", acceptRequestWithText);
+
+  iosIt("Message requests block", blockRequest);
+  androidIt("Message requests block", blockRequest);
 });

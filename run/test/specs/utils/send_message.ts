@@ -14,7 +14,6 @@ export const sendMessage = async (
   await clickOnElement(device, "Send message button");
   // Wait for tick
   await waitForElementToBePresent(device, "Message sent status tick");
-  await device.elementByAccessibilityId("Message sent status tick");
 
   return message;
 };

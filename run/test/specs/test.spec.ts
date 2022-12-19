@@ -23,13 +23,16 @@ import {
 
 async function tinyTest(platform: SupportedPlatformsType) {
   const { server, device1, device2 } = await openAppTwoDevices(platform);
+  // Get information about what appium actions are
+  // const selector = device1.click();
+  // console.log(selector);
 
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
+  // const [userA, userB] = await Promise.all([
+  //   newUser(device1, "Alice", platform),
+  //   newUser(device2, "Bob", platform),
+  // ]);
 
-  await newContact(device1, userA, device2, userB);
+  // await newContact(device1, userA, device2, userB);
 }
 
 describe("Tiny test", () => {

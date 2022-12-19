@@ -1,6 +1,7 @@
 import { iosIt, androidIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
+import { sendMessage } from "./utils/send_message";
 import { sendNewMessage } from "./utils/send_new_message";
 import {
   closeApp,
@@ -11,7 +12,6 @@ import {
   clickOnElement,
   findElement,
   findMessageWithBody,
-  longPress,
   pressAndHold,
   selectByText,
 } from "./utils/utilities";
@@ -202,8 +202,8 @@ async function sendLongMessage(platform: SupportedPlatformsType) {
   // Create contact
   await newContact(device1, userA, device2, userB);
   // Send a long message from User A to User B
-  await sendNewMessage(device1, userB, longText);
-  // Reply to message
+  await sendMessage(device1, longText);
+  // Reply to message (User B to User A)
   const sentMessage = await replyToMessage(device2, userA, longText);
   // Check reply came through on device1
   await findMessageWithBody(device1, sentMessage);

@@ -105,7 +105,7 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   await newContact(device1, userA, device2, userB);
   // Navigate back to conversation list
   await clickOnElement(device1, "Back");
-  await device1.setImplicitWaitTimeout(20000);
+  // await device1.setImplicitWaitTimeout(20000);
   // on ios swipe left on conversation
   await runOnlyOnIOS(platform, () =>
     swipeLeft(device1, "Conversation list item", userB.userName)

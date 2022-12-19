@@ -1,5 +1,5 @@
 import { User } from "../../../types/testing";
-import { sendNewMessage } from "./send_new_message";
+import { sendMessage } from "./send_message";
 import { longPressMessage, clickOnElement } from "./utilities";
 
 export const replyToMessage = async (
@@ -13,7 +13,10 @@ export const replyToMessage = async (
   // Select 'Reply' option
   await clickOnElement(device, "Reply to message");
   // Send message
-  const sentMessage = await sendNewMessage(device, user, "howdy");
+  const sentMessage = await sendMessage(
+    device,
+    `${user.userName} message reply`
+  );
 
   return sentMessage;
 };

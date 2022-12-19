@@ -46,10 +46,10 @@ export const waitForTextElementToBePresent = async (
   text: string,
   maxWait?: number
 ) => {
-  let selector = null;
-  let maxWaitMSec = maxWait || 3000;
-  let currentWait = 0;
-  let waitPerLoop = 100;
+  let selector: null | AppiumElement = null;
+  let maxWaitMSec: number = maxWait || 3000;
+  let currentWait: number = 0;
+  let waitPerLoop: number = 100;
 
   while (selector === null) {
     try {
@@ -153,6 +153,7 @@ export const clickOnElement = async (
   const action = new wd.TouchAction(device);
   await action.tap({ el });
   await action.perform();
+
   return;
 };
 
@@ -222,6 +223,7 @@ export const selectByText = async (
   accessibilityId: string,
   text: string
 ) => {
+  await waitForTextElementToBePresent(device, accessibilityId, text);
   const selector = await findMatchingTextAndAccessibilityId(
     device,
     accessibilityId,
@@ -387,7 +389,7 @@ async function findAsync(
 export const findMatchingTextInElementArray = async (
   elements: Array<AppiumElement>,
   textToLookFor: string
-): Promise<AppiumElement | undefined> => {
+): Promise<AppiumElement | null> => {
   if (elements && elements.length) {
     const matching = await findAsync(elements, async (e) => {
       const text = await e?.text?.();
@@ -397,15 +399,16 @@ export const findMatchingTextInElementArray = async (
       return text && text.toLowerCase() === textToLookFor.toLowerCase();
     });
 
-    return matching || undefined;
+    return matching || null;
   }
-  return undefined;
+  return null;
 };
 
 export const findMessageWithBody = async (
   device: wd.PromiseWebdriver,
   textToLookFor: string
 ): Promise<AppiumElement> => {
+  await waitForTextElementToBePresent(device, "Message Body", textToLookFor);
   const message = await findMatchingTextAndAccessibilityId(
     device,
     "Message Body",
