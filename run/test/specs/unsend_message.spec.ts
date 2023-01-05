@@ -8,12 +8,11 @@ import { newContact } from "./utils/create_contact";
 import {
   clickOnElement,
   longPressMessage,
-  waitForElementToBePresent,
-  sleepFor,
+  sendMessage,
   waitForTextElementToBePresent,
-} from "./utils/utilities";
+  waitForElementToBePresent,
+} from "./utils/index";
 import { iosIt, androidIt } from "../../types/sessionIt";
-import { sendMessage } from "./utils/send_message";
 
 async function unsendMessage(platform: SupportedPlatformsType) {
   const { server, device1, device2 } = await openAppTwoDevices(platform);

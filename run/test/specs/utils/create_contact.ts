@@ -1,10 +1,9 @@
 import {
+  sendMessage,
   clickOnElement,
   findConfigurationMessage,
-  sleepFor,
-} from "./utilities";
-import { sendNewMessage } from "./send_new_message";
-import { sendMessage } from "./send_message";
+  sendNewMessage,
+} from ".";
 import { User } from "../../../types/testing";
 
 export const newContact = async (

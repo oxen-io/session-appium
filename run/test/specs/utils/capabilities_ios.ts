@@ -1,6 +1,6 @@
 import { DesiredCapabilities } from "@wdio/types/build/Capabilities";
 
-const iosAppFullPath = `/Users/emilyburton/Desktop/Session.app`;
+const iosAppFullPath = `/Users/emilyburton/Library/Developer/Xcode/DerivedData/Session-bkhewuibvlxdsxevpurvxorzvqpd/Build/Products/App Store Release-iphonesimulator/Session.app`;
 
 let sharediOSCapabilities: DesiredCapabilities = {
   platformName: "iOS",

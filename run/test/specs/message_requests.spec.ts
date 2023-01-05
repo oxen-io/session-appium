@@ -5,19 +5,16 @@ import {
   openAppTwoDevices,
   closeApp,
 } from "./utils/open_app";
-import { sendNewMessage } from "./utils/send_new_message";
-import { sendMessage } from "./utils/send_message";
 import {
   clickOnElement,
-  findElement,
-  hasElementBeenDeleted,
   hasTextElementBeenDeleted,
-  runOnlyOnAndroid,
   runOnlyOnIOS,
+  waitForTextElementToBePresent,
   sleepFor,
   waitForElementToBePresent,
-  waitForTextElementToBePresent,
-} from "./utils/utilities";
+  sendMessage,
+  sendNewMessage,
+} from "./utils/index";
 
 async function acceptRequest(platform: SupportedPlatformsType) {
   // Check 'accept' button

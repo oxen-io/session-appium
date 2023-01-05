@@ -1,6 +1,6 @@
 import { User } from "../../../types/testing";
-import { sendMessage } from "./send_message";
-import { longPressMessage, clickOnElement } from "./utilities";
+import { longPressMessage, clickOnElement, sendMessage } from ".";
+import * as wd from "wd";
 
 export const replyToMessage = async (
   device: wd.PromiseWebdriver,

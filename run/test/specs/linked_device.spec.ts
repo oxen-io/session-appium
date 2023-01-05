@@ -10,24 +10,24 @@ import {
   openAppTwoDevices,
   SupportedPlatformsType,
 } from "./utils/open_app";
-import { sendMessage } from "./utils/send_message";
 import {
   clickOnElement,
+  longPressMessage,
+  selectByText,
+  runOnlyOnAndroid,
+  runOnlyOnIOS,
   findElement,
   findMatchingTextAndAccessibilityId,
   findMessageWithBody,
   hasElementBeenDeleted,
   hasTextElementBeenDeleted,
   inputText,
-  longPressMessage,
-  runOnlyOnAndroid,
-  runOnlyOnIOS,
   saveText,
-  selectByText,
+  waitForTextElementToBePresent,
   sleepFor,
   waitForElementToBePresent,
-  waitForTextElementToBePresent,
-} from "./utils/utilities";
+  sendMessage,
+} from "./utils/index";
 
 async function linkDevice(platform: SupportedPlatformsType) {
   // Open server and two devices

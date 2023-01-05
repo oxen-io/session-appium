@@ -1,13 +1,13 @@
 import { User } from "../../../types/testing";
 import { newContact } from "./create_contact";
-import { sendMessage } from "./send_message";
 import {
   clickOnElement,
   findConfigurationMessage,
   inputText,
   selectByText,
   sendMessageTo,
-} from "./utilities";
+  sendMessage,
+} from ".";
 
 export const createGroup = async (
   device1: wd.PromiseWebdriver,

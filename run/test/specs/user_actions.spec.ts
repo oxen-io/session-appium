@@ -2,7 +2,6 @@ import {
   clickOnElement,
   deleteText,
   findMatchingTextAndAccessibilityId,
-  findMessageWithBody,
   hasElementBeenDeleted,
   inputText,
   longPressConversation,
@@ -10,11 +9,12 @@ import {
   runOnlyOnIOS,
   saveText,
   selectByText,
-  sleepFor,
   swipeLeft,
-  waitForElementToBePresent,
+  sendMessage,
   waitForTextElementToBePresent,
-} from "./utils/utilities";
+  sleepFor,
+  waitForElementToBePresent,
+} from "./utils/index";
 import { newUser } from "./utils/create_account";
 import {
   closeApp,
@@ -24,7 +24,6 @@ import {
 } from "./utils/open_app";
 import { androidIt, iosIt } from "../../types/sessionIt";
 import { newContact } from "./utils/create_contact";
-import { sendMessage } from "./utils/send_message";
 
 async function createContact(platform: SupportedPlatformsType) {
   // first we want to install the app on each device with our custom call to run it

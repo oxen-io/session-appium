@@ -10,7 +10,7 @@ import {
   hasTextElementBeenDeleted,
   inputText,
   selectByText,
-} from "./utils/utilities";
+} from "./utils/index";
 import { iosIt, androidIt } from "../../types/sessionIt";
 
 async function disappearingMessages(platform: SupportedPlatformsType) {

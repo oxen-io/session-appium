@@ -1,9 +1,5 @@
-import {
-  clickOnElement,
-  inputText,
-  waitForElementToBePresent,
-  waitForTextElementToBePresent,
-} from "./utilities";
+import { clickOnElement, inputText } from ".";
+import { waitForElementToBePresent } from "./wait_for";
 import * as wd from "wd";
 
 export const sendNewMessage = async (

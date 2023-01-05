@@ -698,11 +698,6 @@ declare namespace wd {
       cb?: (err: any, element: any) => void
     ): PromiseElement;
 
-    elementByAccessibilityId(
-      value?: any,
-      cb?: (err: any, element: any) => void
-    ): PromiseElement;
-
     elements(
       using?: any,
       value?: any,

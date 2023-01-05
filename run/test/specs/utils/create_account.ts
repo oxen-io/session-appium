@@ -5,10 +5,11 @@ import {
   pressAndHold,
   getSessionID,
   waitForElementToBePresent,
-} from "./utilities";
+} from ".";
 import * as wd from "wd";
 import { SupportedPlatformsType } from "./open_app";
 import { User } from "../../../types/testing";
+import {} from "./wait_for";
 
 export const newUser = async (
   device: wd.PromiseWebdriver,

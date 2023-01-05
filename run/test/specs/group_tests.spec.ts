@@ -10,16 +10,15 @@ import {
 } from "./utils/open_app";
 import {
   clickOnElement,
-  deleteText,
-  findElement,
-  findMatchingTextAndAccessibilityId,
-  findMessageWithBody,
-  inputText,
+  selectByText,
   runOnlyOnAndroid,
   runOnlyOnIOS,
-  selectByText,
+  deleteText,
+  findElement,
+  findMessageWithBody,
+  inputText,
   waitForTextElementToBePresent,
-} from "./utils/utilities";
+} from "./utils/index";
 
 async function groupCreation(platform: SupportedPlatformsType) {
   const testGroupName = "The Manhattan Crew";

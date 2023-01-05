@@ -6,7 +6,7 @@ import {
   findElement,
   hasElementBeenDeleted,
   scrollDown,
-} from "./utils/utilities";
+} from "./utils/index";
 
 async function voiceCall(platform: SupportedPlatformsType) {
   // Open app

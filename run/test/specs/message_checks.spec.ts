@@ -1,21 +1,27 @@
 import { iosIt, androidIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
-import { sendMessage } from "./utils/send_message";
-import { sendNewMessage } from "./utils/send_new_message";
 import {
   closeApp,
   openAppTwoDevices,
   SupportedPlatformsType,
 } from "./utils/open_app";
 import {
+  doFunctionIfElementExists,
   clickOnElement,
-  findElement,
-  findMessageWithBody,
+  longPressSelector,
   pressAndHold,
   selectByText,
-} from "./utils/utilities";
-import { replyToMessage } from "./utils/reply_message";
+  clickOnXAndYCoordinates,
+  findElement,
+  findLastElementInArray,
+  findMessageWithBody,
+  inputText,
+  waitForTextElementToBePresent,
+  sleepFor,
+  replyToMessage,
+  sendMessage,
+} from "./utils/index";
 
 async function sendImage(platform: SupportedPlatformsType) {
   // Test sending an image
@@ -23,33 +29,49 @@ async function sendImage(platform: SupportedPlatformsType) {
   const { server, device1, device2 } = await openAppTwoDevices(platform);
   // create user a and user b
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A", platform),
-    newUser(device2, "User B", platform),
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
   ]);
+  const replyMessage = `Replying to image from ${userA.userName}`;
   // create contact
   await newContact(device1, userA, device2, userB);
+  // Push image to device for selection
   // Click on attachments button
   await clickOnElement(device1, "Attachments button");
   // Select images button/tab
+  await sleepFor(100);
   // Check if android or ios (android = documents folder/ ios = images folder)
-  await clickOnElement(device1, "Documents folder");
+  await clickOnXAndYCoordinates(device1, 34, 498);
   // Select 'continue' on alert
-  await clickOnElement(device1, "Continue to photos");
-  // Select 'allow' on alert
-  await clickOnElement(device1, "Allow");
+  // Session would like to access your photos
+  await doFunctionIfElementExists(device1, "Allow Access to All Photos", () =>
+    clickOnElement(device1, "Allow Access to All Photos")
+  );
+  await doFunctionIfElementExists(device1, "Add", () =>
+    clickOnElement(device1, "Add")
+  );
+  await doFunctionIfElementExists(device1, "Done", () =>
+    clickOnElement(device1, "Done")
+  );
   // Select image
-  const imageSent = await selectByText(device1, "Image", "picture.jpg");
-  // Send without captions
-  await clickOnElement(device1, "Send message button");
+  await clickOnXAndYCoordinates(device1, 60, 160);
+  // Send with captions
+  await clickOnElement(device1, "Text input box");
+  await inputText(device1, "Text input box", "Testing-image-1");
+  await clickOnElement(device1, "Send button");
   // Check if the 'Tap to download media' config appears
-  // User B - Click on config
-  await clickOnElement(device2, "Configuration message");
+  // User B - Click on untrusted attachment message
+  await clickOnElement(device2, "Untrusted attachment message");
+  await sleepFor(500);
   // User B - Click on 'download'
-  await clickOnElement(device2, "Download");
+  await clickOnElement(device2, "Download media");
   // Reply to message
-  const sentMessage = await replyToMessage(device2, userA, imageSent);
-  // Check reply came through on device1
-  await findMessageWithBody(device1, sentMessage);
+
+  const imageSent = await findLastElementInArray(device2, "Message Body");
+  await longPressSelector(device2, imageSent);
+  await clickOnElement(device2, "Reply to message");
+  await sendMessage(device2, replyMessage);
+  await waitForTextElementToBePresent(device1, "Message Body", replyMessage);
   // Close app and server
   await closeApp(server, device1, device2);
 }

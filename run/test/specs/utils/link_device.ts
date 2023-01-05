@@ -1,12 +1,12 @@
 import { newUser } from "./create_account";
-import { User } from "../../../types/testing";
 import { SupportedPlatformsType } from "./open_app";
 import {
-  clickOnElement,
-  inputText,
   sleepFor,
   waitForElementToBePresent,
-} from "./utilities";
+  clickOnElement,
+  inputText,
+} from ".";
+import wd from "wd";
 
 export const linkedDevice = async (
   device1: wd.PromiseWebdriver,
