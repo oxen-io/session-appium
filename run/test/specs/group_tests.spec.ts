@@ -215,16 +215,16 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
   await closeApp(server, device1, device2, device3);
 }
 
-describe("Group Testing", () => {
-  iosIt("Create group", groupCreation);
-  androidIt("Create group", groupCreation);
+describe("Group Testing", async () => {
+  await iosIt("Create group", groupCreation);
+  await androidIt("Create group", groupCreation);
 
-  iosIt("Change group name", changeGroupName);
-  androidIt("Change group name", changeGroupName);
+  await iosIt("Change group name", changeGroupName);
+  await androidIt("Change group name", changeGroupName);
 
-  iosIt("Add contact to group", addContactToGroup);
-  androidIt("Add contact to group", addContactToGroup);
+  await iosIt("Add contact to group", addContactToGroup);
+  await androidIt("Add contact to group", addContactToGroup);
 
-  iosIt("Test mentions in group chats", mentionsForGroups);
-  androidIt("Test mentions in group chats", mentionsForGroups);
+  await iosIt("Test mentions in group chats", mentionsForGroups);
+  await androidIt("Test mentions in group chats", mentionsForGroups);
 });

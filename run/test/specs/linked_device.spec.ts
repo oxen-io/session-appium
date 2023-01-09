@@ -267,27 +267,27 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
 //   new similarityMatchingOptions();
 // }
 
-describe("Linked device tests", () => {
-  iosIt("Link a device", linkDevice);
-  androidIt("Link a device", linkDevice);
+describe("Linked device tests", async () => {
+  await iosIt("Link a device", linkDevice);
+  await androidIt("Link a device", linkDevice);
 
-  androidIt("Check contact syncs", contactsSyncLinkedDevice);
-  iosIt("Check contact syncs", contactsSyncLinkedDevice);
+  await androidIt("Check contact syncs", contactsSyncLinkedDevice);
+  await iosIt("Check contact syncs", contactsSyncLinkedDevice);
 
-  iosIt("Check group syncs", groupCreationLinkedDevice);
-  androidIt("Check group syncs", groupCreationLinkedDevice);
+  await iosIt("Check group syncs", groupCreationLinkedDevice);
+  await androidIt("Check group syncs", groupCreationLinkedDevice);
 
-  androidIt("Check changed username syncs", changeUsernameLinkedDevice);
-  iosIt("Check changed username syncs", changeUsernameLinkedDevice);
+  await androidIt("Check changed username syncs", changeUsernameLinkedDevice);
+  await iosIt("Check changed username syncs", changeUsernameLinkedDevice);
 
-  androidIt("Check deleted message syncs", deletedMessageLinkedDevice);
-  iosIt("Check deleted message syncs", deletedMessageLinkedDevice);
+  await androidIt("Check deleted message syncs", deletedMessageLinkedDevice);
+  await iosIt("Check deleted message syncs", deletedMessageLinkedDevice);
 
-  iosIt("Check blocked user syncs", blockedUserLinkedDevice);
-  androidIt("Check blocked user syncs", blockedUserLinkedDevice);
+  await iosIt("Check blocked user syncs", blockedUserLinkedDevice);
+  await androidIt("Check blocked user syncs", blockedUserLinkedDevice);
 
-  // iosIt("Check avatar is restored", avatarRestored);
-  // androidIt("Check avatar is restored", avatarRestored);
+  //await iosIt("Check avatar is restored", avatarRestored);
+  //await androidIt("Check avatar is restored", avatarRestored);
 });
 
 // TESTS TO WRITE FOR LINKED DEVICE

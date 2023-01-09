@@ -54,6 +54,22 @@ export const openAppTwoDevices = async (
   return { server, device1: app1.device, device2: app2.device };
 };
 
+// export const openAppTwoDevicesAsArray = async (
+//   platform: SupportedPlatformsType
+// ): Promise<{
+//   server: AppiumServer;
+//   devices: ArrayLength2;
+// }> => {
+//   const server = await openAppiumServerOnly(platform);
+
+//   const [app1, app2] = await Promise.all([
+//     openAppOnPlatform(platform, 0, server),
+//     openAppOnPlatform(platform, 1, server),
+//   ]);
+
+//   return { server, devices: [app1.device, app2.device] };
+// };
+
 export const openAppThreeDevices = async (
   platform: SupportedPlatformsType
 ): Promise<{
@@ -192,3 +208,14 @@ export const closeApp = async (
   await server.close();
   console.info("server closed");
 };
+
+// export const closeAppAsArray = async (
+//   server: AppiumServer,
+//   devices: ArrayLength1 | ArrayLength2 | ArrayLength3 | ArrayLength4
+// ) => {
+//   await Promise.all(devices.map((d) => d.quit()));
+//   console.info("waiting server close");
+
+//   await server.close();
+//   console.info("server closed");
+// };

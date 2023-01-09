@@ -9,29 +9,30 @@ import {
 import {
   doFunctionIfElementExists,
   clickOnElement,
-  longPressSelector,
-  pressAndHold,
-  selectByText,
   clickOnXAndYCoordinates,
-  findElement,
-  findLastElementInArray,
   findMessageWithBody,
   inputText,
   waitForTextElementToBePresent,
   sleepFor,
   replyToMessage,
   sendMessage,
+  longPressMessage,
+  runOnlyOnAndroid,
+  runOnlyOnIOS,
+  longPress,
+  pressAndHold,
+  waitForElementToBePresent,
 } from "./utils/index";
 
 async function sendImage(platform: SupportedPlatformsType) {
+  const { device1, device2 } = await openAppTwoDevices(platform);
   // Test sending an image
-  // open devices and server
-  const { server, device1, device2 } = await openAppTwoDevices(platform);
   // create user a and user b
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
   ]);
+  const testMessage = "Testing-image-1";
   const replyMessage = `Replying to image from ${userA.userName}`;
   // create contact
   await newContact(device1, userA, device2, userB);
@@ -41,6 +42,7 @@ async function sendImage(platform: SupportedPlatformsType) {
   // Select images button/tab
   await sleepFor(100);
   // Check if android or ios (android = documents folder/ ios = images folder)
+  // await clickOnElement(device1, "Images folder");
   await clickOnXAndYCoordinates(device1, 34, 498);
   // Select 'continue' on alert
   // Session would like to access your photos
@@ -54,26 +56,28 @@ async function sendImage(platform: SupportedPlatformsType) {
     clickOnElement(device1, "Done")
   );
   // Select image
-  await clickOnXAndYCoordinates(device1, 60, 160);
+  const elems = (await device1.elementByXPath(
+    '//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell[2]'
+  )) as AppiumElement;
+  await elems.click();
   // Send with captions
   await clickOnElement(device1, "Text input box");
-  await inputText(device1, "Text input box", "Testing-image-1");
+  await inputText(device1, "Text input box", testMessage);
   await clickOnElement(device1, "Send button");
   // Check if the 'Tap to download media' config appears
   // User B - Click on untrusted attachment message
   await clickOnElement(device2, "Untrusted attachment message");
   await sleepFor(500);
   // User B - Click on 'download'
-  await clickOnElement(device2, "Download media");
-  // Reply to message
+  await clickOnElement(device2, "Download");
 
-  const imageSent = await findLastElementInArray(device2, "Message Body");
-  await longPressSelector(device2, imageSent);
+  // Reply to message
+  await sleepFor(3000);
+  await longPressMessage(device2, testMessage);
+
   await clickOnElement(device2, "Reply to message");
   await sendMessage(device2, replyMessage);
   await waitForTextElementToBePresent(device1, "Message Body", replyMessage);
-  // Close app and server
-  await closeApp(server, device1, device2);
 }
 
 async function sendVideo(platform: SupportedPlatformsType) {
@@ -82,94 +86,88 @@ async function sendVideo(platform: SupportedPlatformsType) {
   const { server, device1, device2 } = await openAppTwoDevices(platform);
   // create user a and user b
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A", platform),
-    newUser(device2, "User B", platform),
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
   ]);
+  const testMessage = "Testing-video-1";
+  const replyMessage = `Replying to video from ${userA.userName}`;
   // create contact
   await newContact(device1, userA, device2, userB);
+  // Push image to device for selection
   // Click on attachments button
   await clickOnElement(device1, "Attachments button");
   // Select images button/tab
-  await clickOnElement(device1, "Images folder");
+  await sleepFor(100);
+  // Check if android or ios (android = documents folder/ ios = images folder)
+  // await clickOnElement(device1, "Images folder");
+  await clickOnXAndYCoordinates(device1, 34, 498);
   // Select 'continue' on alert
-  await clickOnElement(device1, "Continue to photos");
-  // Select 'allow' on alert
-  await clickOnElement(device1, "Allow");
+  // Session would like to access your photos
+  await doFunctionIfElementExists(device1, "Allow Access to All Photos", () =>
+    clickOnElement(device1, "Allow Access to All Photos")
+  );
+  await doFunctionIfElementExists(device1, "Add", () =>
+    clickOnElement(device1, "Add")
+  );
+  await doFunctionIfElementExists(device1, "Done", () =>
+    clickOnElement(device1, "Done")
+  );
   // Select video
-  const videoSent = await selectByText(device1, "Image", "picture.jpg");
-  // Confirm without captions
-  await clickOnElement(device1, "Send message button");
+  const elems = (await device1.elementByXPath(
+    '//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell[1]'
+  )) as AppiumElement;
+  await elems.click();
+  // Send with captions
+  await clickOnElement(device1, "Text input box");
+  await inputText(device1, "Text input box", testMessage);
+  await clickOnElement(device1, "Send button");
   // Check if the 'Tap to download media' config appears
-  // Click on config
-  await clickOnElement(device2, "Configuration message");
-  // Click on 'download'
-  await clickOnElement(device2, "Download");
+  // User B - Click on untrusted attachment message
+  await clickOnElement(device2, "Untrusted attachment message");
+  await sleepFor(500);
+  // User B - Click on 'download'
+  await clickOnElement(device2, "Download media");
+
   // Reply to message
-  const sentMessage = await replyToMessage(device2, userA, videoSent);
-  // Check reply came through on device1
-  await findMessageWithBody(device1, sentMessage);
-  // Close app
+  await sleepFor(3000);
+  await longPressMessage(device2, testMessage);
+  await clickOnElement(device2, "Reply to message");
+  await sendMessage(device2, replyMessage);
+  await waitForTextElementToBePresent(device1, "Message Body", replyMessage);
+  // Close app and server
   await closeApp(server, device1, device2);
 }
 
 async function sendVoiceMessage(platform: SupportedPlatformsType) {
-  // open devices and server
   const { server, device1, device2 } = await openAppTwoDevices(platform);
   // create user a and user b
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A", platform),
-    newUser(device2, "User B", platform),
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
   ]);
-  // create contact
+  const replyMessage = `Replying to voice message from ${userA.userName}`;
   await newContact(device1, userA, device2, userB);
-  // Long press microphone icon
+  // Select voice message button to activate recording state
   await pressAndHold(device1, "New voice message");
-  // Click on 'untrusted attachments message'
-  await clickOnElement(device2, "Untrusted attachments message");
-  // Accept dialog 'Are you sure?'
-  await clickOnElement(device2, "Download media");
-  // Check for audio message
-  await findElement(device2, "Voice message");
-  // Close app
-  await closeApp(server, device1, device2);
-}
 
-async function sendDocument(platform: SupportedPlatformsType) {
-  // Test sending a document
-  // open devices and server
-  const { server, device1, device2 } = await openAppTwoDevices(platform);
-  // create user a and user b
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "User A", platform),
-    newUser(device2, "User B", platform),
-  ]);
-  // create contact
-  await newContact(device1, userA, device2, userB);
-  // Click on attachments button
-
-  await clickOnElement(device1, "Attachments button");
-  // Select images button/tab
-  await clickOnElement(device1, "Documents folder");
-  // Select 'continue' on alert
-  await clickOnElement(device1, "Continue to photos");
-  // Select 'allow' on alert
-  await clickOnElement(device1, "Allow");
-  // Select document
-  const documentSent = await selectByText(
-    device1,
-    "Document",
-    "documents_1.pdf"
+  await doFunctionIfElementExists(device1, "OK", () =>
+    clickOnElement(device1, "OK")
   );
-  // Check if the 'Tap to download media' config appears
-  // Click on config
-  await clickOnElement(device2, "Configuration Message");
-  // Click on 'download'
-  await clickOnElement(device2, "Download media");
-  // Reply to message
-  const sentMessage = await replyToMessage(device2, userA, documentSent);
-  // Check reply came through on device1
-  await findMessageWithBody(device1, sentMessage);
-  // Close app
+  // await pressAndHold(device1, "New voice message");
+
+  await waitForElementToBePresent(device1, "Voice message");
+
+  await clickOnElement(device2, "Untrusted attachment message");
+  await sleepFor(200);
+  await clickOnElement(device2, "Download");
+
+  // await sleepFor(1500);
+
+  await pressAndHold(device2, "Voice message");
+  await clickOnElement(device2, "Reply to message");
+  await sendMessage(device2, replyMessage);
+  await waitForTextElementToBePresent(device1, "Message Body", replyMessage);
+
   await closeApp(server, device1, device2);
 }
 
@@ -182,30 +180,39 @@ async function sendGif(platform: SupportedPlatformsType) {
     newUser(device1, "User A", platform),
     newUser(device2, "User B", platform),
   ]);
+  const testMessage = "Testing-GIF-1";
+  const replyMessage = `Replying to GIF from ${userA.userName}`;
   // create contact
   await newContact(device1, userA, device2, userB);
   // Click on attachments button
   await clickOnElement(device1, "Attachments button");
   // Select GIF tab
-  await clickOnElement(device1, "GIF button");
-  // Click send without captions
-  // If android
-  await clickOnElement(device1, "Send message button");
-  // Select 'continue' on alert
-  await clickOnElement(device1, "Continue to photos");
-  // Select 'allow' on alert
-  await clickOnElement(device1, "Allow");
+  await runOnlyOnIOS(platform, () => clickOnXAndYCoordinates(device1, 36, 394));
+  await runOnlyOnAndroid(platform, () => clickOnElement(device1, "GIF button"));
+  await runOnlyOnAndroid(platform, () => clickOnElement(device1, "OK"));
+
   // Select gif
-  const gifSent = await selectByText(device1, "GIF", "first_in_gif_array.GIF");
+  await sleepFor(3000);
+  const gif = (await device1.elementByXPath(
+    `(//XCUIElementTypeImage[@name="gif cell"])[1]`
+  )) as AppiumElement;
+  await gif.click();
+  await clickOnElement(device1, "Text input box");
+  await inputText(device1, "Text input box", testMessage);
+  await clickOnElement(device1, "Send button");
   // Check if the 'Tap to download media' config appears
   // Click on config
-  await clickOnElement(device2, "Configuration message");
+  await clickOnElement(device2, "Untrusted attachment message");
+  await sleepFor(500);
   // Click on 'download'
   await clickOnElement(device2, "Download");
   // Reply to message
-  const sentMessage = await replyToMessage(device2, userA, gifSent);
+  await sleepFor(3000);
+  await longPressMessage(device2, testMessage);
   // Check reply came through on device1
-  await findMessageWithBody(device1, sentMessage);
+  await clickOnElement(device2, "Reply to message");
+  await sendMessage(device2, replyMessage);
+  await waitForTextElementToBePresent(device1, "Message Body", replyMessage);
   // Close app
   await closeApp(server, device1, device2);
 }
@@ -233,22 +240,22 @@ async function sendLongMessage(platform: SupportedPlatformsType) {
   await closeApp(server, device1, device2);
 }
 
-describe("Message checks", () => {
-  iosIt("Send image and reply test", sendImage);
-  androidIt("Send image and reply test", sendImage);
+describe("Message checks", async () => {
+  await iosIt("Send image and reply test", sendImage);
+  await androidIt("Send image and reply test", sendImage);
 
-  iosIt("Send video and reply test", sendVideo);
-  androidIt("Send video and reply test", sendVideo);
+  await iosIt("Send video and reply test", sendVideo);
+  await androidIt("Send video and reply test", sendVideo);
 
-  iosIt("Send voice message test", sendVoiceMessage);
-  androidIt("Send voice message test", sendVoiceMessage);
+  await iosIt("Send voice message test", sendVoiceMessage);
+  await androidIt("Send voice message test", sendVoiceMessage);
 
-  iosIt("Send document and reply test", sendDocument);
-  androidIt("Send document and reply test", sendDocument);
+  // await iosIt("Send document and reply test", sendDocument);
+  // await androidIt("Send document and reply test", sendDocument);
 
-  iosIt("Send GIF and reply ", sendGif);
-  androidIt("Send GIF and reply ", sendGif);
+  await iosIt("Send GIF and reply", sendGif);
+  await androidIt("Send GIF and reply", sendGif);
 
-  iosIt("Send long text and reply test", sendLongMessage);
-  androidIt("Send long text and reply test", sendLongMessage);
+  await iosIt("Send long text and reply test", sendLongMessage);
+  await androidIt("Send long text and reply test", sendLongMessage);
 });

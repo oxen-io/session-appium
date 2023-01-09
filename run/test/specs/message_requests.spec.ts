@@ -145,16 +145,16 @@ async function blockRequest(platform: SupportedPlatformsType) {
   await closeApp(server, device1, device2);
 }
 
-describe("Message", () => {
-  iosIt("Message requests accept", acceptRequest);
-  androidIt("Message requests accept", acceptRequest);
+describe("Message", async () => {
+  await iosIt("Message requests accept", acceptRequest);
+  await androidIt("Message requests accept", acceptRequest);
 
-  iosIt("Message requests decline", declineRequest);
-  androidIt("Message requests decline", declineRequest);
+  await iosIt("Message requests decline", declineRequest);
+  await androidIt("Message requests decline", declineRequest);
 
-  iosIt("Message requests text reply", acceptRequestWithText);
-  androidIt("Message requests text reply", acceptRequestWithText);
+  await iosIt("Message requests text reply", acceptRequestWithText);
+  await androidIt("Message requests text reply", acceptRequestWithText);
 
-  iosIt("Message requests block", blockRequest);
-  androidIt("Message requests block", blockRequest);
+  await iosIt("Message requests block", blockRequest);
+  await androidIt("Message requests block", blockRequest);
 });

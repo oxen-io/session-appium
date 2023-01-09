@@ -8,6 +8,7 @@ export function sleepFor(ms: number) {
 export const waitForElementToBePresent = async (
   device: wd.PromiseWebdriver,
   accessibilityId: string,
+  mustBeClickable = false,
   maxWait?: number
 ) => {
   const maxWaitMSec = maxWait || 30000;
@@ -20,10 +21,15 @@ export const waitForElementToBePresent = async (
       console.log(`Waiting for '${accessibilityId}' to be present`);
 
       selector = await device.elementByAccessibilityId(accessibilityId);
+      if (mustBeClickable && selector) {
+        const clickable = await selector.waitForClickable();
+        if (!clickable) {
+          selector = null;
+        }
+      }
     } catch (e) {
       await sleepFor(waitPerLoop);
       currentWait += waitPerLoop;
-      // console.log("Waiting...");
 
       if (currentWait >= maxWaitMSec) {
         console.log("Waited for too long");
@@ -67,4 +73,5 @@ export const waitForTextElementToBePresent = async (
     }
   }
   console.log(`'${accessibilityId}' and '${text}' has been found`);
+  return selector;
 };

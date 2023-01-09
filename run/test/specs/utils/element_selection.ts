@@ -10,8 +10,8 @@ export const clickOnElement = async (
   device: wd.PromiseWebdriver,
   accessibilityId: string
 ) => {
-  await waitForElementToBePresent(device, accessibilityId);
-  const el = await device.elementByAccessibilityId(accessibilityId);
+  const el = await waitForElementToBePresent(device, accessibilityId, true);
+
   if (!el) {
     throw new Error(`Tap: Couldnt find accessibilityId: ${accessibilityId}`);
   }
@@ -59,14 +59,16 @@ export const longPress = async (
   const el = await device.elementByAccessibilityId(accessibilityId);
   if (!el) {
     throw new Error(
-      `longPress: Could not find accessibilityId: ${accessibilityId}`
+      `pressAndHold: Could not find accessibilityId: ${accessibilityId}`
     );
   }
-  const action = new wd.TouchAction(device);
-  action.longPress({ el });
-  await action.perform();
+  const actions = new wd.TouchAction(device);
 
-  return;
+  actions.longPress({ el });
+  actions.wait(500);
+  actions.release();
+
+  await actions.perform();
 };
 
 export const longPressSelector = async (
@@ -75,7 +77,9 @@ export const longPressSelector = async (
 ) => {
   const actions = new wd.TouchAction(device);
   actions.longPress({ el: selector });
-  actions.release;
+  actions.wait(500);
+  actions.release();
+
   await actions.perform();
 };
 
@@ -83,7 +87,8 @@ export const pressAndHold = async (
   device: wd.PromiseWebdriver,
   accessibilityId: string
 ) => {
-  const el = await device.elementByAccessibilityId(accessibilityId);
+  const el = await waitForElementToBePresent(device, accessibilityId);
+
   if (!el) {
     throw new Error(
       `pressAndHold: Could not find accessibilityId: ${accessibilityId}`
@@ -91,21 +96,27 @@ export const pressAndHold = async (
   }
   const actions = new wd.TouchAction(device);
 
-  actions.longPress({ el });
-  actions.wait(100);
-  actions.release();
+  await actions.longPress({ el });
+  await actions.wait(3000);
+  await actions.release();
 
   await actions.perform();
+
+  console.log(`Press and hold successful: ${accessibilityId}`);
 };
 
 export const longPressMessage = async (
   device: wd.PromiseWebdriver,
   textToLookFor: string
 ) => {
-  const selector = await findMessageWithBody(device, textToLookFor);
+  const selector = await waitForTextElementToBePresent(
+    device,
+    "Message Body",
+    textToLookFor
+  );
   const action = new wd.TouchAction(device);
   action.longPress({ el: selector });
-  action.wait(100);
+  action.wait(500);
   action.release();
   await action.perform();
 };
@@ -114,14 +125,14 @@ export const longPressConversation = async (
   device: wd.PromiseWebdriver,
   userName: string
 ) => {
-  const el = await findMatchingTextAndAccessibilityId(
+  const selector = await waitForTextElementToBePresent(
     device,
     "Conversation list item",
     userName
   );
   const action = new wd.TouchAction(device);
-  action.longPress({ el });
-  action.wait(100);
-  action.release();
+  await action.longPress({ el: selector });
+  await action.wait(500);
+  await action.release();
   await action.perform();
 };

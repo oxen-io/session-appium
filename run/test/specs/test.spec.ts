@@ -43,7 +43,7 @@ async function tinyTest(platform: SupportedPlatformsType) {
   // await findLastElementInArray(device1, "Message Body");
 }
 
-describe("Tiny test", () => {
-  iosIt("Tiny test", tinyTest);
-  androidIt("Tiny test", tinyTest);
+describe("Tiny test", async () => {
+  await iosIt("Tiny test", tinyTest);
+  await androidIt("Tiny test", tinyTest);
 });

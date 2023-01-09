@@ -26,7 +26,7 @@ async function manualTestSetupTwoUsers(platform: SupportedPlatformsType) {
   await closeApp(server, device1, device2);
 }
 
-describe.skip("Manual test setup", () => {
-  iosIt("Manual test", manualTestSetupTwoUsers);
-  androidIt("Manual test", manualTestSetupTwoUsers);
+describe.skip("Manual test setup", async () => {
+  await iosIt("Manual test", manualTestSetupTwoUsers);
+  await androidIt("Manual test", manualTestSetupTwoUsers);
 });

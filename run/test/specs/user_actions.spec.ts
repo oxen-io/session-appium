@@ -277,25 +277,31 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   await closeApp(server, device1, device2);
 }
 
-describe("User actions", () => {
-  iosIt("Create contact", createContact);
-  androidIt("Create contact", createContact);
+describe("User actions", async () => {
+  await iosIt("Create contact", createContact);
+  await androidIt("Create contact", createContact);
 
-  iosIt("Block user in conversation options", blockUserInConversationOptions);
-  androidIt(
+  await iosIt(
+    "Block user in conversation options",
+    blockUserInConversationOptions
+  );
+  await androidIt(
     "Block user in conversation options",
     blockUserInConversationOptions
   );
 
-  iosIt("Block user in conversation list", blockUserInConversationList);
-  androidIt("Block user in conversation list", blockUserInConversationList);
+  await iosIt("Block user in conversation list", blockUserInConversationList);
+  await androidIt(
+    "Block user in conversation list",
+    blockUserInConversationList
+  );
 
-  androidIt("Change username", changeUsername);
-  iosIt("Change username", changeUsername);
+  await androidIt("Change username", changeUsername);
+  await iosIt("Change username", changeUsername);
 
-  androidIt("Change avatar", changeAvatar);
-  iosIt("Change avatar", changeAvatar);
+  await androidIt("Change avatar", changeAvatar);
+  await iosIt("Change avatar", changeAvatar);
 
-  androidIt("Set Nickname", setNicknameAndroid);
-  iosIt("Set Nickname", setNicknameIos);
+  await androidIt("Set Nickname", setNicknameAndroid);
+  await iosIt("Set Nickname", setNicknameIos);
 });

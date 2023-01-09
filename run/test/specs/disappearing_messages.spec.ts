@@ -63,7 +63,7 @@ async function disappearingMessages(platform: SupportedPlatformsType) {
   await closeApp(server, device1, device2);
 }
 
-describe.skip("Disappearing messages", () => {
-  iosIt("Disappearing messages", disappearingMessages);
-  androidIt("Disappearing messages", disappearingMessages);
+describe.skip("Disappearing messages", async () => {
+  await iosIt("Disappearing messages", disappearingMessages);
+  await androidIt("Disappearing messages", disappearingMessages);
 });

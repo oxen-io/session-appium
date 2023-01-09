@@ -1,5 +1,6 @@
 import { waitForElementToBePresent, waitForTextElementToBePresent } from ".";
 import wd from "wd";
+
 export const findMatchingTextInElementArray = async (
   elements: Array<AppiumElement>,
   textToLookFor: string
@@ -32,7 +33,7 @@ export const findElement = async (
   device: wd.PromiseWebdriver,
   accessibilityId: string
 ) => {
-  const selector = await device.elementByAccessibilityId(accessibilityId);
+  const selector = await waitForElementToBePresent(device, accessibilityId);
   if (!selector) {
     throw new Error(
       `findElement: Did not find accessibilityId: ${accessibilityId} `
@@ -64,7 +65,6 @@ export const findMatchingTextAndAccessibilityId = async (
   console.warn(
     `Looking for all elements with accessibilityId: "${accessibilityId}" and text: "${textToLookFor}" `
   );
-
   const elements = await device.elementsByAccessibilityId(accessibilityId);
 
   console.info(

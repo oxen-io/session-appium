@@ -1,4 +1,8 @@
-import { findMatchingTextAndAccessibilityId, sleepFor } from ".";
+import {
+  clickOnXAndYCoordinates,
+  findMatchingTextAndAccessibilityId,
+  sleepFor,
+} from ".";
 import * as wd from "wd";
 
 export const swipeLeft = async (
@@ -15,9 +19,12 @@ export const swipeLeft = async (
   try {
     const actions = new wd.TouchAction(device);
 
-    actions.longPress({ el });
-    actions.moveTo({ x: -100 });
-    actions.release();
+    await actions.longPress({ el });
+    await actions.wait(500);
+    const loc = await el.getLocation();
+
+    await actions.moveTo({ x: loc.x - 100, y: loc.y });
+    await actions.release();
 
     await actions.perform();
     console.warn("Swiped left on " + el);

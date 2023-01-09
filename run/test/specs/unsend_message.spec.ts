@@ -45,7 +45,7 @@ async function unsendMessage(platform: SupportedPlatformsType) {
   await closeApp(server, device1, device2);
 }
 
-describe("Message checks", () => {
-  iosIt("Unsend message", unsendMessage);
-  androidIt("Unsend message", unsendMessage);
+describe("Message checks", async () => {
+  await iosIt("Unsend message", unsendMessage);
+  await androidIt("Unsend message", unsendMessage);
 });
