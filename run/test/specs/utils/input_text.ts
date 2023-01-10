@@ -1,15 +1,18 @@
-import wd from "wd";
+import wd from 'wd';
+import { findElementByAccessibilityId } from './find_elements_stragegy';
+import { waitForElementToBePresent } from './wait_for';
 export const inputText = async (
-  device: wd.PromiseWebdriver,
+  device: any,
   accessibilityId: string,
   text: string
 ) => {
-  const element = await device.elementByAccessibilityId(accessibilityId);
+  await waitForElementToBePresent(device, accessibilityId);
+  const element = await findElementByAccessibilityId(device, accessibilityId);
   if (!element) {
     throw new Error(
       `inputText: Did not find accessibilityId: ${accessibilityId} `
     );
   }
-  // not sure what is the type of element here, but there is a type available for it...
-  return (element as any)?.type(text);
+
+  await device.setElementValue(text, element.ELEMENT, true);
 };

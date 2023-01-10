@@ -1,5 +1,6 @@
-import { findMatchingTextAndAccessibilityId } from ".";
-import wd from "wd";
+import { findMatchingTextAndAccessibilityId } from '.';
+import wd from 'wd';
+import { findElementByAccessibilityId } from './find_elements_stragegy';
 
 export const hasElementBeenDeleted = async (
   device: wd.PromiseWebdriver,
@@ -7,7 +8,7 @@ export const hasElementBeenDeleted = async (
 ) => {
   const fakeError = `${accessibilityId}: has been found, but shouldn't have been. OOPS`;
   try {
-    await device.elementByAccessibilityId(accessibilityId);
+    await findElementByAccessibilityId(device, accessibilityId);
 
     throw new Error(fakeError);
   } catch (e: any) {

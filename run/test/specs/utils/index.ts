@@ -1,5 +1,4 @@
 import { doFunctionIfElementExists } from "./do_function_if_element_exists";
-import wd from "wd";
 import {
   clickOnElement,
   tapOnElement,
@@ -51,6 +50,7 @@ export {
   longPressMessage,
   longPressConversation,
   pressAndHold,
+  selectByText,
   waitForElementToBePresent,
   waitForTextElementToBePresent,
   sleepFor,
@@ -61,7 +61,6 @@ export {
   findMessageWithBody,
   findLastElementInArray,
   findConfigurationMessage,
-  selectByText,
   sendMessageTo,
   sendNewMessage,
   sendMessage,

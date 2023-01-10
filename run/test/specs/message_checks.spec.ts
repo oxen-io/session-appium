@@ -72,7 +72,8 @@ async function sendImage(platform: SupportedPlatformsType) {
   await clickOnElement(device2, "Download");
 
   // Reply to message
-  await sleepFor(3000);
+  await sleepFor(5000);
+
   await longPressMessage(device2, testMessage);
 
   await clickOnElement(device2, "Reply to message");
@@ -170,6 +171,8 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
 
   await closeApp(server, device1, device2);
 }
+
+// async function sendDoc
 
 async function sendGif(platform: SupportedPlatformsType) {
   // Test sending a video

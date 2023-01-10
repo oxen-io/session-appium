@@ -4,7 +4,6 @@ import {
   openAppTwoDevices,
   SupportedPlatformsType,
 } from "../test/specs/utils/open_app";
-import { AppiumServer } from "./appiumServerType";
 
 export async function androidIt(
   title: string,

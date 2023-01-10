@@ -1,23 +1,23 @@
-import * as util from "util";
-import * as wd from "wd";
-const exec = util.promisify(require("child_process").exec);
-import { getAdbFullPath } from "./binaries";
-import { sleepFor } from ".";
+import * as util from 'util';
+import * as wd from 'wd';
+const exec = util.promisify(require('child_process').exec);
+import { getAdbFullPath } from './binaries';
+import { sleepFor } from '.';
 
 async function runScriptAndLog(toRun: string) {
   try {
-    // console.log("running ", toRun);
+    console.log('running ', toRun);
     const result = await exec(toRun);
 
     if (
       result &&
       result.stderr &&
       !result.stderr.startsWith(
-        "All files should be loaded. Notifying the device"
+        'All files should be loaded. Notifying the device'
       )
     ) {
-      // console.log(`cmd which failed: "${toRun}"`);
-      // console.log(`result: "${result.stderr}"`);
+      console.log(`cmd which failed: "${toRun}"`);
+      console.log(`result: "${result.stderr}"`);
     }
   } catch (e) {
     const cmd = (e as any).cmd;
@@ -39,7 +39,7 @@ export const installAppToDeviceName = async (
   emulatorName: string
 ) => {
   if (!emulatorName) {
-    throw new Error("emulatorName must be set");
+    throw new Error('emulatorName must be set');
   }
   const adb = getAdbFullPath();
 
