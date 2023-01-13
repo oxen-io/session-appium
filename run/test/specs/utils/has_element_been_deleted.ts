@@ -1,9 +1,9 @@
 import { findMatchingTextAndAccessibilityId } from '.';
-import wd from 'wd';
+import { AppiumNextDeviceType } from '../../../../appium_next';
 import { findElementByAccessibilityId } from './find_elements_stragegy';
 
 export const hasElementBeenDeleted = async (
-  device: wd.PromiseWebdriver,
+  device: AppiumNextDeviceType,
   accessibilityId: string
 ) => {
   const fakeError = `${accessibilityId}: has been found, but shouldn't have been. OOPS`;
@@ -19,7 +19,7 @@ export const hasElementBeenDeleted = async (
 };
 
 export const hasTextElementBeenDeleted = async (
-  device: wd.PromiseWebdriver,
+  device: AppiumNextDeviceType,
   accessibilityId: string,
   text: string
 ) => {

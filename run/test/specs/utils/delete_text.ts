@@ -1,12 +1,14 @@
-import wd from 'wd';
+import { AppiumNextDeviceType } from '../../../../appium_next';
 import { findElementByAccessibilityId } from './find_elements_stragegy';
+import { inputText } from './input_text';
 
 export const deleteText = async (
-  device: wd.PromiseWebdriver,
+  device: AppiumNextDeviceType,
   accessibilityId: string
 ) => {
-  const selector = await findElementByAccessibilityId(device, accessibilityId);
-  await selector.clear();
-  console.warn(`Text has been cleared` + selector);
+  const el = await findElementByAccessibilityId(device, accessibilityId);
+  await inputText(device, accessibilityId, '');
+
+  console.warn(`Text has been cleared` + accessibilityId);
   return;
 };

@@ -3,13 +3,14 @@ import {
   clickOnElement,
   findConfigurationMessage,
   sendNewMessage,
-} from ".";
-import { User } from "../../../types/testing";
+} from '.';
+import { AppiumNextDeviceType } from '../../../../appium_next';
+import { User } from '../../../types/testing';
 
 export const newContact = async (
-  device1: wd.PromiseWebdriver,
+  device1: AppiumNextDeviceType,
   user1: User,
-  device2: wd.PromiseWebdriver,
+  device2: AppiumNextDeviceType,
   user2: User
 ) => {
   await sendNewMessage(
@@ -21,9 +22,9 @@ export const newContact = async (
   // USER B WORKFLOW
   // Click on message request panel
   // Wait for push notification to disappear (otherwise appium can't find element)
-  await clickOnElement(device2, "Message requests banner");
+  await clickOnElement(device2, 'Message requests banner');
   // Select message from User A
-  await clickOnElement(device2, "Message request");
+  await clickOnElement(device2, 'Message request');
   // Type into message input box
   await sendMessage(
     device2,
@@ -33,7 +34,7 @@ export const newContact = async (
   // Verify config message states message request was accepted
   await findConfigurationMessage(
     device1,
-    "Your message request has been accepted."
+    'Your message request has been accepted.'
   );
 
   console.warn(`${user1.userName} and ${user2.userName} are now contacts`);

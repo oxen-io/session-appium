@@ -1,15 +1,15 @@
 import {
   findMatchingTextAndAccessibilityId,
-  findMatchingTextInElementArray,
   findMessageWithBody,
   waitForElementToBePresent,
   waitForTextElementToBePresent,
 } from '.';
-import wd from 'wd';
+import { AppiumNextDeviceType } from '../../../../appium_next';
+
 import { findElementByAccessibilityId } from './find_elements_stragegy';
 
 export const clickOnElement = async (
-  device: wd.PromiseWebdriver,
+  device: AppiumNextDeviceType,
   accessibilityId: string
 ) => {
   const el = await waitForElementToBePresent(device, accessibilityId, true);
@@ -28,21 +28,21 @@ export const clickOnElement = async (
 };
 
 export const tapOnElement = async (
-  device: wd.PromiseWebdriver,
+  device: AppiumNextDeviceType,
   accessibilityId: string
 ) => {
   const el = await findElementByAccessibilityId(device, accessibilityId);
   if (!el) {
     throw new Error(`Tap: Couldnt find accessibilityId: ${accessibilityId}`);
   }
-  device.waitForElementByAccessibilityId(accessibilityId);
+
   const actions = new wd.TouchAction(device);
   actions.tap({ el });
   await actions.perform();
 };
 
 export const selectByText = async (
-  device: wd.PromiseWebdriver,
+  device: AppiumNextDeviceType,
   accessibilityId: string,
   text: string
 ) => {
@@ -52,12 +52,13 @@ export const selectByText = async (
     accessibilityId,
     text
   );
-  await selector.click();
+  await device.click(selector.ELEMENT);
+
   return;
 };
 
 export const longPress = async (
-  device: wd.PromiseWebdriver,
+  device: AppiumNextDeviceType,
   accessibilityId: string
 ) => {
   const el = await findElementByAccessibilityId(device, accessibilityId);
@@ -75,20 +76,8 @@ export const longPress = async (
   await actions.perform();
 };
 
-export const longPressSelector = async (
-  device: wd.PromiseWebdriver,
-  selector: AppiumElement
-) => {
-  const actions = new wd.TouchAction(device);
-  actions.longPress({ el: selector });
-  actions.wait(500);
-  actions.release();
-
-  await actions.perform();
-};
-
 export const pressAndHold = async (
-  device: wd.PromiseWebdriver,
+  device: AppiumNextDeviceType,
   accessibilityId: string
 ) => {
   const element = await waitForElementToBePresent(device, accessibilityId);
@@ -99,13 +88,13 @@ export const pressAndHold = async (
     );
   }
 
-  await device.touchLongClick(element.ELEMENT, 0, 0, 3000);
+  await device.touchLongClick(element.ELEMENT);
 
   console.log(`Press and hold successful: ${accessibilityId}`);
 };
 
 export const longPressMessage = async (
-  device: wd.PromiseWebdriver,
+  device: AppiumNextDeviceType,
   textToLookFor: string
 ) => {
   const el = await findMessageWithBody(device, textToLookFor);
@@ -118,7 +107,7 @@ export const longPressMessage = async (
 };
 
 export const longPressConversation = async (
-  device: wd.PromiseWebdriver,
+  device: AppiumNextDeviceType,
   userName: string
 ) => {
   const selector = await waitForTextElementToBePresent(

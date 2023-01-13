@@ -1,6 +1,7 @@
-import wd from "wd";
+import { AppiumNextDeviceType } from '../../../../appium_next';
+
 export const clickOnXAndYCoordinates = async (
-  device: wd.PromiseWebdriver,
+  device: AppiumNextDeviceType,
   xCoordinate: number,
   yCoordinate: number
 ) => {

@@ -1,17 +1,28 @@
-import { waitForElementToBePresent, waitForTextElementToBePresent } from ".";
-import wd from "wd";
+import { waitForElementToBePresent, waitForTextElementToBePresent } from '.';
+import {
+  AppiumNextDeviceType,
+  AppiumNextElementType,
+} from '../../../../appium_next';
+import { getTextFromElement } from './element_text';
+import {
+  findElementByAccessibilityId,
+  findElementsByAccessibilityId,
+} from './find_elements_stragegy';
 
 export const findMatchingTextInElementArray = async (
-  elements: Array<AppiumElement>,
+  device: AppiumNextDeviceType,
+  elements: Array<AppiumNextElementType>,
   textToLookFor: string
-): Promise<AppiumElement | null> => {
+): Promise<AppiumNextElementType | null> => {
   if (elements && elements.length) {
     const matching = await findAsync(elements, async (e) => {
-      const text = await e?.text?.();
-      // console.warn(
-      //   `Looking for text: "${textToLookFor}" and found text: "${text}"`
-      // );
-      return text && text.toLowerCase() === textToLookFor.toLowerCase();
+      const text = await getTextFromElement(device, e);
+      console.warn(
+        `Looking for text: "${textToLookFor}" and found text: "${text}"`
+      );
+      return Boolean(
+        text && text.toLowerCase() === textToLookFor.toLowerCase()
+      );
     });
 
     return matching || null;
@@ -19,10 +30,10 @@ export const findMatchingTextInElementArray = async (
   return null;
 };
 
-export const findAsync = async (
-  arr: Array<AppiumElement>,
-  asyncCallback: (opts?: any) => Promise<any>
-) => {
+const findAsync = async (
+  arr: Array<AppiumNextElementType>,
+  asyncCallback: (opts?: AppiumNextElementType) => Promise<boolean>
+): Promise<AppiumNextElementType> => {
   const promises = arr.map(asyncCallback);
   const results = await Promise.all(promises);
   const index = results.findIndex((result) => result);
@@ -30,7 +41,7 @@ export const findAsync = async (
 };
 
 export const findElement = async (
-  device: wd.PromiseWebdriver,
+  device: AppiumNextDeviceType,
   accessibilityId: string
 ) => {
   const selector = await waitForElementToBePresent(device, accessibilityId);
@@ -45,33 +56,34 @@ export const findElement = async (
 };
 
 export const findMessageWithBody = async (
-  device: wd.PromiseWebdriver,
+  device: AppiumNextDeviceType,
   textToLookFor: string
-): Promise<AppiumElement> => {
-  await waitForTextElementToBePresent(device, "Message Body", textToLookFor);
+): Promise<AppiumNextElementType> => {
+  await waitForTextElementToBePresent(device, 'Message Body', textToLookFor);
   const message = await findMatchingTextAndAccessibilityId(
     device,
-    "Message Body",
+    'Message Body',
     textToLookFor
   );
   return message;
 };
 
 export const findMatchingTextAndAccessibilityId = async (
-  device: wd.PromiseWebdriver,
+  device: AppiumNextDeviceType,
   accessibilityId: string,
   textToLookFor: string
-): Promise<AppiumElement> => {
+): Promise<AppiumNextElementType> => {
   console.warn(
     `Looking for all elements with accessibilityId: "${accessibilityId}" and text: "${textToLookFor}" `
   );
-  const elements = await device.elementsByAccessibilityId(accessibilityId);
+  const elements = await findElementsByAccessibilityId(device, accessibilityId);
 
   console.info(
     `found ${elements.length} matching accessibilityId ${accessibilityId}. Now filtering for text`
   );
 
   const foundElementMatchingText = await findMatchingTextInElementArray(
+    device,
     elements,
     textToLookFor
   );
@@ -85,14 +97,14 @@ export const findMatchingTextAndAccessibilityId = async (
 };
 
 export const findLastElementInArray = async (
-  device: wd.PromiseWebdriver,
+  device: AppiumNextDeviceType,
   accessibilityId: string
-): Promise<AppiumElement> => {
-  const elements = await device.elementsByAccessibilityId(accessibilityId);
+): Promise<AppiumNextElementType> => {
+  const elements = await findElementsByAccessibilityId(device, accessibilityId);
 
   console.log(`Elements length: ${elements.length}`);
 
-  const [lastElement] = await elements.slice(-1);
+  const [lastElement] = elements.slice(-1);
 
   if (!elements) {
     throw new Error(`No elements found with ${accessibilityId}`);
@@ -102,14 +114,14 @@ export const findLastElementInArray = async (
 };
 
 export const findConfigurationMessage = async (
-  device: wd.PromiseWebdriver,
+  device: AppiumNextDeviceType,
   messageText: string
 ) => {
   console.warn(`Looking for configuration message with ` + messageText);
-  await waitForElementToBePresent(device, "Configuration message");
+  await waitForElementToBePresent(device, 'Configuration message');
   const configMessage = findMatchingTextAndAccessibilityId(
     device,
-    "Configuration message",
+    'Configuration message',
     messageText
   );
   if (!configMessage) {

@@ -1,8 +1,8 @@
-import * as wd from 'wd';
+import { AppiumNextDeviceType } from '../../../../appium_next';
 import { getTextFromElement } from './element_text';
 import { findElementByAccessibilityId } from './find_elements_stragegy';
 export const saveText = async (
-  device: wd.PromiseWebdriver,
+  device: AppiumNextDeviceType,
   accessibilityId: string
 ) => {
   const selector = await findElementByAccessibilityId(device, accessibilityId);

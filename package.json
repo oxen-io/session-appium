@@ -14,6 +14,7 @@
   "devDependencies": {
     "@appium/execute-driver-plugin": "^3.0.1",
     "@appium/images-plugin": "^2.0.1",
+    "@types/lodash": "^4.14.191",
     "@wdio/types": "^8.1.2",
     "appium-uiautomator2-driver": "^2.12.1",
     "appium-xcuitest-driver": "^4.16.7",

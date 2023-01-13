@@ -1,17 +1,17 @@
-import { User } from "../../../types/testing";
-import { longPressMessage, clickOnElement, sendMessage } from ".";
-import * as wd from "wd";
+import { User } from '../../../types/testing';
+import { longPressMessage, clickOnElement, sendMessage } from '.';
+import { AppiumNextDeviceType } from '../../../../appium_next';
 
 export const replyToMessage = async (
-  device: wd.PromiseWebdriver,
+  device: AppiumNextDeviceType,
   user: User,
-  selector: any
+  body: string
 ) => {
   // Reply to media message from user B
   // Long press on imageSent element
-  await longPressMessage(device, selector);
+  await longPressMessage(device, body);
   // Select 'Reply' option
-  await clickOnElement(device, "Reply to message");
+  await clickOnElement(device, 'Reply to message');
   // Send message
   const sentMessage = await sendMessage(
     device,

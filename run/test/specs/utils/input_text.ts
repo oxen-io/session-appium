@@ -1,8 +1,9 @@
-import wd from 'wd';
+import { AppiumNextDeviceType } from '../../../../appium_next';
 import { findElementByAccessibilityId } from './find_elements_stragegy';
 import { waitForElementToBePresent } from './wait_for';
+
 export const inputText = async (
-  device: any,
+  device: AppiumNextDeviceType,
   accessibilityId: string,
   text: string
 ) => {
@@ -14,5 +15,5 @@ export const inputText = async (
     );
   }
 
-  await device.setElementValue(text, element.ELEMENT, true);
+  await device.setValue(text, element.ELEMENT);
 };

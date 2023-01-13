@@ -1,5 +1,4 @@
 import * as util from 'util';
-import * as wd from 'wd';
 const exec = util.promisify(require('child_process').exec);
 import { getAdbFullPath } from './binaries';
 import { sleepFor } from '.';

@@ -1,7 +1,7 @@
-import wd from 'wd';
+import { AppiumNextDeviceType } from '../../../../appium_next';
 import { findElementByAccessibilityId } from './find_elements_stragegy';
 export const doFunctionIfElementExists = async (
-  device: wd.PromiseWebdriver,
+  device: AppiumNextDeviceType,
   accessibilityId: string,
   toRun: () => Promise<any>
 ) => {
