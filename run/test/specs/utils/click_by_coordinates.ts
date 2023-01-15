@@ -5,11 +5,7 @@ export const clickOnXAndYCoordinates = async (
   xCoordinate: number,
   yCoordinate: number
 ) => {
-  const actions = new wd.TouchAction(device);
-
-  actions.tap({ x: xCoordinate, y: yCoordinate });
-  actions.release();
-
-  await actions.perform();
-  console.log(`Tapped coordinates`);
+  await device.touchDown(xCoordinate, yCoordinate);
+  await device.touchUp(xCoordinate, yCoordinate);
+  console.log(`Tapped coordinates ${xCoordinate}:${yCoordinate}`);
 };

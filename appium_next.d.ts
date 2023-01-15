@@ -31,6 +31,10 @@ export interface AppiumNextDeviceType {
     caps: W3CCapabilities<any>
   ) => Promise<[string, Record<string, any>]>;
   deleteSession: (sessionId?: string) => Promise<void>; // not sure yet
+
+  touchDown(x: number, y: number): Promise<void>;
+  touchUp(x: number, y: number): Promise<void>;
+  touchMove(x: number, y: number): Promise<void>;
 }
 
 export type AppiumNextElementType = {

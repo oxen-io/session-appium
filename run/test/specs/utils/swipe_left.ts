@@ -13,19 +13,16 @@ export const swipeLeft = async (
   );
 
   try {
-    const actions = new wd.TouchAction(device);
+    await device.touchLongClick(el.ELEMENT);
 
-    await actions.longPress({ el });
-    await actions.wait(500);
     const loc = await device.getElementRect(el.ELEMENT);
     if (!loc) {
       throw new Error('did not find element rectangle');
     }
+    // await device.touchDown(, y);
 
-    await actions.moveTo({ x: loc.x - 100, y: loc.y });
-    await actions.release();
+    await device.touchMove(loc.x - 100, loc.y);
 
-    await actions.perform();
     console.warn('Swiped left on ' + el);
     // let some time for swipe action to happen and UI to update
     await sleepFor(300);

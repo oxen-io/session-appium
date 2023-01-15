@@ -35,10 +35,7 @@ export const tapOnElement = async (
   if (!el) {
     throw new Error(`Tap: Couldnt find accessibilityId: ${accessibilityId}`);
   }
-
-  const actions = new wd.TouchAction(device);
-  actions.tap({ el });
-  await actions.perform();
+  await device.click(el.ELEMENT);
 };
 
 export const selectByText = async (
@@ -67,13 +64,8 @@ export const longPress = async (
       `pressAndHold: Could not find accessibilityId: ${accessibilityId}`
     );
   }
-  const actions = new wd.TouchAction(device);
 
-  actions.longPress({ el });
-  actions.wait(500);
-  actions.release();
-
-  await actions.perform();
+  await device.touchLongClick(el.ELEMENT);
 };
 
 export const pressAndHold = async (
@@ -98,26 +90,17 @@ export const longPressMessage = async (
   textToLookFor: string
 ) => {
   const el = await findMessageWithBody(device, textToLookFor);
-
-  const actions = new wd.TouchAction(device);
-  actions.longPress({ el });
-  actions.wait(500);
-  actions.release();
-  await actions.perform();
+  await device.touchLongClick(el.ELEMENT);
 };
 
 export const longPressConversation = async (
   device: AppiumNextDeviceType,
   userName: string
 ) => {
-  const selector = await waitForTextElementToBePresent(
+  const el = await waitForTextElementToBePresent(
     device,
     'Conversation list item',
     userName
   );
-  const action = new wd.TouchAction(device);
-  action.longPress({ el: selector });
-  action.wait(500);
-  action.release();
-  await action.perform();
+  await device.touchLongClick(el.ELEMENT);
 };
