@@ -1,12 +1,12 @@
-import { findMatchingTextInElementArray } from '.';
+import { findMatchingTextInElementArray } from ".";
 import {
   findElementByAccessibilityId,
   findElementsByAccessibilityId,
-} from './find_elements_stragegy';
+} from "./find_elements_stragegy";
 import {
   AppiumNextDeviceType,
   AppiumNextElementType,
-} from '../../../../appium_next';
+} from "../../../../appium_next";
 
 export function sleepFor(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -25,7 +25,9 @@ export const waitForElementToBePresent = async (
 
   while (selector === null) {
     try {
-      console.log(`Waiting for '${accessibilityId}' to be present`);
+      console.log(
+        `Waiting for accessibility ID '${accessibilityId}' to be present`
+      );
 
       selector = await findElementByAccessibilityId(device, accessibilityId);
 
@@ -40,7 +42,7 @@ export const waitForElementToBePresent = async (
       currentWait += waitPerLoop;
 
       if (currentWait >= maxWaitMSec) {
-        console.log('Waited for too long');
+        console.log("Waited for too long");
         throw new Error(`waited for too long looking for '${accessibilityId}'`);
       }
     }
@@ -62,7 +64,9 @@ export const waitForTextElementToBePresent = async (
 
   while (selector === null) {
     try {
-      console.log(`Waiting for '${accessibilityId} to be present with ${text}`);
+      console.log(
+        `Waiting for accessibility ID '${accessibilityId} to be present with ${text}`
+      );
 
       const elements = await findElementsByAccessibilityId(
         device,
@@ -73,10 +77,10 @@ export const waitForTextElementToBePresent = async (
     } catch (e) {
       await sleepFor(waitPerLoop);
       currentWait += waitPerLoop;
-      console.log('Waiting...');
+      console.log("Waiting...");
 
       if (currentWait >= maxWaitMSec) {
-        console.log('Waited too long');
+        console.log("Waited too long");
         throw new Error(
           `Waited for too long looking for '${accessibilityId}' and '${text}`
         );

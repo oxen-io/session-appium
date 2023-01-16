@@ -1,5 +1,5 @@
-import { W3CCapabilities } from 'appium/build/lib/appium';
-import { ExternalDriver } from '@appium/types/build/lib/driver';
+import { W3CCapabilities } from "appium/build/lib/appium";
+import { ExternalDriver } from "@appium/types/build/lib/driver";
 
 // typings comes from :
 //    node_modules/@appium/types/build/lib/driver.d.ts
@@ -8,14 +8,15 @@ import { ExternalDriver } from '@appium/types/build/lib/driver';
 
 export interface MightBeUndefinedDeviceType extends ExternalDriver<any> {}
 
-export interface AppiumNextDeviceType {
+export type AppiumNextDeviceType = {
   pushFile(remotePath: string, payloadBase64: string): promise<void>;
+
   findElement(
-    strategy: 'accessibility id' | 'xpath',
+    strategy: "accessibility id" | "xpath",
     selector: string
   ): Promise<AppiumNextElementType>;
   findElements(
-    strategy: 'accessibility id' | 'xpath',
+    strategy: "accessibility id" | "xpath",
     selector: string
   ): Promise<AppiumNextElementType[]>;
   setValue: (text: string, element: string) => Promise<void>;
@@ -35,7 +36,9 @@ export interface AppiumNextDeviceType {
   touchDown(x: number, y: number): Promise<void>;
   touchUp(x: number, y: number): Promise<void>;
   touchMove(x: number, y: number): Promise<void>;
-}
+
+  postDismissAlert(): Promise<void>;
+};
 
 export type AppiumNextElementType = {
   ELEMENT: string;

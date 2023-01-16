@@ -1,30 +1,30 @@
 import {
   AppiumW3CCapabilities,
+  AppiumXCUITestCapabilities,
   DesiredCapabilities,
-} from '@wdio/types/build/Capabilities';
+} from "@wdio/types/build/Capabilities";
 import {
   AppiumDriverConstraints,
   W3CCapabilities,
-} from 'appium/build/lib/appium';
+} from "appium/build/lib/appium";
 
 const iosAppFullPath = `/Users/emilyburton/Library/Developer/Xcode/DerivedData/Session-bkhewuibvlxdsxevpurvxorzvqpd/Build/Products/App Store Release-iphonesimulator/Session.app`;
 
-let sharediOSCapabilities: AppiumW3CCapabilities = {
-  'appium:platformName': 'iOS',
-  'appium:platformVersion': '16.2',
-  'appium:deviceName': 'iPhone 14 Pro Max',
-  'appium:automationName': 'XCUITest',
-  'appium:app': iosAppFullPath,
-  'appium:bundleId': 'com.loki-project.loki-messenger',
-  'appium:newCommandTimeout': 300000,
-  // useNewWDA: true,
-
-  'appium:showXcodeLog': true,
-} as DesiredCapabilities;
+const sharediOSCapabilities: AppiumXCUITestCapabilities = {
+  "appium:platformName": "iOS",
+  "appium:platformVersion": "16.2",
+  "appium:deviceName": "iPhone 14 Pro Max",
+  "appium:automationName": "XCUITest",
+  "appium:app": iosAppFullPath,
+  "appium:bundleId": "com.loki-project.loki-messenger",
+  "appium:newCommandTimeout": 300000,
+  "appium:useNewWDA": false,
+  "appium:showXcodeLog": false,
+  "appium:autoDismissAlerts": true,
+} as AppiumXCUITestCapabilities;
 export type CapabilitiesIndexType = 0 | 1 | 2 | 3;
 
 function getIOSSimulatorUUIDFromEnv(index: CapabilitiesIndexType): string {
-  return '';
   switch (index) {
     case 0:
       if (process.env.IOS_FIRST_SIMULATOR) {
@@ -64,31 +64,27 @@ const emulator2Udid = getIOSSimulatorUUIDFromEnv(1);
 const emulator3Udid = getIOSSimulatorUUIDFromEnv(2);
 const emulator4Udid = getIOSSimulatorUUIDFromEnv(3);
 
-const capabilities1: AppiumW3CCapabilities = {
+const capabilities1: AppiumXCUITestCapabilities = {
   ...sharediOSCapabilities,
-  'appium:udid': emulator1Udid,
-
-  // wdaLocalPort: 8102,
+  "appium:udid": emulator1Udid,
+  "appium:wdaLocalPort": 1253,
 };
-const capabilities2: AppiumW3CCapabilities = {
+const capabilities2: AppiumXCUITestCapabilities = {
   ...sharediOSCapabilities,
-
-  'appium:udid': emulator2Udid,
-  // wdaLocalPort: 8104,
+  "appium:wdaLocalPort": 1254,
+  "appium:udid": emulator2Udid,
 };
 
-const capabilities3: AppiumW3CCapabilities = {
+const capabilities3: AppiumXCUITestCapabilities = {
   ...sharediOSCapabilities,
-  'appium:udid': emulator3Udid,
-
-  // wdaLocalPort: 8106,
+  "appium:udid": emulator3Udid,
+  "appium:wdaLocalPort": 1255,
 };
 
-const capabilities4: AppiumW3CCapabilities = {
+const capabilities4: AppiumXCUITestCapabilities = {
   ...sharediOSCapabilities,
-  'appium:udid': emulator4Udid,
-
-  // wdaLocalPort: 8108,
+  "appium:udid": emulator4Udid,
+  "appium:wdaLocalPort": 1256,
 };
 
 const countOfIosCapabilities = 4;

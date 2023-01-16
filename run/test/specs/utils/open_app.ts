@@ -1,24 +1,24 @@
-import { main as appiumMain } from 'appium';
+import { main as appiumMain } from "appium";
 import {
   androidCapabilities,
   getAndroidCapabilities,
   getAndroidUuid,
-} from './capabilities_android';
-import { CapabilitiesIndexType, getIosCapabilities } from './capabilities_ios';
-import { installAppToDeviceName } from './utilities';
+} from "./capabilities_android";
+import { CapabilitiesIndexType, getIosCapabilities } from "./capabilities_ios";
+import { installAppToDeviceName } from "./utilities";
 
-import { AppiumServer } from '@appium/types';
+import { AppiumServer } from "@appium/types";
 
-import * as androidDriver from 'appium-uiautomator2-driver';
-import * as iosDriver from 'appium-xcuitest-driver';
+import * as androidDriver from "appium-uiautomator2-driver";
+import * as iosDriver from "appium-xcuitest-driver";
 
-import { DriverOpts } from 'appium/build/lib/appium';
-import { AppiumNextDeviceType } from '../../../../appium_next';
+import { DriverOpts } from "appium/build/lib/appium";
+import { AppiumNextDeviceType } from "../../../../appium_next";
 
 const APPIUM_PORT = 4728;
 export const APPIUM_IOS_PORT = 8100;
 
-export type SupportedPlatformsType = 'android' | 'ios';
+export type SupportedPlatformsType = "android" | "ios";
 
 const openAppOnPlatform = async (
   platform: SupportedPlatformsType,
@@ -28,7 +28,7 @@ const openAppOnPlatform = async (
   server: AppiumServer;
   device: AppiumNextDeviceType;
 }> => {
-  return platform === 'ios'
+  return platform === "ios"
     ? openiOSApp(capabilitiesIndex, server)
     : openAndroidApp(capabilitiesIndex, server);
 };
@@ -50,11 +50,13 @@ export const openAppTwoDevices = async (
   device2: AppiumNextDeviceType;
 }> => {
   const server = await openAppiumServerOnly(platform);
+  console.warn("server started");
 
   const [app1, app2] = await Promise.all([
     openAppOnPlatform(platform, 0, server),
     openAppOnPlatform(platform, 1, server),
   ]);
+  console.warn("voth apps started");
 
   return { server, device1: app1.device, device2: app2.device };
 };
@@ -134,8 +136,8 @@ const openAndroidApp = async (
   device: AppiumNextDeviceType;
 }> => {
   const newServer: AppiumServer =
-    server || (await openAppiumServerOnly('android'));
-  console.warn('openAndroidApp server ', newServer ? 'created' : 'not created');
+    server || (await openAppiumServerOnly("android"));
+  console.warn("openAndroidApp server ", newServer ? "created" : "not created");
 
   await installAppToDeviceName(
     androidCapabilities.androidAppFullPath,
@@ -166,38 +168,33 @@ const openiOSApp = async (
   server: AppiumServer;
   device: AppiumNextDeviceType;
 }> => {
-  console.warn('openiOSApp');
-  const newServer = server || (await openAppiumServerOnly('ios'));
-  console.warn('openiOSApp server ', newServer ? 'created' : 'not created');
+  console.warn("openiOSApp");
+  const newServer = server || (await openAppiumServerOnly("ios"));
 
   const opts: DriverOpts = {
-    address: `http://localhost:${APPIUM_IOS_PORT}`,
+    address: `http://localhost:9102`,
   } as DriverOpts;
   const driver = (iosDriver as any).XCUITestDriver;
 
-  const device = new driver(opts);
+  const device: AppiumNextDeviceType = new driver(opts);
 
   const sess = await device.createSession(
     getIosCapabilities(capabilitiesIndex)
   );
 
-  console.warn('vdffd ios ', driver.prototype);
-
-  // await device.dismissAlert();
-  // console.warn("Alerts dismissed");
-
   return { server: newServer, device };
 };
 
-let serverAndroid: AppiumServer | undefined = undefined;
-let serverIos: AppiumServer | undefined = undefined;
+let serverAndroid: AppiumServer | undefined;
+let serverIos: AppiumServer | undefined;
+
 const openAppiumServerOnly = async (platform: SupportedPlatformsType) => {
-  if (platform === 'android') {
+  if (platform === "android") {
     if (!serverAndroid) {
       serverAndroid = await appiumMain({
         port: APPIUM_PORT,
-        basePath: '/wd/hub',
-        loglevel: 'info',
+        basePath: "/wd/hub",
+        loglevel: "info",
         sessionOverride: true,
       });
     }
@@ -207,7 +204,7 @@ const openAppiumServerOnly = async (platform: SupportedPlatformsType) => {
   if (!serverIos) {
     serverIos = await appiumMain({
       port: 8102,
-      loglevel: 'info',
+      loglevel: "info",
       sessionOverride: true,
     });
   }
@@ -227,10 +224,10 @@ export const closeApp = async (
   await device3?.deleteSession();
   await device4?.deleteSession();
 
-  console.info('waiting server close');
+  console.info("waiting server close");
 
   await server.close();
-  console.info('server closed');
+  console.info("server closed");
 };
 
 // export const closeAppAsArray = async (
