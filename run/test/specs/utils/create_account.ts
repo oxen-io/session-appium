@@ -17,7 +17,7 @@ export const newUser = async (
   platform: SupportedPlatformsType
 ): Promise<User> => {
   // Click create session ID
-  const createSessionId = "Create Session ID";
+  const createSessionId = "Create session ID";
   await waitForElementToBePresent(device, createSessionId);
   await clickOnElement(device, createSessionId);
   // Wait for animation to generate session id

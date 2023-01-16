@@ -86,14 +86,14 @@ export async function iosIt(
 //   ) => Promise<any>
 // ) {
 //   return it(`${title} ${platform}`, async () => {
-//     const { server, devices } = T exte await openAppTwoDevicesAsArray(platform);
+//     const {  devices } = T exte await openAppTwoDevicesAsArray(platform);
 
 //     try {
 //       await test(platform, devices);
 //     } catch (e) {
 //       throw e;
 //     } finally {
-//       await closeAppAsArray(server, devices);
+//       await closeAppAsArray(devices);
 //     }
 //   });
 // }
@@ -129,7 +129,7 @@ export async function iosIt(
 //   ) => Promise<any>
 // ) {
 //   return it(`${title} ${platform}`, async () => {
-//     const { server, device1, device2, device3 } = await openAppThreeDevices(
+//     const {  device1, device2, device3 } = await openAppThreeDevices(
 //       platform
 //     );
 //     const arr3Devices: ArrayLength3 = [device1, device2, device3];
@@ -139,7 +139,7 @@ export async function iosIt(
 //     } catch (e) {
 //       throw e;
 //     } finally {
-//       await closeApp(server, device1, device2, device3);
+//       await closeApp(device1, device2, device3);
 //     }
 //   });
 // }

@@ -3,10 +3,10 @@ import {
   findMessageWithBody,
   waitForElementToBePresent,
   waitForTextElementToBePresent,
-} from '.';
-import { AppiumNextDeviceType } from '../../../../appium_next';
+} from ".";
+import { AppiumNextDeviceType } from "../../../../appium_next";
 
-import { findElementByAccessibilityId } from './find_elements_stragegy';
+import { findElementByAccessibilityId } from "./find_elements_stragegy";
 
 export const clickOnElement = async (
   device: AppiumNextDeviceType,
@@ -17,14 +17,7 @@ export const clickOnElement = async (
   if (!el) {
     throw new Error(`Tap: Couldnt find accessibilityId: ${accessibilityId}`);
   }
-  console.warn('el', el);
   await device.click(el.ELEMENT);
-
-  // const actions = new wd.TouchAction(device);
-  // await actions.tap({ el });
-  // await actions.perform();
-
-  return;
 };
 
 export const tapOnElement = async (
@@ -99,7 +92,7 @@ export const longPressConversation = async (
 ) => {
   const el = await waitForTextElementToBePresent(
     device,
-    'Conversation list item',
+    "Conversation list item",
     userName
   );
   await device.touchLongClick(el.ELEMENT);

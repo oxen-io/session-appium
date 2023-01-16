@@ -15,7 +15,7 @@ import {
 import { iosIt, androidIt } from "../../types/sessionIt";
 
 async function unsendMessage(platform: SupportedPlatformsType) {
-  const { server, device1, device2 } = await openAppTwoDevices(platform);
+  const { device1, device2 } = await openAppTwoDevices(platform);
 
   // Create two users
   const [userA, userB] = await Promise.all([
@@ -42,7 +42,7 @@ async function unsendMessage(platform: SupportedPlatformsType) {
   await waitForElementToBePresent(device2, "Deleted message");
 
   // Excellent
-  await closeApp(server, device1, device2);
+  await closeApp(device1, device2);
 }
 
 describe("Message checks", async () => {

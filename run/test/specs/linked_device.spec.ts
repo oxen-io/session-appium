@@ -31,7 +31,7 @@ import {
 
 async function linkDevice(platform: SupportedPlatformsType) {
   // Open server and two devices
-  const { server, device1, device2 } = await openAppTwoDevices(platform);
+  const { device1, device2 } = await openAppTwoDevices(platform);
   // link device
   await linkedDevice(device1, device2, "User A", platform);
   // Check that 'Youre almost finished' reminder doesn't pop up on device2
@@ -42,13 +42,11 @@ async function linkDevice(platform: SupportedPlatformsType) {
   await findElement(device2, "Username");
   await findElement(device2, "Session ID");
 
-  await closeApp(server, device1, device2);
+  await closeApp(device1, device2);
 }
 
 async function contactsSyncLinkedDevice(platform: SupportedPlatformsType) {
-  const { server, device1, device2, device3 } = await openAppThreeDevices(
-    platform
-  );
+  const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // link device
   const userA = await linkedDevice(device1, device3, "User A", platform);
 
@@ -62,12 +60,13 @@ async function contactsSyncLinkedDevice(platform: SupportedPlatformsType) {
     "Conversation list item",
     userB.userName
   );
-  await closeApp(server, device1, device2, device3);
+  await closeApp(device1, device2, device3);
 }
 
 async function groupCreationLinkedDevice(platform: SupportedPlatformsType) {
-  const { server, device1, device2, device3, device4 } =
-    await openAppFourDevices(platform);
+  const { device1, device2, device3, device4 } = await openAppFourDevices(
+    platform
+  );
 
   const userA = await linkedDevice(device1, device4, "User A", platform);
 
@@ -143,12 +142,12 @@ async function groupCreationLinkedDevice(platform: SupportedPlatformsType) {
       "You renamed group to " + `'${newGroupName}'`
     )
   );
-  await closeApp(server, device1, device2, device3, device4);
+  await closeApp(device1, device2, device3, device4);
 }
 
 async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
   // Open server and two devices
-  const { server, device1, device2 } = await openAppTwoDevices(platform);
+  const { device1, device2 } = await openAppTwoDevices(platform);
   // link device
   const userA = await linkedDevice(device1, device2, "Alice", platform);
   // Change username on device 1
@@ -165,13 +164,11 @@ async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
   const changedUsername = await saveText(device2, "Username");
   expect(changedUsername).toBe(newUsername);
 
-  await closeApp(server, device1, device2);
+  await closeApp(device1, device2);
 }
 
 async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
-  const { server, device1, device2, device3 } = await openAppThreeDevices(
-    platform
-  );
+  const { device1, device2, device3 } = await openAppThreeDevices(platform);
 
   const userA = await linkedDevice(device1, device3, "Alice", platform);
 
@@ -200,13 +197,11 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
   // Check linked device for deleted message
   await hasTextElementBeenDeleted(device3, "Message body", sentMessage);
   // Close app
-  await closeApp(server, device1, device2, device3);
+  await closeApp(device1, device2, device3);
 }
 
 async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
-  const { server, device1, device2, device3 } = await openAppThreeDevices(
-    platform
-  );
+  const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // link device
   const userA = await linkedDevice(device1, device3, "Alice", platform);
   // Create contact to block
@@ -248,12 +243,12 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
   await waitForTextElementToBePresent(device1, "Message Body", sentMessage);
 
   // Everything works then close app
-  await closeApp(server, device1, device2, device3);
+  await closeApp(device1, device2, device3);
 }
 
 // async function avatarRestored(platform: SupportedPlatformsType) {
 //   // open server and two devices
-//   const { server, device1, device2 } = await openAppTwoDevices(platform);
+//   const {  device1, device2 } = await openAppTwoDevices(platform);
 //   // Link device
 //   const user = await linkedDevice(device1, device2, "User A");
 //   // Take screenshot of avatar in device 1

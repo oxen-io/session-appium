@@ -19,7 +19,7 @@ import {
 async function acceptRequest(platform: SupportedPlatformsType) {
   // Check 'accept' button
   // Open app
-  const { server, device1, device2 } = await openAppTwoDevices(platform);
+  const { device1, device2 } = await openAppTwoDevices(platform);
   // Create two users
   const [userA, userB] = await Promise.all([
     newUser(device1, "User A", platform),
@@ -46,12 +46,12 @@ async function acceptRequest(platform: SupportedPlatformsType) {
     "Your message request has been accepted."
   );
   // Close app
-  await closeApp(server, device1, device2);
+  await closeApp(device1, device2);
 }
 
 async function declineRequest(platform: SupportedPlatformsType) {
   // Check 'decline' button
-  const { server, device1, device2 } = await openAppTwoDevices(platform);
+  const { device1, device2 } = await openAppTwoDevices(platform);
   // Create two users
   const [userA, userB] = await Promise.all([
     newUser(device1, "User A", platform),
@@ -78,12 +78,12 @@ async function declineRequest(platform: SupportedPlatformsType) {
   await waitForElementToBePresent(device2, "New conversation button");
 
   // Close app
-  await closeApp(server, device1, device2);
+  await closeApp(device1, device2);
 }
 
 async function acceptRequestWithText(platform: SupportedPlatformsType) {
   // Check accept request by sending text message
-  const { server, device1, device2 } = await openAppTwoDevices(platform);
+  const { device1, device2 } = await openAppTwoDevices(platform);
   // Create two users
   const [userA, userB] = await Promise.all([
     newUser(device1, "User A", platform),
@@ -109,11 +109,11 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
     "Your message request has been accepted."
   );
   // Close app
-  await closeApp(server, device1, device2);
+  await closeApp(device1, device2);
 }
 
 async function blockRequest(platform: SupportedPlatformsType) {
-  const { server, device1, device2 } = await openAppTwoDevices(platform);
+  const { device1, device2 } = await openAppTwoDevices(platform);
   const [userA, userB] = await Promise.all([
     newUser(device1, "User A", platform),
     newUser(device2, "User B", platform),
@@ -142,7 +142,7 @@ async function blockRequest(platform: SupportedPlatformsType) {
   await sleepFor(10000);
   await hasTextElementBeenDeleted(device2, "Message Body", blockedMessage);
   // Close app
-  await closeApp(server, device1, device2);
+  await closeApp(device1, device2);
 }
 
 describe("Message", async () => {

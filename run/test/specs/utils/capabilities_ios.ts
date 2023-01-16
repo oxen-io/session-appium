@@ -11,11 +11,12 @@ import {
 const iosAppFullPath = `/Users/emilyburton/Library/Developer/Xcode/DerivedData/Session-bkhewuibvlxdsxevpurvxorzvqpd/Build/Products/App Store Release-iphonesimulator/Session.app`;
 
 const sharediOSCapabilities: AppiumXCUITestCapabilities = {
+  "appium:app": iosAppFullPath,
+
   "appium:platformName": "iOS",
   "appium:platformVersion": "16.2",
   "appium:deviceName": "iPhone 14 Pro Max",
   "appium:automationName": "XCUITest",
-  "appium:app": iosAppFullPath,
   "appium:bundleId": "com.loki-project.loki-messenger",
   "appium:newCommandTimeout": 300000,
   "appium:useNewWDA": false,

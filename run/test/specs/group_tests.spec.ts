@@ -22,9 +22,7 @@ import {
 
 async function groupCreation(platform: SupportedPlatformsType) {
   const testGroupName = "The Manhattan Crew";
-  const { server, device1, device2, device3 } = await openAppThreeDevices(
-    platform
-  );
+  const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -50,15 +48,13 @@ async function groupCreation(platform: SupportedPlatformsType) {
     "Group created"
   );
   // Close server and devices
-  await closeApp(server, device1, device2, device3);
+  await closeApp(device1, device2, device3);
 }
 
 async function changeGroupName(platform: SupportedPlatformsType) {
   const testGroupName = "Group name";
   const newGroupName = "Changed group name";
-  const { server, device1, device2, device3 } = await openAppThreeDevices(
-    platform
-  );
+  const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -119,12 +115,13 @@ async function changeGroupName(platform: SupportedPlatformsType) {
       "You renamed group to " + `'${newGroupName}'`
     )
   );
-  await closeApp(server, device1, device2, device3);
+  await closeApp(device1, device2, device3);
 }
 
 async function addContactToGroup(platform: SupportedPlatformsType) {
-  const { server, device1, device2, device3, device4 } =
-    await openAppFourDevices(platform);
+  const { device1, device2, device3, device4 } = await openAppFourDevices(
+    platform
+  );
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -176,13 +173,11 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     "Configuration message",
     "Group created"
   );
-  closeApp(server, device1, device2, device3, device4);
+  await closeApp(device1, device2, device3, device4);
 }
 
 async function mentionsForGroups(platform: SupportedPlatformsType) {
-  const { server, device1, device2, device3 } = await openAppThreeDevices(
-    platform
-  );
+  const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -212,7 +207,7 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
   // Check in User C's device if the format is correct
   await findMessageWithBody(device3, "@You");
   // Close app
-  await closeApp(server, device1, device2, device3);
+  await closeApp(device1, device2, device3);
 }
 
 describe("Group Testing", async () => {

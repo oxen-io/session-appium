@@ -14,7 +14,7 @@ import {
 import { iosIt, androidIt } from "../../types/sessionIt";
 
 async function disappearingMessages(platform: SupportedPlatformsType) {
-  const { server, device1, device2 } = await openAppTwoDevices(platform);
+  const { device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, "User A", platform),
@@ -46,7 +46,7 @@ async function disappearingMessages(platform: SupportedPlatformsType) {
   const message = "Howdy testing disappearing messages";
   await inputText(device1, "Message input box", message);
   // Wait 5 seconds
-  console.warn('FIXME audric')
+  console.warn("FIXME audric");
   // await device1.setImplicitWaitTimeout(5000);
   // Look for message for User A
   await hasTextElementBeenDeleted(device1, "Message body", message);
@@ -61,7 +61,7 @@ async function disappearingMessages(platform: SupportedPlatformsType) {
   // Check config message for user A
   // Check config message for user B
   // Close app
-  await closeApp(server, device1, device2);
+  await closeApp(device1, device2);
 }
 
 describe.skip("Disappearing messages", async () => {

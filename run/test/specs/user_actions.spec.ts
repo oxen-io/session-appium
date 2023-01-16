@@ -28,20 +28,20 @@ import { pushFile } from "./utils/push_file";
 
 async function createContact(platform: SupportedPlatformsType) {
   // first we want to install the app on each device with our custom call to run it
-  const { server, device1, device2 } = await openAppTwoDevices(platform);
+  const { device1, device2 } = await openAppTwoDevices(platform);
 
   const userA = await newUser(device1, "Alice", platform);
   const userB = await newUser(device2, "Bob", platform);
 
   await newContact(device1, userA, device2, userB);
   // Wait for tick
-  await closeApp(server, device1, device2);
+  await closeApp(device1, device2);
 }
 async function blockUserInConversationOptions(
   platform: SupportedPlatformsType
 ) {
   // Open App
-  const { server, device1, device2 } = await openAppTwoDevices(platform);
+  const { device1, device2 } = await openAppTwoDevices(platform);
   // Create user A
   // Create Bob
   const [userA, userB] = await Promise.all([
@@ -89,12 +89,12 @@ async function blockUserInConversationOptions(
   console.log(`Message came through from ${userB.userName}`);
 
   // Close app
-  await closeApp(server, device1, device2);
+  await closeApp(device1, device2);
 }
 
 async function blockUserInConversationList(platform: SupportedPlatformsType) {
   // Open App
-  const { server, device1, device2 } = await openAppTwoDevices(platform);
+  const { device1, device2 } = await openAppTwoDevices(platform);
   // Create Alice
   // Create Bob
   const [userA, userB] = await Promise.all([
@@ -111,12 +111,10 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
     swipeLeft(device1, "Conversation list item", userB.userName)
   );
   await clickOnElement(device1, "Block user");
-  await closeApp(server, device1, device2);
+  await closeApp(device1, device2);
 }
 async function changeUsername(platform: SupportedPlatformsType) {
-  const { server, device: device1 } = await openAppOnPlatformSingleDevice(
-    platform
-  );
+  const { device: device1 } = await openAppOnPlatformSingleDevice(platform);
 
   await newUser(device1, "Alice", platform);
   // click on settings/profile avatar
@@ -133,10 +131,10 @@ async function changeUsername(platform: SupportedPlatformsType) {
   await runOnlyOnIOS(platform, () => clickOnElement(device1, "Done button"));
   // verify new username
 
-  await closeApp(server, device1);
+  await closeApp(device1);
 }
 async function changeAvatar(platform: SupportedPlatformsType) {
-  const { server, device } = await openAppOnPlatformSingleDevice(platform);
+  const { device } = await openAppOnPlatformSingleDevice(platform);
 
   // Create new user
   const userA = await newUser(device, "Alice", platform);
@@ -157,10 +155,10 @@ async function changeAvatar(platform: SupportedPlatformsType) {
   await clickOnElement(device, "Done");
   // Wait for change
   // Verify change somehow...?
-  await closeApp(server, device);
+  await closeApp(device);
 }
 async function setNicknameAndroid(platform: SupportedPlatformsType) {
-  const { server, device1, device2 } = await openAppTwoDevices(platform);
+  const { device1, device2 } = await openAppTwoDevices(platform);
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
@@ -221,10 +219,10 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   );
   expect(conversationListUsername).toBe(userB.userName);
   // Close app
-  await closeApp(server, device1, device2);
+  await closeApp(device1, device2);
 }
 async function setNicknameIos(platform: SupportedPlatformsType) {
-  const { server, device1, device2 } = await openAppTwoDevices(platform);
+  const { device1, device2 } = await openAppTwoDevices(platform);
   const nickName = "New nickname";
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -276,7 +274,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
     userB.userName
   );
   // Close app
-  await closeApp(server, device1, device2);
+  await closeApp(device1, device2);
 }
 
 describe("User actions", async () => {
