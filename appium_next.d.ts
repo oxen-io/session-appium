@@ -28,6 +28,7 @@ export type AppiumNextDeviceType = {
   ) => Promise<
     undefined | { height: number; width: number; x: number; y: number }
   >;
+  getText: (id: string) => Promise<string>;
   createSession: (
     caps: W3CCapabilities<any>
   ) => Promise<[string, Record<string, any>]>;

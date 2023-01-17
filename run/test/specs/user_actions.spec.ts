@@ -7,7 +7,6 @@ import {
   longPressConversation,
   runOnlyOnAndroid,
   runOnlyOnIOS,
-  saveText,
   selectByText,
   swipeLeft,
   sendMessage,
@@ -25,6 +24,7 @@ import {
 import { androidIt, iosIt } from "../../types/sessionIt";
 import { newContact } from "./utils/create_contact";
 import { pushFile } from "./utils/push_file";
+import { grabTextFromAccessibilityId } from "./utils/save_text";
 
 async function createContact(platform: SupportedPlatformsType) {
   // first we want to install the app on each device with our custom call to run it
@@ -182,7 +182,10 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Click on conversation to verify nickname is applied
   await selectByText(device1, "Conversation list item", userB.userName);
   // Check name at top of conversation is nickname
-  const conversationHeaderNickname = await saveText(device1, "Username");
+  const conversationHeaderNickname = await grabTextFromAccessibilityId(
+    device1,
+    "Username"
+  );
   expect(conversationHeaderNickname).toBe(nickName);
   // Send a message so nickname is updated in conversation list
   await sendMessage(device1, "Howdy");
@@ -201,7 +204,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   await device1.back();
   // Enter conversation to verify change
   await selectByText(device1, "Conversation list item", nickName);
-  const originalConversationHeaderUsername = await saveText(
+  const originalConversationHeaderUsername = await grabTextFromAccessibilityId(
     device1,
     "Username"
   );
@@ -240,7 +243,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   await clickOnElement(device1, "Done");
   // Check it's changed in heading also
   await clickOnElement(device1, "Back");
-  const newNickname = await saveText(device1, "Username");
+  const newNickname = await grabTextFromAccessibilityId(device1, "Username");
   await findMatchingTextAndAccessibilityId(device1, "Username", newNickname);
   // Check in conversation list also
   await clickOnElement(device1, "Back");
@@ -261,7 +264,10 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   await clickOnElement(device1, "Done");
   // Check in conversation header
   await clickOnElement(device1, "Back");
-  const revertedNickname = await saveText(device1, "Username");
+  const revertedNickname = await grabTextFromAccessibilityId(
+    device1,
+    "Username"
+  );
   console.warn(`revertedNickname:` + revertedNickname);
   if (revertedNickname !== userB.userName) {
     throw new Error(`revertedNickname doesn't match Bob's username`);

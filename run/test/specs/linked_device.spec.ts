@@ -22,12 +22,12 @@ import {
   hasElementBeenDeleted,
   hasTextElementBeenDeleted,
   inputText,
-  saveText,
   waitForTextElementToBePresent,
   sleepFor,
   waitForElementToBePresent,
   sendMessage,
 } from "./utils/index";
+import { grabTextFromAccessibilityId } from "./utils/save_text";
 
 async function linkDevice(platform: SupportedPlatformsType) {
   // Open server and two devices
@@ -123,7 +123,7 @@ async function groupCreationLinkedDevice(platform: SupportedPlatformsType) {
   // Wait 5 seconds for name to update
   await sleepFor(5000);
   // Check linked device for name change (conversation header name)
-  const groupName = await saveText(device4, "Username");
+  const groupName = await grabTextFromAccessibilityId(device4, "Username");
   console.warn("Group name is now" + groupName);
   await findMatchingTextAndAccessibilityId(device4, "Username", newGroupName);
   // Check config message in linked device aswell
@@ -161,7 +161,10 @@ async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
   await runOnlyOnIOS(platform, () => clickOnElement(device1, "Done button"));
   // Check on linked device if name has updated
   await clickOnElement(device2, "User settings");
-  const changedUsername = await saveText(device2, "Username");
+  const changedUsername = await grabTextFromAccessibilityId(
+    device2,
+    "Username"
+  );
   expect(changedUsername).toBe(newUsername);
 
   await closeApp(device1, device2);

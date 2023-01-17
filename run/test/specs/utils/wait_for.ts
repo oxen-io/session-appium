@@ -1,8 +1,8 @@
-import { findMatchingTextInElementArray } from ".";
 import {
+  findMatchingTextInElementArray,
   findElementByAccessibilityId,
   findElementsByAccessibilityId,
-} from "./find_elements_stragegy";
+} from ".";
 import {
   AppiumNextDeviceType,
   AppiumNextElementType,
@@ -15,7 +15,7 @@ export function sleepFor(ms: number) {
 export const waitForElementToBePresent = async (
   device: AppiumNextDeviceType,
   accessibilityId: string,
-  mustBeClickable = false,
+  // mustBeClickable = false,
   maxWait?: number
 ): Promise<AppiumNextElementType> => {
   const maxWaitMSec = maxWait || 30000;
@@ -30,13 +30,6 @@ export const waitForElementToBePresent = async (
       );
 
       selector = await findElementByAccessibilityId(device, accessibilityId);
-
-      if (mustBeClickable && selector) {
-        const clickable = await selector.waitForClickable();
-        if (!clickable) {
-          selector = null;
-        }
-      }
     } catch (e) {
       await sleepFor(waitPerLoop);
       currentWait += waitPerLoop;

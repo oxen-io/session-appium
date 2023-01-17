@@ -1,13 +1,10 @@
-import { waitForElementToBePresent, waitForTextElementToBePresent } from '.';
+import { waitForElementToBePresent, waitForTextElementToBePresent } from ".";
 import {
   AppiumNextDeviceType,
   AppiumNextElementType,
-} from '../../../../appium_next';
-import { getTextFromElement } from './element_text';
-import {
-  findElementByAccessibilityId,
-  findElementsByAccessibilityId,
-} from './find_elements_stragegy';
+} from "../../../../appium_next";
+import { getTextFromElement } from "./element_text";
+import { findElementsByAccessibilityId } from "./find_elements_stragegy";
 
 export const findMatchingTextInElementArray = async (
   device: AppiumNextDeviceType,
@@ -32,7 +29,7 @@ export const findMatchingTextInElementArray = async (
 
 const findAsync = async (
   arr: Array<AppiumNextElementType>,
-  asyncCallback: (opts?: AppiumNextElementType) => Promise<boolean>
+  asyncCallback: (opts: AppiumNextElementType) => Promise<boolean>
 ): Promise<AppiumNextElementType> => {
   const promises = arr.map(asyncCallback);
   const results = await Promise.all(promises);
@@ -59,10 +56,10 @@ export const findMessageWithBody = async (
   device: AppiumNextDeviceType,
   textToLookFor: string
 ): Promise<AppiumNextElementType> => {
-  await waitForTextElementToBePresent(device, 'Message Body', textToLookFor);
+  await waitForTextElementToBePresent(device, "Message Body", textToLookFor);
   const message = await findMatchingTextAndAccessibilityId(
     device,
-    'Message Body',
+    "Message Body",
     textToLookFor
   );
   return message;
@@ -118,10 +115,10 @@ export const findConfigurationMessage = async (
   messageText: string
 ) => {
   console.warn(`Looking for configuration message with ` + messageText);
-  await waitForElementToBePresent(device, 'Configuration message');
+  await waitForElementToBePresent(device, "Configuration message");
   const configMessage = findMatchingTextAndAccessibilityId(
     device,
-    'Configuration message',
+    "Configuration message",
     messageText
   );
   if (!configMessage) {

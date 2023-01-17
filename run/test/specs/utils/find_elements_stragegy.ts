@@ -1,15 +1,15 @@
-import { isArray, isEmpty } from 'lodash';
+import { isArray, isEmpty } from "lodash";
 
 import {
   AppiumNextDeviceType,
   AppiumNextElementType,
-} from '../../../../appium_next';
+} from "../../../../appium_next";
 
 export const findElementByAccessibilityId = async (
   device: AppiumNextDeviceType,
   accessibilityId: string
 ) => {
-  const element = await device.findElement('accessibility id', accessibilityId);
+  const element = await device.findElement("accessibility id", accessibilityId);
   if (!element || isArray(element)) {
     throw new Error(
       `findElementByAccessibilityId: Did not find accessibilityId: ${accessibilityId} or it was an array `
@@ -25,7 +25,7 @@ export const findElementsByAccessibilityId = async (
   accessibilityId: string
 ): Promise<Array<AppiumNextElementType>> => {
   const elements = await device.findElements(
-    'accessibility id',
+    "accessibility id",
     accessibilityId
   );
   if (!elements || !isArray(elements) || isEmpty(elements)) {
@@ -42,7 +42,7 @@ export const findElementByXpath = async (
   device: AppiumNextDeviceType,
   xpath: string
 ) => {
-  const element = await device.findElement('xpath', xpath);
+  const element = await device.findElement("xpath", xpath);
   if (!element || isArray(element)) {
     throw new Error(
       `findElementByXpath: Did not find xpath: ${xpath} or it was an array `

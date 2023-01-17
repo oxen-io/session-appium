@@ -3,16 +3,15 @@ import {
   findMessageWithBody,
   waitForElementToBePresent,
   waitForTextElementToBePresent,
+  findElementByAccessibilityId,
 } from ".";
 import { AppiumNextDeviceType } from "../../../../appium_next";
-
-import { findElementByAccessibilityId } from "./find_elements_stragegy";
 
 export const clickOnElement = async (
   device: AppiumNextDeviceType,
   accessibilityId: string
 ) => {
-  const el = await waitForElementToBePresent(device, accessibilityId, true);
+  const el = await waitForElementToBePresent(device, accessibilityId);
 
   if (!el) {
     throw new Error(`Tap: Couldnt find accessibilityId: ${accessibilityId}`);

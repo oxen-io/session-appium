@@ -2,6 +2,7 @@ import * as util from "util";
 const exec = util.promisify(require("child_process").exec);
 import { getAdbFullPath } from "./binaries";
 import { sleepFor } from ".";
+import { AppiumNextDeviceType } from "../../../../appium_next";
 
 async function runScriptAndLog(toRun: string) {
   try {
@@ -84,3 +85,14 @@ export const installAppToDeviceName = async (
 
   await sleepFor(100);
 };
+
+export const isDeviceIOS = (device: AppiumNextDeviceType) => {
+  return (
+    (device as any).originalCaps.alwaysMatch[
+      "appium:platformName"
+    ]?.toLowerCase() === "ios"
+  );
+};
+
+export const isDeviceAndroid = (device: AppiumNextDeviceType) =>
+  !isDeviceIOS(device);
