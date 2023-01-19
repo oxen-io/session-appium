@@ -21,6 +21,7 @@ export type AppiumNextDeviceType = {
   ): Promise<AppiumNextElementType[]>;
   setValue: (text: string, element: string) => Promise<void>;
   back: () => Promise<void>;
+  clear: (elementId: string) => Promise<void>;
   click: (id: string) => Promise<void>;
   touchLongClick: (id: string) => Promise<void>;
   getElementRect: (
@@ -37,7 +38,10 @@ export type AppiumNextDeviceType = {
   touchDown(x: number, y: number): Promise<void>;
   touchUp(x: number, y: number): Promise<void>;
   touchMove(x: number, y: number): Promise<void>;
-
+  mobileTouchAndHold({
+    duration: number /* In seconds */,
+    elementId: string,
+  }): Promise<void>;
   postDismissAlert(): Promise<void>;
 };
 

@@ -1,18 +1,10 @@
-import {
-  AppiumW3CCapabilities,
-  AppiumXCUITestCapabilities,
-  DesiredCapabilities,
-} from "@wdio/types/build/Capabilities";
-import {
-  AppiumDriverConstraints,
-  W3CCapabilities,
-} from "appium/build/lib/appium";
+import { AppiumXCUITestCapabilities } from "@wdio/types/build/Capabilities";
+import { W3CCapabilities } from "appium/build/lib/appium";
 
 const iosAppFullPath = `/Users/emilyburton/Library/Developer/Xcode/DerivedData/Session-bkhewuibvlxdsxevpurvxorzvqpd/Build/Products/App Store Release-iphonesimulator/Session.app`;
 
 const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   "appium:app": iosAppFullPath,
-
   "appium:platformName": "iOS",
   "appium:platformVersion": "16.2",
   "appium:deviceName": "iPhone 14 Pro Max",

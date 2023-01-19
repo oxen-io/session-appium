@@ -15,7 +15,6 @@ export const findElementByAccessibilityId = async (
       `findElementByAccessibilityId: Did not find accessibilityId: ${accessibilityId} or it was an array `
     );
   }
-  console.warn(`"Element found": ${accessibilityId}`);
 
   return element;
 };

@@ -21,7 +21,7 @@ export const newUser = async (
   await waitForElementToBePresent(device, createSessionId);
   await clickOnElement(device, createSessionId);
   // Wait for animation to generate session id
-  const el = await waitForElementToBePresent(device, "Session ID");
+  await waitForElementToBePresent(device, "Session ID");
   // save session id as variable
   const sessionID = await getSessionID(platform, device);
 

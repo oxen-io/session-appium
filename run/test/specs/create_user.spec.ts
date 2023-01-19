@@ -15,6 +15,6 @@ async function createUser(platform: SupportedPlatformsType) {
 }
 
 describe("Account", async () => {
-  await iosIt("Create user", createUser);
-  await androidIt("Create user", createUser);
+  await iosIt("Create account", createUser);
+  await androidIt("Create account", createUser);
 });

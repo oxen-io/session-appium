@@ -278,7 +278,7 @@ describe("Linked device tests", async () => {
   await androidIt("Check changed username syncs", changeUsernameLinkedDevice);
   await iosIt("Check changed username syncs", changeUsernameLinkedDevice);
 
-  await androidIt("Check deleted message syncs", deletedMessageLinkedDevice);
+  await androidIt("c", deletedMessageLinkedDevice);
   await iosIt("Check deleted message syncs", deletedMessageLinkedDevice);
 
   await iosIt("Check blocked user syncs", blockedUserLinkedDevice);
