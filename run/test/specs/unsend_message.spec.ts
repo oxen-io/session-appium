@@ -23,7 +23,7 @@ async function unsendMessage(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   // Create contact
-  await newContact(device1, userA, device2, userB);
+  await newContact(platform, device1, userA, device2, userB);
   // send message from User A to User B
   const sentMessage = await sendMessage(
     device1,

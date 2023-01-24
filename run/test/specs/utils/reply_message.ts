@@ -1,9 +1,10 @@
-import { User } from '../../../types/testing';
-import { longPressMessage, clickOnElement, sendMessage } from '.';
-import { AppiumNextDeviceType } from '../../../../appium_next';
+import { User } from "../../../types/testing";
+import { longPressMessage, clickOnElement, sendMessage } from ".";
+import { AppiumNextDeviceType } from "../../../../appium_next";
+import { DeviceWrapper } from "../../../types/DeviceWrapper";
 
 export const replyToMessage = async (
-  device: AppiumNextDeviceType,
+  device: DeviceWrapper,
   user: User,
   body: string
 ) => {
@@ -11,7 +12,7 @@ export const replyToMessage = async (
   // Long press on imageSent element
   await longPressMessage(device, body);
   // Select 'Reply' option
-  await clickOnElement(device, 'Reply to message');
+  await clickOnElement(device, "Reply to message");
   // Send message
   const sentMessage = await sendMessage(
     device,

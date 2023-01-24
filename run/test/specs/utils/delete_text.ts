@@ -1,8 +1,8 @@
-import { AppiumNextDeviceType } from "../../../../appium_next";
+import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { findElementByAccessibilityId } from "./find_elements_stragegy";
 
 export const deleteText = async (
-  device: AppiumNextDeviceType,
+  device: DeviceWrapper,
   accessibilityId: string
 ) => {
   const el = await findElementByAccessibilityId(device, accessibilityId);

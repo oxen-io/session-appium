@@ -1,13 +1,11 @@
 import { waitForElementToBePresent, waitForTextElementToBePresent } from ".";
-import {
-  AppiumNextDeviceType,
-  AppiumNextElementType,
-} from "../../../../appium_next";
+import { AppiumNextElementType } from "../../../../appium_next";
+import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { getTextFromElement } from "./element_text";
 import { findElementsByAccessibilityId } from "./find_elements_stragegy";
 
 export const findMatchingTextInElementArray = async (
-  device: AppiumNextDeviceType,
+  device: DeviceWrapper,
   elements: Array<AppiumNextElementType>,
   textToLookFor: string
 ): Promise<AppiumNextElementType | null> => {
@@ -37,23 +35,23 @@ const findAsync = async (
   return arr[index];
 };
 
-export const findElement = async (
-  device: AppiumNextDeviceType,
-  accessibilityId: string
-) => {
-  const selector = await waitForElementToBePresent(device, accessibilityId);
-  if (!selector) {
-    throw new Error(
-      `findElement: Did not find accessibilityId: ${accessibilityId} `
-    );
-  }
-  console.warn(`"Element found": ${accessibilityId}`);
-  await selector;
-  return;
-};
+// export const findElement = async (
+//   device: DeviceWrapper,
+//   accessibilityId: string
+// ) => {
+//   const selector = await waitForElementToBePresent(device, accessibilityId);
+//   if (!selector) {
+//     throw new Error(
+//       `findElement: Did not find accessibilityId: ${accessibilityId} `
+//     );
+//   }
+//   console.warn(`"Element found": ${accessibilityId}`);
+//   await selector;
+//   return;
+// };
 
 export const findMessageWithBody = async (
-  device: AppiumNextDeviceType,
+  device: DeviceWrapper,
   textToLookFor: string
 ): Promise<AppiumNextElementType> => {
   await waitForTextElementToBePresent(device, "Message Body", textToLookFor);
@@ -66,7 +64,7 @@ export const findMessageWithBody = async (
 };
 
 export const findMatchingTextAndAccessibilityId = async (
-  device: AppiumNextDeviceType,
+  device: DeviceWrapper,
   accessibilityId: string,
   textToLookFor: string
 ): Promise<AppiumNextElementType> => {
@@ -94,7 +92,7 @@ export const findMatchingTextAndAccessibilityId = async (
 };
 
 export const findLastElementInArray = async (
-  device: AppiumNextDeviceType,
+  device: DeviceWrapper,
   accessibilityId: string
 ): Promise<AppiumNextElementType> => {
   const elements = await findElementsByAccessibilityId(device, accessibilityId);
@@ -111,7 +109,7 @@ export const findLastElementInArray = async (
 };
 
 export const findConfigurationMessage = async (
-  device: AppiumNextDeviceType,
+  device: DeviceWrapper,
   messageText: string
 ) => {
   console.warn(`Looking for configuration message with ` + messageText);

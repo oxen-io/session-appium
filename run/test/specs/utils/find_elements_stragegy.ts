@@ -1,12 +1,9 @@
 import { isArray, isEmpty } from "lodash";
-
-import {
-  AppiumNextDeviceType,
-  AppiumNextElementType,
-} from "../../../../appium_next";
+import { AppiumNextElementType } from "../../../../appium_next";
+import { DeviceWrapper } from "../../../types/DeviceWrapper";
 
 export const findElementByAccessibilityId = async (
-  device: AppiumNextDeviceType,
+  device: DeviceWrapper,
   accessibilityId: string
 ) => {
   const element = await device.findElement("accessibility id", accessibilityId);
@@ -20,7 +17,7 @@ export const findElementByAccessibilityId = async (
 };
 
 export const findElementsByAccessibilityId = async (
-  device: AppiumNextDeviceType,
+  device: DeviceWrapper,
   accessibilityId: string
 ): Promise<Array<AppiumNextElementType>> => {
   const elements = await device.findElements(
@@ -32,22 +29,30 @@ export const findElementsByAccessibilityId = async (
       `findElementsByAccessibilityId: Did not find accessibilityId: ${accessibilityId} `
     );
   }
-  console.warn(`"Elements found": ${accessibilityId} ${elements.length}`);
 
   return elements;
 };
 
 export const findElementByXpath = async (
-  device: AppiumNextDeviceType,
+  device: DeviceWrapper,
   xpath: string
 ) => {
   const element = await device.findElement("xpath", xpath);
-  if (!element || isArray(element)) {
-    throw new Error(
-      `findElementByXpath: Did not find xpath: ${xpath} or it was an array `
-    );
+  if (!element) {
+    throw new Error(`findElementByXpath: Did not find xpath: ${xpath}`);
   }
-  console.warn(`findElementByXpath "Element found": ${xpath}`);
 
   return element;
+};
+
+export const doesElementExist = async (
+  device: DeviceWrapper,
+  strategy: "accessibility id" | "xpath",
+  selector: string
+) => {
+  try {
+    return await device.findElement(strategy, selector);
+  } catch {
+    console.log(`Couldnt find `, selector);
+  }
 };

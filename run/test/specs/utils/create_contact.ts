@@ -3,14 +3,17 @@ import {
   clickOnElement,
   findConfigurationMessage,
   sendNewMessage,
-} from '.';
-import { AppiumNextDeviceType } from '../../../../appium_next';
-import { User } from '../../../types/testing';
+  runOnlyOnAndroid,
+} from ".";
+import { DeviceWrapper } from "../../../types/DeviceWrapper";
+import { User } from "../../../types/testing";
+import { SupportedPlatformsType } from "./open_app";
 
 export const newContact = async (
-  device1: AppiumNextDeviceType,
+  platform: SupportedPlatformsType,
+  device1: DeviceWrapper,
   user1: User,
-  device2: AppiumNextDeviceType,
+  device2: DeviceWrapper,
   user2: User
 ) => {
   await sendNewMessage(
@@ -22,9 +25,12 @@ export const newContact = async (
   // USER B WORKFLOW
   // Click on message request panel
   // Wait for push notification to disappear (otherwise appium can't find element)
-  await clickOnElement(device2, 'Message requests banner');
+  await clickOnElement(device2, "Message requests banner");
   // Select message from User A
-  await clickOnElement(device2, 'Message request');
+  await clickOnElement(device2, "Message request");
+  await runOnlyOnAndroid(platform, () =>
+    clickOnElement(device2, "Accept message request")
+  );
   // Type into message input box
   await sendMessage(
     device2,
@@ -34,7 +40,7 @@ export const newContact = async (
   // Verify config message states message request was accepted
   await findConfigurationMessage(
     device1,
-    'Your message request has been accepted.'
+    "Your message request has been accepted."
   );
 
   console.warn(`${user1.userName} and ${user2.userName} are now contacts`);

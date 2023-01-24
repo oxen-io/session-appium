@@ -3,8 +3,9 @@ const exec = util.promisify(require("child_process").exec);
 import { getAdbFullPath } from "./binaries";
 import { sleepFor } from ".";
 import { AppiumNextDeviceType } from "../../../../appium_next";
+import { DeviceWrapper } from "../../../types/DeviceWrapper";
 
-async function runScriptAndLog(toRun: string) {
+export async function runScriptAndLog(toRun: string) {
   try {
     // console.log('running ', toRun);
     const result = await exec(toRun);
@@ -86,7 +87,7 @@ export const installAppToDeviceName = async (
   await sleepFor(100);
 };
 
-export const isDeviceIOS = (device: AppiumNextDeviceType) => {
+export const isDeviceIOS = (device: DeviceWrapper) => {
   return (
     (device as any).originalCaps.alwaysMatch[
       "appium:platformName"
@@ -94,5 +95,4 @@ export const isDeviceIOS = (device: AppiumNextDeviceType) => {
   );
 };
 
-export const isDeviceAndroid = (device: AppiumNextDeviceType) =>
-  !isDeviceIOS(device);
+export const isDeviceAndroid = (device: DeviceWrapper) => !isDeviceIOS(device);

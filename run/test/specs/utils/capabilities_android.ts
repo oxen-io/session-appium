@@ -1,13 +1,5 @@
-import {
-  AppiumAndroidCapabilities,
-  AppiumW3CCapabilities,
-  DesiredCapabilities,
-} from "@wdio/types/build/Capabilities";
-import {
-  AppiumDriverConstraints,
-  DriverOpts,
-  W3CCapabilities,
-} from "appium/build/lib/appium";
+import { AppiumW3CCapabilities } from "@wdio/types/build/Capabilities";
+import { W3CCapabilities } from "appium/build/lib/appium";
 
 import { getAndroidBinariesRoot } from "./binaries";
 import { CapabilitiesIndexType } from "./capabilities_ios";

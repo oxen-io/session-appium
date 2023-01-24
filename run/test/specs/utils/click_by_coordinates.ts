@@ -1,11 +1,10 @@
-import { AppiumNextDeviceType } from '../../../../appium_next';
+import { Coordinates, DeviceWrapper } from "../../../types/DeviceWrapper";
 
 export const clickOnXAndYCoordinates = async (
-  device: AppiumNextDeviceType,
-  xCoordinate: number,
-  yCoordinate: number
+  device: DeviceWrapper,
+  xCoOrdinates: number,
+  yCoOrdinates: number
 ) => {
-  await device.touchDown(xCoordinate, yCoordinate);
-  await device.touchUp(xCoordinate, yCoordinate);
-  console.log(`Tapped coordinates ${xCoordinate}:${yCoordinate}`);
+  await device.pressCoordinates(xCoOrdinates, yCoOrdinates);
+  console.log(`Tapped coordinates ${xCoOrdinates}, ${yCoOrdinates}`);
 };

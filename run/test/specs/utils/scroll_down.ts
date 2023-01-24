@@ -1,7 +1,5 @@
-import { AppiumNextDeviceType } from '../../../../appium_next';
+import { DeviceWrapper } from "../../../types/DeviceWrapper";
 
-export const scrollDown = async (device: AppiumNextDeviceType) => {
-  await device.touchDown(760, 1500);
-  await device.touchMove(760, 710);
-  await device.touchUp(760, 710);
+export const scrollDown = async (device: DeviceWrapper) => {
+  await device.scroll({ x: 760, y: 1500 }, { x: 760, y: 710 }, 100);
 };

@@ -15,7 +15,7 @@ async function manualTestSetupTwoUsers(platform: SupportedPlatformsType) {
     newUser(device2, "User B", platform),
   ]);
 
-  await newContact(device1, userA, device2, userB);
+  await newContact(platform, device1, userA, device2, userB);
   console.warn("FIXME audric");
   // await device1.setImplicitWaitTimeout(50000);
   console.log("Waiting for manual tests");

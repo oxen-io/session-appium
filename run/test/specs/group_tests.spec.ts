@@ -14,11 +14,12 @@ import {
   runOnlyOnAndroid,
   runOnlyOnIOS,
   deleteText,
-  findElement,
   findMessageWithBody,
   inputText,
   waitForTextElementToBePresent,
+  findElementByAccessibilityId,
 } from "./utils/index";
+import { navigateBack } from "./utils/navigate_back";
 
 async function groupCreation(platform: SupportedPlatformsType) {
   const testGroupName = "The Manhattan Crew";
@@ -32,6 +33,7 @@ async function groupCreation(platform: SupportedPlatformsType) {
 
   // Create contact between User A and User B
   await createGroup(
+    platform,
     device1,
     userA,
     device2,
@@ -39,13 +41,6 @@ async function groupCreation(platform: SupportedPlatformsType) {
     device3,
     userC,
     testGroupName
-  );
-  // Check config message of group creation is correct
-  // android and ios are different here
-  await waitForTextElementToBePresent(
-    device1,
-    "Configuration message",
-    "Group created"
   );
   // Close server and devices
   await closeApp(device1, device2, device3);
@@ -64,6 +59,7 @@ async function changeGroupName(platform: SupportedPlatformsType) {
   // Create group
 
   await createGroup(
+    platform,
     device1,
     userA,
     device2,
@@ -130,6 +126,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   ]);
   const testGroupName = "Group to test adding contact";
   await createGroup(
+    platform,
     device1,
     userA,
     device2,
@@ -139,10 +136,10 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     testGroupName
   );
   const userD = await newUser(device4, "Derek", platform);
-  await clickOnElement(device1, "Back");
-  await newContact(device1, userA, device4, userD);
+  await navigateBack(device1, platform);
+  await newContact(platform, device1, userA, device4, userD);
   // Exit to conversation list
-  await clickOnElement(device1, "Back");
+  await navigateBack(device1, platform);
   // Select group conversation in list
   await selectByText(device1, "Conversation list item", testGroupName);
   // Click more options
@@ -164,14 +161,23 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     `${userD.userName}` + " joined the group."
   );
   // Exit to conversation list
-  await clickOnElement(device4, "Back");
+  await navigateBack(device4, platform);
   // Select group conversation in list
   await selectByText(device4, "Conversation list item", testGroupName);
   // Check config
-  await waitForTextElementToBePresent(
-    device4,
-    "Configuration message",
-    "Group created"
+  await runOnlyOnIOS(platform, () =>
+    waitForTextElementToBePresent(
+      device4,
+      "Configuration message",
+      "Group created"
+    )
+  );
+  await runOnlyOnAndroid(platform, () =>
+    waitForTextElementToBePresent(
+      device4,
+      "Configuration message",
+      "You created a new group."
+    )
   );
   await closeApp(device1, device2, device3, device4);
 }
@@ -187,6 +193,7 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
   const testGroupName = "Mentions test group";
   // Create contact between User A and User B
   await createGroup(
+    platform,
     device1,
     userA,
     device2,
@@ -197,7 +204,7 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
   );
   await inputText(device1, "Message input box", "@");
   // Check that all users are showing in mentions box
-  await findElement(device1, "Mentions list");
+  await findElementByAccessibilityId(device1, "Mentions list");
   // Select User B
   await selectByText(device1, "Contact", userB.userName);
   // Check in user B's device if the format is correct

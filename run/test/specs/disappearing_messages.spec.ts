@@ -21,7 +21,7 @@ async function disappearingMessages(platform: SupportedPlatformsType) {
     newUser(device2, "User B", platform),
   ]);
   // Create contact
-  await newContact(device1, userA, device2, userB);
+  await newContact(platform, device1, userA, device2, userB);
   // Click conversation options menu (three dots)
   await clickOnElement(device1, "More options");
   // Select disappearing messages option

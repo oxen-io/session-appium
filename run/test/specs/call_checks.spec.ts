@@ -3,10 +3,11 @@ import { newContact } from "./utils/create_contact";
 import { openAppTwoDevices, SupportedPlatformsType } from "./utils/open_app";
 import {
   clickOnElement,
-  findElement,
+  findElementByAccessibilityId,
   hasElementBeenDeleted,
   scrollDown,
 } from "./utils/index";
+import { androidIt, iosIt } from "../../types/sessionIt";
 
 async function voiceCall(platform: SupportedPlatformsType) {
   // Open app
@@ -16,11 +17,18 @@ async function voiceCall(platform: SupportedPlatformsType) {
     newUser(device1, "User A", platform),
     newUser(device2, "User B", platform),
   ]);
+
+  // Enabled voice calls in privacy settings
+  await clickOnElement(device1, "User settings");
+  // Scroll to bottom of page to voice and video calls
+  await scrollDown(device1);
+  await scrollDown(device1);
+
   // Try to make phone call with unapproved user
   // Look for phone icon (shouldnt be there)
   await hasElementBeenDeleted(device1, "Call button");
   // Create contact
-  await newContact(device1, userA, device2, userB);
+  await newContact(platform, device1, userA, device2, userB);
   // Phone icon should appear now that conversation has been approved
   await clickOnElement(device1, "Call button");
   // Enabled voice calls in privacy settings
@@ -50,5 +58,10 @@ async function voiceCall(platform: SupportedPlatformsType) {
   // Hang up
   await clickOnElement(device1, "End call button");
   // Check for config message 'Called User B' on device 1
-  await findElement(device1, "Configuration message");
+  await findElementByAccessibilityId(device1, "Configuration message");
 }
+
+describe("Voice calls ", async () => {
+  await iosIt("Voice calls", voiceCall);
+  await androidIt("Voice calls", voiceCall);
+});

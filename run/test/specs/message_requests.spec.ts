@@ -15,6 +15,7 @@ import {
   sendMessage,
   sendNewMessage,
 } from "./utils/index";
+import { navigateBack } from "./utils/navigate_back";
 
 async function acceptRequest(platform: SupportedPlatformsType) {
   // Check 'accept' button
@@ -73,7 +74,7 @@ async function declineRequest(platform: SupportedPlatformsType) {
   // Are you sure you want to delete message request only for ios
   await runOnlyOnIOS(platform, () => clickOnElement(device2, "Delete"));
   // Navigate back to home page
-  await clickOnElement(device2, "Back");
+  await navigateBack(device2, platform);
   // Look for new conversation button to make sure it all worked
   await waitForElementToBePresent(device2, "New conversation button");
 
@@ -132,14 +133,14 @@ async function blockRequest(platform: SupportedPlatformsType) {
   // User B clicks on block option
   await clickOnElement(device2, "Block message request");
   // Confirm block on android
-  await runOnlyOnIOS(platform, () => clickOnElement(device2, "Block"));
+  await clickOnElement(device2, "Block");
   // Make sure no messages can get through to user B
   const blockedMessage = `${userA.userName} to ${userB.userName} - shouldn't get through`;
   await sendMessage(device1, blockedMessage);
-  await clickOnElement(device2, "Back");
+  await navigateBack(device2, platform);
   await waitForElementToBePresent(device2, "New conversation button");
   // Need to wait to see if message gets through
-  await sleepFor(10000);
+  await sleepFor(1000);
   await hasTextElementBeenDeleted(device2, "Message Body", blockedMessage);
   // Close app
   await closeApp(device1, device2);

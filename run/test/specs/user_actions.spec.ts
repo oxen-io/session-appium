@@ -13,6 +13,7 @@ import {
   waitForTextElementToBePresent,
   sleepFor,
   waitForElementToBePresent,
+  doFunctionIfElementExists,
 } from "./utils/index";
 import { newUser } from "./utils/create_account";
 import {
@@ -25,6 +26,7 @@ import { androidIt, iosIt } from "../../types/sessionIt";
 import { newContact } from "./utils/create_contact";
 import { pushFile } from "./utils/push_file";
 import { grabTextFromAccessibilityId } from "./utils/save_text";
+import { findElementByXpath } from "./utils/find_elements_stragegy";
 
 async function createContact(platform: SupportedPlatformsType) {
   // first we want to install the app on each device with our custom call to run it
@@ -33,7 +35,7 @@ async function createContact(platform: SupportedPlatformsType) {
   const userA = await newUser(device1, "Alice", platform);
   const userB = await newUser(device2, "Bob", platform);
 
-  await newContact(device1, userA, device2, userB);
+  await newContact(platform, device1, userA, device2, userB);
   // Wait for tick
   await closeApp(device1, device2);
 }
@@ -49,7 +51,7 @@ async function blockUserInConversationOptions(
     newUser(device2, "Bob", platform),
   ]);
   // Create contact
-  await newContact(device1, userA, device2, userB);
+  await newContact(platform, device1, userA, device2, userB);
   // Block contact
   // Click on three dots (settings)
   await clickOnElement(device1, "More options");
@@ -102,7 +104,7 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   // Create contact
-  await newContact(device1, userA, device2, userB);
+  await newContact(platform, device1, userA, device2, userB);
   // Navigate back to conversation list
   await runOnlyOnAndroid(platform, () =>
     clickOnElement(device1, "Navigate up")
@@ -116,28 +118,28 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   await runOnlyOnIOS(platform, () =>
     swipeLeft(device1, "Conversation list item", userB.userName)
   );
-  await clickOnElement(device1, "Block user");
+  await clickOnElement(device1, "Block");
   await closeApp(device1, device2);
 }
 async function changeUsername(platform: SupportedPlatformsType) {
-  const { device: device1 } = await openAppOnPlatformSingleDevice(platform);
+  const { device } = await openAppOnPlatformSingleDevice(platform);
 
-  await newUser(device1, "Alice", platform);
+  await newUser(device, "Alice", platform);
   // click on settings/profile avatar
-  await clickOnElement(device1, "User settings");
+  await clickOnElement(device, "User settings");
   // select username
-  await clickOnElement(device1, "Username");
+  await clickOnElement(device, "Username");
   console.warn("Element clicked?");
   // type in new username
 
-  const newUsername = await inputText(device1, "Username", "New username");
+  const newUsername = await inputText(device, "Username", "New username");
   console.warn(newUsername);
   // select tick
-  await runOnlyOnAndroid(platform, () => clickOnElement(device1, "Apply"));
-  await runOnlyOnIOS(platform, () => clickOnElement(device1, "Done button"));
+  await runOnlyOnAndroid(platform, () => clickOnElement(device, "Apply"));
+  await runOnlyOnIOS(platform, () => clickOnElement(device, "Done"));
   // verify new username
 
-  await closeApp(device1);
+  await closeApp(device);
 }
 async function changeAvatar(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
@@ -146,17 +148,25 @@ async function changeAvatar(platform: SupportedPlatformsType) {
   const userA = await newUser(device, "Alice", platform);
   // Click on settings/avatar
   await clickOnElement(device, "User settings");
-  // Dismiss alert 'Allow Session to take pictures and record video?'
-  // Should automatically do it
-  // Click on User settings
 
-  await pushFile(device, "../specs/media/new_profile_pic.png");
-  // Click on avatar picture to open file picker
-  await clickOnElement(device, "User settings");
-  // Click on 'Update User settings' dialog (Photo library)
+  // Click on Profile picture
+  await clickOnElement(device, "Profile picture");
+  // Click on Photo library
   await clickOnElement(device, "Photo library");
+  await doFunctionIfElementExists(
+    device,
+    "accessibility id",
+    "Allow Access to All Photos",
+    () => clickOnElement(device, "Allow Access to All Photos")
+  );
   // Select file
-  await clickOnElement(device, "first_photo.jpeg");
+  await sleepFor(2000);
+
+  const elems = await findElementByXpath(
+    device,
+    '//XCUIElementTypeCell[@name="Photo, September 09, 2022, 3:33 PM"]/XCUIElementTypeOther'
+  );
+  await clickOnElement(device, elems.ELEMENT);
   // Click done
   await clickOnElement(device, "Done");
   // Wait for change
@@ -170,7 +180,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   const nickName = "New nickname";
-  await newContact(device1, userA, device2, userB);
+  await newContact(platform, device1, userA, device2, userB);
   // Go back to conversation list
   await clickOnElement(device1, "Navigate up");
   // Select conversation in list with Bob
@@ -192,7 +202,6 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
     device1,
     "Username"
   );
-  // expect(conversationHeaderNickname).toBe(nickName);
   console.log("Username is: ", conversationHeaderNickname);
   // Send a message so nickname is updated in conversation list
   await sendMessage(device1, "Howdy");
@@ -239,7 +248,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
 
-  await newContact(device1, userA, device2, userB);
+  await newContact(platform, device1, userA, device2, userB);
   // Click on settings/more info
   await clickOnElement(device1, "More options");
   // Click on username to set nickname

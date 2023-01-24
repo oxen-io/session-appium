@@ -6,7 +6,6 @@ import {
   longPressMessage,
   longPressConversation,
   selectByText,
-  pressAndHold,
 } from "./element_selection";
 import {
   waitForElementToBePresent,
@@ -19,7 +18,6 @@ import {
   findMessageWithBody,
   findLastElementInArray,
   findConfigurationMessage,
-  findElement,
 } from "./element_locators";
 import { sendMessageTo } from "./send_message_to";
 import { sendNewMessage } from "./send_new_message";
@@ -50,12 +48,10 @@ export {
   longPress,
   longPressMessage,
   longPressConversation,
-  pressAndHold,
   selectByText,
   waitForElementToBePresent,
   waitForTextElementToBePresent,
   sleepFor,
-  findElement,
   findMatchingTextInElementArray,
   findMatchingTextAndAccessibilityId,
   findMessageWithBody,

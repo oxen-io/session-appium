@@ -20,67 +20,71 @@ import {
   runOnlyOnAndroid,
   runOnlyOnIOS,
   longPress,
-  pressAndHold,
   waitForElementToBePresent,
 } from "./utils/index";
-import { findElementByXpath } from "./utils/find_elements_stragegy";
+import {
+  doesElementExist,
+  findElementByXpath,
+} from "./utils/find_elements_stragegy";
+import { clickOnElementXPath } from "./utils/element_selection";
 
 async function sendImage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  // Test sending an image
-  // create user a and user b
+
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
   ]);
   const testMessage = "Testing-image-1";
   const replyMessage = `Replying to image from ${userA.userName}`;
-  // create contact
-  await newContact(device1, userA, device2, userB);
-  // Push image to device for selection
-  // Click on attachments button
+
+  await newContact(platform, device1, userA, device2, userB);
+
   await clickOnElement(device1, "Attachments button");
-  // Select images button/tab
+
   await sleepFor(100);
-  // Check if android or ios (android = documents folder/ ios = images folder)
-  // await clickOnElement(device1, "Images folder");
+
   await clickOnXAndYCoordinates(device1, 34, 498);
-  // Select 'continue' on alert
-  // Session would like to access your photos
-  await doFunctionIfElementExists(device1, "Allow Access to All Photos", () =>
-    clickOnElement(device1, "Allow Access to All Photos")
-  );
-  await doFunctionIfElementExists(device1, "Add", () =>
-    clickOnElement(device1, "Add")
-  );
-  await doFunctionIfElementExists(device1, "Done", () =>
-    clickOnElement(device1, "Done")
-  );
-  // Select image
-  const elems = await findElementByXpath(
+  const selector = await doesElementExist(
     device1,
-    '//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell[2]'
+    "accessibility id",
+    "Allow Access to All Photos"
   );
-  await clickOnElement(device1, elems.ELEMENT);
-  // Send with captions
+  if (selector) {
+    try {
+      await clickOnElement(device1, "Photo, September 09, 2022, 3:33 PM");
+    } catch (e) {
+      console.log("Trying other path");
+    }
+  }
+  if (!selector) {
+    try {
+      await clickOnElementXPath(
+        device1,
+        `//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell/XCUIElementTypeOther/XCUIElementTypeImage`
+      );
+    } catch {
+      await clickOnElement(device1, "Add");
+      await clickOnElement(device1, "Photo, September 09, 2022, 3:33 PM");
+      await clickOnElement(device1, "Done");
+    }
+  }
   await clickOnElement(device1, "Text input box");
   await inputText(device1, "Text input box", testMessage);
   await clickOnElement(device1, "Send button");
-  // Check if the 'Tap to download media' config appears
-  // User B - Click on untrusted attachment message
   await clickOnElement(device2, "Untrusted attachment message");
   await sleepFor(500);
   // User B - Click on 'download'
-  await clickOnElement(device2, "Download");
+  await clickOnElement(device2, "Download media");
 
   // Reply to message
-  await sleepFor(5000);
-
+  await sleepFor(3000);
   await longPressMessage(device2, testMessage);
-
   await clickOnElement(device2, "Reply to message");
   await sendMessage(device2, replyMessage);
   await waitForTextElementToBePresent(device1, "Message Body", replyMessage);
+  // Close app and server
+  await closeApp(device1, device2);
 }
 
 async function sendVideo(platform: SupportedPlatformsType) {
@@ -95,7 +99,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
   const testMessage = "Testing-video-1";
   const replyMessage = `Replying to video from ${userA.userName}`;
   // create contact
-  await newContact(device1, userA, device2, userB);
+  await newContact(platform, device1, userA, device2, userB);
   // Push image to device for selection
   // Click on attachments button
   await clickOnElement(device1, "Attachments button");
@@ -106,13 +110,16 @@ async function sendVideo(platform: SupportedPlatformsType) {
   await clickOnXAndYCoordinates(device1, 34, 498);
   // Select 'continue' on alert
   // Session would like to access your photos
-  await doFunctionIfElementExists(device1, "Allow Access to All Photos", () =>
-    clickOnElement(device1, "Allow Access to All Photos")
+  await doFunctionIfElementExists(
+    device1,
+    "accessibility id",
+    "Allow Access to All Photos",
+    () => clickOnElement(device1, "Allow Access to All Photos")
   );
-  await doFunctionIfElementExists(device1, "Add", () =>
+  await doFunctionIfElementExists(device1, "accessibility id", "Add", () =>
     clickOnElement(device1, "Add")
   );
-  await doFunctionIfElementExists(device1, "Done", () =>
+  await doFunctionIfElementExists(device1, "accessibility id", "Done", () =>
     clickOnElement(device1, "Done")
   );
   // Select video
@@ -151,11 +158,11 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   const replyMessage = `Replying to voice message from ${userA.userName}`;
-  await newContact(device1, userA, device2, userB);
+  await newContact(platform, device1, userA, device2, userB);
   // Select voice message button to activate recording state
-  await pressAndHold(device1, "New voice message");
+  await longPress(device1, "New voice message");
 
-  await doFunctionIfElementExists(device1, "OK", () =>
+  await doFunctionIfElementExists(device1, "accessibility id", "OK", () =>
     clickOnElement(device1, "OK")
   );
   // await pressAndHold(device1, "New voice message");
@@ -168,7 +175,7 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
 
   // await sleepFor(1500);
 
-  await pressAndHold(device2, "Voice message");
+  await longPress(device2, "Voice message");
   await clickOnElement(device2, "Reply to message");
   await sendMessage(device2, replyMessage);
   await waitForTextElementToBePresent(device1, "Message Body", replyMessage);
@@ -190,7 +197,7 @@ async function sendGif(platform: SupportedPlatformsType) {
   const testMessage = "Testing-GIF-1";
   const replyMessage = `Replying to GIF from ${userA.userName}`;
   // create contact
-  await newContact(device1, userA, device2, userB);
+  await newContact(platform, device1, userA, device2, userB);
   // Click on attachments button
   await clickOnElement(device1, "Attachments button");
   // Select GIF tab
@@ -237,7 +244,7 @@ async function sendLongMessage(platform: SupportedPlatformsType) {
     newUser(device2, "User B", platform),
   ]);
   // Create contact
-  await newContact(device1, userA, device2, userB);
+  await newContact(platform, device1, userA, device2, userB);
   // Send a long message from User A to User B
   await sendMessage(device1, longText);
   // Reply to message (User B to User A)

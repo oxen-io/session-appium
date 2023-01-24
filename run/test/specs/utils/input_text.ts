@@ -1,9 +1,9 @@
-import { AppiumNextDeviceType } from '../../../../appium_next';
-import { findElementByAccessibilityId } from './find_elements_stragegy';
-import { waitForElementToBePresent } from './wait_for';
+import { DeviceWrapper } from "../../../types/DeviceWrapper";
+import { findElementByAccessibilityId } from "./find_elements_stragegy";
+import { waitForElementToBePresent } from "./wait_for";
 
 export const inputText = async (
-  device: AppiumNextDeviceType,
+  device: DeviceWrapper,
   accessibilityId: string,
   text: string
 ) => {
@@ -15,5 +15,5 @@ export const inputText = async (
     );
   }
 
-  await device.setValue(text, element.ELEMENT);
+  await device.setValueImmediate(text, element.ELEMENT);
 };

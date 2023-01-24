@@ -3,17 +3,16 @@ import {
   findElementByAccessibilityId,
   findElementsByAccessibilityId,
 } from ".";
-import {
-  AppiumNextDeviceType,
-  AppiumNextElementType,
-} from "../../../../appium_next";
+import { AppiumNextElementType } from "../../../../appium_next";
+import { DeviceWrapper } from "../../../types/DeviceWrapper";
+import { findElementByXpath } from "./find_elements_stragegy";
 
 export function sleepFor(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export const waitForElementToBePresent = async (
-  device: AppiumNextDeviceType,
+  device: DeviceWrapper,
   accessibilityId: string,
   // mustBeClickable = false,
   maxWait?: number
@@ -45,7 +44,7 @@ export const waitForElementToBePresent = async (
 };
 
 export const waitForTextElementToBePresent = async (
-  device: AppiumNextDeviceType,
+  device: DeviceWrapper,
   accessibilityId: string,
   text: string,
   maxWait?: number
@@ -58,7 +57,7 @@ export const waitForTextElementToBePresent = async (
   while (selector === null) {
     try {
       console.log(
-        `Waiting for accessibility ID '${accessibilityId} to be present with ${text}`
+        `Waiting for accessibility ID '${accessibilityId}' to be present with ${text}`
       );
 
       const elements = await findElementsByAccessibilityId(
@@ -81,5 +80,35 @@ export const waitForTextElementToBePresent = async (
     }
   }
   console.log(`'${accessibilityId}' and '${text}' has been found`);
+  return selector;
+};
+
+export const waitForXPathElement = async (
+  device: DeviceWrapper,
+  xPath: string,
+  maxWait?: number
+): Promise<AppiumNextElementType> => {
+  let selector: null | AppiumNextElementType = null;
+  const maxWaitMSec: number = maxWait || 3000;
+  const waitPerLoop: number = 100;
+  let currentWait: number = 0;
+
+  while (selector === null) {
+    try {
+      console.log(`Waiting for xPath: '${xPath}' to be present`);
+
+      selector = await findElementByXpath(device, xPath);
+    } catch (e) {
+      await sleepFor(waitPerLoop);
+      currentWait += waitPerLoop;
+      console.log("Waiting...");
+
+      if (currentWait >= maxWaitMSec) {
+        console.log("Waited too long");
+        throw new Error(`Waited for too long looking for xPath: '${xPath}'`);
+      }
+    }
+  }
+  console.log(`'${xPath}' has been found`);
   return selector;
 };

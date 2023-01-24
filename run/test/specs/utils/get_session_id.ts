@@ -1,10 +1,9 @@
-import { SupportedPlatformsType } from "./open_app";
 import { AppiumNextDeviceType } from "../../../../appium_next";
-import _ from "lodash";
-import { isDeviceAndroid, isDeviceIOS } from "./utilities";
+import { DeviceWrapper } from "../../../types/DeviceWrapper";
+import { SupportedPlatformsType } from "./open_app";
 import { grabTextFromAccessibilityId } from "./save_text";
 
-export const saveSessionIDIos = async (device: AppiumNextDeviceType) => {
+export const saveSessionIDIos = async (device: DeviceWrapper) => {
   const selector = await grabTextFromAccessibilityId(
     device,
     "Session ID generated"
@@ -14,7 +13,7 @@ export const saveSessionIDIos = async (device: AppiumNextDeviceType) => {
 
 export const getSessionID = async (
   platform: SupportedPlatformsType,
-  device: AppiumNextDeviceType
+  device: DeviceWrapper
 ) => {
   const sessionID = await grabTextFromAccessibilityId(device, "Session ID");
 

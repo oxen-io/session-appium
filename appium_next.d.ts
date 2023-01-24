@@ -1,5 +1,6 @@
 import { W3CCapabilities } from "appium/build/lib/appium";
 import { ExternalDriver } from "@appium/types/build/lib/driver";
+import { functions } from "lodash";
 
 // typings comes from :
 //    node_modules/@appium/types/build/lib/driver.d.ts
@@ -11,38 +12,8 @@ export interface MightBeUndefinedDeviceType extends ExternalDriver<any> {}
 export type AppiumNextDeviceType = {
   pushFile(remotePath: string, payloadBase64: string): promise<void>;
 
-  findElement(
-    strategy: "accessibility id" | "xpath",
-    selector: string
-  ): Promise<AppiumNextElementType>;
-  findElements(
-    strategy: "accessibility id" | "xpath",
-    selector: string
-  ): Promise<AppiumNextElementType[]>;
-  setValue: (text: string, element: string) => Promise<void>;
-  back: () => Promise<void>;
-  clear: (elementId: string) => Promise<void>;
-  click: (id: string) => Promise<void>;
-  touchLongClick: (id: string) => Promise<void>;
-  getElementRect: (
-    id: string
-  ) => Promise<
-    undefined | { height: number; width: number; x: number; y: number }
-  >;
-  getText: (id: string) => Promise<string>;
-  createSession: (
-    caps: W3CCapabilities<any>
-  ) => Promise<[string, Record<string, any>]>;
-  deleteSession: (sessionId?: string) => Promise<void>; // not sure yet
-
-  touchDown(x: number, y: number): Promise<void>;
-  touchUp(x: number, y: number): Promise<void>;
+  // not sure at all
   touchMove(x: number, y: number): Promise<void>;
-  mobileTouchAndHold({
-    duration: number /* In seconds */,
-    elementId: string,
-  }): Promise<void>;
-  postDismissAlert(): Promise<void>;
 };
 
 export type AppiumNextElementType = {

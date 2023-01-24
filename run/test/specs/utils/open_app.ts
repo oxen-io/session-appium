@@ -1,17 +1,18 @@
-import { main as appiumMain } from "appium";
 import {
   androidCapabilities,
   getAndroidCapabilities,
   getAndroidUuid,
 } from "./capabilities_android";
 import { CapabilitiesIndexType, getIosCapabilities } from "./capabilities_ios";
-import { installAppToDeviceName } from "./utilities";
+import { installAppToDeviceName, runScriptAndLog } from "./utilities";
 
 import * as androidDriver from "appium-uiautomator2-driver";
 import * as iosDriver from "appium-xcuitest-driver";
 
 import { DriverOpts } from "appium/build/lib/appium";
-import { AppiumNextDeviceType } from "../../../../appium_next";
+import { DeviceWrapper } from "../../../types/DeviceWrapper";
+import { execSync } from "child_process";
+import { getAdbFullPath } from "./binaries";
 
 const APPIUM_PORT = 4728;
 export const APPIUM_IOS_PORT = 8100;
@@ -22,7 +23,7 @@ const openAppOnPlatform = async (
   platform: SupportedPlatformsType,
   capabilitiesIndex: CapabilitiesIndexType
 ): Promise<{
-  device: AppiumNextDeviceType;
+  device: DeviceWrapper;
 }> => {
   return platform === "ios"
     ? openiOSApp(capabilitiesIndex)
@@ -32,7 +33,7 @@ const openAppOnPlatform = async (
 export const openAppOnPlatformSingleDevice = async (
   platform: SupportedPlatformsType
 ): Promise<{
-  device: AppiumNextDeviceType;
+  device: DeviceWrapper;
 }> => {
   return openAppOnPlatform(platform, 0);
 };
@@ -40,8 +41,8 @@ export const openAppOnPlatformSingleDevice = async (
 export const openAppTwoDevices = async (
   platform: SupportedPlatformsType
 ): Promise<{
-  device1: AppiumNextDeviceType;
-  device2: AppiumNextDeviceType;
+  device1: DeviceWrapper;
+  device2: DeviceWrapper;
 }> => {
   const [app1, app2] = await Promise.all([
     openAppOnPlatform(platform, 0),
@@ -54,9 +55,9 @@ export const openAppTwoDevices = async (
 export const openAppThreeDevices = async (
   platform: SupportedPlatformsType
 ): Promise<{
-  device1: AppiumNextDeviceType;
-  device2: AppiumNextDeviceType;
-  device3: AppiumNextDeviceType;
+  device1: DeviceWrapper;
+  device2: DeviceWrapper;
+  device3: DeviceWrapper;
 }> => {
   const [app1, app2, app3] = await Promise.all([
     openAppOnPlatform(platform, 0),
@@ -74,10 +75,10 @@ export const openAppThreeDevices = async (
 export const openAppFourDevices = async (
   platform: SupportedPlatformsType
 ): Promise<{
-  device1: AppiumNextDeviceType;
-  device2: AppiumNextDeviceType;
-  device3: AppiumNextDeviceType;
-  device4: AppiumNextDeviceType;
+  device1: DeviceWrapper;
+  device2: DeviceWrapper;
+  device3: DeviceWrapper;
+  device4: DeviceWrapper;
 }> => {
   const [app1, app2, app3, app4] = await Promise.all([
     openAppOnPlatform(platform, 0),
@@ -97,7 +98,7 @@ export const openAppFourDevices = async (
 const openAndroidApp = async (
   capabilitiesIndex: CapabilitiesIndexType
 ): Promise<{
-  device: AppiumNextDeviceType;
+  device: DeviceWrapper;
 }> => {
   await installAppToDeviceName(
     androidCapabilities.androidAppFullPath,
@@ -111,20 +112,22 @@ const openAndroidApp = async (
     address: `http://localhost:${APPIUM_PORT}`,
   } as DriverOpts;
 
-  const device: AppiumNextDeviceType = new driver(opts);
+  const device: DeviceWrapper = new driver(opts);
 
-  const sess = await device.createSession(
+  const wrappedDevice = new DeviceWrapper(device);
+
+  const sess = await wrappedDevice.createSession(
     getAndroidCapabilities(capabilitiesIndex)
   );
   console.warn(`SessionID for android:${capabilitiesIndex}: "${sess[0]}"`);
 
-  return { device };
+  return { device: wrappedDevice };
 };
 
 const openiOSApp = async (
   capabilitiesIndex: CapabilitiesIndexType
 ): Promise<{
-  device: AppiumNextDeviceType;
+  device: DeviceWrapper;
 }> => {
   console.warn("openiOSApp");
 
@@ -133,23 +136,24 @@ const openiOSApp = async (
   } as DriverOpts;
   const driver = (iosDriver as any).XCUITestDriver;
 
-  const device: AppiumNextDeviceType = new driver(opts);
+  const device: DeviceWrapper = new driver(opts);
+  const wrappedDevice = new DeviceWrapper(device);
 
-  const sess = await device.createSession(
+  const sess = await wrappedDevice.createSession(
     getIosCapabilities(capabilitiesIndex)
   );
   console.warn(
     `SessionID for iOS:${capabilitiesIndex}: "${JSON.stringify(sess)}"`
   );
 
-  return { device };
+  return { device: wrappedDevice };
 };
 
 export const closeApp = async (
-  device1?: AppiumNextDeviceType,
-  device2?: AppiumNextDeviceType,
-  device3?: AppiumNextDeviceType,
-  device4?: AppiumNextDeviceType
+  device1?: DeviceWrapper,
+  device2?: DeviceWrapper,
+  device3?: DeviceWrapper,
+  device4?: DeviceWrapper
 ) => {
   await device1?.deleteSession();
   await device2?.deleteSession();
@@ -157,4 +161,7 @@ export const closeApp = async (
   await device4?.deleteSession();
 
   console.info("sessions closed");
+
+  console.info("killing adb server");
+  await runScriptAndLog(`${getAdbFullPath()} kill-server`);
 };

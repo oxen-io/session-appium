@@ -1,21 +1,21 @@
-import { selectByText } from '.';
-import { AppiumNextDeviceType } from '../../../../appium_next';
-import { User } from '../../../types/testing';
-import { sendMessage } from './send_message';
-import { waitForTextElementToBePresent } from './wait_for';
+import { selectByText } from ".";
+import { DeviceWrapper } from "../../../types/DeviceWrapper";
+import { Group, User } from "../../../types/testing";
+import { sendMessage } from "./send_message";
+import { waitForTextElementToBePresent } from "./wait_for";
 
 export const sendMessageTo = async (
-  device: AppiumNextDeviceType,
+  device: DeviceWrapper,
   sender: User,
-  receiver: string
+  receiver: User | Group
 ) => {
-  const message = `'${sender.userName}' to ${receiver}`;
+  const message = `'${sender.userName}' to ${receiver.userName}`;
   await waitForTextElementToBePresent(
     device,
-    'Conversation list item',
-    receiver
+    "Conversation list item",
+    receiver.userName
   );
-  await selectByText(device, 'Conversation list item', receiver);
-  console.log(`'${sender.userName}' + " sent message to ${receiver}`);
+  await selectByText(device, "Conversation list item", receiver.userName);
+  console.log(`'${sender.userName}' + " sent message to ${receiver.userName}`);
   await sendMessage(device, message);
 };

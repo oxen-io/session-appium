@@ -1,22 +1,21 @@
-import { AppiumNextDeviceType } from '../../../../appium_next';
-import { findElementByAccessibilityId } from './find_elements_stragegy';
+import { DeviceWrapper } from "../../../types/DeviceWrapper";
+
 export const doFunctionIfElementExists = async (
-  device: AppiumNextDeviceType,
-  accessibilityId: string,
+  device: DeviceWrapper,
+  strategy: "xpath" | "accessibility id",
+  selector: string,
   toRun: () => Promise<any>
 ) => {
   try {
-    const selector = await findElementByAccessibilityId(
-      device,
-      accessibilityId
-    );
+    await device.findElement(strategy, selector);
+
     // Check if element exists
     if (selector) {
       // IF yes do the thing
-      console.log('Found selector so doing the thing');
+      console.log(`'Found ${strategy}: ${selector} so doing the thing`);
       await toRun();
     }
   } catch (e) {
-    console.log(`No ${accessibilityId} so moving on`);
+    console.log(`No ${selector} so moving on`);
   }
 };

@@ -1,18 +1,18 @@
 import {
   clickOnElement,
   inputText,
-  pressAndHold,
   getSessionID,
   waitForElementToBePresent,
+  longPress,
 } from ".";
 import { SupportedPlatformsType } from "./open_app";
 import { User } from "../../../types/testing";
 import {} from "./wait_for";
-import { AppiumNextDeviceType } from "../../../../appium_next";
 import { grabTextFromAccessibilityId } from "./save_text";
+import { DeviceWrapper } from "../../../types/DeviceWrapper";
 
 export const newUser = async (
-  device: AppiumNextDeviceType,
+  device: DeviceWrapper,
   userName: string,
   platform: SupportedPlatformsType
 ): Promise<User> => {
@@ -39,7 +39,7 @@ export const newUser = async (
   await waitForElementToBePresent(device, "Continue");
   await clickOnElement(device, "Continue");
   // Long Press the recovery phrase to reveal recovery phrase
-  await pressAndHold(device, "Recovery Phrase");
+  await longPress(device, "Recovery Phrase");
   // Save recovery phrase as variable
   const recoveryPhrase = await grabTextFromAccessibilityId(
     device,

@@ -1,14 +1,12 @@
-import {
-  AppiumNextDeviceType,
-  AppiumNextElementType,
-} from "../../../../appium_next";
+import { AppiumNextElementType } from "../../../../appium_next";
+import { DeviceWrapper } from "../../../types/DeviceWrapper";
 
 export const getTextFromElement = async (
-  device: AppiumNextDeviceType,
+  device: DeviceWrapper,
   element: AppiumNextElementType
 ): Promise<string> => {
-  console.log("here");
   const text = await device.getText(element.ELEMENT);
-  console.log("Getting text from element", text);
+
   return text;
 };
+// NEEDS TO BE FIXED
