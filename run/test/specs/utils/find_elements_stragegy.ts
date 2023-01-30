@@ -5,7 +5,7 @@ import { DeviceWrapper } from "../../../types/DeviceWrapper";
 export const findElementByAccessibilityId = async (
   device: DeviceWrapper,
   accessibilityId: string
-) => {
+): Promise<AppiumNextElementType> => {
   const element = await device.findElement("accessibility id", accessibilityId);
   if (!element || isArray(element)) {
     throw new Error(

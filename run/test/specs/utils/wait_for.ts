@@ -34,7 +34,7 @@ export const waitForElementToBePresent = async (
       currentWait += waitPerLoop;
 
       if (currentWait >= maxWaitMSec) {
-        console.log("Waited for too long");
+        // console.log("Waited for too long");
         throw new Error(`waited for too long looking for '${accessibilityId}'`);
       }
     }
@@ -69,7 +69,6 @@ export const waitForTextElementToBePresent = async (
     } catch (e) {
       await sleepFor(waitPerLoop);
       currentWait += waitPerLoop;
-      console.log("Waiting...");
 
       if (currentWait >= maxWaitMSec) {
         console.log("Waited too long");

@@ -12,9 +12,7 @@ export const findMatchingTextInElementArray = async (
   if (elements && elements.length) {
     const matching = await findAsync(elements, async (e) => {
       const text = await getTextFromElement(device, e);
-      console.warn(
-        `Looking for text: "${textToLookFor}" and found text: "${text}"`
-      );
+
       return Boolean(
         text && text.toLowerCase() === textToLookFor.toLowerCase()
       );
@@ -35,21 +33,6 @@ const findAsync = async (
   return arr[index];
 };
 
-// export const findElement = async (
-//   device: DeviceWrapper,
-//   accessibilityId: string
-// ) => {
-//   const selector = await waitForElementToBePresent(device, accessibilityId);
-//   if (!selector) {
-//     throw new Error(
-//       `findElement: Did not find accessibilityId: ${accessibilityId} `
-//     );
-//   }
-//   console.warn(`"Element found": ${accessibilityId}`);
-//   await selector;
-//   return;
-// };
-
 export const findMessageWithBody = async (
   device: DeviceWrapper,
   textToLookFor: string
@@ -68,14 +51,7 @@ export const findMatchingTextAndAccessibilityId = async (
   accessibilityId: string,
   textToLookFor: string
 ): Promise<AppiumNextElementType> => {
-  console.warn(
-    `Looking for all elements with accessibilityId: "${accessibilityId}" and text: "${textToLookFor}" `
-  );
   const elements = await findElementsByAccessibilityId(device, accessibilityId);
-
-  console.info(
-    `found ${elements.length} matching accessibilityId ${accessibilityId}. Now filtering for text`
-  );
 
   const foundElementMatchingText = await findMatchingTextInElementArray(
     device,
@@ -97,8 +73,6 @@ export const findLastElementInArray = async (
 ): Promise<AppiumNextElementType> => {
   const elements = await findElementsByAccessibilityId(device, accessibilityId);
 
-  console.log(`Elements length: ${elements.length}`);
-
   const [lastElement] = elements.slice(-1);
 
   if (!elements) {
@@ -112,7 +86,6 @@ export const findConfigurationMessage = async (
   device: DeviceWrapper,
   messageText: string
 ) => {
-  console.warn(`Looking for configuration message with ` + messageText);
   await waitForElementToBePresent(device, "Configuration message");
   const configMessage = findMatchingTextAndAccessibilityId(
     device,

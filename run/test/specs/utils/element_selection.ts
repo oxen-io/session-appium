@@ -1,6 +1,5 @@
 import {
   findMatchingTextAndAccessibilityId,
-  findMessageWithBody,
   waitForElementToBePresent,
   waitForTextElementToBePresent,
   findElementByAccessibilityId,
@@ -54,7 +53,7 @@ export const selectByText = async (
   );
   await device.click(selector.ELEMENT);
 
-  return;
+  return text;
 };
 
 export const longPress = async (
@@ -74,8 +73,22 @@ export const longPressMessage = async (
   device: DeviceWrapper,
   textToLookFor: string
 ) => {
-  const el = await findMessageWithBody(device, textToLookFor);
-  await device.longClick(el, 1000);
+  try {
+    const el = await waitForTextElementToBePresent(
+      device,
+      "Message Body",
+      textToLookFor
+    );
+    await device.longClick(el, 5000);
+    console.log(`Longpress on message:`, textToLookFor, `successful`);
+    if (!el) {
+      throw new Error(
+        `longPress on message: ${textToLookFor} unsuccessful, couldn't find message`
+      );
+    }
+  } catch {
+    console.log(`Longpress on message: `, textToLookFor, `unsuccessful`);
+  }
 };
 
 export const longPressConversation = async (

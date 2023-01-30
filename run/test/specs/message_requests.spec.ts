@@ -23,10 +23,10 @@ async function acceptRequest(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create two users
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A", platform),
-    newUser(device2, "User B", platform),
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
   ]);
-  // Send message from User A to User B
+  // Send message from Alice to Bob
   await sendNewMessage(
     device1,
     userB,
@@ -34,13 +34,13 @@ async function acceptRequest(platform: SupportedPlatformsType) {
   );
   // Wait for banner to appear
 
-  // User B clicks on message request banner
+  // Bob clicks on message request banner
   await clickOnElement(device2, "Message requests banner");
-  // User B clicks on request conversation item
+  // Bob clicks on request conversation item
   await clickOnElement(device2, "Message request");
-  // User B clicks accept button
+  // Bob clicks accept button
   await clickOnElement(device2, "Accept message request");
-  // Verify config message for User A 'Your message request has been accepted'
+  // Verify config message for Alice 'Your message request has been accepted'
   await waitForTextElementToBePresent(
     device1,
     "Configuration message",
@@ -55,19 +55,19 @@ async function declineRequest(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create two users
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A", platform),
-    newUser(device2, "User B", platform),
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
   ]);
-  // Send message from User A to User B
+  // Send message from Alice to Bob
   await sendNewMessage(
     device1,
     userB,
     `${userA.userName} to ${userB.userName}`
   );
   // Wait for banner to appear
-  // User B clicks on message request banner
+  // Bob clicks on message request banner
   await clickOnElement(device2, "Message requests banner");
-  // User B clicks on request conversation item
+  // Bob clicks on request conversation item
   await clickOnElement(device2, "Message request");
   // Click on decline button
   await clickOnElement(device2, "Decline message request");
@@ -87,21 +87,21 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create two users
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A", platform),
-    newUser(device2, "User B", platform),
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
   ]);
-  // Send message from User A to User B
+  // Send message from Alice to Bob
   await sendNewMessage(
     device1,
     userB,
     `${userA.userName} to ${userB.userName}`
   );
   // Wait for banner to appear
-  // User B clicks on message request banner
+  // Bob clicks on message request banner
   await clickOnElement(device2, "Message requests banner");
-  // User B clicks on request conversation item
+  // Bob clicks on request conversation item
   await clickOnElement(device2, "Message request");
-  // Send message from User B to User A
+  // Send message from Bob to Alice
   await sendMessage(device2, `${userB.userName} to ${userA.userName}`);
   // Check config
   await waitForTextElementToBePresent(
@@ -116,25 +116,25 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
 async function blockRequest(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A", platform),
-    newUser(device2, "User B", platform),
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
   ]);
-  // Send message from User A to User B
+  // Send message from Alice to Bob
   await sendNewMessage(
     device1,
     userB,
     `${userA.userName} to ${userB.userName}`
   );
   // Wait for banner to appear
-  // User B clicks on message request banner
+  // Bob clicks on message request banner
   await clickOnElement(device2, "Message requests banner");
-  // User B clicks on request conversation item
+  // Bob clicks on request conversation item
   await clickOnElement(device2, "Message request");
-  // User B clicks on block option
+  // Bob clicks on block option
   await clickOnElement(device2, "Block message request");
   // Confirm block on android
   await clickOnElement(device2, "Block");
-  // Make sure no messages can get through to user B
+  // Make sure no messages can get through to Bob
   const blockedMessage = `${userA.userName} to ${userB.userName} - shouldn't get through`;
   await sendMessage(device1, blockedMessage);
   await navigateBack(device2, platform);

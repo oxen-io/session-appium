@@ -26,7 +26,7 @@ import {
   doesElementExist,
   findElementByXpath,
 } from "./utils/find_elements_stragegy";
-import { clickOnElementXPath } from "./utils/element_selection";
+import { clickOnElementXPath, selectByText } from "./utils/element_selection";
 
 async function sendImage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
@@ -53,6 +53,7 @@ async function sendImage(platform: SupportedPlatformsType) {
   if (selector) {
     try {
       await clickOnElement(device1, "Photo, September 09, 2022, 3:33 PM");
+      // Need to account for scenario that photo is already selected...
     } catch (e) {
       console.log("Trying other path");
     }
@@ -78,8 +79,11 @@ async function sendImage(platform: SupportedPlatformsType) {
   await clickOnElement(device2, "Download media");
 
   // Reply to message
-  await sleepFor(3000);
+  await sleepFor(5000);
+  // await selectByText(device2, "Message Body", testMessage);
+  // await clickOnElement(device2, "Back");
   await longPressMessage(device2, testMessage);
+
   await clickOnElement(device2, "Reply to message");
   await sendMessage(device2, replyMessage);
   await waitForTextElementToBePresent(device1, "Message Body", replyMessage);
@@ -274,3 +278,7 @@ describe("Message checks", async () => {
   await iosIt("Send long text and reply test", sendLongMessage);
   await androidIt("Send long text and reply test", sendLongMessage);
 });
+
+// Link preview without image
+// Link preview with image
+// Media saved notification

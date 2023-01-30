@@ -19,8 +19,8 @@ export const linkedDevice = async (
 ) => {
   const user = await newUser(device1, userName, platform);
   // Log in with recovery seed on device 2
+
   await clickOnElement(device2, "Link a device");
-  console.log("Tiny bubble");
   // Enter recovery phrase into input box
   await inputText(device2, "Enter your recovery phrase", user.recoveryPhrase);
   // Continue with recovery phrase
