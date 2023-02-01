@@ -14,7 +14,6 @@ export function sleepFor(ms: number) {
 export const waitForElementToBePresent = async (
   device: DeviceWrapper,
   accessibilityId: string,
-  // mustBeClickable = false,
   maxWait?: number
 ): Promise<AppiumNextElementType> => {
   const maxWaitMSec = maxWait || 30000;

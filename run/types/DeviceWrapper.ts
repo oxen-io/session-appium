@@ -22,8 +22,9 @@ type SharedDeviceInterface = {
   ) => Promise<
     undefined | { height: number; width: number; x: number; y: number }
   >;
-  pushFile(path: string, data: string): Promise<void>;
-
+  getCssProperty: (name: string, elementId: string) => Promise<string>;
+  // pushFile(path: string, data: string): Promise<void>;
+  getElementScreenshot: (elementId: string) => Promise<string>;
   // gestures
   scroll: (
     start: Coordinates,
@@ -114,6 +115,13 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return this.toShared().getElementRect(elementId);
   }
 
+  public async getCssProperty(
+    name: string,
+    elementId: string
+  ): Promise<string> {
+    return this.toShared().getCssProperty(name, elementId);
+  }
+
   public async scroll(
     start: Coordinates,
     end: Coordinates,
@@ -192,8 +200,12 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return this.toShared().performTouch(actions);
   }
 
-  public async pushFile(path: string, data: string): Promise<void> {
-    return this.toShared().pushFile(path, data);
+  // public async pushFile(path: string, data: string): Promise<void> {
+  //   return this.toShared().pushFile(path, data);
+  // }
+
+  public async getElementScreenshot(elementId: string): Promise<string> {
+    return this.toShared().getElementScreenshot(elementId);
   }
 
   public async touchUp(CoOrdinates: Coordinates): Promise<void> {

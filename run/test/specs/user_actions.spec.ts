@@ -13,7 +13,6 @@ import {
   waitForTextElementToBePresent,
   sleepFor,
   waitForElementToBePresent,
-  doFunctionIfElementExists,
   clickOnXAndYCoordinates,
 } from "./utils/index";
 import { newUser } from "./utils/create_account";
@@ -26,8 +25,10 @@ import {
 import { androidIt, iosIt } from "../../types/sessionIt";
 import { newContact } from "./utils/create_contact";
 import { grabTextFromAccessibilityId } from "./utils/save_text";
-import { findElementByXpath } from "./utils/find_elements_stragegy";
+import { findElementByAccessibilityId } from "./utils/find_elements_stragegy";
 import { getTextFromElement } from "./utils/element_text";
+import { clickOnElementXPath } from "./utils/element_selection";
+import PNGReader from "pngjs";
 
 async function createContact(platform: SupportedPlatformsType) {
   // first we want to install the app on each device with our custom call to run it
@@ -142,38 +143,62 @@ async function changeUsername(platform: SupportedPlatformsType) {
 
   await closeApp(device);
 }
-async function changeAvatar(platform: SupportedPlatformsType) {
+async function changeAvatarAndroid(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
 
   // Create new user
   const userA = await newUser(device, "Alice", platform);
   // Click on settings/avatar
   await clickOnElement(device, "User settings");
-
+  await sleepFor(100);
   // Click on Profile picture
-  await clickOnElement(device, "Profile picture");
+  await clickOnElement(device, "User settings");
   // Click on Photo library
-  await clickOnElement(device, "Photo library");
-  await doFunctionIfElementExists(
-    device,
-    "accessibility id",
-    "Allow Access to All Photos",
-    () => clickOnElement(device, "Allow Access to All Photos")
-  );
+  await sleepFor(100);
+  await clickOnXAndYCoordinates(device, 315, 316);
+  // await device.back();
   // Select file
   await sleepFor(2000);
 
-  const elems = await findElementByXpath(
+  // const elems = await findElementByXpath(
+  //   device,
+  //   '//android.widget.LinearLayout[@content-desc="images (2).jpeg, 9.04 kB, Dec 6, 2022"]/android.widget.RelativeLayout/android.widget.FrameLayout[1]/android.widget.ImageView'
+  // );
+  await clickOnElementXPath(
     device,
-    '//XCUIElementTypeCell[@name="Photo, September 09, 2022, 3:33 PM"]/XCUIElementTypeOther'
+    '//android.widget.LinearLayout[@content-desc="download.png, 3.59 kB, Jan 30"]/android.widget.RelativeLayout/android.widget.FrameLayout[1]/android.widget.ImageView[1]'
   );
-  await clickOnElement(device, elems.ELEMENT);
-  // Click done
-  await clickOnElement(device, "Done");
+  // Click crop
+  await clickOnElementXPath(
+    device,
+    "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.FrameLayout[1]/android.view.ViewGroup/androidx.appcompat.widget.LinearLayoutCompat/android.widget.Button[3]"
+  );
   // Wait for change
+  await sleepFor(1000);
   // Verify change somehow...?
+  // Take screenshot
+  const el = await waitForElementToBePresent(device, "User settings");
+
+  await device.getElementScreenshot(el.ELEMENT);
+
+  // async function parseDataImage(data: string) {
+  //   console.log("Data is", data); // Data is data:image/png;base64,iVBORw0KGgoAAAANSUh...
+  //   const base64 = data.split(",")[1];
+  //   console.log("Base64 is", base64); // Base64 is iVBORw0KGgoAAAANSUh...
+  //   const bytes = Buffer.from("base64").toString(); // Base64 Decode
+  //   console.log("Bytes are", bytes); // Bytes are <Some binary data>
+  //   const png = await new PNGReader(bytes);
+  //   await png.parse((err, png) => {
+  //     console.log("Pixels are", png.pixels); // Pixels are Buffer{0: 255, 1: 0, 2: 65, ...
+  //   });
+  // }
+  // await parseDataImage(el.ELEMENT);
   await closeApp(device);
 }
+
+// async function changeAvatariOS(platform: SupportedPlatformsType) {
+//   // Need to add things
+// }
 async function setNicknameAndroid(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const [userA, userB] = await Promise.all([
@@ -330,8 +355,8 @@ describe("User actions", async () => {
   await androidIt("Change username", changeUsername);
   await iosIt("Change username", changeUsername);
 
-  await androidIt("Change avatar", changeAvatar);
-  await iosIt("Change avatar", changeAvatar);
+  await androidIt("Change avatar", changeAvatarAndroid);
+  // await iosIt("Change avatar", changeAvatariOS);
 
   await androidIt("Set nickname", setNicknameAndroid);
   await iosIt("Set nickname", setNicknameIos);

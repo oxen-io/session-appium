@@ -11,7 +11,6 @@ import * as iosDriver from "appium-xcuitest-driver";
 
 import { DriverOpts } from "appium/build/lib/appium";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
-import { execSync } from "child_process";
 import { getAdbFullPath } from "./binaries";
 
 const APPIUM_PORT = 4728;

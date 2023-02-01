@@ -1,6 +1,5 @@
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { getTextFromElement } from "./element_text";
-import { findElementByAccessibilityId } from "./find_elements_stragegy";
 import { waitForElementToBePresent } from "./wait_for";
 
 export const grabTextFromAccessibilityId = async (
