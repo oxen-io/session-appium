@@ -163,7 +163,7 @@ async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
   await inputText(device1, "Username", newUsername);
   // Select apply
   await runOnlyOnAndroid(platform, () => clickOnElement(device1, "Apply"));
-  await runOnlyOnIOS(platform, () => clickOnElement(device1, "Done button"));
+  await runOnlyOnIOS(platform, () => clickOnElement(device1, "Done"));
   // Check on linked device if name has updated
   await clickOnElement(device2, "User settings");
   await runOnlyOnAndroid(platform, () => navigateBack(device2, platform));

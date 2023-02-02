@@ -19,3 +19,5 @@ chromeDriver
 
 run/**/*.js
 *.js.map
+run/test/specs/to do 
+

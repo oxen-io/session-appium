@@ -1,5 +1,5 @@
 import { W3CCapabilities } from "appium/build/lib/appium";
-import { ExternalDriver } from "@appium/types/build/lib/driver";
+import { ExternalDriver } from "@appium/types/buildgit /lib/driver";
 import { functions } from "lodash";
 
 // typings comes from :

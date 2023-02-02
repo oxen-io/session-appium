@@ -79,8 +79,8 @@ export const longPressMessage = async (
       "Message Body",
       textToLookFor
     );
-    await device.longClick(el, 5000);
-    console.log(`Longpress on message:`, textToLookFor, `successful`);
+    await device.longClick(el, 1000);
+
     if (!el) {
       throw new Error(
         `longPress on message: ${textToLookFor} unsuccessful, couldn't find message`

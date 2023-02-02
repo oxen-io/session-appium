@@ -25,10 +25,9 @@ import {
 import { androidIt, iosIt } from "../../types/sessionIt";
 import { newContact } from "./utils/create_contact";
 import { grabTextFromAccessibilityId } from "./utils/save_text";
-import { findElementByAccessibilityId } from "./utils/find_elements_stragegy";
 import { getTextFromElement } from "./utils/element_text";
 import { clickOnElementXPath } from "./utils/element_selection";
-import PNGReader from "pngjs";
+import PNG from "png-js";
 
 async function createContact(platform: SupportedPlatformsType) {
   // first we want to install the app on each device with our custom call to run it
@@ -126,7 +125,8 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
 async function changeUsername(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
 
-  await newUser(device, "Alice", platform);
+  const userA = await newUser(device, "Alice", platform);
+  const newUsername = "Alice in chains";
   // click on settings/profile avatar
   await clickOnElement(device, "User settings");
   // select username
@@ -134,8 +134,21 @@ async function changeUsername(platform: SupportedPlatformsType) {
   console.warn("Element clicked?");
   // type in new username
 
-  const newUsername = await inputText(device, "Username", "New username");
-  console.warn(newUsername);
+  await inputText(device, "Username", newUsername);
+  const changedUsername = await grabTextFromAccessibilityId(device, "Username");
+  console.log("Changed username", changedUsername);
+  if (changedUsername === newUsername) {
+    console.log("Username change successful");
+  }
+  if (changedUsername === userA.userName) {
+    console.log("Username is still ", userA.userName);
+  }
+  if (changedUsername === "Username") {
+    console.log(
+      "Username is not picking up text but using access id text",
+      changedUsername
+    );
+  }
   // select tick
   await runOnlyOnAndroid(platform, () => clickOnElement(device, "Apply"));
   await runOnlyOnIOS(platform, () => clickOnElement(device, "Done"));
@@ -151,6 +164,7 @@ async function changeAvatarAndroid(platform: SupportedPlatformsType) {
   // Click on settings/avatar
   await clickOnElement(device, "User settings");
   await sleepFor(100);
+
   // Click on Profile picture
   await clickOnElement(device, "User settings");
   // Click on Photo library
@@ -178,22 +192,32 @@ async function changeAvatarAndroid(platform: SupportedPlatformsType) {
   // Verify change somehow...?
   // Take screenshot
   const el = await waitForElementToBePresent(device, "User settings");
+  const base64 = await device.getElementScreenshot(el.ELEMENT);
+  await parseDataImage(base64);
 
-  await device.getElementScreenshot(el.ELEMENT);
-
-  // async function parseDataImage(data: string) {
-  //   console.log("Data is", data); // Data is data:image/png;base64,iVBORw0KGgoAAAANSUh...
-  //   const base64 = data.split(",")[1];
-  //   console.log("Base64 is", base64); // Base64 is iVBORw0KGgoAAAANSUh...
-  //   const bytes = Buffer.from("base64").toString(); // Base64 Decode
-  //   console.log("Bytes are", bytes); // Bytes are <Some binary data>
-  //   const png = await new PNGReader(bytes);
-  //   await png.parse((err, png) => {
-  //     console.log("Pixels are", png.pixels); // Pixels are Buffer{0: 255, 1: 0, 2: 65, ...
-  //   });
-  // }
-  // await parseDataImage(el.ELEMENT);
   await closeApp(device);
+}
+
+async function parseDataImage(base64: string) {
+  console.warn("base64", base64);
+  const buffer = Buffer.from(base64, "base64");
+
+  const reader = new PNG(buffer);
+  const { height, width } = reader;
+  const middleX = Math.floor(width / 2);
+  const middleY = Math.floor(height / 2);
+
+  const pxDataStart = (width * middleY + middleX) * 3;
+  const pxDataEnd = pxDataStart + 3;
+
+  const px: Buffer = await new Promise((resolve) => {
+    reader.decodePixels((decodedPx: any) => {
+      resolve(decodedPx);
+    });
+  });
+
+  const middlePx = px.buffer.slice(pxDataStart, pxDataEnd);
+  console.warn("middlePx RGB: ", Buffer.from(middlePx).toString("hex"));
 }
 
 // async function changeAvatariOS(platform: SupportedPlatformsType) {

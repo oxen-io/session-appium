@@ -1,4 +1,4 @@
-import { iosIt, androidIt } from "../../types/sessionIt";
+import { androidIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import {
@@ -259,26 +259,14 @@ async function sendLongMessage(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
-describe("Message checks", async () => {
-  await iosIt("Send image and reply test", sendImage);
+describe("Message checks android", async () => {
   await androidIt("Send image and reply test", sendImage);
-
-  await iosIt("Send video and reply test", sendVideo);
   await androidIt("Send video and reply test", sendVideo);
-
-  await iosIt("Send voice message test", sendVoiceMessage);
   await androidIt("Send voice message test", sendVoiceMessage);
-
-  // await iosIt("Send document and reply test", sendDocument);
   // await androidIt("Send document and reply test", sendDocument);
-
-  await iosIt("Send GIF and reply", sendGif);
   await androidIt("Send GIF and reply", sendGif);
-
-  await iosIt("Send long text and reply test", sendLongMessage);
   await androidIt("Send long text and reply test", sendLongMessage);
 });
-
 // Link preview without image
 // Link preview with image
 // Media saved notification
