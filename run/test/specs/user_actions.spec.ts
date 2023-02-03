@@ -28,6 +28,7 @@ import { grabTextFromAccessibilityId } from "./utils/save_text";
 import { getTextFromElement } from "./utils/element_text";
 import { clickOnElementXPath } from "./utils/element_selection";
 import PNG from "png-js";
+import { parseDataImage } from "./utils/check_colour";
 
 async function createContact(platform: SupportedPlatformsType) {
   // first we want to install the app on each device with our custom call to run it
@@ -174,10 +175,7 @@ async function changeAvatarAndroid(platform: SupportedPlatformsType) {
   // Select file
   await sleepFor(2000);
 
-  // const elems = await findElementByXpath(
-  //   device,
-  //   '//android.widget.LinearLayout[@content-desc="images (2).jpeg, 9.04 kB, Dec 6, 2022"]/android.widget.RelativeLayout/android.widget.FrameLayout[1]/android.widget.ImageView'
-  // );
+  // Need to add a function that if file isn't found, push file to device
   await clickOnElementXPath(
     device,
     '//android.widget.LinearLayout[@content-desc="download.png, 3.59 kB, Jan 30"]/android.widget.RelativeLayout/android.widget.FrameLayout[1]/android.widget.ImageView[1]'
@@ -188,36 +186,19 @@ async function changeAvatarAndroid(platform: SupportedPlatformsType) {
     "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.FrameLayout[1]/android.view.ViewGroup/androidx.appcompat.widget.LinearLayoutCompat/android.widget.Button[3]"
   );
   // Wait for change
-  await sleepFor(1000);
+  await sleepFor(5000);
   // Verify change somehow...?
   // Take screenshot
   const el = await waitForElementToBePresent(device, "User settings");
   const base64 = await device.getElementScreenshot(el.ELEMENT);
-  await parseDataImage(base64);
-
+  const pixelColor = await parseDataImage(base64);
+  console.log("RGB Value of pixel is:", pixelColor);
+  if (pixelColor === "00cbfe") {
+    console.log("Colour is correct");
+  } else {
+    console.log("Colour isn't 00cbfe, it is: ", pixelColor);
+  }
   await closeApp(device);
-}
-
-async function parseDataImage(base64: string) {
-  console.warn("base64", base64);
-  const buffer = Buffer.from(base64, "base64");
-
-  const reader = new PNG(buffer);
-  const { height, width } = reader;
-  const middleX = Math.floor(width / 2);
-  const middleY = Math.floor(height / 2);
-
-  const pxDataStart = (width * middleY + middleX) * 3;
-  const pxDataEnd = pxDataStart + 3;
-
-  const px: Buffer = await new Promise((resolve) => {
-    reader.decodePixels((decodedPx: any) => {
-      resolve(decodedPx);
-    });
-  });
-
-  const middlePx = px.buffer.slice(pxDataStart, pxDataEnd);
-  console.warn("middlePx RGB: ", Buffer.from(middlePx).toString("hex"));
 }
 
 // async function changeAvatariOS(platform: SupportedPlatformsType) {
