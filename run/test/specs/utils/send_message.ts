@@ -1,5 +1,4 @@
 import { clickOnElement, inputText } from ".";
-import { AppiumNextDeviceType } from "../../../../appium_next";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { waitForElementToBePresent } from "./wait_for";
 

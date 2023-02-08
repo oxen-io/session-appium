@@ -15,12 +15,15 @@
     "@appium/execute-driver-plugin": "^3.0.1",
     "@appium/images-plugin": "^2.0.1",
     "@types/lodash": "^4.14.191",
+    "@typescript-eslint/eslint-plugin": "^5.51.0",
+    "@typescript-eslint/parser": "^5.51.0",
     "@wdio/types": "^8.1.2",
     "appium-uiautomator2-driver": "^2.12.1",
     "appium-xcuitest-driver": "^4.16.7",
+    "eslint": "^8.33.0",
     "mocha": "^10.2.0",
     "ts-node": "^10.9.1",
-    "typescript": "^4.7.4",
+    "typescript": "^4.9.5",
     "wdio-wait-for": "^2.2.6"
   },
   "dependencies": {
@@ -29,6 +32,7 @@
     "jest": "^29.3.1",
     "lodash": "^4.17.21",
     "png-js": "^1.0.0",
+    "typescript-tslint-plugin": "^1.0.2",
     "wd": "^1.14.0"
   }
 }
