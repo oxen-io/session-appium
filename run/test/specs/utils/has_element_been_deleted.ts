@@ -17,6 +17,7 @@ export const hasElementBeenDeleted = async (
       throw e;
     }
   }
+  console.log(accessibilityId, "is not visible, congratulations");
 };
 
 export const hasTextElementBeenDeleted = async (
@@ -33,4 +34,5 @@ export const hasTextElementBeenDeleted = async (
       throw e;
     }
   }
+  console.log(accessibilityId + text, "is not visible, congratulations");
 };

@@ -11,6 +11,7 @@ import {
 } from "./utils";
 import { newUser } from "./utils/create_account";
 import { getTextFromElement } from "./utils/element_text";
+import { linkedDevice } from "./utils/link_device";
 
 import {
   openAppOnPlatformSingleDevice,
@@ -19,19 +20,8 @@ import {
 } from "./utils/open_app";
 
 async function tinyTest(platform: SupportedPlatformsType) {
-  const { device } = await openAppOnPlatformSingleDevice(platform);
-  const recoveryPhrase =
-    "oxygen fishing hiding optical nowhere request amply aloof rafts system fountain diode aloof";
-  await clickOnElement(device, "Link a device");
-  await inputText(device, "Enter your recovery phrase", recoveryPhrase);
-  await clickOnElement(device, "Continue");
-  await waitForElementToBePresent(device, "Message Notifications");
-  await sleepFor(250);
-  await clickOnElement(device, "Continue with settings");
-
-  await selectByText(device, "Conversation list item", "Bob");
-  await clickOnElement(device, "Add attachments");
-  await clickOnElement(device, "Select camera button");
+  const { device1, device2 } = await openAppTwoDevices(platform);
+  await linkedDevice(device1, device2, "Alice", platform);
 }
 
 describe("Tiny test", async () => {

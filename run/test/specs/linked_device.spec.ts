@@ -29,6 +29,7 @@ import {
 } from "./utils/index";
 import { grabTextFromAccessibilityId } from "./utils/save_text";
 import { navigateBack } from "./utils/navigate_back";
+import { parseDataImage } from "./utils/check_colour";
 
 async function linkDevice(platform: SupportedPlatformsType) {
   // Open server and two devices
@@ -265,20 +266,56 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
   await closeApp(device1, device2, device3);
 }
 
-// async function avatarRestored(platform: SupportedPlatformsType) {
-//   // open server and two devices
-//   const {  device1, device2 } = await openAppTwoDevices(platform);
-//   // Link device
-//   const user = await linkedDevice(device1, device2, "User A");
-//   // Take screenshot of avatar in device 1
-//   await clickOnElement(device1, "User settings");
-//   await findElement(device1, "Profile picture");
-//   const screenShotDeviceOne = await device1.takeScreenshot();
+async function avatarRestorediOS(platform: SupportedPlatformsType) {
+  const { device1, device2 } = await openAppTwoDevices(platform);
 
-//   await clickOnElement(device2, "User settings");
-//   const screenShotDeviceTwo = await device2.takeScreenshot();
+  const userA = await linkedDevice(device1, device2, "Alice", platform);
 
-//   new similarityMatchingOptions();
+  await clickOnElement(device1, "User settings");
+  await sleepFor(100);
+
+  // Click on Profile picture
+  await clickOnElement(device1, "Profile picture");
+  await clickOnElement(device1, "Photo library");
+  // Click on Photo library
+  await sleepFor(100);
+  await clickOnElement(device1, `Photo, January 30, 4:17 PM`);
+  await clickOnElement(device1, "Done");
+  // Select file
+  await sleepFor(2000);
+  await clickOnElement(device1, `Photo, January 30, 4:17 PM`);
+  await clickOnElement(device1, "Done");
+
+  // Need to add a function that if file isn't found, push file to device1
+  // Wait for change
+  // Verify change somehow...?
+  // Take screenshot
+  const el = await waitForElementToBePresent(device1, "Profile picture");
+  await sleepFor(3000);
+  const base64 = await device1.getElementScreenshot(el.ELEMENT);
+  const pixelColor = await parseDataImage(base64);
+  console.log("RGB Value of pixel is:", pixelColor);
+  if (pixelColor === "00cbfe") {
+    console.log("Colour is correct");
+  } else {
+    console.log("Colour isn't 00cbfe, it is: ", pixelColor);
+  }
+  console.log("Now checking avatar on linked device");
+  // Check avatar on device 2
+  await clickOnElement(device2, "User settings");
+  const el2 = await waitForElementToBePresent(device2, "Profile picture");
+  await sleepFor(3000);
+  const base64A = await device2.getElementScreenshot(el2.ELEMENT);
+  const pixelColorLinked = await parseDataImage(base64A);
+  if (pixelColorLinked === "00cbfe") {
+    console.log("Colour is correct on linked device");
+  } else {
+    console.log("Colour isn't 00cbfe, it is: ", pixelColorLinked);
+  }
+  await closeApp(device1, device2);
+}
+
+// async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
 // }
 
 describe("Linked device tests", async () => {
@@ -299,10 +336,12 @@ describe("Linked device tests", async () => {
 
   await iosIt("Check blocked user syncs", blockedUserLinkedDevice);
   await androidIt("Check blocked user syncs", blockedUserLinkedDevice);
+
+  await iosIt("Check profile picture syncs", avatarRestorediOS);
+  // await androidIt("Check profile picture syncs", avatarRestoredAndroid);
 });
 
 // TESTS TO WRITE FOR LINKED DEVICE
-// You're almost finished not there
 // Leave group
 // Message requests
 // Avatar restored

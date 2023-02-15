@@ -7,6 +7,7 @@ import {
   inputText,
   runOnlyOnAndroid,
   runOnlyOnIOS,
+  hasElementBeenDeleted,
 } from ".";
 
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
@@ -34,6 +35,8 @@ export const linkedDevice = async (
   await sleepFor(250);
   // Click continue on message notification settings
   await clickOnElement(device2, "Continue with settings");
+  // Check that you're almost there isn't displayed
+  await hasElementBeenDeleted(device2, "Continue");
   // Check that button was clicked
   await waitForElementToBePresent(device2, "New conversation button");
   console.warn("Device 3 linked");
