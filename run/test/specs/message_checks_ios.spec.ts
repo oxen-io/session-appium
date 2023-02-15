@@ -25,6 +25,7 @@ import {
   selectByText,
   doesElementExist,
   clickOnElementXPath,
+  hasElementBeenDeleted,
 } from "./utils/index";
 
 async function sendImage(platform: SupportedPlatformsType) {
@@ -381,6 +382,37 @@ async function unsendMessage(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
+async function deleteMessage(platform: SupportedPlatformsType) {
+  const { device1, device2 } = await openAppTwoDevices(platform);
+
+  // Create two users
+  const [userA, userB] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+  ]);
+  // Create contact
+  await newContact(platform, device1, userA, device2, userB);
+  // send message from User A to User B
+  const sentMessage = await sendMessage(
+    device1,
+    "Checking delete functionality"
+  );
+  // await sleepFor(1000);
+  await waitForTextElementToBePresent(device2, "Message Body", sentMessage);
+  console.log("Doing a long click on" + `${sentMessage}`);
+  // Select and long press on message to delete it
+  await longPressMessage(device1, sentMessage);
+  // Select Delete icon
+  await clickOnElement(device1, "Delete message");
+  // Select 'Delete for me and User B'
+  await clickOnElement(device1, "Delete for me");
+  // Look in User B's chat for alert 'This message has been deleted?'
+  await hasElementBeenDeleted(device1, sentMessage);
+
+  // Excellent
+  await closeApp(device1, device2);
+}
+
 describe("Message checks ios", async () => {
   await iosIt("Send image and reply test", sendImage);
   await iosIt("Send video and reply test", sendVideo);
@@ -389,6 +421,7 @@ describe("Message checks ios", async () => {
   await iosIt("Send GIF and reply", sendGif);
   await iosIt("Send long text and reply test", sendLongMessage);
   await iosIt("Unsend message", unsendMessage);
+  await iosIt("Delete message", deleteMessage);
 });
 // Link preview without image
 // Link preview with image
