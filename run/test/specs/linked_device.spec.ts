@@ -129,7 +129,7 @@ async function groupCreationLinkedDevice(platform: SupportedPlatformsType) {
   await sleepFor(5000);
   // Check linked device for name change (conversation header name)
   const groupName = await grabTextFromAccessibilityId(device2, "Username");
-  console.warn("Group name is now" + groupName);
+  console.warn("Group name is now " + groupName);
   await findMatchingTextAndAccessibilityId(device2, "Username", newGroupName);
   // Check config message in linked device aswell
   await runOnlyOnIOS(platform, () =>

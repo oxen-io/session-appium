@@ -1,11 +1,13 @@
 import { doFunctionIfElementExists } from "./do_function_if_element_exists";
 import {
   clickOnElement,
+  clickOnElementXPath,
   tapOnElement,
   longPress,
   longPressMessage,
   longPressConversation,
   selectByText,
+  pressAndHold,
 } from "./element_selection";
 import {
   waitForElementToBePresent,
@@ -37,6 +39,8 @@ import { scrollDown } from "./scroll_down";
 import { swipeLeft } from "./swipe_left";
 import { clickOnXAndYCoordinates } from "./click_by_coordinates";
 import {
+  doesElementExist,
+  findElementByXpath,
   findElementByAccessibilityId,
   findElementsByAccessibilityId,
 } from "./find_elements_stragegy";
@@ -44,6 +48,7 @@ import {
 export {
   doFunctionIfElementExists,
   clickOnElement,
+  clickOnElementXPath,
   tapOnElement,
   longPress,
   longPressMessage,
@@ -57,6 +62,8 @@ export {
   findMessageWithBody,
   findLastElementInArray,
   findConfigurationMessage,
+  doesElementExist,
+  findElementByXpath,
   sendMessageTo,
   sendNewMessage,
   sendMessage,
@@ -75,4 +82,5 @@ export {
   clickOnXAndYCoordinates,
   findElementByAccessibilityId,
   findElementsByAccessibilityId,
+  pressAndHold,
 };

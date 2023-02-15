@@ -1,11 +1,14 @@
 import { newUser } from "./utils/create_account";
-import { newContact } from "./utils/create_contact";
 import { openAppTwoDevices, SupportedPlatformsType } from "./utils/open_app";
 import {
   clickOnElement,
   findElementByAccessibilityId,
   hasElementBeenDeleted,
+  runOnlyOnAndroid,
   scrollDown,
+  sendNewMessage,
+  sendMessage,
+  findConfigurationMessage,
 } from "./utils/index";
 import { androidIt, iosIt } from "../../types/sessionIt";
 
@@ -14,21 +17,30 @@ async function voiceCall(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and User B
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A", platform),
-    newUser(device2, "User B", platform),
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
   ]);
-
-  // Enabled voice calls in privacy settings
-  await clickOnElement(device1, "User settings");
-  // Scroll to bottom of page to voice and video calls
-  await scrollDown(device1);
-  await scrollDown(device1);
-
-  // Try to make phone call with unapproved user
+  await sendNewMessage(device1, userB, "Testing calls");
   // Look for phone icon (shouldnt be there)
   await hasElementBeenDeleted(device1, "Call button");
   // Create contact
-  await newContact(platform, device1, userA, device2, userB);
+  await clickOnElement(device2, "Message requests banner");
+  // Select message from User A
+  await clickOnElement(device2, "Message request");
+  await runOnlyOnAndroid(platform, () =>
+    clickOnElement(device2, "Accept message request")
+  );
+  // Type into message input box
+  await sendMessage(
+    device2,
+    `Reply-message-${userB.userName}-to-${userA.userName}`
+  );
+
+  // Verify config message states message request was accepted
+  await findConfigurationMessage(
+    device1,
+    "Your message request has been accepted."
+  );
   // Phone icon should appear now that conversation has been approved
   await clickOnElement(device1, "Call button");
   // Enabled voice calls in privacy settings

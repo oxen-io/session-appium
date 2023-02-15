@@ -2,7 +2,7 @@
   "scripts": {
     "tsc": "npm run clean-tsc && tsc",
     "clean-tsc": "find run/test/specs -type f -name '*.js' -delete",
-    "tsc-watch": "tsc -w",
+    "tsc-watch": "npm run clean-tsc && tsc -w",
     "test": "_TESTING=1 mocha --timeout 300000 --retries 2 --jobs 1 ./run/test/specs/*.spec.js ",
     "test-one": "_TESTING=1 mocha --timeout 300000 --retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep ",
     "test-one-android": "node ./scripts/run_one.js android",
@@ -29,6 +29,7 @@
   "dependencies": {
     "@types/jest": "^29.2.5",
     "appium": "^2.0.0-beta.48",
+    "ci": "^2.2.0",
     "jest": "^29.3.1",
     "lodash": "^4.17.21",
     "png-js": "^1.0.0",

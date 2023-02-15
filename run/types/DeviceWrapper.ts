@@ -74,6 +74,7 @@ type IOSDeviceInterface = {
 
 type AndroidDeviceInterface = {
   touchLongClick: (id: string) => Promise<void>;
+  getPageSource: () => Promise<string>;
 } & SharedDeviceInterface;
 
 export class DeviceWrapper implements SharedDeviceInterface {
@@ -251,6 +252,9 @@ export class DeviceWrapper implements SharedDeviceInterface {
       });
     }
     return this.toAndroid().touchLongClick(element.ELEMENT);
+  }
+  public async getPageSource(): Promise<string> {
+    return this.toAndroid().getPageSource();
   }
 
   /* === all the utilities function ===  */

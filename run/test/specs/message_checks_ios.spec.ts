@@ -21,12 +21,11 @@ import {
   runOnlyOnIOS,
   longPress,
   waitForElementToBePresent,
-} from "./utils/index";
-import {
+  pressAndHold,
+  selectByText,
   doesElementExist,
-  findElementByXpath,
-} from "./utils/find_elements_stragegy";
-import { clickOnElementXPath } from "./utils/element_selection";
+  clickOnElementXPath,
+} from "./utils/index";
 
 async function sendImage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
@@ -45,6 +44,7 @@ async function sendImage(platform: SupportedPlatformsType) {
   await sleepFor(100);
 
   await clickOnXAndYCoordinates(device1, 34, 498);
+
   const selector = await doesElementExist(
     device1,
     "accessibility id",
@@ -53,9 +53,14 @@ async function sendImage(platform: SupportedPlatformsType) {
   if (selector) {
     try {
       await clickOnElement(device1, "Photo, September 09, 2022, 3:33 PM");
+      await clickOnElement(device1, "Done");
+      await clickOnElementXPath(
+        device1,
+        `//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell/XCUIElementTypeOther/XCUIElementTypeImage`
+      );
       // Need to account for scenario that photo is already selected...
     } catch (e) {
-      console.log("Trying other path");
+      console.log("Trying other path", e);
     }
   }
   if (!selector) {
@@ -64,12 +69,13 @@ async function sendImage(platform: SupportedPlatformsType) {
         device1,
         `//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell/XCUIElementTypeOther/XCUIElementTypeImage`
       );
-    } catch {
-      await clickOnElement(device1, "Add");
-      await clickOnElement(device1, "Photo, September 09, 2022, 3:33 PM");
-      await clickOnElement(device1, "Done");
+    } catch (e) {
+      console.warn("PLOP 22 ", e);
+      clickOnElement(device1, "Add");
+      clickOnElement(device1, "Photo, September 09, 2022, 3:33 PM");
     }
   }
+
   await clickOnElement(device1, "Text input box");
   await inputText(device1, "Text input box", testMessage);
   await clickOnElement(device1, "Send button");
@@ -79,9 +85,76 @@ async function sendImage(platform: SupportedPlatformsType) {
   await clickOnElement(device2, "Download media");
 
   // Reply to message
-  await sleepFor(5000);
-  // await selectByText(device2, "Message Body", testMessage);
-  // await clickOnElement(device2, "Back");
+
+  await sleepFor(500);
+  await longPressMessage(device2, "Testing-image-1");
+
+  await clickOnElement(device2, "Reply to message");
+  await sendMessage(device2, replyMessage);
+  await waitForTextElementToBePresent(device1, "Message Body", replyMessage);
+  // Close app and server
+  await closeApp(device1, device2);
+}
+
+async function sendDoc(platform: SupportedPlatformsType) {
+  const { device1, device2 } = await openAppTwoDevices(platform);
+
+  const [userA, userB] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+  ]);
+  const testMessage = "Testing-document-1";
+  const replyMessage = `Replying to document from ${userA.userName}`;
+
+  await newContact(platform, device1, userA, device2, userB);
+
+  await clickOnElement(device1, "Attachments button");
+
+  await sleepFor(100);
+
+  await clickOnXAndYCoordinates(device1, 36, 447);
+
+  const selector = await doesElementExist(
+    device1,
+    "accessibility id",
+    "Allow Access to All Photos"
+  );
+  if (selector) {
+    try {
+      await clickOnElement(device1, "Photo, September 09, 2022, 3:33 PM");
+      await clickOnElement(device1, "Done");
+      await clickOnElementXPath(
+        device1,
+        `//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell/XCUIElementTypeOther/XCUIElementTypeImage`
+      );
+      // Need to account for scenario that photo is already selected...
+    } catch (e) {
+      console.log("Trying other path", e);
+    }
+  }
+  if (!selector) {
+    try {
+      await clickOnElementXPath(
+        device1,
+        `//XCUIElementTypeCell[@name="covid, pdf"]/XCUIElementTypeOther[2]/XCUIElementTypeOther[1]/XCUIElementTypeImage`
+      );
+    } catch (e) {
+      clickOnElement(device1, "Add");
+      clickOnElement(device1, "Photo, September 09, 2022, 3:33 PM");
+    }
+  }
+  await clickOnElement(device1, "Message");
+  await clickOnElement(device1, "Text input box");
+  await inputText(device1, "Text input box", testMessage);
+  await clickOnElement(device1, "Send button");
+  await clickOnElement(device2, "Untrusted attachment message");
+  await sleepFor(500);
+  // User B - Click on 'download'
+  await clickOnElement(device2, "Download media");
+
+  // Reply to message
+
+  await sleepFor(500);
   await longPressMessage(device2, testMessage);
 
   await clickOnElement(device2, "Reply to message");
@@ -127,14 +200,22 @@ async function sendVideo(platform: SupportedPlatformsType) {
     clickOnElement(device1, "Done")
   );
   // Select video
-  const elems = await findElementByXpath(
+  await clickOnElementXPath(
     device1,
-    '//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell[1]'
+    `//XCUIElementTypeCollectionView['label == "Images"']/XCUIElementTypeCell[1]/XCUIElementTypeOther/XCUIElementTypeImage[1]`
   );
-  await clickOnElement(device1, elems.ELEMENT);
-
+  // const elems = await findElementByXpath(
+  //   device1,
+  //   '//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell[1]'
+  // );
+  // await clickOnElement(device1, elems.ELEMENT);
+  // await clickOnElement(device1, "Done");
+  // await clickOnElementXPath(
+  //   device1,
+  //   `//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell/XCUIElementTypeOther/XCUIElementTypeImage[1]`
+  // );
   // Send with captions
-  await clickOnElement(device1, "Text input box");
+  await await clickOnElement(device1, "Text input box");
   await inputText(device1, "Text input box", testMessage);
   await clickOnElement(device1, "Send button");
   // Check if the 'Tap to download media' config appears
@@ -165,11 +246,24 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
   await newContact(platform, device1, userA, device2, userB);
   // Select voice message button to activate recording state
   await longPress(device1, "New voice message");
+  // "Session" would like to access the microphone (Don't allow/ OK)
 
-  await doFunctionIfElementExists(device1, "accessibility id", "OK", () =>
-    clickOnElement(device1, "OK")
+  await clickOnElement(device1, "OK");
+  // Need enable microphone access in settings
+  await clickOnElementXPath(
+    device1,
+    `//XCUIElementTypeStaticText[@name="Settings"]`
   );
-  // await pressAndHold(device1, "New voice message");
+  await clickOnElementXPath(
+    device1,
+    `//XCUIElementTypeSwitch[@name="Microphone"]/XCUIElementTypeSwitch`
+  );
+  await device1.back();
+  await selectByText(device1, "Conversation list item", "Alice");
+  // await doFunctionIfElementExists(device1, "accessibility id", "OK", () =>
+  //   clickOnElement(device1, "OK")
+  // );
+  await pressAndHold(device1, "New voice message");
 
   await waitForElementToBePresent(device1, "Voice message");
 
@@ -187,16 +281,14 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
-// async function sendDoc
-
 async function sendGif(platform: SupportedPlatformsType) {
   // Test sending a video
   // open devices and server
   const { device1, device2 } = await openAppTwoDevices(platform);
   // create user a and user b
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A", platform),
-    newUser(device2, "User B", platform),
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
   ]);
   const testMessage = "Testing-GIF-1";
   const replyMessage = `Replying to GIF from ${userA.userName}`;
@@ -210,23 +302,22 @@ async function sendGif(platform: SupportedPlatformsType) {
   await runOnlyOnAndroid(platform, () => clickOnElement(device1, "OK"));
 
   // Select gif
-  await sleepFor(3000);
-  const gif = await findElementByXpath(
+  await sleepFor(500);
+  await clickOnElementXPath(
     device1,
     `(//XCUIElementTypeImage[@name="gif cell"])[1]`
   );
-  await device1.click(gif.ELEMENT);
   await clickOnElement(device1, "Text input box");
   await inputText(device1, "Text input box", testMessage);
   await clickOnElement(device1, "Send button");
   // Check if the 'Tap to download media' config appears
   // Click on config
   await clickOnElement(device2, "Untrusted attachment message");
-  await sleepFor(500);
+  await sleepFor(100);
   // Click on 'download'
-  await clickOnElement(device2, "Download");
+  await clickOnElement(device2, "Download media");
   // Reply to message
-  await sleepFor(3000);
+  await sleepFor(500);
   await longPressMessage(device2, testMessage);
   // Check reply came through on device1
   await clickOnElement(device2, "Reply to message");
@@ -244,8 +335,8 @@ async function sendLongMessage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and User B
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A", platform),
-    newUser(device2, "User B", platform),
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
   ]);
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
@@ -263,7 +354,7 @@ describe("Message checks ios", async () => {
   await iosIt("Send image and reply test", sendImage);
   await iosIt("Send video and reply test", sendVideo);
   await iosIt("Send voice message test", sendVoiceMessage);
-  // await iosIt("Send document and reply test", sendDocument);
+  await iosIt("Send document and reply test", sendDoc);
   await iosIt("Send GIF and reply", sendGif);
   await iosIt("Send long text and reply test", sendLongMessage);
 });

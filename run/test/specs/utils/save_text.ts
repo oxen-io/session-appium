@@ -9,7 +9,6 @@ export const grabTextFromAccessibilityId = async (
   const elementId = await waitForElementToBePresent(device, accessibilityId);
 
   const text = await getTextFromElement(device, elementId);
-  console.log("what text are we getting here", text);
   return text;
 };
 

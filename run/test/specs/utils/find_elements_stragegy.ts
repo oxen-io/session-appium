@@ -51,6 +51,7 @@ export const doesElementExist = async (
   selector: string
 ) => {
   try {
+    console.log(selector, "Element exists");
     return await device.findElement(strategy, selector);
   } catch {
     console.log(`Couldnt find `, selector);

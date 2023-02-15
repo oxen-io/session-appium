@@ -49,7 +49,7 @@ export const createGroup = async (
   // Select tick
   await clickOnElement(device1, "Create group");
   await runOnlyOnIOS(platform, () =>
-    findConfigurationMessage(device1, "Group createddddd")
+    findConfigurationMessage(device1, "Group created")
   );
   await runOnlyOnAndroid(platform, () =>
     findConfigurationMessage(device1, "You created a new group.")

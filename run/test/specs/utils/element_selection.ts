@@ -7,6 +7,7 @@ import {
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { findElementByXpath } from "./find_elements_stragegy";
 import { waitForXPathElement } from "./wait_for";
+
 export const clickOnElement = async (
   device: DeviceWrapper,
   accessibilityId: string
@@ -26,7 +27,6 @@ export const clickOnElementXPath = async (
   await waitForXPathElement(device, selector);
   const el = await findElementByXpath(device, selector);
   await device.click(el.ELEMENT);
-  console.log(selector, "clicked");
 };
 
 export const tapOnElement = async (
@@ -80,7 +80,7 @@ export const longPressMessage = async (
       textToLookFor
     );
     await device.longClick(el, 1000);
-
+    console.log("LongClick successful");
     if (!el) {
       throw new Error(
         `longPress on message: ${textToLookFor} unsuccessful, couldn't find message`
@@ -101,4 +101,13 @@ export const longPressConversation = async (
     userName
   );
   await device.longClick(el, 1000);
+};
+
+export const pressAndHold = async (
+  device: DeviceWrapper,
+  accessibilityId: string
+) => {
+  const el = await waitForElementToBePresent(device, accessibilityId);
+
+  await device.longClick(el, 2000);
 };

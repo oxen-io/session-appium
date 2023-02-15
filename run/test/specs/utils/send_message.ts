@@ -7,7 +7,7 @@ export const sendMessage = async (device: DeviceWrapper, message: string) => {
   // Click send
   await clickOnElement(device, "Send message button");
   // Wait for tick
-  await waitForElementToBePresent(device, "Message sent status tick");
+  await waitForElementToBePresent(device, `Message sent status: Sent`);
 
   return message;
 };

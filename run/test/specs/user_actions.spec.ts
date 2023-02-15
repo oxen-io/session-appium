@@ -27,7 +27,6 @@ import { newContact } from "./utils/create_contact";
 import { grabTextFromAccessibilityId } from "./utils/save_text";
 import { getTextFromElement } from "./utils/element_text";
 import { clickOnElementXPath } from "./utils/element_selection";
-import PNG from "png-js";
 import { parseDataImage } from "./utils/check_colour";
 
 async function createContact(platform: SupportedPlatformsType) {
@@ -95,7 +94,6 @@ async function blockUserInConversationOptions(
   // Close app
   await closeApp(device1, device2);
 }
-
 async function blockUserInConversationList(platform: SupportedPlatformsType) {
   // Open App
   const { device1, device2 } = await openAppTwoDevices(platform);
@@ -200,10 +198,43 @@ async function changeAvatarAndroid(platform: SupportedPlatformsType) {
   }
   await closeApp(device);
 }
+async function changeAvatariOS(platform: SupportedPlatformsType) {
+  const { device } = await openAppOnPlatformSingleDevice(platform);
 
-// async function changeAvatariOS(platform: SupportedPlatformsType) {
-//   // Need to add things
-// }
+  // Create new user
+  const userA = await newUser(device, "Alice", platform);
+  // Click on settings/avatar
+  await clickOnElement(device, "User settings");
+  await sleepFor(100);
+
+  // Click on Profile picture
+  await clickOnElement(device, "Profile picture");
+  await clickOnElement(device, "Photo library");
+  // Click on Photo library
+  await sleepFor(100);
+  await clickOnElement(device, `Photo, January 30, 4:17 PM`);
+  await clickOnElement(device, "Done");
+  // Select file
+  await sleepFor(2000);
+  await clickOnElement(device, `Photo, January 30, 4:17 PM`);
+  await clickOnElement(device, "Done");
+
+  // Need to add a function that if file isn't found, push file to device
+  // Wait for change
+  // Verify change somehow...?
+  // Take screenshot
+  const el = await waitForElementToBePresent(device, "Profile picture");
+  await sleepFor(3000);
+  const base64 = await device.getElementScreenshot(el.ELEMENT);
+  const pixelColor = await parseDataImage(base64);
+  console.log("RGB Value of pixel is:", pixelColor);
+  if (pixelColor === "00cbfe") {
+    console.log("Colour is correct");
+  } else {
+    console.log("Colour isn't 00cbfe, it is: ", pixelColor);
+  }
+  await closeApp(device);
+}
 async function setNicknameAndroid(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const [userA, userB] = await Promise.all([
@@ -361,10 +392,10 @@ describe("User actions", async () => {
   await iosIt("Change username", changeUsername);
 
   await androidIt("Change avatar", changeAvatarAndroid);
-  // await iosIt("Change avatar", changeAvatariOS);
+  await iosIt("Change avatar", changeAvatariOS);
 
   await androidIt("Set nickname", setNicknameAndroid);
   await iosIt("Set nickname", setNicknameIos);
 });
 
-// Check read receipts working
+// Check read receipts workin

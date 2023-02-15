@@ -1,7 +1,12 @@
 import { androidIt, iosIt } from "../../types/sessionIt";
 import {
+  clickOnElement,
   findElementByAccessibilityId,
   grabTextFromAccessibilityId,
+  inputText,
+  longPressMessage,
+  selectByText,
+  sleepFor,
   waitForElementToBePresent,
 } from "./utils";
 import { newUser } from "./utils/create_account";
@@ -15,10 +20,18 @@ import {
 
 async function tinyTest(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
+  const recoveryPhrase =
+    "oxygen fishing hiding optical nowhere request amply aloof rafts system fountain diode aloof";
+  await clickOnElement(device, "Link a device");
+  await inputText(device, "Enter your recovery phrase", recoveryPhrase);
+  await clickOnElement(device, "Continue");
+  await waitForElementToBePresent(device, "Message Notifications");
+  await sleepFor(250);
+  await clickOnElement(device, "Continue with settings");
 
-  const el = await waitForElementToBePresent(device, "Create session ID");
-  const text = await grabTextFromAccessibilityId(device, "Create session ID");
-  console.log("Text is: ", text);
+  await selectByText(device, "Conversation list item", "Bob");
+  await clickOnElement(device, "Add attachments");
+  await clickOnElement(device, "Select camera button");
 }
 
 describe("Tiny test", async () => {

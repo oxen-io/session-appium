@@ -4,7 +4,7 @@ import { W3CCapabilities } from "appium/build/lib/appium";
 import { getAndroidBinariesRoot } from "./binaries";
 import { CapabilitiesIndexType } from "./capabilities_ios";
 
-const androidAppFullPath = `${getAndroidBinariesRoot()}/session-1.16.3-universal.apk`;
+const androidAppFullPath = `${getAndroidBinariesRoot()}/session-1.16.5-universal.apk`;
 
 const sharedCapabilities: AppiumW3CCapabilities = {
   "appium:app": androidAppFullPath,

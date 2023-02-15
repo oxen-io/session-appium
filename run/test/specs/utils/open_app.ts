@@ -131,7 +131,7 @@ const openiOSApp = async (
   console.warn("openiOSApp");
 
   const opts: DriverOpts = {
-    address: `http://localhost:9102`,
+    address: `http://localhost:${APPIUM_PORT}`,
   } as DriverOpts;
   const driver = (iosDriver as any).XCUITestDriver;
 
