@@ -11,7 +11,6 @@ import {
   runOnlyOnIOS,
   waitForTextElementToBePresent,
   sleepFor,
-  waitForElementToBePresent,
   sendMessage,
   sendNewMessage,
 } from "./utils/index";
@@ -76,7 +75,7 @@ async function declineRequest(platform: SupportedPlatformsType) {
   // Navigate back to home page
   await navigateBack(device2, platform);
   // Look for new conversation button to make sure it all worked
-  await waitForElementToBePresent(device2, "New conversation button");
+  await device2.waitForElementToBePresent("New conversation button");
 
   // Close app
   await closeApp(device1, device2);
@@ -138,7 +137,7 @@ async function blockRequest(platform: SupportedPlatformsType) {
   const blockedMessage = `${userA.userName} to ${userB.userName} - shouldn't get through`;
   await sendMessage(device1, blockedMessage);
   await navigateBack(device2, platform);
-  await waitForElementToBePresent(device2, "New conversation button");
+  await device2.waitForElementToBePresent("New conversation button");
   // Need to wait to see if message gets through
   await sleepFor(1000);
   await hasTextElementBeenDeleted(device2, "Message Body", blockedMessage);

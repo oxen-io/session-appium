@@ -1,4 +1,7 @@
-import { AppiumW3CCapabilities } from "@wdio/types/build/Capabilities";
+import {
+  AppiumAndroidCapabilities,
+  AppiumW3CCapabilities,
+} from "@wdio/types/build/Capabilities";
 import { W3CCapabilities } from "appium/build/lib/appium";
 
 import { getAndroidBinariesRoot } from "./binaries";
@@ -8,7 +11,6 @@ const androidAppFullPath = `${getAndroidBinariesRoot()}/session-1.16.5-universal
 
 const sharedCapabilities: AppiumW3CCapabilities = {
   "appium:app": androidAppFullPath,
-
   "appium:platformName": "Android",
   "appium:platformVersion": "12",
   "appium:appPackage": "network.loki.messenger",

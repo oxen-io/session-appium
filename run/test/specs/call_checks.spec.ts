@@ -9,7 +9,7 @@ import {
   sendMessage,
   findConfigurationMessage,
 } from "./utils/index";
-import { androidIt, iosIt } from "../../types/sessionIt";
+import { androidIt, everyPlatformIt, iosIt } from "../../types/sessionIt";
 
 async function voiceCall(platform: SupportedPlatformsType) {
   // Open app
@@ -73,6 +73,5 @@ async function voiceCall(platform: SupportedPlatformsType) {
 }
 
 describe("Voice calls ", async () => {
-  await iosIt("Voice calls", voiceCall);
-  await androidIt("Voice calls", voiceCall);
+  everyPlatformIt("Voice calls", voiceCall);
 });

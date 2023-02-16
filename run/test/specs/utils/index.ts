@@ -9,11 +9,7 @@ import {
   selectByText,
   pressAndHold,
 } from "./element_selection";
-import {
-  waitForElementToBePresent,
-  waitForTextElementToBePresent,
-  sleepFor,
-} from "./wait_for";
+import { waitForTextElementToBePresent, sleepFor } from "./wait_for";
 import {
   findMatchingTextAndAccessibilityId,
   findMatchingTextInElementArray,
@@ -53,7 +49,6 @@ export {
   longPressMessage,
   longPressConversation,
   selectByText,
-  waitForElementToBePresent,
   waitForTextElementToBePresent,
   sleepFor,
   findMatchingTextInElementArray,

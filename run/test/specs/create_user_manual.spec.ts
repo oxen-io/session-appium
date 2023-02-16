@@ -1,4 +1,4 @@
-import { iosIt, androidIt, everyPlatformIt } from "../../types/sessionIt";
+import { everyPlatformIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import {

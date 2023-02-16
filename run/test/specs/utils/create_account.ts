@@ -1,10 +1,4 @@
-import {
-  clickOnElement,
-  inputText,
-  getSessionID,
-  waitForElementToBePresent,
-  longPress,
-} from ".";
+import { clickOnElement, inputText, getSessionID, longPress } from ".";
 import { SupportedPlatformsType } from "./open_app";
 import { User } from "../../../types/testing";
 import {} from "./wait_for";
@@ -18,10 +12,10 @@ export const newUser = async (
 ): Promise<User> => {
   // Click create session ID
   const createSessionId = "Create session ID";
-  await waitForElementToBePresent(device, createSessionId);
+  await device.waitForElementToBePresent(createSessionId);
   await clickOnElement(device, createSessionId);
   // Wait for animation to generate session id
-  await waitForElementToBePresent(device, "Session ID");
+  await device.waitForElementToBePresent("Session ID");
   // save session id as variable
   const sessionID = await getSessionID(platform, device);
 
@@ -36,7 +30,7 @@ export const newUser = async (
   // Choose message notification options
   await clickOnElement(device, "Continue with settings");
   // Click on 'continue' button to open recovery phrase modal
-  await waitForElementToBePresent(device, "Continue");
+  await device.waitForElementToBePresent("Continue");
   await clickOnElement(device, "Continue");
   // Long Press the recovery phrase to reveal recovery phrase
   await longPress(device, "Recovery Phrase");

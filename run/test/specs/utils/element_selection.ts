@@ -1,6 +1,5 @@
 import {
   findMatchingTextAndAccessibilityId,
-  waitForElementToBePresent,
   waitForTextElementToBePresent,
 } from ".";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
@@ -11,7 +10,7 @@ export const clickOnElement = async (
   device: DeviceWrapper,
   accessibilityId: string
 ) => {
-  const el = await waitForElementToBePresent(device, accessibilityId);
+  const el = await device.waitForElementToBePresent(accessibilityId);
 
   if (!el) {
     throw new Error(`Tap: Couldnt find accessibilityId: ${accessibilityId}`);
@@ -59,7 +58,7 @@ export const longPress = async (
   device: DeviceWrapper,
   accessibilityId: string
 ) => {
-  const el = await waitForElementToBePresent(device, accessibilityId);
+  const el = await device.waitForElementToBePresent(accessibilityId);
   if (!el) {
     throw new Error(
       `longPress: Could not find accessibilityId: ${accessibilityId}`
@@ -106,7 +105,7 @@ export const pressAndHold = async (
   device: DeviceWrapper,
   accessibilityId: string
 ) => {
-  const el = await waitForElementToBePresent(device, accessibilityId);
+  const el = await device.waitForElementToBePresent(accessibilityId);
 
   await device.longClick(el, 2000);
 };

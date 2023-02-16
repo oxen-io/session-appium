@@ -1,12 +1,11 @@
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
-import { waitForElementToBePresent } from "./wait_for";
 
 export const inputText = async (
   device: DeviceWrapper,
   accessibilityId: string,
   text: string
 ) => {
-  await waitForElementToBePresent(device, accessibilityId);
+  await device.waitForElementToBePresent(accessibilityId);
   const element = await device.findElementByAccessibilityId(accessibilityId);
   if (!element) {
     throw new Error(

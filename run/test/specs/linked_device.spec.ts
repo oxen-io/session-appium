@@ -23,7 +23,6 @@ import {
   inputText,
   waitForTextElementToBePresent,
   sleepFor,
-  waitForElementToBePresent,
   sendMessage,
 } from "./utils/index";
 import { grabTextFromAccessibilityId } from "./utils/save_text";
@@ -199,7 +198,7 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
   // Check message came through on linked device(3)
   // Enter conversation with user B on device 3
   // Need to wait for notifications to disappear
-  await waitForElementToBePresent(device3, "Conversation list item");
+  await device3.waitForElementToBePresent("Conversation list item");
   await selectByText(device3, "Conversation list item", userB.userName);
   // Find message
   await findMessageWithBody(device3, sentMessage);
@@ -212,7 +211,7 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
 
   // await waitForLoadingAnimation(device1);
 
-  await waitForElementToBePresent(device2, "Deleted message");
+  await device2.waitForElementToBePresent("Deleted message");
   // Check linked device for deleted message
   await hasTextElementBeenDeleted(device3, "Message body", sentMessage);
   // Close app
@@ -247,7 +246,6 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
   // Click on conversation with User B
   await selectByText(device3, "Conversation list item", userB.userName);
   // Look for blocked banner
-  // await waitForElementToBePresent(device3, "Blocked banner");
   // Unblock on device 3 and check if unblocked on device 1
   await clickOnElement(device3, "Blocked banner");
   // On ios you need to click ok to confirm unblock
@@ -289,7 +287,7 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   // Wait for change
   // Verify change somehow...?
   // Take screenshot
-  const el = await waitForElementToBePresent(device1, "Profile picture");
+  const el = await device1.waitForElementToBePresent("Profile picture");
   await sleepFor(3000);
   const base64 = await device1.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
@@ -302,7 +300,7 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   console.log("Now checking avatar on linked device");
   // Check avatar on device 2
   await clickOnElement(device2, "User settings");
-  const el2 = await waitForElementToBePresent(device2, "Profile picture");
+  const el2 = await device2.waitForElementToBePresent("Profile picture");
   await sleepFor(3000);
   const base64A = await device2.getElementScreenshot(el2.ELEMENT);
   const pixelColorLinked = await parseDataImage(base64A);

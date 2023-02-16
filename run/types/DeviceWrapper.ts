@@ -1,7 +1,7 @@
 import { W3CCapabilities } from "appium/build/lib/appium";
 import { isArray } from "lodash";
 import { AppiumNextElementType } from "../../appium_next";
-import { SupportedPlatformsType } from "../test/specs/utils/open_app";
+import { sleepFor } from "../test/specs/utils";
 import { isDeviceAndroid, isDeviceIOS } from "../test/specs/utils/utilities";
 
 export type Coordinates = {
@@ -56,7 +56,7 @@ type SharedDeviceInterface = {
     selector: string
   ): Promise<AppiumNextElementType>;
   findElements(
-    strategy: "accessibility id" | "xpath",
+    strategy: "accessibility id" | "xpath" | "class name",
     selector: string
   ): Promise<Array<AppiumNextElementType>>;
 
@@ -226,7 +226,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async findElements(
-    strategy: "accessibility id" | "xpath",
+    strategy: "accessibility id" | "xpath" | "class name",
     selector: string
   ): Promise<Array<AppiumNextElementType>> {
     return this.toShared().findElements(strategy, selector);
@@ -268,8 +268,39 @@ export class DeviceWrapper implements SharedDeviceInterface {
         `findElementByAccessibilityId: Did not find accessibilityId: ${accessibilityId} or it was an array `
       );
     }
-
     return element;
+  }
+
+  public async waitForElementToBePresent(
+    accessibilityId: string,
+    maxWait?: number
+  ): Promise<AppiumNextElementType> {
+    const maxWaitMSec = maxWait || 30000;
+    let currentWait = 0;
+    const waitPerLoop = 100;
+    let selector: AppiumNextElementType | null = null;
+
+    while (selector === null) {
+      try {
+        console.log(
+          `Waiting for accessibility ID '${accessibilityId}' to be present`
+        );
+
+        selector = await this.findElementByAccessibilityId(accessibilityId);
+      } catch (e) {
+        await sleepFor(waitPerLoop);
+        currentWait += waitPerLoop;
+
+        if (currentWait >= maxWaitMSec) {
+          // console.log("Waited for too long");
+          throw new Error(
+            `waited for too long looking for '${accessibilityId}'`
+          );
+        }
+      }
+    }
+    console.log(`'${accessibilityId}' has been found`);
+    return selector;
   }
 
   /* === all the utilities function ===  */

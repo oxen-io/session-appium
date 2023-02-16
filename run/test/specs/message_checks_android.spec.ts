@@ -1,23 +1,24 @@
 import { androidIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
+import { findElementByClass } from "./utils/find_elements_stragegy";
+import {
+  clickOnElement,
+  clickOnElementXPath,
+  findMatchingTextInElementArray,
+  findMessageWithBody,
+  longPress,
+  longPressMessage,
+  replyToMessage,
+  sendMessage,
+  sleepFor,
+  waitForTextElementToBePresent,
+} from "./utils/index";
 import {
   closeApp,
   openAppTwoDevices,
   SupportedPlatformsType,
 } from "./utils/open_app";
-import {
-  clickOnElement,
-  findMessageWithBody,
-  waitForTextElementToBePresent,
-  sleepFor,
-  replyToMessage,
-  sendMessage,
-  longPressMessage,
-  longPress,
-  waitForElementToBePresent,
-  clickOnElementXPath,
-} from "./utils/index";
 
 async function sendImage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
@@ -36,6 +37,20 @@ async function sendImage(platform: SupportedPlatformsType) {
   await sleepFor(100);
 
   await clickOnElement(device1, "Documents folder");
+
+  const elements = await findElementByClass(
+    device1,
+    "android.widget.CompoundButton"
+  );
+  const imageButton = await findMatchingTextInElementArray(
+    device1,
+    elements,
+    "Images"
+  );
+  if (!imageButton) {
+    throw new Error("imageButton was not found in android");
+  }
+  await device1.click(imageButton?.ELEMENT);
   // await clickOnElement(device1, "Show roots");
   await clickOnElementXPath(
     device1,
@@ -55,8 +70,6 @@ async function sendImage(platform: SupportedPlatformsType) {
   await sleepFor(5000);
 
   await longPress(device2, "Media message");
-  let pageSource = await device1.getPageSource();
-  console.log("Page source", pageSource);
   await clickOnElement(device2, "Reply to message");
   await sendMessage(device2, replyMessage);
   await waitForTextElementToBePresent(device1, "Message Body", replyMessage);
@@ -125,7 +138,7 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
   await clickOnElement(device1, "CONTINUE");
   // await pressAndHold(device1, "New voice message");
 
-  await waitForElementToBePresent(device1, "Voice message");
+  await device1.waitForElementToBePresent("Voice message");
 
   await clickOnElement(device2, "Untrusted attachment message");
   await sleepFor(200);
@@ -234,7 +247,7 @@ async function unsendMessage(platform: SupportedPlatformsType) {
   // Select 'Delete for me and User B'
   await clickOnElement(device1, "Delete for everyone");
   // Look in User B's chat for alert 'This message has been deleted?'
-  await waitForElementToBePresent(device2, "Deleted message");
+  await device2.waitForElementToBePresent("Deleted message");
 
   // Excellent
   await closeApp(device1, device2);

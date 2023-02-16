@@ -20,7 +20,6 @@ import {
   runOnlyOnAndroid,
   runOnlyOnIOS,
   longPress,
-  waitForElementToBePresent,
   pressAndHold,
   selectByText,
   doesElementExist,
@@ -51,13 +50,12 @@ async function sendImage(platform: SupportedPlatformsType) {
     "accessibility id",
     "Allow Access to All Photos"
   );
+  await clickOnElement(device1, `Allow Access to All Photos`);
   if (selector) {
     try {
-      await clickOnElement(device1, "Photo, September 09, 2022, 3:33 PM");
-      await clickOnElement(device1, "Done");
       await clickOnElementXPath(
         device1,
-        `//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell/XCUIElementTypeOther/XCUIElementTypeImage`
+        `//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell[8]/XCUIElementTypeOther/XCUIElementTypeImage`
       );
       // Need to account for scenario that photo is already selected...
     } catch (e) {
@@ -76,7 +74,6 @@ async function sendImage(platform: SupportedPlatformsType) {
       clickOnElement(device1, "Photo, September 09, 2022, 3:33 PM");
     }
   }
-
   await clickOnElement(device1, "Text input box");
   await inputText(device1, "Text input box", testMessage);
   await clickOnElement(device1, "Send button");
@@ -188,33 +185,12 @@ async function sendVideo(platform: SupportedPlatformsType) {
   await clickOnXAndYCoordinates(device1, 34, 498);
   // Select 'continue' on alert
   // Session would like to access your photos
-  await doFunctionIfElementExists(
-    device1,
-    "accessibility id",
-    "Allow Access to All Photos",
-    () => clickOnElement(device1, "Allow Access to All Photos")
-  );
-  await doFunctionIfElementExists(device1, "accessibility id", "Add", () =>
-    clickOnElement(device1, "Add")
-  );
-  await doFunctionIfElementExists(device1, "accessibility id", "Done", () =>
-    clickOnElement(device1, "Done")
-  );
+  await clickOnElement(device1, "Allow Access to All Photos");
   // Select video
   await clickOnElementXPath(
     device1,
     `//XCUIElementTypeCollectionView['label == "Images"']/XCUIElementTypeCell[1]/XCUIElementTypeOther/XCUIElementTypeImage[1]`
   );
-  // const elems = await findElementByXpath(
-  //   device1,
-  //   '//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell[1]'
-  // );
-  // await clickOnElement(device1, elems.ELEMENT);
-  // await clickOnElement(device1, "Done");
-  // await clickOnElementXPath(
-  //   device1,
-  //   `//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell/XCUIElementTypeOther/XCUIElementTypeImage[1]`
-  // );
   // Send with captions
   await await clickOnElement(device1, "Text input box");
   await inputText(device1, "Text input box", testMessage);
@@ -248,9 +224,10 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
   // Select voice message button to activate recording state
   await longPress(device1, "New voice message");
   // "Session" would like to access the microphone (Don't allow/ OK)
-  const permissions = await waitForElementToBePresent(device1, "OK");
+  const permissions = await device1.waitForElementToBePresent("OK");
   if (permissions) {
     clickOnElement(device1, "OK");
+    pressAndHold(device1, "New voice message");
   } else {
     // Need enable microphone access in settings
     await doFunctionIfElementExists(
@@ -272,7 +249,7 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
     await pressAndHold(device1, "New voice message");
   }
   // await clickOnElement(device1, "Allow");
-  await waitForElementToBePresent(device1, "Voice message");
+  await device1.waitForElementToBePresent("Voice message");
 
   await clickOnElement(device2, "Untrusted attachment message");
   await sleepFor(200);
@@ -382,7 +359,7 @@ async function unsendMessage(platform: SupportedPlatformsType) {
   // Select 'Delete for me and User B'
   await clickOnElement(device1, "Delete for everyone");
   // Look in User B's chat for alert 'This message has been deleted?'
-  await waitForElementToBePresent(device2, "Deleted message");
+  await device2.waitForElementToBePresent("Deleted message");
 
   // Excellent
   await closeApp(device1, device2);

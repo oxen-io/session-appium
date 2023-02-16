@@ -1,4 +1,4 @@
-import { waitForElementToBePresent, waitForTextElementToBePresent } from ".";
+import { waitForTextElementToBePresent } from ".";
 import { AppiumNextElementType } from "../../../../appium_next";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { getTextFromElement } from "./element_text";
@@ -86,7 +86,7 @@ export const findConfigurationMessage = async (
   device: DeviceWrapper,
   messageText: string
 ) => {
-  await waitForElementToBePresent(device, "Configuration message");
+  await device.waitForElementToBePresent("Configuration message");
   const configMessage = findMatchingTextAndAccessibilityId(
     device,
     "Configuration message",

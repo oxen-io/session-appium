@@ -10,37 +10,6 @@ export function sleepFor(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export const waitForElementToBePresent = async (
-  device: DeviceWrapper,
-  accessibilityId: string,
-  maxWait?: number
-): Promise<AppiumNextElementType> => {
-  const maxWaitMSec = maxWait || 30000;
-  let currentWait = 0;
-  const waitPerLoop = 100;
-  let selector: AppiumNextElementType | null = null;
-
-  while (selector === null) {
-    try {
-      console.log(
-        `Waiting for accessibility ID '${accessibilityId}' to be present`
-      );
-
-      selector = await device.findElementByAccessibilityId(accessibilityId);
-    } catch (e) {
-      await sleepFor(waitPerLoop);
-      currentWait += waitPerLoop;
-
-      if (currentWait >= maxWaitMSec) {
-        // console.log("Waited for too long");
-        throw new Error(`waited for too long looking for '${accessibilityId}'`);
-      }
-    }
-  }
-  console.log(`'${accessibilityId}' has been found`);
-  return selector;
-};
-
 export const waitForTextElementToBePresent = async (
   device: DeviceWrapper,
   accessibilityId: string,

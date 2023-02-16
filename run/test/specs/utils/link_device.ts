@@ -2,7 +2,6 @@ import { newUser } from "./create_account";
 import { SupportedPlatformsType } from "./open_app";
 import {
   sleepFor,
-  waitForElementToBePresent,
   clickOnElement,
   inputText,
   runOnlyOnAndroid,
@@ -30,7 +29,7 @@ export const linkedDevice = async (
   );
   await runOnlyOnIOS(platform, () => clickOnElement(device2, "Continue"));
   // Wait for any notifications to disappear
-  await waitForElementToBePresent(device2, "Message Notifications");
+  await device2.waitForElementToBePresent("Message Notifications");
   // Wait for transitiion animation between the two pages
   await sleepFor(250);
   // Click continue on message notification settings
@@ -38,7 +37,7 @@ export const linkedDevice = async (
   // Check that you're almost there isn't displayed
   await hasElementBeenDeleted(device2, "Continue");
   // Check that button was clicked
-  await waitForElementToBePresent(device2, "New conversation button");
+  await device2.waitForElementToBePresent("New conversation button");
   console.warn("Device 3 linked");
 
   return user;

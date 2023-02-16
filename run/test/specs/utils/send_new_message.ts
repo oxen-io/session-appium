@@ -1,10 +1,10 @@
 import { clickOnElement, inputText } from ".";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
-import { waitForElementToBePresent } from "./wait_for";
+import { User } from "../../../types/testing";
 
 export const sendNewMessage = async (
   device: DeviceWrapper,
-  user: any,
+  user: User,
   message: string
 ) => {
   // Sender workflow
@@ -22,7 +22,7 @@ export const sendNewMessage = async (
   // Click send
   await clickOnElement(device, "Send message button");
   // Wait for tick
-  await waitForElementToBePresent(device, `Message sent status: Sent`);
+  await device.waitForElementToBePresent(`Message sent status: Sent`);
 
   return message;
 };
