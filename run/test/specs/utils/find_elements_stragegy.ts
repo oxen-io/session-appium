@@ -2,20 +2,6 @@ import { isArray, isEmpty } from "lodash";
 import { AppiumNextElementType } from "../../../../appium_next";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 
-export const findElementByAccessibilityId = async (
-  device: DeviceWrapper,
-  accessibilityId: string
-): Promise<AppiumNextElementType> => {
-  const element = await device.findElement("accessibility id", accessibilityId);
-  if (!element || isArray(element)) {
-    throw new Error(
-      `findElementByAccessibilityId: Did not find accessibilityId: ${accessibilityId} or it was an array `
-    );
-  }
-
-  return element;
-};
-
 export const findElementsByAccessibilityId = async (
   device: DeviceWrapper,
   accessibilityId: string

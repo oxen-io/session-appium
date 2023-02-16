@@ -1,25 +1,24 @@
-import { iosIt, androidIt } from "../../types/sessionIt";
+import { androidIt, iosIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { createGroup } from "./utils/create_group";
+import {
+  clickOnElement,
+  deleteText,
+  findMessageWithBody,
+  inputText,
+  runOnlyOnAndroid,
+  runOnlyOnIOS,
+  selectByText,
+  waitForTextElementToBePresent,
+} from "./utils/index";
+import { navigateBack } from "./utils/navigate_back";
 import {
   closeApp,
   openAppFourDevices,
   openAppThreeDevices,
   SupportedPlatformsType,
 } from "./utils/open_app";
-import {
-  clickOnElement,
-  selectByText,
-  runOnlyOnAndroid,
-  runOnlyOnIOS,
-  deleteText,
-  findMessageWithBody,
-  inputText,
-  waitForTextElementToBePresent,
-  findElementByAccessibilityId,
-} from "./utils/index";
-import { navigateBack } from "./utils/navigate_back";
 
 async function groupCreation(platform: SupportedPlatformsType) {
   const testGroupName = "The Manhattan Crew";
@@ -80,6 +79,7 @@ async function changeGroupName(platform: SupportedPlatformsType) {
   await clickOnElement(device1, "Accept name change");
   // Alert should pop up 'Please enter group name', click ok
   // If ios click ok / If Android go to next step
+
   await runOnlyOnIOS(platform, () => clickOnElement(device1, "OK"));
   // Delete empty space
   await runOnlyOnIOS(platform, () => clickOnElement(device1, "Cancel"));
@@ -204,7 +204,7 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
   );
   await inputText(device1, "Message input box", "@");
   // Check that all users are showing in mentions box
-  await findElementByAccessibilityId(device1, "Mentions list");
+  await device1.findElementByAccessibilityId("Mentions list");
   // Select User B
   await selectByText(device1, "Contact", userB.userName);
   // Check in user B's device if the format is correct

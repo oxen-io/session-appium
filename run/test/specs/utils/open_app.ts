@@ -12,6 +12,7 @@ import * as iosDriver from "appium-xcuitest-driver";
 import { DriverOpts } from "appium/build/lib/appium";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { getAdbFullPath } from "./binaries";
+import { clickOnElement } from "./element_selection";
 
 const APPIUM_PORT = 4728;
 export const APPIUM_IOS_PORT = 8100;
@@ -138,12 +139,11 @@ const openiOSApp = async (
   const device: DeviceWrapper = new driver(opts);
   const wrappedDevice = new DeviceWrapper(device);
 
-  const sess = await wrappedDevice.createSession(
-    getIosCapabilities(capabilitiesIndex)
-  );
-  console.warn(
-    `SessionID for iOS:${capabilitiesIndex}: "${JSON.stringify(sess)}"`
-  );
+  const caps = getIosCapabilities(capabilitiesIndex);
+  const sess = await wrappedDevice.createSession(caps);
+
+  // deny notification
+  await clickOnElement(wrappedDevice, "Don’t Allow");
 
   return { device: wrappedDevice };
 };

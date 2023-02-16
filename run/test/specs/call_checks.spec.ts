@@ -2,7 +2,6 @@ import { newUser } from "./utils/create_account";
 import { openAppTwoDevices, SupportedPlatformsType } from "./utils/open_app";
 import {
   clickOnElement,
-  findElementByAccessibilityId,
   hasElementBeenDeleted,
   runOnlyOnAndroid,
   scrollDown,
@@ -70,7 +69,7 @@ async function voiceCall(platform: SupportedPlatformsType) {
   // Hang up
   await clickOnElement(device1, "End call button");
   // Check for config message 'Called User B' on device 1
-  await findElementByAccessibilityId(device1, "Configuration message");
+  await device1.findElementByAccessibilityId("Configuration message");
 }
 
 describe("Voice calls ", async () => {

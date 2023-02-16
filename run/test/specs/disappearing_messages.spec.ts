@@ -46,8 +46,7 @@ async function disappearingMessages(platform: SupportedPlatformsType) {
   const message = "Howdy testing disappearing messages";
   await inputText(device1, "Message input box", message);
   // Wait 5 seconds
-  console.warn("FIXME audric");
-  // await device1.setImplicitWaitTimeout(5000);
+
   // Look for message for User A
   await hasTextElementBeenDeleted(device1, "Message body", message);
   // Look for message for User B

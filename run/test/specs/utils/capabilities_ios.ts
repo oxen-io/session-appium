@@ -13,7 +13,7 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   "appium:newCommandTimeout": 300000,
   "appium:useNewWDA": false,
   "appium:showXcodeLog": false,
-  "appium:autoDismissAlerts": true,
+  "appium:autoDismissAlerts": false,
 } as AppiumXCUITestCapabilities;
 export type CapabilitiesIndexType = 0 | 1 | 2 | 3;
 

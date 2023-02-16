@@ -248,24 +248,30 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
   // Select voice message button to activate recording state
   await longPress(device1, "New voice message");
   // "Session" would like to access the microphone (Don't allow/ OK)
-
-  await clickOnElement(device1, "OK");
-  // Need enable microphone access in settings
-  await clickOnElementXPath(
-    device1,
-    `//XCUIElementTypeStaticText[@name="Settings"]`
-  );
-  await clickOnElementXPath(
-    device1,
-    `//XCUIElementTypeSwitch[@name="Microphone"]/XCUIElementTypeSwitch`
-  );
-  await device1.back();
-  await selectByText(device1, "Conversation list item", "Alice");
-  // await doFunctionIfElementExists(device1, "accessibility id", "OK", () =>
-  //   clickOnElement(device1, "OK")
-  // );
-  await pressAndHold(device1, "New voice message");
-
+  const permissions = await waitForElementToBePresent(device1, "OK");
+  if (permissions) {
+    clickOnElement(device1, "OK");
+  } else {
+    // Need enable microphone access in settings
+    await doFunctionIfElementExists(
+      device1,
+      "accessibility id",
+      "Settings",
+      () => clickOnElement(device1, "Settings")
+    );
+    await clickOnElementXPath(
+      device1,
+      `//XCUIElementTypeSwitch[@name="Microphone"]/XCUIElementTypeSwitch`
+    );
+    await sleepFor(100);
+    await device1.back();
+    await selectByText(device1, "Conversation list item", "Alice");
+    // await doFunctionIfElementExists(device1, "accessibility id", "OK", () =>
+    //   clickOnElement(device1, "OK")
+    // );
+    await pressAndHold(device1, "New voice message");
+  }
+  // await clickOnElement(device1, "Allow");
   await waitForElementToBePresent(device1, "Voice message");
 
   await clickOnElement(device2, "Untrusted attachment message");

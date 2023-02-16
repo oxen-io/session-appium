@@ -1,7 +1,6 @@
 import PNG from "png-js";
 
 export async function parseDataImage(base64: string) {
-  console.warn("base64", base64);
   const buffer = Buffer.from(base64, "base64");
 
   const reader = new PNG(buffer);

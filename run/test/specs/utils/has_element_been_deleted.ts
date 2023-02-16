@@ -1,7 +1,5 @@
 import { findMatchingTextAndAccessibilityId } from ".";
-import { AppiumNextDeviceType } from "../../../../appium_next";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
-import { findElementByAccessibilityId } from "./find_elements_stragegy";
 
 export const hasElementBeenDeleted = async (
   device: DeviceWrapper,
@@ -9,7 +7,7 @@ export const hasElementBeenDeleted = async (
 ) => {
   const fakeError = `${accessibilityId}: has been found, but shouldn't have been. OOPS`;
   try {
-    await findElementByAccessibilityId(device, accessibilityId);
+    await device.findElementByAccessibilityId(accessibilityId);
 
     throw new Error(fakeError);
   } catch (e: any) {

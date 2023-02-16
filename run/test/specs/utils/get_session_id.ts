@@ -1,4 +1,3 @@
-import { AppiumNextDeviceType } from "../../../../appium_next";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { SupportedPlatformsType } from "./open_app";
 import { grabTextFromAccessibilityId } from "./save_text";

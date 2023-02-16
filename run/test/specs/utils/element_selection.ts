@@ -2,7 +2,6 @@ import {
   findMatchingTextAndAccessibilityId,
   waitForElementToBePresent,
   waitForTextElementToBePresent,
-  findElementByAccessibilityId,
 } from ".";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { findElementByXpath } from "./find_elements_stragegy";
@@ -33,7 +32,7 @@ export const tapOnElement = async (
   device: DeviceWrapper,
   accessibilityId: string
 ) => {
-  const el = await findElementByAccessibilityId(device, accessibilityId);
+  const el = await device.findElementByAccessibilityId(accessibilityId);
   if (!el) {
     throw new Error(`Tap: Couldnt find accessibilityId: ${accessibilityId}`);
   }

@@ -25,7 +25,6 @@ import {
   sleepFor,
   waitForElementToBePresent,
   sendMessage,
-  findElementByAccessibilityId,
 } from "./utils/index";
 import { grabTextFromAccessibilityId } from "./utils/save_text";
 import { navigateBack } from "./utils/navigate_back";
@@ -41,8 +40,8 @@ async function linkDevice(platform: SupportedPlatformsType) {
   // Verify username and session ID match
   await clickOnElement(device2, "User settings");
   // Check username
-  await findElementByAccessibilityId(device2, "Username");
-  await findElementByAccessibilityId(device2, "Session ID");
+  await device2.findElementByAccessibilityId("Username");
+  await device2.findElementByAccessibilityId("Session ID");
 
   await closeApp(device1, device2);
 }

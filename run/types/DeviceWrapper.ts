@@ -1,5 +1,7 @@
 import { W3CCapabilities } from "appium/build/lib/appium";
+import { isArray } from "lodash";
 import { AppiumNextElementType } from "../../appium_next";
+import { SupportedPlatformsType } from "../test/specs/utils/open_app";
 import { isDeviceAndroid, isDeviceIOS } from "../test/specs/utils/utilities";
 
 export type Coordinates = {
@@ -255,6 +257,19 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
   public async getPageSource(): Promise<string> {
     return this.toAndroid().getPageSource();
+  }
+
+  public async findElementByAccessibilityId(
+    accessibilityId: string
+  ): Promise<AppiumNextElementType> {
+    const element = await this.findElement("accessibility id", accessibilityId);
+    if (!element || isArray(element)) {
+      throw new Error(
+        `findElementByAccessibilityId: Did not find accessibilityId: ${accessibilityId} or it was an array `
+      );
+    }
+
+    return element;
   }
 
   /* === all the utilities function ===  */

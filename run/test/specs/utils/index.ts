@@ -41,7 +41,6 @@ import { clickOnXAndYCoordinates } from "./click_by_coordinates";
 import {
   doesElementExist,
   findElementByXpath,
-  findElementByAccessibilityId,
   findElementsByAccessibilityId,
 } from "./find_elements_stragegy";
 
@@ -80,7 +79,6 @@ export {
   scrollDown,
   swipeLeft,
   clickOnXAndYCoordinates,
-  findElementByAccessibilityId,
   findElementsByAccessibilityId,
   pressAndHold,
 };

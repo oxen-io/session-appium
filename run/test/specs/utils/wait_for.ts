@@ -1,6 +1,5 @@
 import {
   findMatchingTextInElementArray,
-  findElementByAccessibilityId,
   findElementsByAccessibilityId,
 } from ".";
 import { AppiumNextElementType } from "../../../../appium_next";
@@ -27,7 +26,7 @@ export const waitForElementToBePresent = async (
         `Waiting for accessibility ID '${accessibilityId}' to be present`
       );
 
-      selector = await findElementByAccessibilityId(device, accessibilityId);
+      selector = await device.findElementByAccessibilityId(accessibilityId);
     } catch (e) {
       await sleepFor(waitPerLoop);
       currentWait += waitPerLoop;

@@ -1,4 +1,4 @@
-import { iosIt, androidIt } from "../../types/sessionIt";
+import { iosIt, androidIt, everyPlatformIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import {
@@ -16,17 +16,10 @@ async function manualTestSetupTwoUsers(platform: SupportedPlatformsType) {
   ]);
 
   await newContact(platform, device1, userA, device2, userB);
-  console.warn("FIXME audric");
-  // await device1.setImplicitWaitTimeout(50000);
-  console.log("Waiting for manual tests");
-  console.warn("FIXME audric");
-  // await device2.setImplicitWaitTimeout(50000);
-  console.log("waiting for manual tests");
 
   await closeApp(device1, device2);
 }
 
-describe.skip("Manual test setup", async () => {
-  await iosIt("Manual test", manualTestSetupTwoUsers);
-  await androidIt("Manual test", manualTestSetupTwoUsers);
+describe("Manual test setup", async () => {
+  await everyPlatformIt("Manual test", manualTestSetupTwoUsers);
 });
