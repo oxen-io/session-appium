@@ -5,12 +5,7 @@ import {
 } from "./utils/open_app";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
-import {
-  clickOnElement,
-  hasTextElementBeenDeleted,
-  inputText,
-  selectByText,
-} from "./utils/index";
+import { hasTextElementBeenDeleted } from "./utils/index";
 import { iosIt, androidIt } from "../../types/sessionIt";
 
 async function disappearingMessages(platform: SupportedPlatformsType) {
@@ -23,28 +18,26 @@ async function disappearingMessages(platform: SupportedPlatformsType) {
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // Click conversation options menu (three dots)
-  await clickOnElement(device1, "More options");
+  await device1.clickOnElement("More options");
   // Select disappearing messages option
-  await clickOnElement(device1, "Disappearing messages");
+  await device1.clickOnElement("Disappearing messages");
   // Select 5 seconds
-  await selectByText(device1, "Disappearing messages time picker", "5 seconds");
+  await device1.selectByText("Disappearing messages time picker", "5 seconds");
   // Select OK
-  await selectByText(device1, "Time selector", "OK");
+  await device1.selectByText("Time selector", "OK");
   // Check config message for User A
-  await selectByText(
-    device1,
+  await device1.selectByText(
     "Configuration message",
     "You set the disappearing message timer to 5 seconds"
   );
   // Check config message for User B
-  await selectByText(
-    device1,
+  await device1.selectByText(
     "Configuration message",
     `${userA.userName} set the disappearing message timer to 5 seconds`
   );
   // Send message
   const message = "Howdy testing disappearing messages";
-  await inputText(device1, "Message input box", message);
+  await device1.inputText("Message input box", message);
   // Wait 5 seconds
 
   // Look for message for User A

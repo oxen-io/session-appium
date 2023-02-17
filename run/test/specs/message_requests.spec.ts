@@ -6,12 +6,9 @@ import {
   closeApp,
 } from "./utils/open_app";
 import {
-  clickOnElement,
   hasTextElementBeenDeleted,
   runOnlyOnIOS,
-  waitForTextElementToBePresent,
   sleepFor,
-  sendMessage,
   sendNewMessage,
 } from "./utils/index";
 import { navigateBack } from "./utils/navigate_back";
@@ -34,14 +31,13 @@ async function acceptRequest(platform: SupportedPlatformsType) {
   // Wait for banner to appear
 
   // Bob clicks on message request banner
-  await clickOnElement(device2, "Message requests banner");
+  await device2.clickOnElement("Message requests banner");
   // Bob clicks on request conversation item
-  await clickOnElement(device2, "Message request");
+  await device2.clickOnElement("Message request");
   // Bob clicks accept button
-  await clickOnElement(device2, "Accept message request");
+  await device2.clickOnElement("Accept message request");
   // Verify config message for Alice 'Your message request has been accepted'
-  await waitForTextElementToBePresent(
-    device1,
+  await device1.waitForTextElementToBePresent(
     "Configuration message",
     "Your message request has been accepted."
   );
@@ -65,13 +61,13 @@ async function declineRequest(platform: SupportedPlatformsType) {
   );
   // Wait for banner to appear
   // Bob clicks on message request banner
-  await clickOnElement(device2, "Message requests banner");
+  await device2.clickOnElement("Message requests banner");
   // Bob clicks on request conversation item
-  await clickOnElement(device2, "Message request");
+  await device2.clickOnElement("Message request");
   // Click on decline button
-  await clickOnElement(device2, "Decline message request");
+  await device2.clickOnElement("Decline message request");
   // Are you sure you want to delete message request only for ios
-  await runOnlyOnIOS(platform, () => clickOnElement(device2, "Delete"));
+  await runOnlyOnIOS(platform, () => device2.clickOnElement("Delete"));
   // Navigate back to home page
   await navigateBack(device2, platform);
   // Look for new conversation button to make sure it all worked
@@ -97,14 +93,13 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
   );
   // Wait for banner to appear
   // Bob clicks on message request banner
-  await clickOnElement(device2, "Message requests banner");
+  await device2.clickOnElement("Message requests banner");
   // Bob clicks on request conversation item
-  await clickOnElement(device2, "Message request");
+  await device2.clickOnElement("Message request");
   // Send message from Bob to Alice
-  await sendMessage(device2, `${userB.userName} to ${userA.userName}`);
+  await device2.sendMessage(`${userB.userName} to ${userA.userName}`);
   // Check config
-  await waitForTextElementToBePresent(
-    device1,
+  await device1.waitForTextElementToBePresent(
     "Configuration message",
     "Your message request has been accepted."
   );
@@ -126,16 +121,16 @@ async function blockRequest(platform: SupportedPlatformsType) {
   );
   // Wait for banner to appear
   // Bob clicks on message request banner
-  await clickOnElement(device2, "Message requests banner");
+  await device2.clickOnElement("Message requests banner");
   // Bob clicks on request conversation item
-  await clickOnElement(device2, "Message request");
+  await device2.clickOnElement("Message request");
   // Bob clicks on block option
-  await clickOnElement(device2, "Block message request");
+  await device2.clickOnElement("Block message request");
   // Confirm block on android
-  await clickOnElement(device2, "Block");
+  await device2.clickOnElement("Block");
   // Make sure no messages can get through to Bob
   const blockedMessage = `${userA.userName} to ${userB.userName} - shouldn't get through`;
-  await sendMessage(device1, blockedMessage);
+  await device1.sendMessage(blockedMessage);
   await navigateBack(device2, platform);
   await device2.waitForElementToBePresent("New conversation button");
   // Need to wait to see if message gets through

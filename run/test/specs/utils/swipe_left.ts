@@ -1,4 +1,3 @@
-import { findMatchingTextAndAccessibilityId } from ".";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 
 export const swipeLeft = async (
@@ -6,8 +5,7 @@ export const swipeLeft = async (
   accessibilityId: string,
   text: string
 ) => {
-  const el = await findMatchingTextAndAccessibilityId(
-    device,
+  const el = await device.findMatchingTextAndAccessibilityId(
     accessibilityId,
     text
   );

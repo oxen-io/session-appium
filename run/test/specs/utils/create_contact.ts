@@ -1,10 +1,4 @@
-import {
-  sendMessage,
-  clickOnElement,
-  findConfigurationMessage,
-  sendNewMessage,
-  runOnlyOnAndroid,
-} from ".";
+import { sendNewMessage, runOnlyOnAndroid } from ".";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { User } from "../../../types/testing";
 import { SupportedPlatformsType } from "./open_app";
@@ -25,21 +19,19 @@ export const newContact = async (
   // USER B WORKFLOW
   // Click on message request panel
   // Wait for push notification to disappear (otherwise appium can't find element)
-  await clickOnElement(device2, "Message requests banner");
+  await device2.clickOnElement("Message requests banner");
   // Select message from User A
-  await clickOnElement(device2, "Message request");
+  await device2.clickOnElement("Message request");
   await runOnlyOnAndroid(platform, () =>
-    clickOnElement(device2, "Accept message request")
+    device2.clickOnElement("Accept message request")
   );
   // Type into message input box
-  await sendMessage(
-    device2,
+  await device2.sendMessage(
     `Reply-message-${user2.userName}-to-${user1.userName}`
   );
 
   // Verify config message states message request was accepted
-  await findConfigurationMessage(
-    device1,
+  await device1.findConfigurationMessage(
     "Your message request has been accepted."
   );
 

@@ -1,7 +1,5 @@
-import { User } from "../../../types/testing";
-import { longPressMessage, clickOnElement, sendMessage } from ".";
-import { AppiumNextDeviceType } from "../../../../appium_next";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
+import { User } from "../../../types/testing";
 
 export const replyToMessage = async (
   device: DeviceWrapper,
@@ -10,12 +8,11 @@ export const replyToMessage = async (
 ) => {
   // Reply to media message from user B
   // Long press on imageSent element
-  await longPressMessage(device, body);
+  await device.longPressMessage(body);
   // Select 'Reply' option
-  await clickOnElement(device, "Reply to message");
+  await device.clickOnElement("Reply to message");
   // Send message
-  const sentMessage = await sendMessage(
-    device,
+  const sentMessage = await device.sendMessage(
     `${user.userName} message reply`
   );
 

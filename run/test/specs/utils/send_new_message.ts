@@ -1,4 +1,3 @@
-import { clickOnElement, inputText } from ".";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { User } from "../../../types/testing";
 
@@ -9,18 +8,18 @@ export const sendNewMessage = async (
 ) => {
   // Sender workflow
   // Click on plus button
-  await clickOnElement(device, "New conversation button");
+  await device.clickOnElement("New conversation button");
   // Select direct message option
-  await clickOnElement(device, "New direct message");
+  await device.clickOnElement("New direct message");
   // Enter User B's session ID into input box
-  await inputText(device, "Session id input box", user.sessionID);
+  await device.inputText("Session id input box", user.sessionID);
   // Click next
-  await clickOnElement(device, "Next");
+  await device.clickOnElement("Next");
   // Type message into message input box
 
-  await inputText(device, "Message input box", message);
+  await device.inputText("Message input box", message);
   // Click send
-  await clickOnElement(device, "Send message button");
+  await device.clickOnElement("Send message button");
   // Wait for tick
   await device.waitForElementToBePresent(`Message sent status: Sent`);
 

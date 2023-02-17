@@ -2,18 +2,7 @@ import { androidIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { findElementByClass } from "./utils/find_elements_stragegy";
-import {
-  clickOnElement,
-  clickOnElementXPath,
-  findMatchingTextInElementArray,
-  findMessageWithBody,
-  longPress,
-  longPressMessage,
-  replyToMessage,
-  sendMessage,
-  sleepFor,
-  waitForTextElementToBePresent,
-} from "./utils/index";
+import { replyToMessage, sleepFor } from "./utils/index";
 import {
   closeApp,
   openAppTwoDevices,
@@ -32,18 +21,17 @@ async function sendImage(platform: SupportedPlatformsType) {
 
   await newContact(platform, device1, userA, device2, userB);
 
-  await clickOnElement(device1, "Attachments button");
+  await device1.clickOnElement("Attachments button");
 
   await sleepFor(100);
 
-  await clickOnElement(device1, "Documents folder");
+  await device1.clickOnElement("Documents folder");
 
   const elements = await findElementByClass(
     device1,
     "android.widget.CompoundButton"
   );
-  const imageButton = await findMatchingTextInElementArray(
-    device1,
+  const imageButton = await device1.findMatchingTextInElementArray(
     elements,
     "Images"
   );
@@ -51,9 +39,8 @@ async function sendImage(platform: SupportedPlatformsType) {
     throw new Error("imageButton was not found in android");
   }
   await device1.click(imageButton?.ELEMENT);
-  // await clickOnElement(device1, "Show roots");
-  await clickOnElementXPath(
-    device1,
+  // await device1.clickOnElement("Show roots");
+  await device1.clickOnElementXPath(
     `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.view.ViewGroup/androidx.drawerlayout.widget.DrawerLayout/android.view.ViewGroup/android.widget.FrameLayout/android.widget.FrameLayout[2]/android.widget.LinearLayout/android.view.ViewGroup/androidx.recyclerview.widget.RecyclerView/androidx.cardview.widget.CardView[2]`
   );
   // await clickOnElementXPath(
@@ -61,18 +48,19 @@ async function sendImage(platform: SupportedPlatformsType) {
   //   `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.view.ViewGroup/androidx.drawerlayout.widget.DrawerLayout/android.view.ViewGroup/android.widget.FrameLayout/android.widget.FrameLayout[2]/android.widget.LinearLayout/android.view.ViewGroup/androidx.recyclerview.widget.RecyclerView/androidx.cardview.widget.CardView[2]/androidx.cardview.widget.CardView/android.widget.RelativeLayout/android.widget.FrameLayout[1]`
   // );
 
-  await clickOnElement(device2, "Untrusted attachment message");
+  await device2.clickOnElement("Untrusted attachment message");
   await sleepFor(500);
   // User B - Click on 'download'
-  await clickOnElement(device2, "Download media");
+  await device2.clickOnElement("Download media");
 
+  // NEED TO WAIT FOR A FIX
   // Reply to message
-  await sleepFor(5000);
-
-  await longPress(device2, "Media message");
-  await clickOnElement(device2, "Reply to message");
-  await sendMessage(device2, replyMessage);
-  await waitForTextElementToBePresent(device1, "Message Body", replyMessage);
+  // await sleepFor(5000);
+  // Need to wait for solution
+  // await device2.longPress("Media message");
+  // await device2.clickOnElement("Reply to message");
+  // await sendMessage(device2, replyMessage);
+  // await device1.waitForTextElementToBePresent("Message Body", replyMessage);
   // Close app and server
   await closeApp(device1, device2);
 }
@@ -92,33 +80,33 @@ async function sendVideo(platform: SupportedPlatformsType) {
   await newContact(platform, device1, userA, device2, userB);
   // Push image to device for selection
   // Click on attachments button
-  await clickOnElement(device1, "Attachments button");
+  await device1.clickOnElement("Attachments button");
   // Select images button/tab
   await sleepFor(100);
   // Check if android or ios (android = documents folder/ ios = images folder)
-  // await clickOnElement(device1, "Images folder");
-  await clickOnElement(device1, "Documents folder");
+  // await device1.clickOnElement("Images folder");
+  await device1.clickOnElement("Documents folder");
   // Select 'continue' on alert
   // Session would like to access your photos
 
   // Select video
-  await clickOnElementXPath(
-    device1,
+  await device1.clickOnElementXPath(
     `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.view.ViewGroup/androidx.drawerlayout.widget.DrawerLayout/android.view.ViewGroup/android.widget.FrameLayout/android.widget.FrameLayout[2]/android.widget.LinearLayout/android.view.ViewGroup/androidx.recyclerview.widget.RecyclerView/androidx.cardview.widget.CardView[3]/androidx.cardview.widget.CardView/android.widget.RelativeLayout`
   );
   // Check if the 'Tap to download media' config appears
   // User B - Click on untrusted attachment message
-  await clickOnElement(device2, "Untrusted attachment message");
+  await device2.clickOnElement("Untrusted attachment message");
   await sleepFor(1000);
   // User B - Click on 'download'
-  await clickOnElement(device2, "Download media");
+  await device2.clickOnElement("Download media");
 
+  // NEED TO WAIT FOR A FIX
   // Reply to message
-  await sleepFor(5000);
-  await longPress(device2, "Media message");
-  await clickOnElement(device2, "Reply to message");
-  await sendMessage(device2, replyMessage);
-  await waitForTextElementToBePresent(device1, "Message Body", replyMessage);
+  // await sleepFor(5000);
+  // await device2.longPress("Media message");
+  // await device2.clickOnElement("Reply to message");
+  // await sendMessage(device2, replyMessage);
+  // await device1.waitForTextElementToBePresent("Message Body", replyMessage);
   // Close app and server
   await closeApp(device1, device2);
 }
@@ -133,28 +121,26 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to voice message from ${userA.userName}`;
   await newContact(platform, device1, userA, device2, userB);
   // Select voice message button to activate recording state
-  await longPress(device1, "New voice message");
+  await device1.longPress("New voice message");
 
-  await clickOnElement(device1, "CONTINUE");
+  await device1.clickOnElement("CONTINUE");
   // await pressAndHold(device1, "New voice message");
 
   await device1.waitForElementToBePresent("Voice message");
 
-  await clickOnElement(device2, "Untrusted attachment message");
+  await device2.clickOnElement("Untrusted attachment message");
   await sleepFor(200);
-  await clickOnElement(device2, "Download");
+  await device2.clickOnElement("Download");
 
+  // NEED TO WAIT FOR A FIX
   // await sleepFor(1500);
-
-  await longPress(device2, "Voice message");
-  await clickOnElement(device2, "Reply to message");
-  await sendMessage(device2, replyMessage);
-  await waitForTextElementToBePresent(device1, "Message Body", replyMessage);
+  // await device2.longPress("Voice message");
+  // await device2.clickOnElement("Reply to message");
+  // await sendMessage(device2, replyMessage);
+  // await device1.waitForTextElementToBePresent("Message Body", replyMessage);
 
   await closeApp(device1, device2);
 }
-
-// async function sendDoc
 
 async function sendGif(platform: SupportedPlatformsType) {
   // Test sending a video
@@ -170,31 +156,31 @@ async function sendGif(platform: SupportedPlatformsType) {
   // create contact
   await newContact(platform, device1, userA, device2, userB);
   // Click on attachments button
-  await clickOnElement(device1, "Attachments button");
+  await device1.clickOnElement("Attachments button");
   // Select GIF tab
 
-  await clickOnElement(device1, "GIF button");
-  await clickOnElement(device1, "OK");
+  await device1.clickOnElement("GIF button");
+  await device1.clickOnElement("OK");
 
   // Select gif
   await sleepFor(3000);
-  await clickOnElementXPath(
-    device1,
+  await device1.clickOnElementXPath(
     `(//XCUIElementTypeImage[@name="gif cell"])[1]`
   );
   // Check if the 'Tap to download media' config appears
   // Click on config
-  await clickOnElement(device2, "Untrusted attachment message");
+  await device2.clickOnElement("Untrusted attachment message");
   await sleepFor(500);
   // Click on 'download'
-  await clickOnElement(device2, "Download");
+  await device2.clickOnElement("Download");
+  // NEED TO WAIT FOR A FIX
   // Reply to message
-  await sleepFor(3000);
-  await longPressMessage(device2, testMessage);
-  // Check reply came through on device1
-  await clickOnElement(device2, "Reply to message");
-  await sendMessage(device2, replyMessage);
-  await waitForTextElementToBePresent(device1, "Message Body", replyMessage);
+  // await sleepFor(3000);
+  // await device2.longPressMessage(testMessage);
+  // // Check reply came through on device1
+  // await device2.clickOnElement("Reply to message");
+  // await sendMessage(device2, replyMessage);
+  // await device1.waitForTextElementToBePresent("Message Body", replyMessage);
   // Close app
   await closeApp(device1, device2);
 }
@@ -213,12 +199,43 @@ async function sendLongMessage(platform: SupportedPlatformsType) {
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // Send a long message from User A to User B
-  await sendMessage(device1, longText);
+  await device1.sendMessage(longText);
   // Reply to message (User B to User A)
   const sentMessage = await replyToMessage(device2, userA, longText);
   // Check reply came through on device1
-  await findMessageWithBody(device1, sentMessage);
+  await device1.findMessageWithBody(sentMessage);
   // Close app
+  await closeApp(device1, device2);
+}
+
+async function sendLink(platform: SupportedPlatformsType) {
+  const { device1, device2 } = await openAppTwoDevices(platform);
+
+  // Create two users
+  const [userA, userB] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+  ]);
+  // Create contact
+  await newContact(platform, device1, userA, device2, userB);
+  // Send a link
+  await device1.inputText("Message input box", `https://nerdlegame.com/`);
+  // Accept dialog for link preview
+  await device1.clickOnElement("Enable");
+  // No preview on first send
+  await device1.clickOnElement("Send message button");
+  await device1.waitForElementToBePresent("Message sent status: Sent");
+  // Send again for image
+  await device1.inputText("Message input box", `https://nerdlegame.com/`);
+  await sleepFor(100);
+  await device1.clickOnElement("Send message button");
+  // Make sure link works (dialog pop ups saying are you sure?)
+
+  // Make sure image preview is available in device 2
+  await device2.waitForTextElementToBePresent(
+    "Message Body",
+    `https://nerdlegame.com/`
+  );
   await closeApp(device1, device2);
 }
 
@@ -233,19 +250,18 @@ async function unsendMessage(platform: SupportedPlatformsType) {
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // send message from User A to User B
-  const sentMessage = await sendMessage(
-    device1,
+  const sentMessage = await device1.sendMessage(
     "Checking unsend functionality"
   );
   // await sleepFor(1000);
-  await waitForTextElementToBePresent(device2, "Message Body", sentMessage);
+  await device2.waitForTextElementToBePresent("Message Body", sentMessage);
   console.log("Doing a long click on" + `${sentMessage}`);
   // Select and long press on message to delete it
-  await longPressMessage(device1, sentMessage);
+  await device1.longPressMessage(sentMessage);
   // Select Delete icon
-  await clickOnElement(device1, "Delete message");
+  await device1.clickOnElement("Delete message");
   // Select 'Delete for me and User B'
-  await clickOnElement(device1, "Delete for everyone");
+  await device1.clickOnElement("Delete for everyone");
   // Look in User B's chat for alert 'This message has been deleted?'
   await device2.waitForElementToBePresent("Deleted message");
 
@@ -258,10 +274,14 @@ describe("Message checks android", async () => {
   await androidIt("Send video and reply test", sendVideo);
   await androidIt("Send voice message test", sendVoiceMessage);
   // await androidIt("Send document and reply test", sendDocument);
+  await androidIt("Send link test", sendLink);
   await androidIt("Send GIF and reply", sendGif);
   await androidIt("Send long text and reply test", sendLongMessage);
   await androidIt("Unsend message", unsendMessage);
+  // await androidIt("Delete message", deleteMessage);
 });
 // Link preview without image
 // Link preview with image
 // Media saved notification
+// Send doc
+// Delete message

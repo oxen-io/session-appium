@@ -1,5 +1,4 @@
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
-import { clickOnElement } from "./element_selection";
 import { SupportedPlatformsType } from "./open_app";
 
 export const navigateBack = async (
@@ -7,8 +6,8 @@ export const navigateBack = async (
   platform: SupportedPlatformsType
 ) => {
   if (platform === "ios") {
-    await clickOnElement(device, "Back");
+    await device.clickOnElement("Back");
   } else {
-    await clickOnElement(device, "Navigate up");
+    await device.clickOnElement("Navigate up");
   }
 };

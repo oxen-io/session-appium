@@ -2,16 +2,7 @@ import { androidIt, iosIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { createGroup } from "./utils/create_group";
-import {
-  clickOnElement,
-  deleteText,
-  findMessageWithBody,
-  inputText,
-  runOnlyOnAndroid,
-  runOnlyOnIOS,
-  selectByText,
-  waitForTextElementToBePresent,
-} from "./utils/index";
+import { deleteText, runOnlyOnAndroid, runOnlyOnIOS } from "./utils/index";
 import { navigateBack } from "./utils/navigate_back";
 import {
   closeApp,
@@ -70,43 +61,41 @@ async function changeGroupName(platform: SupportedPlatformsType) {
   // Now change the group name
 
   // Click on settings or three dots
-  await clickOnElement(device1, "More options");
+  await device1.clickOnElement("More options");
   // Click on Edit group option
-  await clickOnElement(device1, "Edit group");
+  await device1.clickOnElement("Edit group");
   // Click on current group name
-  await clickOnElement(device1, "Group name");
-  await inputText(device1, "Group name text field", "   ");
-  await clickOnElement(device1, "Accept name change");
+  await device1.clickOnElement("Group name");
+  await device1.inputText("Group name text field", "   ");
+  await device1.clickOnElement("Accept name change");
   // Alert should pop up 'Please enter group name', click ok
   // If ios click ok / If Android go to next step
 
-  await runOnlyOnIOS(platform, () => clickOnElement(device1, "OK"));
+  await runOnlyOnIOS(platform, () => device1.clickOnElement("OK"));
   // Delete empty space
-  await runOnlyOnIOS(platform, () => clickOnElement(device1, "Cancel"));
+  await runOnlyOnIOS(platform, () => device1.clickOnElement("Cancel"));
   await runOnlyOnAndroid(platform, () =>
     deleteText(device1, "Group name text field")
   );
   // Enter new group name
-  await clickOnElement(device1, "Group name");
+  await device1.clickOnElement("Group name");
 
-  await inputText(device1, "Group name text field", newGroupName);
+  await device1.inputText("Group name text field", newGroupName);
   // Click done/apply
-  await clickOnElement(device1, "Accept name change");
-  await clickOnElement(device1, "Apply changes");
+  await device1.clickOnElement("Accept name change");
+  await device1.clickOnElement("Apply changes");
   // If ios click back to match android (which goes back to conversation screen)
   // Check config message for changed name (different on ios and android)
   // Config message on ios is "Title is now blah"
   await runOnlyOnIOS(platform, () =>
-    waitForTextElementToBePresent(
-      device1,
+    device1.waitForTextElementToBePresent(
       "Configuration message",
       "Title is now " + `'${newGroupName}'.`
     )
   );
   // Config on Android is "You renamed the group to blah"
   await runOnlyOnAndroid(platform, () =>
-    waitForTextElementToBePresent(
-      device1,
+    device1.waitForTextElementToBePresent(
       "Configuration message",
       "You renamed group to " + `'${newGroupName}'`
     )
@@ -141,40 +130,37 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   // Exit to conversation list
   await navigateBack(device1, platform);
   // Select group conversation in list
-  await selectByText(device1, "Conversation list item", testGroupName);
+  await device1.selectByText("Conversation list item", testGroupName);
   // Click more options
-  await clickOnElement(device1, "More options");
+  await device1.clickOnElement("More options");
   // Select edit group
-  await clickOnElement(device1, "Edit group");
+  await device1.clickOnElement("Edit group");
   // Add contact to group
-  await clickOnElement(device1, "Add members");
+  await device1.clickOnElement("Add members");
   // Select new user
-  await selectByText(device1, "Contact", userD.userName);
+  await device1.selectByText("Contact", userD.userName);
   // Click done/apply
-  await clickOnElement(device1, "Done");
+  await device1.clickOnElement("Done");
   // Click done/apply again
-  await clickOnElement(device1, "Apply changes");
+  await device1.clickOnElement("Apply changes");
   // Check config message
-  await waitForTextElementToBePresent(
-    device1,
+  await device1.waitForTextElementToBePresent(
     "Configuration message",
     `${userD.userName}` + " joined the group."
   );
   // Exit to conversation list
   await navigateBack(device4, platform);
   // Select group conversation in list
-  await selectByText(device4, "Conversation list item", testGroupName);
+  await device4.selectByText("Conversation list item", testGroupName);
   // Check config
   await runOnlyOnIOS(platform, () =>
-    waitForTextElementToBePresent(
-      device4,
+    device4.waitForTextElementToBePresent(
       "Configuration message",
       "Group created"
     )
   );
   await runOnlyOnAndroid(platform, () =>
-    waitForTextElementToBePresent(
-      device4,
+    device4.waitForTextElementToBePresent(
       "Configuration message",
       "You created a new group."
     )
@@ -202,17 +188,17 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
-  await inputText(device1, "Message input box", "@");
+  await device1.inputText("Message input box", "@");
   // Check that all users are showing in mentions box
   await device1.findElementByAccessibilityId("Mentions list");
   // Select User B
-  await selectByText(device1, "Contact", userB.userName);
+  await device1.selectByText("Contact", userB.userName);
   // Check in user B's device if the format is correct
-  await findMessageWithBody(device2, "@You");
+  await device2.findMessageWithBody("@You");
   // Select User C
-  await selectByText(device1, "Contact", userC.userName);
+  await device1.selectByText("Contact", userC.userName);
   // Check in User C's device if the format is correct
-  await findMessageWithBody(device3, "@You");
+  await device3.findMessageWithBody("@You");
   // Close app
   await closeApp(device1, device2, device3);
 }

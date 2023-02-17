@@ -1,15 +1,6 @@
 import { Group, User } from "../../../types/testing";
 import { newContact } from "./create_contact";
-import {
-  clickOnElement,
-  findConfigurationMessage,
-  inputText,
-  selectByText,
-  sendMessageTo,
-  sendMessage,
-  runOnlyOnIOS,
-  runOnlyOnAndroid,
-} from ".";
+import { sendMessageTo, runOnlyOnIOS, runOnlyOnAndroid } from ".";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { SupportedPlatformsType } from "./open_app";
 import { navigateBack } from "./navigate_back";
@@ -38,24 +29,24 @@ export const createGroup = async (
   // Exit conversation back to list
   await navigateBack(device3, platform);
   // Click plus button
-  await clickOnElement(device1, "New conversation button");
+  await device1.clickOnElement("New conversation button");
   // Select Closed Group option
-  await clickOnElement(device1, "Create group");
+  await device1.clickOnElement("Create group");
   // Type in group name
-  await inputText(device1, "Group name input", userName);
+  await device1.inputText("Group name input", userName);
   // Select User B and User C
-  await selectByText(device1, "Contact", userTwo.userName);
-  await selectByText(device1, "Contact", userThree.userName);
+  await device1.selectByText("Contact", userTwo.userName);
+  await device1.selectByText("Contact", userThree.userName);
   // Select tick
-  await clickOnElement(device1, "Create group");
+  await device1.clickOnElement("Create group");
   await runOnlyOnIOS(platform, () =>
-    findConfigurationMessage(device1, "Group created")
+    device1.findConfigurationMessage("Group created")
   );
   await runOnlyOnAndroid(platform, () =>
-    findConfigurationMessage(device1, "You created a new group.")
+    device1.findConfigurationMessage("You created a new group.")
   );
   // Send message from User a to group to verify all working
-  await sendMessage(device1, userAMessage);
+  await device1.sendMessage(userAMessage);
   // Check group was created in device 2 by selecting group from list
 
   await sendMessageTo(device2, userTwo, group);

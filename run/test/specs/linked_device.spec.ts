@@ -11,19 +11,11 @@ import {
   SupportedPlatformsType,
 } from "./utils/open_app";
 import {
-  clickOnElement,
-  longPressMessage,
-  selectByText,
   runOnlyOnAndroid,
   runOnlyOnIOS,
-  findMatchingTextAndAccessibilityId,
-  findMessageWithBody,
   hasElementBeenDeleted,
   hasTextElementBeenDeleted,
-  inputText,
-  waitForTextElementToBePresent,
   sleepFor,
-  sendMessage,
 } from "./utils/index";
 import { grabTextFromAccessibilityId } from "./utils/save_text";
 import { navigateBack } from "./utils/navigate_back";
@@ -37,7 +29,7 @@ async function linkDevice(platform: SupportedPlatformsType) {
   // Check that 'Youre almost finished' reminder doesn't pop up on device2
   await hasElementBeenDeleted(device2, "Recovery phrase reminder");
   // Verify username and session ID match
-  await clickOnElement(device2, "User settings");
+  await device2.clickOnElement("User settings");
   // Check username
   await device2.findElementByAccessibilityId("Username");
   await device2.findElementByAccessibilityId("Session ID");
@@ -53,13 +45,10 @@ async function contactsSyncLinkedDevice(platform: SupportedPlatformsType) {
   const userB = await newUser(device3, "User B", platform);
 
   await newContact(platform, device1, userA, device3, userB);
-  await runOnlyOnIOS(platform, () => clickOnElement(device1, "Back"));
-  await runOnlyOnAndroid(platform, () =>
-    clickOnElement(device1, "Navigate up")
-  );
+  await runOnlyOnIOS(platform, () => device1.clickOnElement("Back"));
+  await runOnlyOnAndroid(platform, () => device1.clickOnElement("Navigate up"));
   // Check that user synced on linked device
-  await findMatchingTextAndAccessibilityId(
-    device2,
+  await device2.findMatchingTextAndAccessibilityId(
     "Conversation list item",
     userB.userName
   );
@@ -90,36 +79,34 @@ async function groupCreationLinkedDevice(platform: SupportedPlatformsType) {
     testGroupName
   );
   // Test that group has loaded on linked device
-  await selectByText(device2, "Conversation list item", testGroupName);
+  await device2.selectByText("Conversation list item", testGroupName);
   // Test group name change syncs
   // Change group name in device 1
   // Click on settings/more info
-  await clickOnElement(device1, "More options");
+  await device1.clickOnElement("More options");
   // Edit group
-  await clickOnElement(device1, "Edit group");
+  await device1.clickOnElement("Edit group");
   // click on group name to change it
-  await clickOnElement(device1, "Group name");
+  await device1.clickOnElement("Group name");
   // Type in new name
-  await inputText(device1, "Group name text field", newGroupName);
+  await device1.inputText("Group name text field", newGroupName);
   // Confirm change (tick on android/ first done on ios)
-  await clickOnElement(device1, "Accept name change");
+  await device1.clickOnElement("Accept name change");
   // Apply changes (Apply on android/ second done on ios)
-  await clickOnElement(device1, "Apply changes");
-  // await clickOnElement(device1, "Accept name change");
+  await device1.clickOnElement("Apply changes");
+  // await device1.clickOnElement("Accept name change");
   // If ios click back to match android (which goes back to conversation screen)
   // Check config message for changed name (different on ios and android)
   // Config message on ios is "Title is now blah"
   await runOnlyOnIOS(platform, () =>
-    findMatchingTextAndAccessibilityId(
-      device1,
+    device1.findMatchingTextAndAccessibilityId(
       "Configuration message",
       "Title is now " + `'${newGroupName}'.`
     )
   );
   // Config on Android is "You renamed the group to blah"
   await runOnlyOnAndroid(platform, () =>
-    findMatchingTextAndAccessibilityId(
-      device1,
+    device1.findMatchingTextAndAccessibilityId(
       "Configuration message",
       "You renamed group to: " + `'${newGroupName}'`
     )
@@ -129,19 +116,17 @@ async function groupCreationLinkedDevice(platform: SupportedPlatformsType) {
   // Check linked device for name change (conversation header name)
   const groupName = await grabTextFromAccessibilityId(device2, "Username");
   console.warn("Group name is now " + groupName);
-  await findMatchingTextAndAccessibilityId(device2, "Username", newGroupName);
+  await device2.findMatchingTextAndAccessibilityId("Username", newGroupName);
   // Check config message in linked device aswell
   await runOnlyOnIOS(platform, () =>
-    findMatchingTextAndAccessibilityId(
-      device2,
+    device2.findMatchingTextAndAccessibilityId(
       "Configuration message",
       "Title is now " + `'${newGroupName}'.`
     )
   );
   // Config on Android is "You renamed the group to blah"
   await runOnlyOnAndroid(platform, () =>
-    findMatchingTextAndAccessibilityId(
-      device2,
+    device2.findMatchingTextAndAccessibilityId(
       "Configuration message",
       "You renamed group to " + `'${newGroupName}'`
     )
@@ -156,19 +141,19 @@ async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
   // link device
   await linkedDevice(device1, device2, "Alice", platform);
   // Change username on device 1
-  await clickOnElement(device1, "User settings");
+  await device1.clickOnElement("User settings");
   // Select username
-  await clickOnElement(device1, "Username");
-  await inputText(device1, "Username", newUsername);
+  await device1.clickOnElement("Username");
+  await device1.inputText("Username", newUsername);
   // Select apply
-  await runOnlyOnAndroid(platform, () => clickOnElement(device1, "Apply"));
-  await runOnlyOnIOS(platform, () => clickOnElement(device1, "Done"));
+  await runOnlyOnAndroid(platform, () => device1.clickOnElement("Apply"));
+  await runOnlyOnIOS(platform, () => device1.clickOnElement("Done"));
   // Check on linked device if name has updated
-  await clickOnElement(device2, "User settings");
+  await device2.clickOnElement("User settings");
   await runOnlyOnAndroid(platform, () => navigateBack(device2, platform));
   await sleepFor(100);
   await runOnlyOnAndroid(platform, () =>
-    clickOnElement(device2, "User settings")
+    device2.clickOnElement("User settings")
   );
   const changedUsername = await grabTextFromAccessibilityId(
     device2,
@@ -194,20 +179,20 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
 
   await newContact(platform, device1, userA, device2, userB);
   // Send message from user a to user b
-  const sentMessage = await sendMessage(device1, "Howdy");
+  const sentMessage = await device1.sendMessage("Howdy");
   // Check message came through on linked device(3)
   // Enter conversation with user B on device 3
   // Need to wait for notifications to disappear
   await device3.waitForElementToBePresent("Conversation list item");
-  await selectByText(device3, "Conversation list item", userB.userName);
+  await device3.selectByText("Conversation list item", userB.userName);
   // Find message
-  await findMessageWithBody(device3, sentMessage);
+  await device3.findMessageWithBody(sentMessage);
   // Select message on device 1, long press
-  await longPressMessage(device1, sentMessage);
+  await device1.longPressMessage(sentMessage);
   // Select delete
-  await clickOnElement(device1, "Delete message");
+  await device1.clickOnElement("Delete message");
   // Select delete for everyone
-  await clickOnElement(device1, "Delete for everyone");
+  await device1.clickOnElement("Delete for everyone");
 
   // await waitForLoadingAnimation(device1);
 
@@ -226,38 +211,37 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
   const userB = await newUser(device2, "Bob", platform);
   await newContact(platform, device1, userA, device2, userB);
   // Check that user synced on linked device
-  await waitForTextElementToBePresent(
-    device3,
+  await device3.waitForTextElementToBePresent(
     "Conversation list item",
     userB.userName
   );
   // Block user on device 1
-  await clickOnElement(device1, "More options");
+  await device1.clickOnElement("More options");
   // Select block (menu option for android and toggle for ios)
-  await clickOnElement(device1, "Block");
+  await device1.clickOnElement("Block");
   // Confirm block
-  await clickOnElement(device1, "Confirm block");
+  await device1.clickOnElement("Confirm block");
   await sleepFor(1000);
-  await runOnlyOnIOS(platform, () => clickOnElement(device1, "OK_BUTTON"));
+  await runOnlyOnIOS(platform, () => device1.clickOnElement("OK_BUTTON"));
   console.log(`${userB.userName}` + " has been blocked");
   // On ios, you need to navigate back to conversation screen to confirm block
-  await runOnlyOnIOS(platform, () => clickOnElement(device1, "Back"));
+  await runOnlyOnIOS(platform, () => device1.clickOnElement("Back"));
   // Check on device 3 if user B is blocked
   // Click on conversation with User B
-  await selectByText(device3, "Conversation list item", userB.userName);
+  await device3.selectByText("Conversation list item", userB.userName);
   // Look for blocked banner
   // Unblock on device 3 and check if unblocked on device 1
-  await clickOnElement(device3, "Blocked banner");
+  await device3.clickOnElement("Blocked banner");
   // On ios you need to click ok to confirm unblock
-  await runOnlyOnIOS(platform, () => clickOnElement(device3, "Confirm block"));
+  await runOnlyOnIOS(platform, () => device3.clickOnElement("Confirm block"));
   // check on device 1 if user B is unblocked
   await sleepFor(1250);
   await hasElementBeenDeleted(device1, "Blocked banner");
   // Send message from user B to user A to see if unblock worked
 
-  const sentMessage = await sendMessage(device2, "Unsend message");
+  const sentMessage = await device2.sendMessage("Unsend message");
   // Check on device 1 if user A receives message
-  await waitForTextElementToBePresent(device1, "Message Body", sentMessage);
+  await device1.waitForTextElementToBePresent("Message Body", sentMessage);
 
   // Everything works then close app
   await closeApp(device1, device2, device3);
@@ -268,20 +252,20 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
 
   const userA = await linkedDevice(device1, device2, "Alice", platform);
 
-  await clickOnElement(device1, "User settings");
+  await device1.clickOnElement("User settings");
   await sleepFor(100);
 
   // Click on Profile picture
-  await clickOnElement(device1, "Profile picture");
-  await clickOnElement(device1, "Photo library");
+  await device1.clickOnElement("Profile picture");
+  await device1.clickOnElement("Photo library");
   // Click on Photo library
   await sleepFor(100);
-  await clickOnElement(device1, `Photo, January 30, 4:17 PM`);
-  await clickOnElement(device1, "Done");
+  await device1.clickOnElement(`Photo, January 30, 4:17 PM`);
+  await device1.clickOnElement("Done");
   // Select file
   await sleepFor(2000);
-  await clickOnElement(device1, `Photo, January 30, 4:17 PM`);
-  await clickOnElement(device1, "Done");
+  await device1.clickOnElement(`Photo, January 30, 4:17 PM`);
+  await device1.clickOnElement("Done");
 
   // Need to add a function that if file isn't found, push file to device1
   // Wait for change
@@ -299,7 +283,7 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   }
   console.log("Now checking avatar on linked device");
   // Check avatar on device 2
-  await clickOnElement(device2, "User settings");
+  await device2.clickOnElement("User settings");
   const el2 = await device2.waitForElementToBePresent("Profile picture");
   await sleepFor(3000);
   const base64A = await device2.getElementScreenshot(el2.ELEMENT);

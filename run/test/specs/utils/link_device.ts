@@ -2,8 +2,6 @@ import { newUser } from "./create_account";
 import { SupportedPlatformsType } from "./open_app";
 import {
   sleepFor,
-  clickOnElement,
-  inputText,
   runOnlyOnAndroid,
   runOnlyOnIOS,
   hasElementBeenDeleted,
@@ -20,20 +18,18 @@ export const linkedDevice = async (
   const user = await newUser(device1, userName, platform);
   // Log in with recovery seed on device 2
 
-  await clickOnElement(device2, "Link a device");
+  await device2.clickOnElement("Link a device");
   // Enter recovery phrase into input box
-  await inputText(device2, "Enter your recovery phrase", user.recoveryPhrase);
+  await device2.inputText("Enter your recovery phrase", user.recoveryPhrase);
   // Continue with recovery phrase
-  await runOnlyOnAndroid(platform, () =>
-    clickOnElement(device2, "Link Device")
-  );
-  await runOnlyOnIOS(platform, () => clickOnElement(device2, "Continue"));
+  await runOnlyOnAndroid(platform, () => device2.clickOnElement("Link Device"));
+  await runOnlyOnIOS(platform, () => device2.clickOnElement("Continue"));
   // Wait for any notifications to disappear
   await device2.waitForElementToBePresent("Message Notifications");
   // Wait for transitiion animation between the two pages
   await sleepFor(250);
   // Click continue on message notification settings
-  await clickOnElement(device2, "Continue with settings");
+  await device2.clickOnElement("Continue with settings");
   // Check that you're almost there isn't displayed
   await hasElementBeenDeleted(device2, "Continue");
   // Check that button was clicked

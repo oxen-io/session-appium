@@ -1,32 +1,23 @@
+import { androidIt, iosIt } from "../../types/sessionIt";
+import { parseDataImage } from "./utils/check_colour";
+import { newUser } from "./utils/create_account";
+import { newContact } from "./utils/create_contact";
 import {
-  clickOnElement,
+  clickOnXAndYCoordinates,
   deleteText,
-  findMatchingTextAndAccessibilityId,
   hasElementBeenDeleted,
-  inputText,
-  longPressConversation,
   runOnlyOnAndroid,
   runOnlyOnIOS,
-  selectByText,
-  swipeLeft,
-  sendMessage,
-  waitForTextElementToBePresent,
   sleepFor,
-  clickOnXAndYCoordinates,
+  swipeLeft,
 } from "./utils/index";
-import { newUser } from "./utils/create_account";
 import {
   closeApp,
   openAppOnPlatformSingleDevice,
   openAppTwoDevices,
   SupportedPlatformsType,
 } from "./utils/open_app";
-import { androidIt, iosIt } from "../../types/sessionIt";
-import { newContact } from "./utils/create_contact";
 import { grabTextFromAccessibilityId } from "./utils/save_text";
-import { getTextFromElement } from "./utils/element_text";
-import { clickOnElementXPath } from "./utils/element_selection";
-import { parseDataImage } from "./utils/check_colour";
 
 async function createContact(platform: SupportedPlatformsType) {
   // first we want to install the app on each device with our custom call to run it
@@ -54,37 +45,35 @@ async function blockUserInConversationOptions(
   await newContact(platform, device1, userA, device2, userB);
   // Block contact
   // Click on three dots (settings)
-  await clickOnElement(device1, "More options");
+  await device1.clickOnElement("More options");
   // Select Block option
-  await clickOnElement(device1, "Block");
+  await device1.clickOnElement("Block");
   // Confirm block option
-  await clickOnElement(device1, "Confirm block");
+  await device1.clickOnElement("Confirm block");
   // On ios there is an alert that confirms that the user has been blocked
   await sleepFor(1000);
-  await runOnlyOnIOS(platform, () => clickOnElement(device1, "OK_BUTTON"));
+  await runOnlyOnIOS(platform, () => device1.clickOnElement("OK_BUTTON"));
   // await runOnlyOnIOS(platform, () => clickOnXAndYCoordinates(device1));
   console.warn(`${userB.userName}` + " has been blocked");
 
   // On ios, you need to navigate back to conversation screen to confirm block
-  await runOnlyOnIOS(platform, () => clickOnElement(device1, "Back"));
+  await runOnlyOnIOS(platform, () => device1.clickOnElement("Back"));
   // Look for alert at top of screen (Bob is blocked. Unblock them?)
   await device1.waitForElementToBePresent("Blocked banner");
   console.warn("User has been blocked");
   // Click on alert to unblock
-  await clickOnElement(device1, "Blocked banner");
+  await device1.clickOnElement("Blocked banner");
   // on ios there is a confirm unblock alert, need to click 'unblock'
-  await runOnlyOnIOS(platform, () => clickOnElement(device1, "Unblock"));
+  await runOnlyOnIOS(platform, () => device1.clickOnElement("Unblock"));
   console.warn("User has been unblocked");
   // Look for alert (shouldn't be there)
   await hasElementBeenDeleted(device1, "Blocked banner");
   // Has capabilities returned to blocked user (can they send message)
-  const hasUserBeenUnblockedMessage = await sendMessage(
-    device2,
+  const hasUserBeenUnblockedMessage = await device2.sendMessage(
     "Hey, am I unblocked?"
   );
   // Check in device 1 for message
-  await waitForTextElementToBePresent(
-    device1,
+  await device1.waitForTextElementToBePresent(
     "Message Body",
     hasUserBeenUnblockedMessage
   );
@@ -105,19 +94,16 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // Navigate back to conversation list
-  await runOnlyOnAndroid(platform, () =>
-    clickOnElement(device1, "Navigate up")
-  );
-  await runOnlyOnIOS(platform, () => clickOnElement(device1, "Back"));
-  // await device1.setImplicitWaitTimeout(20000);
+  await runOnlyOnAndroid(platform, () => device1.clickOnElement("Navigate up"));
+  await runOnlyOnIOS(platform, () => device1.clickOnElement("Back"));
   // on ios swipe left on conversation
   await runOnlyOnAndroid(platform, () =>
-    longPressConversation(device1, userB.userName)
+    device1.longPressConversation(userB.userName)
   );
   await runOnlyOnIOS(platform, () =>
     swipeLeft(device1, "Conversation list item", userB.userName)
   );
-  await clickOnElement(device1, "Block");
+  await device1.clickOnElement("Block");
   await closeApp(device1, device2);
 }
 async function changeUsername(platform: SupportedPlatformsType) {
@@ -126,13 +112,13 @@ async function changeUsername(platform: SupportedPlatformsType) {
   const userA = await newUser(device, "Alice", platform);
   const newUsername = "Alice in chains";
   // click on settings/profile avatar
-  await clickOnElement(device, "User settings");
+  await device.clickOnElement("User settings");
   // select username
-  await clickOnElement(device, "Username");
+  await device.clickOnElement("Username");
   console.warn("Element clicked?");
   // type in new username
 
-  await inputText(device, "Username", newUsername);
+  await device.inputText("Username", newUsername);
   const changedUsername = await grabTextFromAccessibilityId(device, "Username");
   console.log("Changed username", changedUsername);
   if (changedUsername === newUsername) {
@@ -148,8 +134,8 @@ async function changeUsername(platform: SupportedPlatformsType) {
     );
   }
   // select tick
-  await runOnlyOnAndroid(platform, () => clickOnElement(device, "Apply"));
-  await runOnlyOnIOS(platform, () => clickOnElement(device, "Done"));
+  await runOnlyOnAndroid(platform, () => device.clickOnElement("Apply"));
+  await runOnlyOnIOS(platform, () => device.clickOnElement("Done"));
   // verify new username
 
   await closeApp(device);
@@ -160,11 +146,11 @@ async function changeAvatarAndroid(platform: SupportedPlatformsType) {
   // Create new user
   const userA = await newUser(device, "Alice", platform);
   // Click on settings/avatar
-  await clickOnElement(device, "User settings");
+  await device.clickOnElement("User settings");
   await sleepFor(100);
 
   // Click on Profile picture
-  await clickOnElement(device, "User settings");
+  await device.clickOnElement("User settings");
   // Click on Photo library
   await sleepFor(100);
   await clickOnXAndYCoordinates(device, 315, 316);
@@ -173,13 +159,11 @@ async function changeAvatarAndroid(platform: SupportedPlatformsType) {
   await sleepFor(2000);
 
   // Need to add a function that if file isn't found, push file to device
-  await clickOnElementXPath(
-    device,
+  await device.clickOnElementXPath(
     '//android.widget.LinearLayout[@content-desc="download.png, 3.59 kB, Jan 30"]/android.widget.RelativeLayout/android.widget.FrameLayout[1]/android.widget.ImageView[1]'
   );
   // Click crop
-  await clickOnElementXPath(
-    device,
+  await device.clickOnElementXPath(
     "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.FrameLayout[1]/android.view.ViewGroup/androidx.appcompat.widget.LinearLayoutCompat/android.widget.Button[3]"
   );
   // Wait for change
@@ -203,20 +187,20 @@ async function changeAvatariOS(platform: SupportedPlatformsType) {
   // Create new user
   const userA = await newUser(device, "Alice", platform);
   // Click on settings/avatar
-  await clickOnElement(device, "User settings");
+  await device.clickOnElement("User settings");
   await sleepFor(100);
 
   // Click on Profile picture
-  await clickOnElement(device, "Profile picture");
-  await clickOnElement(device, "Photo library");
+  await device.clickOnElement("Profile picture");
+  await device.clickOnElement("Photo library");
   // Click on Photo library
   await sleepFor(100);
-  await clickOnElement(device, `Photo, January 30, 4:17 PM`);
-  await clickOnElement(device, "Done");
+  await device.clickOnElement(`Photo, January 30, 4:17 PM`);
+  await device.clickOnElement("Done");
   // Select file
   await sleepFor(2000);
-  await clickOnElement(device, `Photo, January 30, 4:17 PM`);
-  await clickOnElement(device, "Done");
+  await device.clickOnElement(`Photo, January 30, 4:17 PM`);
+  await device.clickOnElement("Done");
 
   // Need to add a function that if file isn't found, push file to device
   // Wait for change
@@ -243,58 +227,52 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   const nickName = "New nickname";
   await newContact(platform, device1, userA, device2, userB);
   // Go back to conversation list
-  await clickOnElement(device1, "Navigate up");
+  await device1.clickOnElement("Navigate up");
   // Select conversation in list with Bob
-  await longPressConversation(device1, userB.userName);
+  await device1.longPressConversation(userB.userName);
   // Select 'Details' option
-  await clickOnElement(device1, "Details");
+  await device1.clickOnElement("Details");
   // Select username to edit
-  await clickOnElement(device1, "Edit user nickname");
+  await device1.clickOnElement("Edit user nickname");
   // Type in nickname
-  await inputText(device1, "Username", nickName);
+  await device1.inputText("Username", nickName);
   // Click on tick button
-  await clickOnElement(device1, "Apply");
+  await device1.clickOnElement("Apply");
   // CLick out of pop up
   await clickOnXAndYCoordinates(device1, 484, 108);
   // Click on conversation to verify nickname is applied
-  await selectByText(device1, "Conversation list item", userB.userName);
+  await device1.selectByText("Conversation list item", userB.userName);
   // Check name at top of conversation is nickname
   const headerElement = await device1.waitForElementToBePresent("Username");
-  const conversationHeaderNickname = await getTextFromElement(
-    device1,
-    headerElement
-  );
+  await device1.getTextFromElement(headerElement);
   // Send a message so nickname is updated in conversation list
-  await sendMessage(device1, "Howdy");
+  await device1.sendMessage("Howdy");
   // Navigate out of conversation
-  await clickOnElement(device1, "Navigate up");
+  await device1.clickOnElement("Navigate up");
   // Change nickname back to original username
   // Long press on contact conversation
-  await longPressConversation(device1, nickName);
+  await device1.longPressConversation(nickName);
   // Select details
-  await clickOnElement(device1, "Details");
+  await device1.clickOnElement("Details");
   // Click on username to edit
-  await clickOnElement(device1, "Edit user nickname");
+  await device1.clickOnElement("Edit user nickname");
   // Click apply without entering new nickname
-  await clickOnElement(device1, "Apply");
+  await device1.clickOnElement("Apply");
   // Click out of pop up
   await device1.back();
   // Enter conversation to verify change
-  await selectByText(device1, "Conversation list item", nickName);
+  await device1.selectByText("Conversation list item", nickName);
   const changedElement = await device1.waitForElementToBePresent("Username");
-  const conversationListNickname = await getTextFromElement(
-    device1,
-    changedElement
-  );
+  await device1.getTextFromElement(changedElement);
   // Send message to change in conversation list
-  await sendMessage(device1, "Howdy");
+  await device1.sendMessage("Howdy");
   // Navigate back to list
-  await clickOnElement(device1, "Navigate up");
+  await device1.clickOnElement("Navigate up");
   // Verify name change in list
   // Save text of conversation list item?
-  await selectByText(device1, "Conversation list item", userB.userName);
+  await device1.selectByText("Conversation list item", userB.userName);
   const revertedHeader = await device1.waitForElementToBePresent("Username");
-  await getTextFromElement(device1, revertedHeader);
+  await device1.getTextFromElement(revertedHeader);
   // if (originalUsername === userB.userName) {
   //   console.log("Nickname changed back to original username");
   // } else {
@@ -313,36 +291,35 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
 
   await newContact(platform, device1, userA, device2, userB);
   // Click on settings/more info
-  await clickOnElement(device1, "More options");
+  await device1.clickOnElement("More options");
   // Click on username to set nickname
-  await clickOnElement(device1, "Username");
+  await device1.clickOnElement("Username");
   // Type in nickname
-  await inputText(device1, "Username", nickName);
+  await device1.inputText("Username", nickName);
   // Click apply/done
-  await clickOnElement(device1, "Done");
+  await device1.clickOnElement("Done");
   // Check it's changed in heading also
-  await clickOnElement(device1, "Back");
+  await device1.clickOnElement("Back");
   const newNickname = await grabTextFromAccessibilityId(device1, "Username");
-  await findMatchingTextAndAccessibilityId(device1, "Username", newNickname);
+  await device1.findMatchingTextAndAccessibilityId("Username", newNickname);
   // Check in conversation list also
-  await clickOnElement(device1, "Back");
+  await device1.clickOnElement("Back");
   // Save text of conversation list item?
-  await findMatchingTextAndAccessibilityId(
-    device1,
+  await device1.findMatchingTextAndAccessibilityId(
     "Conversation list item",
     nickName
   );
   // Set nickname back to original username
-  await selectByText(device1, "Conversation list item", nickName);
+  await device1.selectByText("Conversation list item", nickName);
   // Click on settings/more info
-  await clickOnElement(device1, "More options");
+  await device1.clickOnElement("More options");
   // Click on edit
-  await clickOnElement(device1, "Username");
+  await device1.clickOnElement("Username");
   // Empty username input
   await deleteText(device1, "Nickname");
-  await clickOnElement(device1, "Done");
+  await device1.clickOnElement("Done");
   // Check in conversation header
-  await clickOnElement(device1, "Back");
+  await device1.clickOnElement("Back");
   await sleepFor(1000);
   const revertedNickname = await grabTextFromAccessibilityId(
     device1,
@@ -352,10 +329,9 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   if (revertedNickname !== userB.userName) {
     throw new Error(`revertedNickname doesn't match Bob's username`);
   }
-  await clickOnElement(device1, "Back");
+  await device1.clickOnElement("Back");
   // Check in conversation list aswell
-  await findMatchingTextAndAccessibilityId(
-    device1,
+  await device1.findMatchingTextAndAccessibilityId(
     "Conversation list item",
     userB.userName
   );
