@@ -4,12 +4,10 @@ import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import {
   clickOnXAndYCoordinates,
-  deleteText,
   hasElementBeenDeleted,
   runOnlyOnAndroid,
   runOnlyOnIOS,
   sleepFor,
-  swipeLeft,
 } from "./utils/index";
 import {
   closeApp,
@@ -17,7 +15,6 @@ import {
   openAppTwoDevices,
   SupportedPlatformsType,
 } from "./utils/open_app";
-import { grabTextFromAccessibilityId } from "./utils/save_text";
 
 async function createContact(platform: SupportedPlatformsType) {
   // first we want to install the app on each device with our custom call to run it
@@ -101,7 +98,7 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
     device1.longPressConversation(userB.userName)
   );
   await runOnlyOnIOS(platform, () =>
-    swipeLeft(device1, "Conversation list item", userB.userName)
+    device1.swipeLeft("Conversation list item", userB.userName)
   );
   await device1.clickOnElement("Block");
   await closeApp(device1, device2);
@@ -119,7 +116,7 @@ async function changeUsername(platform: SupportedPlatformsType) {
   // type in new username
 
   await device.inputText("Username", newUsername);
-  const changedUsername = await grabTextFromAccessibilityId(device, "Username");
+  const changedUsername = await device.grabTextFromAccessibilityId("Username");
   console.log("Changed username", changedUsername);
   if (changedUsername === newUsername) {
     console.log("Username change successful");
@@ -300,7 +297,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Done");
   // Check it's changed in heading also
   await device1.clickOnElement("Back");
-  const newNickname = await grabTextFromAccessibilityId(device1, "Username");
+  const newNickname = await device1.grabTextFromAccessibilityId("Username");
   await device1.findMatchingTextAndAccessibilityId("Username", newNickname);
   // Check in conversation list also
   await device1.clickOnElement("Back");
@@ -316,13 +313,12 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   // Click on edit
   await device1.clickOnElement("Username");
   // Empty username input
-  await deleteText(device1, "Nickname");
+  await device1.deleteText("Nickname");
   await device1.clickOnElement("Done");
   // Check in conversation header
   await device1.clickOnElement("Back");
   await sleepFor(1000);
-  const revertedNickname = await grabTextFromAccessibilityId(
-    device1,
+  const revertedNickname = await device1.grabTextFromAccessibilityId(
     "Username"
   );
   console.warn(`revertedNickname:` + revertedNickname);

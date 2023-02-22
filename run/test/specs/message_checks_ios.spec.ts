@@ -10,7 +10,6 @@ import {
   doFunctionIfElementExists,
   clickOnXAndYCoordinates,
   sleepFor,
-  replyToMessage,
   runOnlyOnAndroid,
   runOnlyOnIOS,
   doesElementExist,
@@ -310,7 +309,7 @@ async function sendLongMessage(platform: SupportedPlatformsType) {
   // Send a long message from User A to User B
   await device1.sendMessage(longText);
   // Reply to message (User B to User A)
-  const sentMessage = await replyToMessage(device2, userA, longText);
+  const sentMessage = await device2.replyToMessage(userA, longText);
   // Check reply came through on device1
   await device1.findMessageWithBody(sentMessage);
   // Close app

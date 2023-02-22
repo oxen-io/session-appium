@@ -9,7 +9,6 @@ import {
   hasTextElementBeenDeleted,
   runOnlyOnIOS,
   sleepFor,
-  sendNewMessage,
 } from "./utils/index";
 import { navigateBack } from "./utils/navigate_back";
 
@@ -23,11 +22,7 @@ async function acceptRequest(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   // Send message from Alice to Bob
-  await sendNewMessage(
-    device1,
-    userB,
-    `${userA.userName} to ${userB.userName}`
-  );
+  await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
   // Wait for banner to appear
 
   // Bob clicks on message request banner
@@ -54,11 +49,7 @@ async function declineRequest(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   // Send message from Alice to Bob
-  await sendNewMessage(
-    device1,
-    userB,
-    `${userA.userName} to ${userB.userName}`
-  );
+  await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
   // Wait for banner to appear
   // Bob clicks on message request banner
   await device2.clickOnElement("Message requests banner");
@@ -86,11 +77,7 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   // Send message from Alice to Bob
-  await sendNewMessage(
-    device1,
-    userB,
-    `${userA.userName} to ${userB.userName}`
-  );
+  await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
   // Wait for banner to appear
   // Bob clicks on message request banner
   await device2.clickOnElement("Message requests banner");
@@ -114,11 +101,7 @@ async function blockRequest(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   // Send message from Alice to Bob
-  await sendNewMessage(
-    device1,
-    userB,
-    `${userA.userName} to ${userB.userName}`
-  );
+  await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
   // Wait for banner to appear
   // Bob clicks on message request banner
   await device2.clickOnElement("Message requests banner");

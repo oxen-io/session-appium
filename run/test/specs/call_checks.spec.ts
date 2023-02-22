@@ -1,11 +1,6 @@
 import { everyPlatformIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
-import {
-  hasElementBeenDeleted,
-  runOnlyOnAndroid,
-  scrollDown,
-  sendNewMessage,
-} from "./utils/index";
+import { hasElementBeenDeleted, runOnlyOnAndroid } from "./utils/index";
 import { openAppTwoDevices, SupportedPlatformsType } from "./utils/open_app";
 
 async function voiceCall(platform: SupportedPlatformsType) {
@@ -16,7 +11,7 @@ async function voiceCall(platform: SupportedPlatformsType) {
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
   ]);
-  await sendNewMessage(device1, userB, "Testing calls");
+  await device1.sendNewMessage(userB, "Testing calls");
   // Look for phone icon (shouldnt be there)
   await hasElementBeenDeleted(device1, "Call button");
   // Create contact
@@ -40,7 +35,7 @@ async function voiceCall(platform: SupportedPlatformsType) {
   // Enabled voice calls in privacy settings
   await device1.clickOnElement("Settings");
   // Scroll to bottom of page to voice and video calls
-  await scrollDown(device1);
+  await device1.scrollDown();
   // Toggle voice settings on
   await device1.clickOnElement("Allow voice and video calls");
   // Click enable on exposure IP address warning
@@ -50,7 +45,7 @@ async function voiceCall(platform: SupportedPlatformsType) {
   // Enable voice calls on device 2 for User B
   await device2.clickOnElement("Call button");
   await device2.clickOnElement("Settings");
-  await scrollDown(device2);
+  await device2.scrollDown();
   await device2.clickOnElement("Allow voice and video calls");
   await device2.clickOnElement("Enable");
   await device2.clickOnElement("Navigate up");

@@ -2,7 +2,7 @@ import { androidIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { findElementByClass } from "./utils/find_elements_stragegy";
-import { replyToMessage, sleepFor } from "./utils/index";
+import { sleepFor } from "./utils/index";
 import {
   closeApp,
   openAppTwoDevices,
@@ -201,7 +201,7 @@ async function sendLongMessage(platform: SupportedPlatformsType) {
   // Send a long message from User A to User B
   await device1.sendMessage(longText);
   // Reply to message (User B to User A)
-  const sentMessage = await replyToMessage(device2, userA, longText);
+  const sentMessage = await device2.replyToMessage(userA, longText);
   // Check reply came through on device1
   await device1.findMessageWithBody(sentMessage);
   // Close app

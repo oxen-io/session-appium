@@ -2,7 +2,7 @@ import { androidIt, iosIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { createGroup } from "./utils/create_group";
-import { deleteText, runOnlyOnAndroid, runOnlyOnIOS } from "./utils/index";
+import { runOnlyOnAndroid, runOnlyOnIOS } from "./utils/index";
 import { navigateBack } from "./utils/navigate_back";
 import {
   closeApp,
@@ -75,7 +75,7 @@ async function changeGroupName(platform: SupportedPlatformsType) {
   // Delete empty space
   await runOnlyOnIOS(platform, () => device1.clickOnElement("Cancel"));
   await runOnlyOnAndroid(platform, () =>
-    deleteText(device1, "Group name text field")
+    device1.deleteText("Group name text field")
   );
   // Enter new group name
   await device1.clickOnElement("Group name");

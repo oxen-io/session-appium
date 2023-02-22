@@ -3,6 +3,7 @@ import { isArray, isEmpty } from "lodash";
 import { AppiumNextElementType } from "../../appium_next";
 import { sleepFor } from "../test/specs/utils";
 import { isDeviceAndroid, isDeviceIOS } from "../test/specs/utils/utilities";
+import { Group, User } from "./testing";
 
 export type Coordinates = {
   x: number;
@@ -110,6 +111,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   ): Promise<void> {
     return this.toShared().setValueImmediate(text, elementId);
   }
+
   public async getElementRect(
     elementId: string
   ): Promise<
@@ -344,6 +346,24 @@ export class DeviceWrapper implements SharedDeviceInterface {
     const text = await this.getText(element.ELEMENT);
 
     return text;
+  }
+
+  public async grabTextFromAccessibilityId(
+    accessibilityId: string
+  ): Promise<string> {
+    const elementId = await this.waitForElementToBePresent(accessibilityId);
+
+    const text = await this.getTextFromElement(elementId);
+    return text;
+  }
+
+  public async deleteText(accessibilityId: string) {
+    const el = await this.findElementByAccessibilityId(accessibilityId);
+
+    await this.clear(el.ELEMENT);
+
+    console.warn(`Text has been cleared` + accessibilityId);
+    return;
   }
 
   // ELEMENT LOCATORS
@@ -581,6 +601,54 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return message;
   }
 
+  public async sendNewMessage(user: User, message: string) {
+    // Sender workflow
+    // Click on plus button
+    await this.clickOnElement("New conversation button");
+    // Select direct message option
+    await this.clickOnElement("New direct message");
+    // Enter User B's session ID into input box
+    await this.inputText("Session id input box", user.sessionID);
+    // Click next
+    await this.clickOnElement("Next");
+    // Type message into message input box
+
+    await this.inputText("Message input box", message);
+    // Click send
+    await this.clickOnElement("Send message button");
+    // Wait for tick
+    await this.waitForElementToBePresent(`Message sent status: Sent`);
+
+    return message;
+  }
+
+  public async sendMessageTo(sender: User, receiver: User | Group) {
+    const message = `'${sender.userName}' to ${receiver.userName}`;
+    await this.waitForTextElementToBePresent(
+      "Conversation list item",
+      receiver.userName
+    );
+    await this.selectByText("Conversation list item", receiver.userName);
+    console.log(
+      `'${sender.userName}' + " sent message to ${receiver.userName}`
+    );
+    await this.sendMessage(message);
+  }
+
+  public async replyToMessage(user: User, body: string) {
+    // Reply to media message from user B
+    // Long press on imageSent element
+    await this.longPressMessage(body);
+    // Select 'Reply' option
+    await this.clickOnElement("Reply to message");
+    // Send message
+    const sentMessage = await this.sendMessage(
+      `${user.userName} message reply`
+    );
+
+    return sentMessage;
+  }
+
   public async inputText(accessibilityId: string, text: string) {
     await this.waitForElementToBePresent(accessibilityId);
     const element = await this.findElementByAccessibilityId(accessibilityId);
@@ -591,6 +659,34 @@ export class DeviceWrapper implements SharedDeviceInterface {
     }
 
     await this.setValueImmediate(text, element.ELEMENT);
+  }
+
+  // ACTIONS
+
+  public async swipeLeft(accessibilityId: string, text: string) {
+    const el = await this.findMatchingTextAndAccessibilityId(
+      accessibilityId,
+      text
+    );
+
+    const loc = await this.getElementRect(el.ELEMENT);
+    console.log(loc);
+
+    if (!loc) {
+      throw new Error("did not find element rectangle");
+    }
+    await this.scroll(
+      { x: loc.x + loc.width, y: loc.y + loc.height / 2 },
+      { x: loc.x + loc.width / 2, y: loc.y + loc.height / 2 },
+      1000
+    );
+
+    console.warn("Swiped left on " + el);
+    // let some time for swipe action to happen and UI to update
+  }
+
+  public async scrollDown() {
+    await this.scroll({ x: 760, y: 1500 }, { x: 760, y: 710 }, 100);
   }
 
   /* === all the utilities function ===  */

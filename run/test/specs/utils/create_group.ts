@@ -1,6 +1,6 @@
 import { Group, User } from "../../../types/testing";
 import { newContact } from "./create_contact";
-import { sendMessageTo, runOnlyOnIOS, runOnlyOnAndroid } from ".";
+import { runOnlyOnIOS, runOnlyOnAndroid } from ".";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { SupportedPlatformsType } from "./open_app";
 import { navigateBack } from "./navigate_back";
@@ -49,8 +49,8 @@ export const createGroup = async (
   await device1.sendMessage(userAMessage);
   // Check group was created in device 2 by selecting group from list
 
-  await sendMessageTo(device2, userTwo, group);
-  await sendMessageTo(device3, userThree, group);
+  await device2.sendMessageTo(userTwo, group);
+  await device3.sendMessageTo(userThree, group);
 
   return { userName, userOne, userTwo, userThree };
 };

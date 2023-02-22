@@ -1,4 +1,4 @@
-import { sendNewMessage, runOnlyOnAndroid } from ".";
+import { runOnlyOnAndroid } from ".";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { User } from "../../../types/testing";
 import { SupportedPlatformsType } from "./open_app";
@@ -10,11 +10,7 @@ export const newContact = async (
   device2: DeviceWrapper,
   user2: User
 ) => {
-  await sendNewMessage(
-    device1,
-    user2,
-    `${user1.userName} to ${user2.userName}`
-  );
+  await device1.sendNewMessage(user2, `${user1.userName} to ${user2.userName}`);
 
   // USER B WORKFLOW
   // Click on message request panel

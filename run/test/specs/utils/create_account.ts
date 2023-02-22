@@ -2,7 +2,6 @@ import { getSessionID } from ".";
 import { SupportedPlatformsType } from "./open_app";
 import { User } from "../../../types/testing";
 import {} from "./sleep_for";
-import { grabTextFromAccessibilityId } from "./save_text";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 
 export const newUser = async (
@@ -35,8 +34,7 @@ export const newUser = async (
   // Long Press the recovery phrase to reveal recovery phrase
   await device.longPress("Recovery Phrase");
   // Save recovery phrase as variable
-  const recoveryPhrase = await grabTextFromAccessibilityId(
-    device,
+  const recoveryPhrase = await device.grabTextFromAccessibilityId(
     "Recovery Phrase"
   );
   console.log(`${userName}s recovery phrase is "${recoveryPhrase}"`);

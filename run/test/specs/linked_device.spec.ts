@@ -17,7 +17,7 @@ import {
   hasTextElementBeenDeleted,
   sleepFor,
 } from "./utils/index";
-import { grabTextFromAccessibilityId } from "./utils/save_text";
+
 import { navigateBack } from "./utils/navigate_back";
 import { parseDataImage } from "./utils/check_colour";
 
@@ -114,7 +114,7 @@ async function groupCreationLinkedDevice(platform: SupportedPlatformsType) {
   // Wait 5 seconds for name to update
   await sleepFor(5000);
   // Check linked device for name change (conversation header name)
-  const groupName = await grabTextFromAccessibilityId(device2, "Username");
+  const groupName = await device2.grabTextFromAccessibilityId("Username");
   console.warn("Group name is now " + groupName);
   await device2.findMatchingTextAndAccessibilityId("Username", newGroupName);
   // Check config message in linked device aswell
@@ -155,10 +155,7 @@ async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
   await runOnlyOnAndroid(platform, () =>
     device2.clickOnElement("User settings")
   );
-  const changedUsername = await grabTextFromAccessibilityId(
-    device2,
-    "Username"
-  );
+  const changedUsername = await device2.grabTextFromAccessibilityId("Username");
   await sleepFor(100);
   if (changedUsername === newUsername) {
     console.log(`Username changed from Alice to `, changedUsername);
