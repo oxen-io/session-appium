@@ -12,9 +12,9 @@ import {
   sleepFor,
   runOnlyOnAndroid,
   runOnlyOnIOS,
-  doesElementExist,
   hasElementBeenDeleted,
 } from "./utils/index";
+import { runScriptAndLog } from "./utils/utilities";
 
 async function sendImage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
@@ -34,14 +34,15 @@ async function sendImage(platform: SupportedPlatformsType) {
 
   await clickOnXAndYCoordinates(device1, 34, 498);
 
-  const selector = await doesElementExist(
-    device1,
+  const selector = await device1.doesElementExist(
     "accessibility id",
     "Allow Access to All Photos"
   );
-  await device1.clickOnElement(`Allow Access to All Photos`);
+  // Need to add a max wait here
+
   if (selector) {
     try {
+      await device1.clickOnElement(`Allow Access to All Photos`);
       await device1.clickOnElementXPath(
         `//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell[8]/XCUIElementTypeOther/XCUIElementTypeImage`
       );
@@ -56,9 +57,7 @@ async function sendImage(platform: SupportedPlatformsType) {
         `//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell/XCUIElementTypeOther/XCUIElementTypeImage`
       );
     } catch (e) {
-      console.warn("PLOP 22 ", e);
-      device1.clickOnElement("Add");
-      device1.clickOnElement("Photo, September 09, 2022, 3:33 PM");
+      console.warn("No selector or image to select", e);
     }
   }
   await device1.clickOnElement("Text input box");
@@ -99,8 +98,7 @@ async function sendDoc(platform: SupportedPlatformsType) {
 
   await clickOnXAndYCoordinates(device1, 36, 447);
 
-  const selector = await doesElementExist(
-    device1,
+  const selector = await device1.doesElementExist(
     "accessibility id",
     "Allow Access to All Photos"
   );
@@ -169,14 +167,59 @@ async function sendVideo(platform: SupportedPlatformsType) {
   // await device1.clickOnElement("Images folder");
   await clickOnXAndYCoordinates(device1, 34, 498);
   // Select 'continue' on alert
+  // Need to put a video on device
   // Session would like to access your photos
-  await device1.clickOnElement("Allow Access to All Photos");
-  // Select video
-  await device1.clickOnElementXPath(
-    `//XCUIElementTypeCollectionView['label == "Images"']/XCUIElementTypeCell[1]/XCUIElementTypeOther/XCUIElementTypeImage[1]`
+  await sleepFor(1000);
+  const permissions = await device1.doesElementExist(
+    "accessibility id",
+    "Allow Access to All Photos",
+    5000
   );
+  console.log("Permissions element", permissions);
+  if (permissions) {
+    await device1.clickOnElement("Allow Access to All Photos");
+    console.log("Are you checking for permissions?");
+  } else {
+    console.log("No permissions");
+  }
+  const settingsPermissions = await device1.doesElementExist(
+    "accessibility id",
+    "Settings",
+    1000
+  );
+  if (settingsPermissions) {
+    await device1.clickOnElement("Photos");
+    await device1.clickOnElement("All Photos");
+  } else {
+    console.log("No settings permission dialog");
+  }
+  await device1.clickOnElement("Recents");
+  await sleepFor(2000);
+  // Select video
+  const videoFolder = await device1.doesElementExist(
+    "xpath",
+    `//XCUIElementTypeStaticText[@name="Videos"]`
+  );
+  if (videoFolder) {
+    console.log("Videos folder found");
+    await device1.clickOnElement("Videos");
+    await device1.clickOnElementXPath(
+      `//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell/XCUIElementTypeOther/XCUIElementTypeImage[1]`
+    );
+  } else {
+    console.log("Videos folder NOT found");
+    await runScriptAndLog(
+      `xcrun simctl addmedia ${process.env.IOS_FIRST_SIMULATOR} 'run/test/specs/media/test_video.mp4'`
+    );
+    await sleepFor(1000);
+    await device1.clickOnElement("Add");
+    await device1.clickOnElementXPath(
+      `//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell/XCUIElementTypeOther/XCUIElementTypeImage[1]`
+    );
+  }
+
   // Send with captions
-  await await device1.clickOnElement("Text input box");
+  await device1.clickOnElement("Text input box");
   await device1.inputText("Text input box", testMessage);
   await device1.clickOnElement("Send button");
   // Check if the 'Tap to download media' config appears

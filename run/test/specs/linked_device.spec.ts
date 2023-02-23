@@ -17,9 +17,8 @@ import {
   hasTextElementBeenDeleted,
   sleepFor,
 } from "./utils/index";
-
-import { navigateBack } from "./utils/navigate_back";
 import { parseDataImage } from "./utils/check_colour";
+import { runScriptAndLog } from "./utils/utilities";
 
 async function linkDevice(platform: SupportedPlatformsType) {
   // Open server and two devices
@@ -150,7 +149,7 @@ async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
   await runOnlyOnIOS(platform, () => device1.clickOnElement("Done"));
   // Check on linked device if name has updated
   await device2.clickOnElement("User settings");
-  await runOnlyOnAndroid(platform, () => navigateBack(device2, platform));
+  await runOnlyOnAndroid(platform, () => device2.navigateBack(platform));
   await sleepFor(100);
   await runOnlyOnAndroid(platform, () =>
     device2.clickOnElement("User settings")
@@ -252,17 +251,28 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   await device1.clickOnElement("User settings");
   await sleepFor(100);
 
+  await runScriptAndLog(
+    `xcrun simctl addmedia ${process.env.IOS_FIRST_SIMULATOR} 'run/test/specs/media/profile_picture.jpg'`
+  );
+
   // Click on Profile picture
   await device1.clickOnElement("Profile picture");
   await device1.clickOnElement("Photo library");
+  const permissions = await device1.waitForElementToBePresent(
+    "Allow Access to All Photos"
+  );
+  if (permissions) {
+    await device1.clickOnElement("Allow Access to All Photos");
+    await device1.clickOnElement("Photo, February 22, 4:04 PM");
+  } else {
+    await device1.clickOnElement("Settings");
+    await device1.clickOnElement("Photos");
+  }
   // Click on Photo library
   await sleepFor(100);
-  await device1.clickOnElement(`Photo, January 30, 4:17 PM`);
   await device1.clickOnElement("Done");
   // Select file
   await sleepFor(2000);
-  await device1.clickOnElement(`Photo, January 30, 4:17 PM`);
-  await device1.clickOnElement("Done");
 
   // Need to add a function that if file isn't found, push file to device1
   // Wait for change

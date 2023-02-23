@@ -2,6 +2,7 @@ import { W3CCapabilities } from "appium/build/lib/appium";
 import { isArray, isEmpty } from "lodash";
 import { AppiumNextElementType } from "../../appium_next";
 import { sleepFor } from "../test/specs/utils";
+import { SupportedPlatformsType } from "../test/specs/utils/open_app";
 import { isDeviceAndroid, isDeviceIOS } from "../test/specs/utils/utilities";
 import { Group, User } from "./testing";
 
@@ -26,7 +27,7 @@ type SharedDeviceInterface = {
     undefined | { height: number; width: number; x: number; y: number }
   >;
   getCssProperty: (name: string, elementId: string) => Promise<string>;
-  // pushFile(path: string, data: string): Promise<void>;
+  pushFile(path: string, data: string): Promise<void>;
   getElementScreenshot: (elementId: string) => Promise<string>;
   // gestures
   scroll: (
@@ -205,9 +206,9 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return this.toShared().performTouch(actions);
   }
 
-  // public async pushFile(path: string, data: string): Promise<void> {
-  //   return this.toShared().pushFile(path, data);
-  // }
+  public async pushFile(path: string, data: string): Promise<void> {
+    return this.toShared().pushFile(path, data);
+  }
 
   public async getElementScreenshot(elementId: string): Promise<string> {
     return this.toShared().getElementScreenshot(elementId);
@@ -489,6 +490,33 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return message;
   }
 
+  public async doesElementExist(
+    strategy: "accessibility id" | "xpath",
+    selector: string,
+    maxWait?: number
+  ): Promise<AppiumNextElementType | null> {
+    const beforeStart = Date.now();
+    const maxWaitMSec = maxWait || 30000;
+    let currentWait = 0;
+    const waitPerLoop = 100;
+    let element: AppiumNextElementType | null = null;
+    while (selector === null) {
+      try {
+        element = await this.findElement(strategy, selector);
+        console.log(element, "Exists");
+      } catch (e) {
+        await sleepFor(waitPerLoop);
+        currentWait += waitPerLoop;
+
+        if (beforeStart + maxWaitMSec >= Date.now()) {
+          console.log(element, " doesn't exist");
+        } else {
+          console.log(element, "Doesn't exist but retrying");
+        }
+      }
+    }
+    return element;
+  }
   // WAIT FOR FUNCTIONS
 
   public async waitForElementToBePresent(
@@ -687,6 +715,14 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async scrollDown() {
     await this.scroll({ x: 760, y: 1500 }, { x: 760, y: 710 }, 100);
+  }
+
+  public async navigateBack(platform: SupportedPlatformsType) {
+    if (platform === "ios") {
+      await this.clickOnElement("Back");
+    } else {
+      await this.clickOnElement("Navigate up");
+    }
   }
 
   /* === all the utilities function ===  */

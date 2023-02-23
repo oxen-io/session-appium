@@ -14,6 +14,7 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   "appium:useNewWDA": false,
   "appium:showXcodeLog": false,
   "appium:autoDismissAlerts": false,
+  // "appium:isHeadless": true,
 } as AppiumXCUITestCapabilities;
 export type CapabilitiesIndexType = 0 | 1 | 2 | 3;
 

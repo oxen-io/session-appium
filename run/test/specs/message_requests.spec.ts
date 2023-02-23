@@ -10,7 +10,6 @@ import {
   runOnlyOnIOS,
   sleepFor,
 } from "./utils/index";
-import { navigateBack } from "./utils/navigate_back";
 
 async function acceptRequest(platform: SupportedPlatformsType) {
   // Check 'accept' button
@@ -60,7 +59,7 @@ async function declineRequest(platform: SupportedPlatformsType) {
   // Are you sure you want to delete message request only for ios
   await runOnlyOnIOS(platform, () => device2.clickOnElement("Delete"));
   // Navigate back to home page
-  await navigateBack(device2, platform);
+  await device2.navigateBack(platform);
   // Look for new conversation button to make sure it all worked
   await device2.waitForElementToBePresent("New conversation button");
 
@@ -114,7 +113,7 @@ async function blockRequest(platform: SupportedPlatformsType) {
   // Make sure no messages can get through to Bob
   const blockedMessage = `${userA.userName} to ${userB.userName} - shouldn't get through`;
   await device1.sendMessage(blockedMessage);
-  await navigateBack(device2, platform);
+  await device2.navigateBack(platform);
   await device2.waitForElementToBePresent("New conversation button");
   // Need to wait to see if message gets through
   await sleepFor(1000);

@@ -9,12 +9,10 @@ import {
 } from "./has_element_been_deleted";
 
 import { clickOnXAndYCoordinates } from "./click_by_coordinates";
-import { doesElementExist } from "./find_elements_stragegy";
 
 export {
   doFunctionIfElementExists,
   sleepFor,
-  doesElementExist,
   saveSessionIDIos,
   getSessionID,
   runOnlyOnIOS,

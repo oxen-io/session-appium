@@ -1,5 +1,3 @@
-import { isArray, isEmpty } from "lodash";
-import { AppiumNextElementType } from "../../../../appium_next";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 
 export const findElementByClass = async (
@@ -14,17 +12,4 @@ export const findElementByClass = async (
   }
 
   return element;
-};
-
-export const doesElementExist = async (
-  device: DeviceWrapper,
-  strategy: "accessibility id" | "xpath",
-  selector: string
-) => {
-  try {
-    console.log(selector, "Element exists");
-    return await device.findElement(strategy, selector);
-  } catch {
-    console.log(`Couldnt find `, selector);
-  }
 };

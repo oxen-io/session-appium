@@ -1,13 +1,13 @@
+import { pick } from "lodash";
 import * as util from "util";
-const exec = util.promisify(require("child_process").exec);
-import { getAdbFullPath } from "./binaries";
 import { sleepFor } from ".";
-import { AppiumNextDeviceType } from "../../../../appium_next";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
+import { getAdbFullPath } from "./binaries";
+const exec = util.promisify(require("child_process").exec);
 
 export async function runScriptAndLog(toRun: string) {
   try {
-    // console.log('running ', toRun);
+    // console.log("running ", toRun);
     const result = await exec(toRun);
 
     if (

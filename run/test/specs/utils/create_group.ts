@@ -3,7 +3,6 @@ import { newContact } from "./create_contact";
 import { runOnlyOnIOS, runOnlyOnAndroid } from ".";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { SupportedPlatformsType } from "./open_app";
-import { navigateBack } from "./navigate_back";
 
 export const createGroup = async (
   platform: SupportedPlatformsType,
@@ -20,14 +19,14 @@ export const createGroup = async (
   const userAMessage = `${userOne.userName} to group`;
   // Create contact between User A and User B
   await newContact(platform, device1, userOne, device2, userTwo);
-  await navigateBack(device1, platform);
-  await navigateBack(device2, platform);
+  await device1.navigateBack(platform);
+  await device2.navigateBack(platform);
   // Create contact between User A and User C
   await newContact(platform, device1, userOne, device3, userThree);
   // Exit conversation back to list
-  await navigateBack(device1, platform);
+  await device1.navigateBack(platform);
   // Exit conversation back to list
-  await navigateBack(device3, platform);
+  await device3.navigateBack(platform);
   // Click plus button
   await device1.clickOnElement("New conversation button");
   // Select Closed Group option

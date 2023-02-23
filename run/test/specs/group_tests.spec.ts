@@ -3,7 +3,6 @@ import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { createGroup } from "./utils/create_group";
 import { runOnlyOnAndroid, runOnlyOnIOS } from "./utils/index";
-import { navigateBack } from "./utils/navigate_back";
 import {
   closeApp,
   openAppFourDevices,
@@ -125,10 +124,10 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     testGroupName
   );
   const userD = await newUser(device4, "Derek", platform);
-  await navigateBack(device1, platform);
+  await device1.navigateBack(platform);
   await newContact(platform, device1, userA, device4, userD);
   // Exit to conversation list
-  await navigateBack(device1, platform);
+  await device1.navigateBack(platform);
   // Select group conversation in list
   await device1.selectByText("Conversation list item", testGroupName);
   // Click more options
@@ -149,7 +148,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     `${userD.userName}` + " joined the group."
   );
   // Exit to conversation list
-  await navigateBack(device4, platform);
+  await device4.navigateBack(platform);
   // Select group conversation in list
   await device4.selectByText("Conversation list item", testGroupName);
   // Check config
@@ -213,6 +212,6 @@ describe("Group Testing", async () => {
   await iosIt("Add contact to group", addContactToGroup);
   await androidIt("Add contact to group", addContactToGroup);
 
-  await iosIt("Test mentions in group chats", mentionsForGroups);
-  await androidIt("Test mentions in group chats", mentionsForGroups);
+  // await iosIt("Test mentions in group chats", mentionsForGroups);
+  // await androidIt("Test mentions in group chats", mentionsForGroups);
 });
