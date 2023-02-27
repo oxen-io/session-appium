@@ -112,12 +112,18 @@ const openAndroidApp = async (
   } as DriverOpts;
 
   const device: DeviceWrapper = new driver(opts);
-
   const wrappedDevice = new DeviceWrapper(device);
 
   const sess = await wrappedDevice.createSession(
     getAndroidCapabilities(capabilitiesIndex)
   );
+  // this is required to make PopupWindow show up from the Android SDK
+  // this `any` was approved by Audric
+  await (device as any).updateSettings({
+    ignoreUnimportantViews: false,
+    allowInvisibleElements: true,
+    enableMultiWindows: true,
+  });
   console.warn(`SessionID for android:${capabilitiesIndex}: "${sess[0]}"`);
 
   return { device: wrappedDevice };
