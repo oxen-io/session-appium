@@ -135,3 +135,5 @@ describe("Message", async () => {
   await iosIt("Message requests block", blockRequest);
   await androidIt("Message requests block", blockRequest);
 });
+
+// Delete request

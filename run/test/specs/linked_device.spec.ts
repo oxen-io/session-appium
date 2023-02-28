@@ -188,6 +188,38 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
   // Select delete
   await device1.clickOnElement("Delete message");
   // Select delete for everyone
+  await device1.clickOnElement("Delete just for me");
+
+  // await waitForLoadingAnimation(device1);
+
+  // Check linked device for deleted message
+  await hasTextElementBeenDeleted(device1, "Message body", sentMessage);
+  // Close app
+  await closeApp(device1, device2, device3);
+}
+
+async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
+  const { device1, device2, device3 } = await openAppThreeDevices(platform);
+
+  const userA = await linkedDevice(device1, device3, "Alice", platform);
+
+  const userB = await newUser(device2, "Bob", platform);
+
+  await newContact(platform, device1, userA, device2, userB);
+  // Send message from user a to user b
+  const sentMessage = await device1.sendMessage("Howdy");
+  // Check message came through on linked device(3)
+  // Enter conversation with user B on device 3
+  // Need to wait for notifications to disappear
+  await device3.waitForElementToBePresent("Conversation list item");
+  await device3.selectByText("Conversation list item", userB.userName);
+  // Find message
+  await device3.findMessageWithBody(sentMessage);
+  // Select message on device 1, long press
+  await device1.longPressMessage(sentMessage);
+  // Select delete
+  await device1.clickOnElement("Delete message");
+  // Select delete for everyone
   await device1.clickOnElement("Delete for everyone");
 
   // await waitForLoadingAnimation(device1);
@@ -321,6 +353,9 @@ describe("Linked device tests", async () => {
 
   await androidIt("Check deleted message syncs", deletedMessageLinkedDevice);
   await iosIt("Check deleted message syncs", deletedMessageLinkedDevice);
+
+  await androidIt("Check unsent message syncs", unSendMessageLinkedDevice);
+  await iosIt("Check unsent message syncs", unSendMessageLinkedDevice);
 
   await iosIt("Check blocked user syncs", blockedUserLinkedDevice);
   await androidIt("Check blocked user syncs", blockedUserLinkedDevice);

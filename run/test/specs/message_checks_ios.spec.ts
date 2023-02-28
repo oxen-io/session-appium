@@ -43,23 +43,21 @@ async function sendImage(platform: SupportedPlatformsType) {
   if (selector) {
     try {
       await device1.clickOnElement(`Allow Access to All Photos`);
-      await device1.clickOnElementXPath(
-        `//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell[8]/XCUIElementTypeOther/XCUIElementTypeImage`
-      );
-      // Need to account for scenario that photo is already selected...
+      await sleepFor(2000);
+      // Select video
     } catch (e) {
-      console.log("Trying other path", e);
+      console.log("No selector error");
     }
+  } else {
+    await device1.clickOnElementXPath(
+      `//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell/XCUIElementTypeOther/XCUIElementTypeImage`
+    );
   }
-  if (!selector) {
-    try {
-      await device1.clickOnElementXPath(
-        `//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell/XCUIElementTypeOther/XCUIElementTypeImage`
-      );
-    } catch (e) {
-      console.warn("No selector or image to select", e);
-    }
-  }
+  // await sleepFor(2000);
+  await device1.clickOnElementXPath(
+    `//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell[1]/XCUIElementTypeOther/XCUIElementTypeImage`
+  ); // Need to account for scenario that photo is already selected...
+
   await device1.clickOnElement("Text input box");
   await device1.inputText("Text input box", testMessage);
   await device1.clickOnElement("Send button");
@@ -173,12 +171,10 @@ async function sendVideo(platform: SupportedPlatformsType) {
   const permissions = await device1.doesElementExist(
     "accessibility id",
     "Allow Access to All Photos",
-    5000
+    1000
   );
-  console.log("Permissions element", permissions);
   if (permissions) {
     await device1.clickOnElement("Allow Access to All Photos");
-    console.log("Are you checking for permissions?");
   } else {
     console.log("No permissions");
   }
@@ -198,7 +194,8 @@ async function sendVideo(platform: SupportedPlatformsType) {
   // Select video
   const videoFolder = await device1.doesElementExist(
     "xpath",
-    `//XCUIElementTypeStaticText[@name="Videos"]`
+    `//XCUIElementTypeStaticText[@name="Videos"]`,
+    1000
   );
   if (videoFolder) {
     console.log("Videos folder found");
@@ -211,13 +208,15 @@ async function sendVideo(platform: SupportedPlatformsType) {
     await runScriptAndLog(
       `xcrun simctl addmedia ${process.env.IOS_FIRST_SIMULATOR} 'run/test/specs/media/test_video.mp4'`
     );
-    await sleepFor(1000);
-    await device1.clickOnElement("Add");
+    await sleepFor(2000);
+    // await device1.clickOnElement("Add");
     await device1.clickOnElementXPath(
       `//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell/XCUIElementTypeOther/XCUIElementTypeImage[1]`
     );
   }
-
+  await device1.clickOnElementXPath(
+    `//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell/XCUIElementTypeOther/XCUIElementTypeImage[1]`
+  );
   // Send with captions
   await device1.clickOnElement("Text input box");
   await device1.inputText("Text input box", testMessage);
@@ -454,7 +453,7 @@ describe("Message checks ios", async () => {
   await iosIt("Send video and reply test", sendVideo);
   await iosIt("Send voice message test", sendVoiceMessage);
   await iosIt("Send document and reply test", sendDoc);
-  await iosIt("Send GIF and reply", sendGif);
+  await iosIt("Send GIF and reply test", sendGif);
   await iosIt("Send long text and reply test", sendLongMessage);
   await iosIt("Send link test", sendLink);
   await iosIt("Unsend message", unsendMessage);

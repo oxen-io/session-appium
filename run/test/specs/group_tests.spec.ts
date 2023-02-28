@@ -110,10 +110,10 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
-    newUser(device3, "Carl", platform),
+    newUser(device3, "Cat", platform),
   ]);
   const testGroupName = "Group to test adding contact";
-  await createGroup(
+  const group = await createGroup(
     platform,
     device1,
     userA,
@@ -123,13 +123,13 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
-  const userD = await newUser(device4, "Derek", platform);
+  const userD = await newUser(device4, "Dracula", platform);
   await device1.navigateBack(platform);
   await newContact(platform, device1, userA, device4, userD);
   // Exit to conversation list
   await device1.navigateBack(platform);
   // Select group conversation in list
-  await device1.selectByText("Conversation list item", testGroupName);
+  await device1.selectByText("Conversation list item", group.userName);
   // Click more options
   await device1.clickOnElement("More options");
   // Select edit group
@@ -150,7 +150,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   // Exit to conversation list
   await device4.navigateBack(platform);
   // Select group conversation in list
-  await device4.selectByText("Conversation list item", testGroupName);
+  await device4.selectByText("Conversation list item", group.userName);
   // Check config
   await runOnlyOnIOS(platform, () =>
     device4.waitForTextElementToBePresent(
@@ -173,7 +173,7 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
-    newUser(device3, "Carl", platform),
+    newUser(device3, "Cat", platform),
   ]);
   const testGroupName = "Mentions test group";
   // Create contact between User A and User B
@@ -212,6 +212,6 @@ describe("Group Testing", async () => {
   await iosIt("Add contact to group", addContactToGroup);
   await androidIt("Add contact to group", addContactToGroup);
 
-  // await iosIt("Test mentions in group chats", mentionsForGroups);
-  // await androidIt("Test mentions in group chats", mentionsForGroups);
+  await iosIt("Test mentions in group chats", mentionsForGroups);
+  await androidIt("Test mentions in group chats", mentionsForGroups);
 });

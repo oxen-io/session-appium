@@ -496,22 +496,21 @@ export class DeviceWrapper implements SharedDeviceInterface {
     maxWait?: number
   ): Promise<AppiumNextElementType | null> {
     const beforeStart = Date.now();
-    const maxWaitMSec = maxWait || 30000;
-    let currentWait = 0;
+    const maxWaitMSec = maxWait || 300000;
     const waitPerLoop = 100;
     let element: AppiumNextElementType | null = null;
-    while (selector === null) {
+    while (element === null) {
       try {
         element = await this.findElement(strategy, selector);
-        console.log(element, "Exists");
       } catch (e) {
+        // console.warn("doesElementExist failed with", (e as any).message);
         await sleepFor(waitPerLoop);
-        currentWait += waitPerLoop;
 
-        if (beforeStart + maxWaitMSec >= Date.now()) {
-          console.log(element, " doesn't exist");
+        if (beforeStart + maxWaitMSec <= Date.now()) {
+          console.log(element, " doesn't exist, time expired");
+          break;
         } else {
-          console.log(element, "Doesn't exist but retrying");
+          console.log(selector, "Doesn't exist but retrying");
         }
       }
     }

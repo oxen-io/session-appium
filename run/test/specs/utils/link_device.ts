@@ -27,9 +27,11 @@ export const linkedDevice = async (
   // Wait for any notifications to disappear
   await device2.waitForElementToBePresent("Message Notifications");
   // Wait for transitiion animation between the two pages
-  await sleepFor(250);
+  await await sleepFor(250);
   // Click continue on message notification settings
   await device2.clickOnElement("Continue with settings");
+  // Dismiss notifications alert
+  await device2.clickOnElement("Don’t Allow");
   // Check that you're almost there isn't displayed
   await hasElementBeenDeleted(device2, "Continue");
   // Check that button was clicked

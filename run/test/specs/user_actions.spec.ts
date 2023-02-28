@@ -15,6 +15,7 @@ import {
   openAppTwoDevices,
   SupportedPlatformsType,
 } from "./utils/open_app";
+import { runScriptAndLog } from "./utils/utilities";
 
 async function createContact(platform: SupportedPlatformsType) {
   // first we want to install the app on each device with our custom call to run it
@@ -186,22 +187,30 @@ async function changeAvatariOS(platform: SupportedPlatformsType) {
   // Click on settings/avatar
   await device.clickOnElement("User settings");
   await sleepFor(100);
+  await runScriptAndLog(
+    `cp run/test/specs/media/profile_picture.jpg ~/Library/Developer/CoreSimulator/Devices/${process.env.IOS_FIRST_SIMULATOR}/data/Media/DCIM/100APPLE/avatar_blue.jpg`
+  );
 
-  // Click on Profile picture
   await device.clickOnElement("Profile picture");
   await device.clickOnElement("Photo library");
+  const permissions = await device.doesElementExist(
+    "accessibility id",
+    "Allow Access to All Photos"
+  );
+  if (permissions) {
+    try {
+      device.clickOnElement("Allow Access to All Photos");
+    } catch (e) {
+      console.log("No permissions dialog");
+    }
+  }
+  // Click on Profile picture
   // Click on Photo library
   await sleepFor(100);
-  await device.clickOnElement(`Photo, January 30, 4:17 PM`);
-  await device.clickOnElement("Done");
-  // Select file
-  await sleepFor(2000);
-  await device.clickOnElement(`Photo, January 30, 4:17 PM`);
-  await device.clickOnElement("Done");
+  await device.clickOnElementXPath(
+    `(//XCUIElementTypeImage[@name="avatar_blue.jpg"])[1]`
+  );
 
-  // Need to add a function that if file isn't found, push file to device
-  // Wait for change
-  // Verify change somehow...?
   // Take screenshot
   const el = await device.waitForElementToBePresent("Profile picture");
   await sleepFor(3000);
@@ -356,7 +365,7 @@ describe("User actions", async () => {
 
   await androidIt("Change username", changeUsername);
   await iosIt("Change username", changeUsername);
-
+  // NEED TO FIX
   await androidIt("Change avatar", changeAvatarAndroid);
   await iosIt("Change avatar", changeAvatariOS);
 
@@ -364,4 +373,4 @@ describe("User actions", async () => {
   await iosIt("Set nickname", setNicknameIos);
 });
 
-// Check read receipts workin
+// Check read receipts working

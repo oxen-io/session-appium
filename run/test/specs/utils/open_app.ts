@@ -148,7 +148,7 @@ const openiOSApp = async (
   const sess = await wrappedDevice.createSession(caps);
 
   // deny notification
-  await wrappedDevice.clickOnElement("Don’t Allow");
+  // await wrappedDevice.clickOnElement("Don’t Allow");
 
   return { device: wrappedDevice };
 };

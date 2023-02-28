@@ -5,9 +5,11 @@ import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { getAdbFullPath } from "./binaries";
 const exec = util.promisify(require("child_process").exec);
 
-export async function runScriptAndLog(toRun: string) {
+export async function runScriptAndLog(toRun: string, verbose = false) {
   try {
-    // console.log("running ", toRun);
+    if (verbose) {
+      console.log("running ", toRun);
+    }
     const result = await exec(toRun);
 
     if (
@@ -17,13 +19,17 @@ export async function runScriptAndLog(toRun: string) {
         "All files should be loaded. Notifying the device"
       )
     ) {
-      console.log(`cmd which failed: "${toRun}"`);
-      console.log(`result: "${result.stderr}"`);
+      if (verbose) {
+        console.log(`cmd which failed: "${toRun}"`);
+        console.log(`result: "${result.stderr}"`);
+      }
     }
   } catch (e) {
     const cmd = (e as any).cmd;
-    // console.warn(`cmd which failed: "${cmd}"`);
-    // console.warn(pick(e, ["stdout", "stderr"]));
+    if (verbose) {
+      console.warn(`cmd which failed: "${cmd}"`);
+      console.warn(pick(e, ["stdout", "stderr"]));
+    }
   }
 }
 

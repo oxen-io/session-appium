@@ -1,4 +1,4 @@
-import { getSessionID } from ".";
+import { getSessionID, runOnlyOnIOS } from ".";
 import { SupportedPlatformsType } from "./open_app";
 import { User } from "../../../types/testing";
 import {} from "./sleep_for";
@@ -28,6 +28,9 @@ export const newUser = async (
   await device.clickOnElement("Continue");
   // Choose message notification options
   await device.clickOnElement("Continue with settings");
+  // Need to add Don't allow notifications dismiss here
+  // iOS only
+  await runOnlyOnIOS(platform, () => device.clickOnElement("Don’t Allow"));
   // Click on 'continue' button to open recovery phrase modal
   await device.waitForElementToBePresent("Continue");
   await device.clickOnElement("Continue");
