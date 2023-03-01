@@ -507,7 +507,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
         await sleepFor(waitPerLoop);
 
         if (beforeStart + maxWaitMSec <= Date.now()) {
-          console.log(element, " doesn't exist, time expired");
+          console.log(selector, " doesn't exist, time expired");
           break;
         } else {
           console.log(selector, "Doesn't exist but retrying");

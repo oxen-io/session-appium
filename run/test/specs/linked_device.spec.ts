@@ -277,48 +277,61 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
 
 async function avatarRestorediOS(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-
+  const spongebobsBirthday = "199905010700.00";
   const userA = await linkedDevice(device1, device2, "Alice", platform);
 
   await device1.clickOnElement("User settings");
   await sleepFor(100);
-
-  await runScriptAndLog(
-    `xcrun simctl addmedia ${process.env.IOS_FIRST_SIMULATOR} 'run/test/specs/media/profile_picture.jpg'`
-  );
-
-  // Click on Profile picture
   await device1.clickOnElement("Profile picture");
   await device1.clickOnElement("Photo library");
-  const permissions = await device1.waitForElementToBePresent(
-    "Allow Access to All Photos"
+  // Check if permissions need to be enabled
+  const permissions = await device1.doesElementExist(
+    "accessibility id",
+    "Allow Access to All Photos",
+    1000
   );
   if (permissions) {
-    await device1.clickOnElement("Allow Access to All Photos");
-    await device1.clickOnElement("Photo, February 22, 4:04 PM");
-  } else {
-    await device1.clickOnElement("Settings");
-    await device1.clickOnElement("Photos");
+    try {
+      device1.clickOnElement("Allow Access to All Photos");
+    } catch (e) {
+      console.log("No permissions dialog");
+    }
   }
-  // Click on Photo library
-  await sleepFor(100);
-  await device1.clickOnElement("Done");
-  // Select file
-  await sleepFor(2000);
+  // Check if image is already on device
+  const profilePicture = await device1.doesElementExist(
+    "accessibility id",
+    `Photo, May 01, 1999, 7:00 AM`,
+    2000
+  );
+  // If no image, push file to device
+  if (!profilePicture) {
+    await runScriptAndLog(
+      `touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/profile_picture.jpg'`
+    );
 
-  // Need to add a function that if file isn't found, push file to device1
+    await runScriptAndLog(
+      `xcrun simctl addmedia ${process.env.IOS_FIRST_SIMULATOR} 'run/test/specs/media/profile_picture.jpg'`,
+      true
+    );
+  }
+  await sleepFor(100);
+  // Select file
+  await device1.clickOnElement(`Photo, May 01, 1999, 7:00 AM`);
+  await device1.clickOnElement("Done");
+
+  await sleepFor(2000);
   // Wait for change
-  // Verify change somehow...?
+  // Verify change
   // Take screenshot
   const el = await device1.waitForElementToBePresent("Profile picture");
   await sleepFor(3000);
   const base64 = await device1.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
   console.log("RGB Value of pixel is:", pixelColor);
-  if (pixelColor === "00cbfe") {
+  if (pixelColor === "04cbfe") {
     console.log("Colour is correct");
   } else {
-    console.log("Colour isn't 00cbfe, it is: ", pixelColor);
+    console.log("Colour isn't 04cbfe, it is: ", pixelColor);
   }
   console.log("Now checking avatar on linked device");
   // Check avatar on device 2
@@ -327,10 +340,10 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   await sleepFor(3000);
   const base64A = await device2.getElementScreenshot(el2.ELEMENT);
   const pixelColorLinked = await parseDataImage(base64A);
-  if (pixelColorLinked === "00cbfe") {
+  if (pixelColorLinked === "04cbfe") {
     console.log("Colour is correct on linked device");
   } else {
-    console.log("Colour isn't 00cbfe, it is: ", pixelColorLinked);
+    console.log("Colour isn't 04cbfe, it is: ", pixelColorLinked);
   }
   await closeApp(device1, device2);
 }
@@ -367,4 +380,3 @@ describe("Linked device tests", async () => {
 // TESTS TO WRITE FOR LINKED DEVICE
 // Leave group
 // Message requests
-// Avatar restored

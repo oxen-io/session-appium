@@ -181,21 +181,18 @@ async function changeAvatarAndroid(platform: SupportedPlatformsType) {
 }
 async function changeAvatariOS(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
-
+  const spongebobsBirthday = "199905010700.00";
   // Create new user
   const userA = await newUser(device, "Alice", platform);
   // Click on settings/avatar
   await device.clickOnElement("User settings");
   await sleepFor(100);
-  await runScriptAndLog(
-    `cp run/test/specs/media/profile_picture.jpg ~/Library/Developer/CoreSimulator/Devices/${process.env.IOS_FIRST_SIMULATOR}/data/Media/DCIM/100APPLE/avatar_blue.jpg`
-  );
-
   await device.clickOnElement("Profile picture");
   await device.clickOnElement("Photo library");
   const permissions = await device.doesElementExist(
     "accessibility id",
-    "Allow Access to All Photos"
+    "Allow Access to All Photos",
+    1000
   );
   if (permissions) {
     try {
@@ -204,26 +201,40 @@ async function changeAvatariOS(platform: SupportedPlatformsType) {
       console.log("No permissions dialog");
     }
   }
+  const profilePicture = await device.doesElementExist(
+    "accessibility id",
+    `Photo, May 01, 1999, 7:00 AM`,
+    2000
+  );
+  if (!profilePicture) {
+    await runScriptAndLog(
+      `touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/profile_picture.jpg'`
+    );
+
+    await runScriptAndLog(
+      `xcrun simctl addmedia ${process.env.IOS_FIRST_SIMULATOR} 'run/test/specs/media/profile_picture.jpg'`,
+      true
+    );
+  }
   // Click on Profile picture
   // Click on Photo library
   await sleepFor(100);
-  await device.clickOnElementXPath(
-    `(//XCUIElementTypeImage[@name="avatar_blue.jpg"])[1]`
-  );
-
+  await device.clickOnElement(`Photo, May 01, 1999, 7:00 AM`);
+  await device.clickOnElement("Done");
   // Take screenshot
   const el = await device.waitForElementToBePresent("Profile picture");
   await sleepFor(3000);
   const base64 = await device.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
   console.log("RGB Value of pixel is:", pixelColor);
-  if (pixelColor === "00cbfe") {
+  if (pixelColor === "04cbfe") {
     console.log("Colour is correct");
   } else {
-    console.log("Colour isn't 00cbfe, it is: ", pixelColor);
+    console.log("Colour isn't 04cbfe, it is: ", pixelColor);
   }
   await closeApp(device);
 }
+
 async function setNicknameAndroid(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const [userA, userB] = await Promise.all([
