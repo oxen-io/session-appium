@@ -10,13 +10,7 @@ import {
   openAppTwoDevices,
   SupportedPlatformsType,
 } from "./utils/open_app";
-import {
-  runOnlyOnAndroid,
-  runOnlyOnIOS,
-  hasElementBeenDeleted,
-  hasTextElementBeenDeleted,
-  sleepFor,
-} from "./utils/index";
+import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils/index";
 import { parseDataImage } from "./utils/check_colour";
 import { runScriptAndLog } from "./utils/utilities";
 
@@ -26,12 +20,15 @@ async function linkDevice(platform: SupportedPlatformsType) {
   // link device
   await linkedDevice(device1, device2, "User A", platform);
   // Check that 'Youre almost finished' reminder doesn't pop up on device2
-  await hasElementBeenDeleted(device2, "Recovery phrase reminder");
+  await device2.hasElementBeenDeleted(
+    "accessibility id",
+    "Recovery phrase reminder"
+  );
   // Verify username and session ID match
   await device2.clickOnElement("User settings");
   // Check username
-  await device2.findElementByAccessibilityId("Username");
-  await device2.findElementByAccessibilityId("Session ID");
+  await device2.findElement("accessibility id", "Username");
+  await device2.findElement("accessibility id", "Session ID");
 
   await closeApp(device1, device2);
 }
@@ -88,7 +85,11 @@ async function groupCreationLinkedDevice(platform: SupportedPlatformsType) {
   // click on group name to change it
   await device1.clickOnElement("Group name");
   // Type in new name
-  await device1.inputText("Group name text field", newGroupName);
+  await device1.inputText(
+    "accessibility id",
+    "Group name text field",
+    newGroupName
+  );
   // Confirm change (tick on android/ first done on ios)
   await device1.clickOnElement("Accept name change");
   // Apply changes (Apply on android/ second done on ios)
@@ -143,7 +144,7 @@ async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
   await device1.clickOnElement("User settings");
   // Select username
   await device1.clickOnElement("Username");
-  await device1.inputText("Username", newUsername);
+  await device1.inputText("accessibility id", "Username", newUsername);
   // Select apply
   await runOnlyOnAndroid(platform, () => device1.clickOnElement("Apply"));
   await runOnlyOnIOS(platform, () => device1.clickOnElement("Done"));
@@ -179,7 +180,10 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
   // Check message came through on linked device(3)
   // Enter conversation with user B on device 3
   // Need to wait for notifications to disappear
-  await device3.waitForElementToBePresent("Conversation list item");
+  await device3.waitForElementToBePresent(
+    "accessibility id",
+    "Conversation list item"
+  );
   await device3.selectByText("Conversation list item", userB.userName);
   // Find message
   await device3.findMessageWithBody(sentMessage);
@@ -193,7 +197,7 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
   // await waitForLoadingAnimation(device1);
 
   // Check linked device for deleted message
-  await hasTextElementBeenDeleted(device1, "Message body", sentMessage);
+  await device1.hasTextElementBeenDeleted("Message body", sentMessage);
   // Close app
   await closeApp(device1, device2, device3);
 }
@@ -211,7 +215,10 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
   // Check message came through on linked device(3)
   // Enter conversation with user B on device 3
   // Need to wait for notifications to disappear
-  await device3.waitForElementToBePresent("Conversation list item");
+  await device3.waitForElementToBePresent(
+    "accessibility id",
+    "Conversation list item"
+  );
   await device3.selectByText("Conversation list item", userB.userName);
   // Find message
   await device3.findMessageWithBody(sentMessage);
@@ -224,9 +231,12 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
 
   // await waitForLoadingAnimation(device1);
 
-  await device2.waitForElementToBePresent("Deleted message");
+  await device2.waitForElementToBePresent(
+    "accessibility id",
+    "Deleted message"
+  );
   // Check linked device for deleted message
-  await hasTextElementBeenDeleted(device3, "Message body", sentMessage);
+  await device3.hasTextElementBeenDeleted("Message body", sentMessage);
   // Close app
   await closeApp(device1, device2, device3);
 }
@@ -264,7 +274,7 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
   await runOnlyOnIOS(platform, () => device3.clickOnElement("Confirm block"));
   // check on device 1 if user B is unblocked
   await sleepFor(1250);
-  await hasElementBeenDeleted(device1, "Blocked banner");
+  await device1.hasElementBeenDeleted("accessibility id", "Blocked banner");
   // Send message from user B to user A to see if unblock worked
 
   const sentMessage = await device2.sendMessage("Unsend message");
@@ -323,7 +333,10 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   // Wait for change
   // Verify change
   // Take screenshot
-  const el = await device1.waitForElementToBePresent("Profile picture");
+  const el = await device1.waitForElementToBePresent(
+    "accessibility id",
+    "Profile picture"
+  );
   await sleepFor(3000);
   const base64 = await device1.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
@@ -336,7 +349,10 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   console.log("Now checking avatar on linked device");
   // Check avatar on device 2
   await device2.clickOnElement("User settings");
-  const el2 = await device2.waitForElementToBePresent("Profile picture");
+  const el2 = await device2.waitForElementToBePresent(
+    "accessibility id",
+    "Profile picture"
+  );
   await sleepFor(3000);
   const base64A = await device2.getElementScreenshot(el2.ELEMENT);
   const pixelColorLinked = await parseDataImage(base64A);

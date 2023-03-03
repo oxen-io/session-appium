@@ -2,7 +2,7 @@ import { androidIt, iosIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { createGroup } from "./utils/create_group";
-import { runOnlyOnAndroid, runOnlyOnIOS } from "./utils/index";
+import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils/index";
 import {
   closeApp,
   openAppFourDevices,
@@ -35,7 +35,7 @@ async function groupCreation(platform: SupportedPlatformsType) {
   await closeApp(device1, device2, device3);
 }
 
-async function changeGroupName(platform: SupportedPlatformsType) {
+async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   const testGroupName = "Group name";
   const newGroupName = "Changed group name";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
@@ -62,43 +62,100 @@ async function changeGroupName(platform: SupportedPlatformsType) {
   // Click on settings or three dots
   await device1.clickOnElement("More options");
   // Click on Edit group option
-  await device1.clickOnElement("Edit group");
+  await sleepFor(1000);
+  await device1.clickOnTextElementById(
+    `network.loki.messenger:id/title`,
+    "Edit group"
+  );
+
   // Click on current group name
   await device1.clickOnElement("Group name");
-  await device1.inputText("Group name text field", "   ");
+  await device1.inputText("accessibility id", "Group name", "   ");
   await device1.clickOnElement("Accept name change");
   // Alert should pop up 'Please enter group name', click ok
   // If ios click ok / If Android go to next step
 
-  await runOnlyOnIOS(platform, () => device1.clickOnElement("OK"));
-  // Delete empty space
-  await runOnlyOnIOS(platform, () => device1.clickOnElement("Cancel"));
-  await runOnlyOnAndroid(platform, () =>
-    device1.deleteText("Group name text field")
-  );
+  await device1.deleteText("Group name");
   // Enter new group name
   await device1.clickOnElement("Group name");
 
-  await device1.inputText("Group name text field", newGroupName);
+  await device1.inputText("accessibility id", "Group name", newGroupName);
   // Click done/apply
   await device1.clickOnElement("Accept name change");
+  await device1.clickOnElementById("network.loki.messenger:id/action_apply");
+  // Check config message for changed name (different on ios and android)
+  // Config on Android is "You renamed the group to blah"
+  await device1.waitForTextElementToBePresent(
+    "Configuration message",
+    "You renamed the group to " + `${newGroupName}`
+  );
+
+  await closeApp(device1, device2, device3);
+}
+
+async function changeGroupNameIos(platform: SupportedPlatformsType) {
+  const testGroupName = "Group name";
+  const newGroupName = "Changed group name";
+  const { device1, device2, device3 } = await openAppThreeDevices(platform);
+  // Create users A, B and C
+  const [userA, userB, userC] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+    newUser(device3, "Carl", platform),
+  ]);
+  // Create group
+
+  await createGroup(
+    platform,
+    device1,
+    userA,
+    device2,
+    userB,
+    device3,
+    userC,
+    testGroupName
+  );
+  // Now change the group name
+
+  // Click on settings or three dots
+  await device1.clickOnElement("More options");
+  // Click on Edit group option
+  await sleepFor(1000);
+
+  await device1.clickOnElement("Edit group");
+
+  // Click on current group name
+  await device1.clickOnElement("Group name");
+  await device1.inputText("accessibility id", "Group name text field", "   ");
+  await device1.clickOnElement("Accept name change");
+  // Alert should pop up 'Please enter group name', click ok
+  // If ios click ok / If Android go to next step
+
+  await device1.clickOnElement("OK");
+  // Delete empty space
+  await device1.clickOnElement("Cancel");
+
+  // Enter new group name
+  await device1.clickOnElement("Group name");
+
+  await device1.inputText(
+    "accessibility id",
+    "Group name text field",
+    newGroupName
+  );
+  // Click done/apply
+  await device1.clickOnElement("Accept name change");
+
   await device1.clickOnElement("Apply changes");
   // If ios click back to match android (which goes back to conversation screen)
   // Check config message for changed name (different on ios and android)
   // Config message on ios is "Title is now blah"
-  await runOnlyOnIOS(platform, () =>
-    device1.waitForTextElementToBePresent(
-      "Configuration message",
-      "Title is now " + `'${newGroupName}'.`
-    )
+  await device1.waitForTextElementToBePresent(
+    "Configuration message",
+    "Title is now " + `'${newGroupName}'.`
   );
   // Config on Android is "You renamed the group to blah"
-  await runOnlyOnAndroid(platform, () =>
-    device1.waitForTextElementToBePresent(
-      "Configuration message",
-      "You renamed group to " + `'${newGroupName}'`
-    )
-  );
+
   await closeApp(device1, device2, device3);
 }
 
@@ -133,7 +190,14 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   // Click more options
   await device1.clickOnElement("More options");
   // Select edit group
-  await device1.clickOnElement("Edit group");
+  await runOnlyOnIOS(platform, () => device1.clickOnElement("Edit group"));
+  await sleepFor(1000);
+  await runOnlyOnAndroid(platform, () =>
+    device1.clickOnTextElementById(
+      `network.loki.messenger:id/title`,
+      "Edit group"
+    )
+  );
   // Add contact to group
   await device1.clickOnElement("Add members");
   // Select new user
@@ -141,11 +205,23 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   // Click done/apply
   await device1.clickOnElement("Done");
   // Click done/apply again
-  await device1.clickOnElement("Apply changes");
+  await sleepFor(1000);
+  await runOnlyOnIOS(platform, () => device1.clickOnElement("Apply changes"));
+  await runOnlyOnAndroid(platform, () =>
+    device1.clickOnElementById("network.loki.messenger:id/action_apply")
+  );
   // Check config message
-  await device1.waitForTextElementToBePresent(
-    "Configuration message",
-    `${userD.userName}` + " joined the group."
+  await runOnlyOnIOS(platform, () =>
+    device1.waitForTextElementToBePresent(
+      "Configuration message",
+      `${userD.userName}` + " joined the group."
+    )
+  );
+  await runOnlyOnAndroid(platform, () =>
+    device1.waitForTextElementToBePresent(
+      "Configuration message",
+      `You added ${userD.userName} to the group.`
+    )
   );
   // Exit to conversation list
   await device4.navigateBack(platform);
@@ -187,9 +263,9 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
-  await device1.inputText("Message input box", "@");
+  await device1.inputText("accessibility id", "Message input box", "@");
   // Check that all users are showing in mentions box
-  await device1.findElementByAccessibilityId("Mentions list");
+  await device1.findElement("accessibility id", "Mentions list");
   // Select User B
   await device1.selectByText("Contact", userB.userName);
   // Check in user B's device if the format is correct
@@ -206,8 +282,8 @@ describe("Group Testing", async () => {
   await iosIt("Create group", groupCreation);
   await androidIt("Create group", groupCreation);
 
-  await iosIt("Change group name", changeGroupName);
-  await androidIt("Change group name", changeGroupName);
+  await iosIt("Change group name", changeGroupNameIos);
+  await androidIt("Change group name", changeGroupNameAndroid);
 
   await iosIt("Add contact to group", addContactToGroup);
   await androidIt("Add contact to group", addContactToGroup);

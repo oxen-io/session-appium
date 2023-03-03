@@ -5,7 +5,6 @@ import {
 } from "./utils/open_app";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
-import { hasTextElementBeenDeleted } from "./utils/index";
 import { iosIt, androidIt } from "../../types/sessionIt";
 
 async function disappearingMessages(platform: SupportedPlatformsType) {
@@ -37,13 +36,13 @@ async function disappearingMessages(platform: SupportedPlatformsType) {
   );
   // Send message
   const message = "Howdy testing disappearing messages";
-  await device1.inputText("Message input box", message);
+  await device1.inputText("accessibility id", "Message input box", message);
   // Wait 5 seconds
 
   // Look for message for User A
-  await hasTextElementBeenDeleted(device1, "Message body", message);
+  await device1.hasTextElementBeenDeleted("Message body", message);
   // Look for message for User B
-  await hasTextElementBeenDeleted(device2, "Message body,", message);
+  await device2.hasTextElementBeenDeleted("Message body,", message);
   // Turn off disappearing messages
   // Click on timer icon
   // Android

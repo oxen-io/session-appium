@@ -1,6 +1,6 @@
 import { everyPlatformIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
-import { hasElementBeenDeleted, runOnlyOnAndroid } from "./utils/index";
+import { runOnlyOnAndroid } from "./utils/index";
 import { openAppTwoDevices, SupportedPlatformsType } from "./utils/open_app";
 
 async function voiceCall(platform: SupportedPlatformsType) {
@@ -13,7 +13,7 @@ async function voiceCall(platform: SupportedPlatformsType) {
   ]);
   await device1.sendNewMessage(userB, "Testing calls");
   // Look for phone icon (shouldnt be there)
-  await hasElementBeenDeleted(device1, "Call button");
+  await device1.hasElementBeenDeleted("accessibility id", "Call button");
   // Create contact
   await device2.clickOnElement("Message requests banner");
   // Select message from User A
@@ -57,7 +57,7 @@ async function voiceCall(platform: SupportedPlatformsType) {
   // Hang up
   await device1.clickOnElement("End call button");
   // Check for config message 'Called User B' on device 1
-  await device1.findElementByAccessibilityId("Configuration message");
+  await device1.findElement("accessibility id", "Configuration message");
 }
 
 describe("Voice calls ", async () => {

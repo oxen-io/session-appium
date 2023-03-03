@@ -5,11 +5,7 @@ import {
   openAppTwoDevices,
   closeApp,
 } from "./utils/open_app";
-import {
-  hasTextElementBeenDeleted,
-  runOnlyOnIOS,
-  sleepFor,
-} from "./utils/index";
+import { runOnlyOnIOS, sleepFor } from "./utils/index";
 
 async function acceptRequest(platform: SupportedPlatformsType) {
   // Check 'accept' button
@@ -61,7 +57,10 @@ async function declineRequest(platform: SupportedPlatformsType) {
   // Navigate back to home page
   await device2.navigateBack(platform);
   // Look for new conversation button to make sure it all worked
-  await device2.waitForElementToBePresent("New conversation button");
+  await device2.waitForElementToBePresent(
+    "accessibility id",
+    "New conversation button"
+  );
 
   // Close app
   await closeApp(device1, device2);
@@ -114,10 +113,13 @@ async function blockRequest(platform: SupportedPlatformsType) {
   const blockedMessage = `${userA.userName} to ${userB.userName} - shouldn't get through`;
   await device1.sendMessage(blockedMessage);
   await device2.navigateBack(platform);
-  await device2.waitForElementToBePresent("New conversation button");
+  await device2.waitForElementToBePresent(
+    "accessibility id",
+    "New conversation button"
+  );
   // Need to wait to see if message gets through
   await sleepFor(1000);
-  await hasTextElementBeenDeleted(device2, "Message Body", blockedMessage);
+  await device2.hasTextElementBeenDeleted("Message Body", blockedMessage);
   // Close app
   await closeApp(device1, device2);
 }

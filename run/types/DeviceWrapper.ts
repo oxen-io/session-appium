@@ -15,6 +15,8 @@ export type ActionSequence = {
   actions: string;
 };
 
+export type Strategy = "accessibility id" | "xpath" | "id" | "classname";
+
 type SharedDeviceInterface = {
   back: () => Promise<void>;
   click: (elementId: string) => Promise<void>;
@@ -54,11 +56,11 @@ type SharedDeviceInterface = {
   // finding elements
 
   findElement(
-    strategy: "accessibility id" | "xpath" | "ID",
+    strategy: Strategy,
     selector: string
   ): Promise<AppiumNextElementType>;
   findElements(
-    strategy: "accessibility id" | "xpath" | "class name",
+    strategy: Strategy,
     selector: string
   ): Promise<Array<AppiumNextElementType>>;
 
@@ -241,14 +243,14 @@ export class DeviceWrapper implements SharedDeviceInterface {
   // ELEMENT INTERACTION
 
   public async findElement(
-    strategy: "accessibility id" | "xpath" | "ID",
+    strategy: Strategy,
     selector: string
   ): Promise<AppiumNextElementType> {
     return this.toShared().findElement(strategy, selector);
   }
 
   public async findElements(
-    strategy: "accessibility id" | "xpath" | "class name",
+    strategy: Strategy,
     selector: string
   ): Promise<Array<AppiumNextElementType>> {
     return this.toShared().findElements(strategy, selector);
@@ -266,7 +268,10 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async clickOnElement(accessibilityId: string) {
-    const el = await this.waitForElementToBePresent(accessibilityId);
+    const el = await this.waitForElementToBePresent(
+      "accessibility id",
+      accessibilityId
+    );
 
     if (!el) {
       throw new Error(`Tap: Couldnt find accessibilityId: ${accessibilityId}`);
@@ -274,9 +279,33 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.click(el.ELEMENT);
   }
 
+  public async clickOnElementByText(textToClickOn: string) {
+    const el = await this.waitForElementToBePresent(
+      "accessibility id",
+      textToClickOn
+    );
+
+    if (!el) {
+      throw new Error(
+        `clickOnElementByText: Couldnt find text: ${textToClickOn}`
+      );
+    }
+    await this.click(el.ELEMENT);
+  }
+
   public async clickOnElementXPath(selector: string) {
-    await this.waitForXPathElement(selector);
+    await this.waitForElementToBePresent("xpath", selector);
     const el = await this.findElementByXpath(selector);
+    await this.click(el.ELEMENT);
+  }
+
+  public async clickOnElementById(id: string) {
+    const el = await this.findElement("id", id);
+    await this.click(el.ELEMENT);
+  }
+
+  public async clickOnTextElementById(id: string, textToLookFor: string) {
+    const el = await this.findTextElementArrayById(id, textToLookFor);
     await this.click(el.ELEMENT);
   }
 
@@ -289,7 +318,10 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async longPress(accessibilityId: string) {
-    const el = await this.waitForElementToBePresent(accessibilityId);
+    const el = await this.waitForElementToBePresent(
+      "accessibility id",
+      accessibilityId
+    );
     if (!el) {
       throw new Error(
         `longPress: Could not find accessibilityId: ${accessibilityId}`
@@ -325,7 +357,10 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async pressAndHold(accessibilityId: string) {
-    const el = await this.waitForElementToBePresent(accessibilityId);
+    const el = await this.waitForElementToBePresent(
+      "accessibility id",
+      accessibilityId
+    );
 
     await this.longClick(el, 2000);
   }
@@ -352,7 +387,10 @@ export class DeviceWrapper implements SharedDeviceInterface {
   public async grabTextFromAccessibilityId(
     accessibilityId: string
   ): Promise<string> {
-    const elementId = await this.waitForElementToBePresent(accessibilityId);
+    const elementId = await this.waitForElementToBePresent(
+      "accessibility id",
+      accessibilityId
+    );
 
     const text = await this.getTextFromElement(elementId);
     return text;
@@ -404,6 +442,47 @@ export class DeviceWrapper implements SharedDeviceInterface {
     }
 
     return element;
+  }
+
+  public async findElementByClass(
+    androidClassName: string
+  ): Promise<AppiumNextElementType> {
+    const element = await this.findElement("classname", androidClassName);
+    if (!element) {
+      throw new Error(
+        `findElementByClass: Did not find classname: ${androidClassName}`
+      );
+    }
+    return element;
+  }
+
+  public async findElementsByClass(
+    androidClassName: string
+  ): Promise<Array<AppiumNextElementType>> {
+    const elements = await this.findElements("classname", androidClassName);
+    if (!elements) {
+      throw new Error(
+        `findElementsByClass: Did not find classname: ${androidClassName}`
+      );
+    }
+
+    return elements;
+  }
+
+  public async findTextElementArrayById(
+    id: string,
+    textToLookFor: string
+  ): Promise<AppiumNextElementType> {
+    const elementArray = await this.findElements("id", id);
+    const selector = await this.findMatchingTextInElementArray(
+      elementArray,
+      textToLookFor
+    );
+    if (!selector) {
+      throw new Error(`No matching selector found with text: ${textToLookFor}`);
+    }
+
+    return selector;
   }
 
   public async findMatchingTextAndAccessibilityId(
@@ -468,7 +547,10 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async findConfigurationMessage(messageText: string) {
-    await this.waitForElementToBePresent("Configuration message");
+    await this.waitForElementToBePresent(
+      "accessibility id",
+      "Configuration message"
+    );
     const configMessage = this.findMatchingTextAndAccessibilityId(
       "Configuration message",
       messageText
@@ -491,7 +573,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async doesElementExist(
-    strategy: "accessibility id" | "xpath",
+    strategy: Strategy,
     selector: string,
     maxWait?: number
   ): Promise<AppiumNextElementType | null> {
@@ -516,24 +598,54 @@ export class DeviceWrapper implements SharedDeviceInterface {
     }
     return element;
   }
+
+  public async hasElementBeenDeleted(strategy: Strategy, selector: string) {
+    const fakeError = `${selector}: has been found, but shouldn't have been. OOPS`;
+    try {
+      await this.findElement(strategy, selector);
+
+      throw new Error(fakeError);
+    } catch (e: any) {
+      if (e.message === fakeError) {
+        throw e;
+      }
+    }
+    console.log(`${strategy}: ${selector} "is not visible, congratulations"`);
+  }
+
+  public async hasTextElementBeenDeleted(
+    accessibilityId: string,
+    text: string
+  ) {
+    const fakeError = `${accessibilityId}: has been found, but shouldn't have been. OOPS`;
+    try {
+      await this.findMatchingTextAndAccessibilityId(accessibilityId, text);
+      throw new Error(fakeError);
+    } catch (e: any) {
+      if (e.message === fakeError) {
+        throw e;
+      }
+    }
+    console.log(accessibilityId + text, "is not visible, congratulations");
+  }
   // WAIT FOR FUNCTIONS
 
   public async waitForElementToBePresent(
-    accessibilityId: string,
+    strategy: Strategy,
+    selector: string,
     maxWait?: number
   ): Promise<AppiumNextElementType> {
     const maxWaitMSec = maxWait || 30000;
     let currentWait = 0;
     const waitPerLoop = 100;
-    let selector: AppiumNextElementType | null = null;
+    let el: AppiumNextElementType | null = null;
 
-    while (selector === null) {
+    while (el === null) {
       try {
         console.log(
-          `Waiting for accessibility ID '${accessibilityId}' to be present`
+          `Waiting for '${strategy}' and '${selector}' to be present`
         );
-
-        selector = await this.findElementByAccessibilityId(accessibilityId);
+        el = await this.findElement(strategy, selector);
       } catch (e) {
         await sleepFor(waitPerLoop);
         currentWait += waitPerLoop;
@@ -541,13 +653,13 @@ export class DeviceWrapper implements SharedDeviceInterface {
         if (currentWait >= maxWaitMSec) {
           // console.log("Waited for too long");
           throw new Error(
-            `waited for too long looking for '${accessibilityId}'`
+            `waited for too long looking for ${strategy}: ' ${selector}'`
           );
         }
       }
     }
-    console.log(`'${accessibilityId}' has been found`);
-    return selector;
+    console.log(`${strategy}: ' ${selector}' has been found`);
+    return el;
   }
 
   public async waitForTextElementToBePresent(
@@ -587,43 +699,17 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return selector;
   }
 
-  public async waitForXPathElement(
-    xPath: string,
-    maxWait?: number
-  ): Promise<AppiumNextElementType> {
-    let selector: null | AppiumNextElementType = null;
-    const maxWaitMSec: number = maxWait || 3000;
-    const waitPerLoop: number = 100;
-    let currentWait: number = 0;
-
-    while (selector === null) {
-      try {
-        console.log(`Waiting for xPath: '${xPath}' to be present`);
-
-        selector = await this.findElementByXpath(xPath);
-      } catch (e) {
-        await sleepFor(waitPerLoop);
-        currentWait += waitPerLoop;
-        console.log("Waiting...");
-
-        if (currentWait >= maxWaitMSec) {
-          console.log("Waited too long");
-          throw new Error(`Waited for too long looking for xPath: '${xPath}'`);
-        }
-      }
-    }
-    console.log(`'${xPath}' has been found`);
-    return selector;
-  }
-
   // UTILITY FUNCTIONS
 
   public async sendMessage(message: string) {
-    await this.inputText("Message input box", message);
+    await this.inputText("accessibility id", "Message input box", message);
     // Click send
     await this.clickOnElement("Send message button");
     // Wait for tick
-    await this.waitForElementToBePresent(`Message sent status: Sent`);
+    await this.waitForElementToBePresent(
+      "accessibility id",
+      `Message sent status: Sent`
+    );
 
     return message;
   }
@@ -635,16 +721,23 @@ export class DeviceWrapper implements SharedDeviceInterface {
     // Select direct message option
     await this.clickOnElement("New direct message");
     // Enter User B's session ID into input box
-    await this.inputText("Session id input box", user.sessionID);
+    await this.inputText(
+      "accessibility id",
+      "Session id input box",
+      user.sessionID
+    );
     // Click next
     await this.clickOnElement("Next");
     // Type message into message input box
 
-    await this.inputText("Message input box", message);
+    await this.inputText("accessibility id", "Message input box", message);
     // Click send
     await this.clickOnElement("Send message button");
     // Wait for tick
-    await this.waitForElementToBePresent(`Message sent status: Sent`);
+    await this.waitForElementToBePresent(
+      "accessibility id",
+      `Message sent status: Sent`
+    );
 
     return message;
   }
@@ -660,6 +753,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
       `'${sender.userName}' + " sent message to ${receiver.userName}`
     );
     await this.sendMessage(message);
+    // wait for message to be received before moving on
+    await this.waitForTextElementToBePresent("Message Body", message);
+    console.log(
+      `Message received by ${receiver.userName} from ${sender.userName}`
+    );
   }
 
   public async replyToMessage(user: User, body: string) {
@@ -676,13 +774,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return sentMessage;
   }
 
-  public async inputText(accessibilityId: string, text: string) {
-    await this.waitForElementToBePresent(accessibilityId);
-    const element = await this.findElementByAccessibilityId(accessibilityId);
+  public async inputText(strategy: Strategy, selector: string, text: string) {
+    await this.waitForElementToBePresent(strategy, selector);
+    const element = await this.findElementByAccessibilityId(selector);
     if (!element) {
-      throw new Error(
-        `inputText: Did not find accessibilityId: ${accessibilityId} `
-      );
+      throw new Error(`inputText: Did not find accessibilityId: ${selector} `);
     }
 
     await this.setValueImmediate(text, element.ELEMENT);

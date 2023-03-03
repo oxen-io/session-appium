@@ -1,4 +1,4 @@
-import { getSessionID, runOnlyOnIOS } from ".";
+import { getSessionID, runOnlyOnAndroid, runOnlyOnIOS } from ".";
 import { SupportedPlatformsType } from "./open_app";
 import { User } from "../../../types/testing";
 import {} from "./sleep_for";
@@ -11,10 +11,10 @@ export const newUser = async (
 ): Promise<User> => {
   // Click create session ID
   const createSessionId = "Create session ID";
-  await device.waitForElementToBePresent(createSessionId);
-  await device.clickOnElement(createSessionId);
+  await device.waitForElementToBePresent("accessibility id", createSessionId);
+  await device.clickOnElementByText("Create Session ID");
   // Wait for animation to generate session id
-  await device.waitForElementToBePresent("Session ID");
+  await device.waitForElementToBePresent("accessibility id", "Session ID");
   // save session id as variable
   const sessionID = await getSessionID(platform, device);
 
@@ -23,16 +23,20 @@ export const newUser = async (
   // Click continue on session Id creation
   await device.clickOnElement("Continue");
   // Input username
-  await device.inputText("Enter display name", userName);
+  await device.inputText("accessibility id", "Enter display name", userName);
   // Click continue
   await device.clickOnElement("Continue");
   // Choose message notification options
+  // Want to choose 'Slow Mode' so notifications don't interrupt test
+  await runOnlyOnAndroid(platform, () =>
+    device.clickOnElement("Slow mode notifications option")
+  );
   await device.clickOnElement("Continue with settings");
   // Need to add Don't allow notifications dismiss here
   // iOS only
   await runOnlyOnIOS(platform, () => device.clickOnElement("Don’t Allow"));
   // Click on 'continue' button to open recovery phrase modal
-  await device.waitForElementToBePresent("Continue");
+  await device.waitForElementToBePresent("accessibility id", "Continue");
   await device.clickOnElement("Continue");
   // Long Press the recovery phrase to reveal recovery phrase
   await device.longPress("Recovery Phrase");

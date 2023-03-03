@@ -124,7 +124,7 @@ const openAndroidApp = async (
     allowInvisibleElements: true,
     enableMultiWindows: true,
   });
-  console.warn(`SessionID for android:${capabilitiesIndex}: "${sess[0]}"`);
+  // console.warn(`SessionID for android:${capabilitiesIndex}: "${sess[0]}"`);
 
   return { device: wrappedDevice };
 };

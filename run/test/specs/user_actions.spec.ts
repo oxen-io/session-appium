@@ -4,7 +4,6 @@ import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import {
   clickOnXAndYCoordinates,
-  hasElementBeenDeleted,
   runOnlyOnAndroid,
   runOnlyOnIOS,
   sleepFor,
@@ -57,7 +56,7 @@ async function blockUserInConversationOptions(
   // On ios, you need to navigate back to conversation screen to confirm block
   await runOnlyOnIOS(platform, () => device1.clickOnElement("Back"));
   // Look for alert at top of screen (Bob is blocked. Unblock them?)
-  await device1.waitForElementToBePresent("Blocked banner");
+  await device1.waitForElementToBePresent("accessibility id", "Blocked banner");
   console.warn("User has been blocked");
   // Click on alert to unblock
   await device1.clickOnElement("Blocked banner");
@@ -65,7 +64,7 @@ async function blockUserInConversationOptions(
   await runOnlyOnIOS(platform, () => device1.clickOnElement("Unblock"));
   console.warn("User has been unblocked");
   // Look for alert (shouldn't be there)
-  await hasElementBeenDeleted(device1, "Blocked banner");
+  await device1.hasElementBeenDeleted("accessibility id", "Blocked banner");
   // Has capabilities returned to blocked user (can they send message)
   const hasUserBeenUnblockedMessage = await device2.sendMessage(
     "Hey, am I unblocked?"
@@ -116,7 +115,7 @@ async function changeUsername(platform: SupportedPlatformsType) {
   console.warn("Element clicked?");
   // type in new username
 
-  await device.inputText("Username", newUsername);
+  await device.inputText("accessibility id", "Username", newUsername);
   const changedUsername = await device.grabTextFromAccessibilityId("Username");
   console.log("Changed username", changedUsername);
   if (changedUsername === newUsername) {
@@ -168,7 +167,10 @@ async function changeAvatarAndroid(platform: SupportedPlatformsType) {
   await sleepFor(5000);
   // Verify change somehow...?
   // Take screenshot
-  const el = await device.waitForElementToBePresent("User settings");
+  const el = await device.waitForElementToBePresent(
+    "accessibility id",
+    "User settings"
+  );
   const base64 = await device.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
   console.log("RGB Value of pixel is:", pixelColor);
@@ -222,7 +224,10 @@ async function changeAvatariOS(platform: SupportedPlatformsType) {
   await device.clickOnElement(`Photo, May 01, 1999, 7:00 AM`);
   await device.clickOnElement("Done");
   // Take screenshot
-  const el = await device.waitForElementToBePresent("Profile picture");
+  const el = await device.waitForElementToBePresent(
+    "accessibility id",
+    "Profile picture"
+  );
   await sleepFor(3000);
   const base64 = await device.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
@@ -252,7 +257,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Select username to edit
   await device1.clickOnElement("Edit user nickname");
   // Type in nickname
-  await device1.inputText("Username", nickName);
+  await device1.inputText("accessibility id", "Username", nickName);
   // Click on tick button
   await device1.clickOnElement("Apply");
   // CLick out of pop up
@@ -260,7 +265,10 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Click on conversation to verify nickname is applied
   await device1.selectByText("Conversation list item", userB.userName);
   // Check name at top of conversation is nickname
-  const headerElement = await device1.waitForElementToBePresent("Username");
+  const headerElement = await device1.waitForElementToBePresent(
+    "accessibility id",
+    "Username"
+  );
   await device1.getTextFromElement(headerElement);
   // Send a message so nickname is updated in conversation list
   await device1.sendMessage("Howdy");
@@ -279,7 +287,10 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   await device1.back();
   // Enter conversation to verify change
   await device1.selectByText("Conversation list item", nickName);
-  const changedElement = await device1.waitForElementToBePresent("Username");
+  const changedElement = await device1.waitForElementToBePresent(
+    "accessibility id",
+    "Username"
+  );
   await device1.getTextFromElement(changedElement);
   // Send message to change in conversation list
   await device1.sendMessage("Howdy");
@@ -288,7 +299,10 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Verify name change in list
   // Save text of conversation list item?
   await device1.selectByText("Conversation list item", userB.userName);
-  const revertedHeader = await device1.waitForElementToBePresent("Username");
+  const revertedHeader = await device1.waitForElementToBePresent(
+    "accessibility id",
+    "Username"
+  );
   await device1.getTextFromElement(revertedHeader);
   // if (originalUsername === userB.userName) {
   //   console.log("Nickname changed back to original username");
@@ -312,7 +326,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   // Click on username to set nickname
   await device1.clickOnElement("Username");
   // Type in nickname
-  await device1.inputText("Username", nickName);
+  await device1.inputText("accessibility id", "Username", nickName);
   // Click apply/done
   await device1.clickOnElement("Done");
   // Check it's changed in heading also
