@@ -237,13 +237,13 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   await runOnlyOnAndroid(platform, () =>
     device4.waitForTextElementToBePresent(
       "Configuration message",
-      "You created a new group."
+      `${userA.userName} added you to the group.`
     )
   );
   await closeApp(device1, device2, device3, device4);
 }
 
-async function mentionsForGroups(platform: SupportedPlatformsType) {
+async function mentionsForGroupsIos(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
@@ -278,6 +278,55 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
   await closeApp(device1, device2, device3);
 }
 
+async function mentionsForGroupsAndroid(platform: SupportedPlatformsType) {
+  const { device1, device2, device3 } = await openAppThreeDevices(platform);
+  // Create users A, B and C
+  const [userA, userB, userC] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+    newUser(device3, "Cat", platform),
+  ]);
+  const testGroupName = "Mentions test group";
+  // Create contact between User A and User B
+  await createGroup(
+    platform,
+    device1,
+    userA,
+    device2,
+    userB,
+    device3,
+    userC,
+    testGroupName
+  );
+  await device1.inputText("accessibility id", "Message input box", "@");
+  // Check that all users are showing in mentions box
+  await device1.waitForElementToBePresent("accessibility id", "Mentions list");
+  // Select User B
+  await device1.selectByText("Contact mentions", userB.userName);
+  await device1.clickOnElement("Send message button");
+  await device1.waitForElementToBePresent(
+    "accessibility id",
+    `Message sent status: Sent`
+  );
+  // Check in user B's device if the format is correct
+  await device2.findMessageWithBody("@You");
+  // Select User C
+  await device1.inputText("accessibility id", "Message input box", "@");
+  // Check that all users are showing in mentions box
+  await device1.waitForElementToBePresent("accessibility id", "Mentions list");
+  // Select User B
+  await device1.selectByText("Contact mentions", userC.userName);
+  await device1.clickOnElement("Send message button");
+  await device1.waitForElementToBePresent(
+    "accessibility id",
+    `Message sent status: Sent`
+  );
+  // Check in User C's device if the format is correct
+  await device3.findMessageWithBody("@You");
+  // Close app
+  await closeApp(device1, device2, device3);
+}
+
 describe("Group Testing", async () => {
   await iosIt("Create group", groupCreation);
   await androidIt("Create group", groupCreation);
@@ -288,6 +337,6 @@ describe("Group Testing", async () => {
   await iosIt("Add contact to group", addContactToGroup);
   await androidIt("Add contact to group", addContactToGroup);
 
-  await iosIt("Test mentions in group chats", mentionsForGroups);
-  await androidIt("Test mentions in group chats", mentionsForGroups);
+  await iosIt("Test mentions in group chats", mentionsForGroupsIos);
+  await androidIt("Test mentions in group chats", mentionsForGroupsAndroid);
 });

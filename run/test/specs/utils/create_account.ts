@@ -12,7 +12,7 @@ export const newUser = async (
   // Click create session ID
   const createSessionId = "Create session ID";
   await device.waitForElementToBePresent("accessibility id", createSessionId);
-  await device.clickOnElementByText("Create Session ID");
+  await device.clickOnElement(createSessionId);
   // Wait for animation to generate session id
   await device.waitForElementToBePresent("accessibility id", "Session ID");
   // save session id as variable
