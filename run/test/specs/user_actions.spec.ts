@@ -44,7 +44,12 @@ async function blockUserInConversationOptions(
   // Click on three dots (settings)
   await device1.clickOnElement("More options");
   // Select Block option
-  await device1.clickOnElement("Block");
+
+  await runOnlyOnIOS(platform, () => device1.clickOnElement("Block"));
+  await sleepFor(1000);
+  await runOnlyOnAndroid(platform, () =>
+    device1.clickOnTextElementById(`network.loki.messenger:id/title`, "Block")
+  );
   // Confirm block option
   await device1.clickOnElement("Confirm block");
   // On ios there is an alert that confirms that the user has been blocked
@@ -71,6 +76,7 @@ async function blockUserInConversationOptions(
   );
   // Check in device 1 for message
   await device1.waitForTextElementToBePresent(
+    "accessibility id",
     "Message Body",
     hasUserBeenUnblockedMessage
   );

@@ -86,6 +86,7 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   // Check config message for changed name (different on ios and android)
   // Config on Android is "You renamed the group to blah"
   await device1.waitForTextElementToBePresent(
+    "accessibility id",
     "Configuration message",
     "You renamed the group to " + `${newGroupName}`
   );
@@ -151,6 +152,7 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   // Check config message for changed name (different on ios and android)
   // Config message on ios is "Title is now blah"
   await device1.waitForTextElementToBePresent(
+    "accessibility id",
     "Configuration message",
     "Title is now " + `'${newGroupName}'.`
   );
@@ -213,12 +215,14 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   // Check config message
   await runOnlyOnIOS(platform, () =>
     device1.waitForTextElementToBePresent(
+      "accessibility id",
       "Configuration message",
       `${userD.userName}` + " joined the group."
     )
   );
   await runOnlyOnAndroid(platform, () =>
     device1.waitForTextElementToBePresent(
+      "accessibility id",
       "Configuration message",
       `You added ${userD.userName} to the group.`
     )
@@ -230,12 +234,14 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   // Check config
   await runOnlyOnIOS(platform, () =>
     device4.waitForTextElementToBePresent(
+      "accessibility id",
       "Configuration message",
       "Group created"
     )
   );
   await runOnlyOnAndroid(platform, () =>
     device4.waitForTextElementToBePresent(
+      "accessibility id",
       "Configuration message",
       `${userA.userName} added you to the group.`
     )

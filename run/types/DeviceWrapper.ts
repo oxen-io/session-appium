@@ -52,7 +52,11 @@ type SharedDeviceInterface = {
   ) => Promise<any>;
   touchUp(CoOrdinates: Coordinates): Promise<void>;
   touchDown(CoOrdinates: Coordinates): Promise<void>;
-
+  touchScroll(
+    x: Coordinates,
+    y: Coordinates,
+    element: AppiumNextElementType
+  ): Promise<AppiumNextElementType>;
   // finding elements
 
   findElement(
@@ -88,6 +92,14 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   constructor(device: DeviceWrapper) {
     this.device = device;
+  }
+
+  public async touchScroll(
+    x: Coordinates,
+    y: Coordinates,
+    element: AppiumNextElementType
+  ) {
+    return this.toShared().touchScroll(x, y, element);
   }
 
   /**  === all the shared actions ===  */
@@ -279,11 +291,8 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.click(el.ELEMENT);
   }
 
-  public async clickOnElementByText(textToClickOn: string) {
-    const el = await this.waitForElementToBePresent(
-      "accessibility id",
-      textToClickOn
-    );
+  public async clickOnElementByText(strategy: Strategy, textToClickOn: string) {
+    const el = await this.waitForElementToBePresent(strategy, textToClickOn);
 
     if (!el) {
       throw new Error(
@@ -333,6 +342,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   public async longPressMessage(textToLookFor: string) {
     try {
       const el = await this.waitForTextElementToBePresent(
+        "accessibility id",
         "Message Body",
         textToLookFor
       );
@@ -350,6 +360,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async longPressConversation(userName: string) {
     const el = await this.waitForTextElementToBePresent(
+      "accessibility id",
       "Conversation list item",
       userName
     );
@@ -366,7 +377,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async selectByText(accessibilityId: string, text: string) {
-    await this.waitForTextElementToBePresent(accessibilityId, text);
+    await this.waitForTextElementToBePresent(
+      "accessibility id",
+      accessibilityId,
+      text
+    );
     const selector = await this.findMatchingTextAndAccessibilityId(
       accessibilityId,
       text
@@ -564,7 +579,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
   public async findMessageWithBody(
     textToLookFor: string
   ): Promise<AppiumNextElementType> {
-    await this.waitForTextElementToBePresent("Message Body", textToLookFor);
+    await this.waitForTextElementToBePresent(
+      "accessibility id",
+      "Message Body",
+      textToLookFor
+    );
     const message = await this.findMatchingTextAndAccessibilityId(
       "Message Body",
       textToLookFor
@@ -663,26 +682,25 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async waitForTextElementToBePresent(
-    accessibilityId: string,
+    strategy: Strategy,
+    selector: string,
     text: string,
     maxWait?: number
   ): Promise<AppiumNextElementType> {
-    let selector: null | AppiumNextElementType = null;
+    let el: null | AppiumNextElementType = null;
     const maxWaitMSec: number = maxWait || 3000;
     let currentWait: number = 0;
     const waitPerLoop: number = 100;
 
-    while (selector === null) {
+    while (el === null) {
       try {
         console.log(
-          `Waiting for accessibility ID '${accessibilityId}' to be present with ${text}`
+          `Waiting for accessibility ID '${strategy}' to be present with ${text}`
         );
 
-        const elements = await this.findElementsByAccessibilityId(
-          accessibilityId
-        );
+        const els = await this.findElements(strategy, selector);
 
-        selector = await this.findMatchingTextInElementArray(elements, text);
+        el = await this.findMatchingTextInElementArray(els, text);
       } catch (e) {
         await sleepFor(waitPerLoop);
         currentWait += waitPerLoop;
@@ -690,13 +708,13 @@ export class DeviceWrapper implements SharedDeviceInterface {
         if (currentWait >= maxWaitMSec) {
           console.log("Waited too long");
           throw new Error(
-            `Waited for too long looking for '${accessibilityId}' and '${text}`
+            `Waited for too long looking for '${selector}' and '${text}`
           );
         }
       }
     }
-    console.log(`'${accessibilityId}' and '${text}' has been found`);
-    return selector;
+    console.log(`'${selector}' and '${text}' has been found`);
+    return el;
   }
 
   // UTILITY FUNCTIONS
@@ -745,6 +763,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   public async sendMessageTo(sender: User, receiver: User | Group) {
     const message = `'${sender.userName}' to ${receiver.userName}`;
     await this.waitForTextElementToBePresent(
+      "accessibility id",
       "Conversation list item",
       receiver.userName
     );
@@ -754,7 +773,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
     );
     await this.sendMessage(message);
     // wait for message to be received before moving on
-    await this.waitForTextElementToBePresent("Message Body", message);
+    await this.waitForTextElementToBePresent(
+      "accessibility id",
+      "Message Body",
+      message
+    );
     console.log(
       `Message received by ${receiver.userName} from ${sender.userName}`
     );

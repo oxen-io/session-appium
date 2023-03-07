@@ -250,6 +250,7 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
   await newContact(platform, device1, userA, device2, userB);
   // Check that user synced on linked device
   await device3.waitForTextElementToBePresent(
+    "accessibility id",
     "Conversation list item",
     userB.userName
   );
@@ -279,7 +280,11 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
 
   const sentMessage = await device2.sendMessage("Unsend message");
   // Check on device 1 if user A receives message
-  await device1.waitForTextElementToBePresent("Message Body", sentMessage);
+  await device1.waitForTextElementToBePresent(
+    "accessibility id",
+    "Message Body",
+    sentMessage
+  );
 
   // Everything works then close app
   await closeApp(device1, device2, device3);

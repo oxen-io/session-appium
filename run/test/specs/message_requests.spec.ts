@@ -5,7 +5,7 @@ import {
   openAppTwoDevices,
   closeApp,
 } from "./utils/open_app";
-import { runOnlyOnIOS, sleepFor } from "./utils/index";
+import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils/index";
 
 async function acceptRequest(platform: SupportedPlatformsType) {
   // Check 'accept' button
@@ -28,6 +28,7 @@ async function acceptRequest(platform: SupportedPlatformsType) {
   await device2.clickOnElement("Accept message request");
   // Verify config message for Alice 'Your message request has been accepted'
   await device1.waitForTextElementToBePresent(
+    "accessibility id",
     "Configuration message",
     "Your message request has been accepted."
   );
@@ -85,6 +86,7 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
   await device2.sendMessage(`${userB.userName} to ${userA.userName}`);
   // Check config
   await device1.waitForTextElementToBePresent(
+    "accessibility id",
     "Configuration message",
     "Your message request has been accepted."
   );
@@ -108,7 +110,14 @@ async function blockRequest(platform: SupportedPlatformsType) {
   // Bob clicks on block option
   await device2.clickOnElement("Block message request");
   // Confirm block on android
-  await device2.clickOnElement("Block");
+  await sleepFor(1000);
+  await runOnlyOnIOS(platform, () => device2.clickOnElement("Block"));
+  await runOnlyOnAndroid(platform, () =>
+    device2.clickOnElement("Confirm block")
+  );
+  // await runOnlyOnAndroid(platform, () =>
+  //   device1.clickOnElementById("android:id/button1")
+  // );
   // Make sure no messages can get through to Bob
   const blockedMessage = `${userA.userName} to ${userB.userName} - shouldn't get through`;
   await device1.sendMessage(blockedMessage);
