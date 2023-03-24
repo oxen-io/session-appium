@@ -34,7 +34,7 @@ async function sendImage(platform: SupportedPlatformsType) {
   const permissions = await device1.doesElementExist(
     "accessibility id",
     "Allow Access to All Photos",
-    2000
+    1000
   );
   if (permissions) {
     try {
@@ -44,11 +44,11 @@ async function sendImage(platform: SupportedPlatformsType) {
       console.log("No permissions dialog");
     }
   } else {
-    await device1.clickOnElement("Add");
+    console.log("No permissions dialog");
   }
   const testImage = await device1.doesElementExist(
     "accessibility id",
-    `Photo, May 1, 1999, 7:00 AM`,
+    `Photo, May 01, 1999, 7:00 AM`,
     2000
   );
   if (!testImage) {
@@ -62,8 +62,7 @@ async function sendImage(platform: SupportedPlatformsType) {
     );
   }
   await sleepFor(100);
-  await device1.clickOnElement(`Photo, May 1, 1999, 7:00 AM`);
-  await device1.clickOnElement("Done");
+  await device1.clickOnElement(`Photo, May 01, 1999, 7:00 AM`);
   await device1.clickOnElement("Text input box");
   await device1.inputText("accessibility id", "Text input box", testMessage);
   await device1.clickOnElement("Send button");
@@ -432,7 +431,9 @@ async function sendLink(platform: SupportedPlatformsType) {
     "Message Body",
     `https://nerdlegame.com/`
   );
-  await closeApp(device1, device2);
+
+  await device2.replyToMessage(userA, "https://nerdlegame.com/");
+  await await closeApp(device1, device2);
 }
 
 async function unsendMessage(platform: SupportedPlatformsType) {
@@ -519,3 +520,5 @@ describe("Message checks ios", async () => {
 });
 
 // Media saved notification
+// Send all message types in groups
+// Send all message types in communities

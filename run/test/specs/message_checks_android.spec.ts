@@ -8,6 +8,7 @@ import {
   openAppTwoDevices,
   SupportedPlatformsType,
 } from "./utils/open_app";
+import { runScriptAndLog } from "./utils/utilities";
 
 async function sendImage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
@@ -21,27 +22,40 @@ async function sendImage(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Attachments button");
   await sleepFor(100);
   await device1.clickOnElement("Documents folder");
-  const elements = await device1.findElementsByClass(
+
+  const mediaButtons = await device1.findElementsByClass(
     "android.widget.CompoundButton"
   );
   const imageButton = await device1.findMatchingTextInElementArray(
-    elements,
+    mediaButtons,
     "Images"
   );
   if (!imageButton) {
     throw new Error("imageButton was not found in android");
   }
-  await device1.click(imageButton?.ELEMENT);
-  await device1.clickOnElementXPath(
-    `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.view.ViewGroup/androidx.drawerlayout.widget.DrawerLayout/android.view.ViewGroup/android.widget.FrameLayout/android.widget.FrameLayout[2]/android.widget.LinearLayout/android.view.ViewGroup/androidx.recyclerview.widget.RecyclerView/androidx.cardview.widget.CardView[2]`
+  await device1.click(imageButton.ELEMENT);
+  const testImage = await device1.doesElementExist(
+    "id",
+    "android:id/title",
+    2000,
+    "test_image.jpg"
   );
+  if (!testImage) {
+    await runScriptAndLog(
+      `adb -s emulator-5554 push 'run/test/specs/media/test_image.jpg' /storage/emulated/0/Download`,
+      true
+    );
+  }
+  await sleepFor(100);
+  await device1.clickOnTextElementById("android:id/title", "test_image.jpg");
+
   await device2.clickOnElement("Untrusted attachment message");
   await sleepFor(500);
   // User B - Click on 'download'
   await device2.clickOnElement("Download media");
 
   // Reply to message
-  await sleepFor(5000);
+
   await device2.longPress("Media message");
   await device2.clickOnElement("Reply to message");
   await device2.sendMessage(replyMessage);
@@ -66,27 +80,38 @@ async function sendDocument(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Attachments button");
   await sleepFor(100);
   await device1.clickOnElement("Documents folder");
-  const elements = await device1.findElementsByClass(
+  const mediaButtons = await device1.findElementsByClass(
     "android.widget.CompoundButton"
   );
   const documentsButton = await device1.findMatchingTextInElementArray(
-    elements,
+    mediaButtons,
     "Documents"
   );
   if (!documentsButton) {
-    throw new Error("documentsButton was not found in android");
+    throw new Error("documentsButton was not found");
   }
-  await device1.click(documentsButton?.ELEMENT);
-  await device1.clickOnElementXPath(
-    `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.view.ViewGroup/androidx.drawerlayout.widget.DrawerLayout/android.view.ViewGroup/android.widget.FrameLayout/android.widget.FrameLayout[2]/android.widget.LinearLayout/android.view.ViewGroup/androidx.recyclerview.widget.RecyclerView/androidx.cardview.widget.CardView[2]`
+  await device1.click(documentsButton.ELEMENT);
+  const testDocument = await device1.doesElementExist(
+    "id",
+    "android:id/title",
+    1000,
+    "test_file.pdf"
   );
+  if (!testDocument) {
+    await runScriptAndLog(
+      `adb -s emulator-5554 push 'run/test/specs/media/test_file.pdf' /storage/emulated/0/Download`,
+      true
+    );
+  }
+  await sleepFor(100);
+  await device1.clickOnTextElementById("android:id/title", "test_file.pdf");
   await device2.clickOnElement("Untrusted attachment message");
   await sleepFor(500);
   // User B - Click on 'download'
   await device2.clickOnElement("Download media");
 
   // Reply to message
-  await sleepFor(5000);
+  // await sleepFor(5000);
   await device2.longPress("Document");
   await device2.clickOnElement("Reply to message");
   await device2.sendMessage(replyMessage);
@@ -111,29 +136,52 @@ async function sendVideo(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to video from ${userA.userName}`;
   // create contact
   await newContact(platform, device1, userA, device2, userB);
-  // Push image to device for selection
   // Click on attachments button
   await device1.clickOnElement("Attachments button");
-  // Select images button/tab
   await sleepFor(100);
-  // Check if android or ios (android = documents folder/ ios = images folder)
-  // await device1.clickOnElement("Images folder");
+  // Select images button/tab
   await device1.clickOnElement("Documents folder");
   // Select video
-  await device1.clickOnElementXPath(
-    `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.view.ViewGroup/androidx.drawerlayout.widget.DrawerLayout/android.view.ViewGroup/android.widget.FrameLayout/android.widget.FrameLayout[2]/android.widget.LinearLayout/android.view.ViewGroup/androidx.recyclerview.widget.RecyclerView/androidx.cardview.widget.CardView[3]/androidx.cardview.widget.CardView/android.widget.RelativeLayout`
+  const mediaButtons = await device1.findElementsByClass(
+    "android.widget.CompoundButton"
   );
-  // Check if the 'Tap to download media' config appears
+  const videosButton = await device1.findMatchingTextInElementArray(
+    mediaButtons,
+    "Videos"
+  );
+  if (!videosButton) {
+    throw new Error("videosButton was not found");
+  }
+  await device1.click(videosButton.ELEMENT);
+  const testVideo = await device1.doesElementExist(
+    "id",
+    "android:id/title",
+    1000,
+    "test_video.mp4"
+  );
+  if (!testVideo) {
+    // Adds video to downloads folder if it isn't already there
+    await runScriptAndLog(
+      `adb -s emulator-5554 push 'run/test/specs/media/test_video.mp4' /storage/emulated/0/Download`,
+      true
+    );
+  }
+  await sleepFor(100);
+  await device1.clickOnTextElementById("android:id/title", "test_video.mp4");
   // User B - Click on untrusted attachment message
   await device2.clickOnElement("Untrusted attachment message");
-  await sleepFor(1000);
+  // await sleepFor(1000);
   // User B - Click on 'download'
   await device2.clickOnElement("Download media");
   // Reply to message
-  await sleepFor(5000);
+  await device2.waitForElementToBePresent(
+    "id",
+    "network.loki.messenger:id/play_overlay"
+  );
   await device2.longPress("Media message");
   await device2.clickOnElement("Reply to message");
   await device2.sendMessage(replyMessage);
+  await sleepFor(2000);
   await device1.waitForTextElementToBePresent(
     "accessibility id",
     "Message Body",

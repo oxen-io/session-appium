@@ -15,11 +15,12 @@ export type ActionSequence = {
   actions: string;
 };
 
-export type Strategy = "accessibility id" | "xpath" | "id" | "classname";
+export type Strategy = "accessibility id" | "xpath" | "id" | "class name";
 
 type SharedDeviceInterface = {
   back: () => Promise<void>;
   click: (elementId: string) => Promise<void>;
+  doubleClick: (elementId: string) => Promise<void>;
   clear: (elementId: string) => Promise<void>;
   getText: (elementId: string) => Promise<string>;
   setValueImmediate: (text: string, elementId: string) => Promise<void>;
@@ -106,6 +107,9 @@ export class DeviceWrapper implements SharedDeviceInterface {
   public async click(element: string) {
     // this one works for both devices so just call it without casting it
     return this.toShared().click(element);
+  }
+  public async doubleClick(elementId: string): Promise<void> {
+    return this.toShared().doubleClick(elementId);
   }
 
   public async back(): Promise<void> {
@@ -221,6 +225,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async pushFile(path: string, data: string): Promise<void> {
+    console.log("Did file get pushed", path);
     return this.toShared().pushFile(path, data);
   }
 
@@ -309,6 +314,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async clickOnElementById(id: string) {
+    await this.waitForElementToBePresent("id", id);
     const el = await this.findElement("id", id);
     await this.click(el.ELEMENT);
   }
@@ -462,7 +468,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   public async findElementByClass(
     androidClassName: string
   ): Promise<AppiumNextElementType> {
-    const element = await this.findElement("classname", androidClassName);
+    const element = await this.findElement("class name", androidClassName);
     if (!element) {
       throw new Error(
         `findElementByClass: Did not find classname: ${androidClassName}`
@@ -474,7 +480,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   public async findElementsByClass(
     androidClassName: string
   ): Promise<Array<AppiumNextElementType>> {
-    const elements = await this.findElements("classname", androidClassName);
+    const elements = await this.findElements("class name", androidClassName);
     if (!elements) {
       throw new Error(
         `findElementsByClass: Did not find classname: ${androidClassName}`
@@ -533,6 +539,9 @@ export class DeviceWrapper implements SharedDeviceInterface {
       });
 
       return matching || null;
+    }
+    if (!elements) {
+      throw new Error(`No elements matching: ${textToLookFor}`);
     }
     return null;
   }
@@ -594,7 +603,8 @@ export class DeviceWrapper implements SharedDeviceInterface {
   public async doesElementExist(
     strategy: Strategy,
     selector: string,
-    maxWait?: number
+    maxWait?: number,
+    text?: string
   ): Promise<AppiumNextElementType | null> {
     const beforeStart = Date.now();
     const maxWaitMSec = maxWait || 300000;
@@ -602,19 +612,36 @@ export class DeviceWrapper implements SharedDeviceInterface {
     let element: AppiumNextElementType | null = null;
     while (element === null) {
       try {
-        element = await this.findElement(strategy, selector);
-      } catch (e) {
-        // console.warn("doesElementExist failed with", (e as any).message);
-        await sleepFor(waitPerLoop);
-
-        if (beforeStart + maxWaitMSec <= Date.now()) {
-          console.log(selector, " doesn't exist, time expired");
-          break;
+        if (!text) {
+          element = await this.findElement(strategy, selector);
         } else {
-          console.log(selector, "Doesn't exist but retrying");
+          const els = await this.findElements(strategy, selector);
+          element = await this.findMatchingTextInElementArray(els, text);
+          if (element) {
+            console.log(
+              `${strategy}: ${selector} with matching text ${text} found`
+            );
+          } else {
+            console.log(
+              `Couldn't find ${text} with matching ${strategy}: ${selector}`
+            );
+          }
         }
+      } catch (e: any) {
+        console.warn("doesElementExist failed with", e.message);
+      }
+
+      if (!element) {
+        await sleepFor(waitPerLoop);
+      }
+      if (beforeStart + maxWaitMSec <= Date.now()) {
+        console.log(selector, " doesn't exist, time expired");
+        break;
+      } else {
+        console.log(selector, "Doesn't exist but retrying");
       }
     }
+
     return element;
   }
 
@@ -654,7 +681,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     selector: string,
     maxWait?: number
   ): Promise<AppiumNextElementType> {
-    const maxWaitMSec = maxWait || 30000;
+    const maxWaitMSec = maxWait || 6000;
     let currentWait = 0;
     const waitPerLoop = 100;
     let el: AppiumNextElementType | null = null;
@@ -665,16 +692,19 @@ export class DeviceWrapper implements SharedDeviceInterface {
           `Waiting for '${strategy}' and '${selector}' to be present`
         );
         el = await this.findElement(strategy, selector);
-      } catch (e) {
+      } catch (e: any) {
+        // console.warn("waitForElementToBePresent failed with", e.message);
+      }
+      if (!el) {
         await sleepFor(waitPerLoop);
-        currentWait += waitPerLoop;
+      }
+      currentWait += waitPerLoop;
 
-        if (currentWait >= maxWaitMSec) {
-          // console.log("Waited for too long");
-          throw new Error(
-            `waited for too long looking for ${strategy}: ' ${selector}'`
-          );
-        }
+      if (currentWait >= maxWaitMSec) {
+        // console.log("Waited for too long");
+        throw new Error(
+          `waited for too long looking for ${strategy}: ' ${selector}'`
+        );
       }
     }
     console.log(`${strategy}: ' ${selector}' has been found`);
@@ -688,29 +718,33 @@ export class DeviceWrapper implements SharedDeviceInterface {
     maxWait?: number
   ): Promise<AppiumNextElementType> {
     let el: null | AppiumNextElementType = null;
-    const maxWaitMSec: number = maxWait || 3000;
+    const maxWaitMSec: number = maxWait || 15000;
     let currentWait: number = 0;
     const waitPerLoop: number = 100;
 
     while (el === null) {
       try {
         console.log(
-          `Waiting for accessibility ID '${strategy}' to be present with ${text}`
+          `Waiting for accessibility ID '${selector}' to be present with ${text}`
         );
 
         const els = await this.findElements(strategy, selector);
 
         el = await this.findMatchingTextInElementArray(els, text);
-      } catch (e) {
-        await sleepFor(waitPerLoop);
-        currentWait += waitPerLoop;
+      } catch (e: any) {
+        console.warn("waitForTextElementToBePresent threw: ", e.message);
+      }
 
-        if (currentWait >= maxWaitMSec) {
-          console.log("Waited too long");
-          throw new Error(
-            `Waited for too long looking for '${selector}' and '${text}`
-          );
-        }
+      if (!el) {
+        await sleepFor(waitPerLoop);
+      }
+      currentWait += waitPerLoop;
+
+      if (currentWait >= maxWaitMSec) {
+        console.log("Waited too long");
+        throw new Error(
+          `Waited for too long looking for '${selector}' and '${text}`
+        );
       }
     }
     console.log(`'${selector}' and '${text}' has been found`);

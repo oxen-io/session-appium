@@ -1,7 +1,9 @@
-import { iosIt, androidIt } from "../../types/sessionIt";
+import { androidIt, iosIt } from "../../types/sessionIt";
+import { parseDataImage } from "./utils/check_colour";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { createGroup } from "./utils/create_group";
+import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils/index";
 import { linkedDevice } from "./utils/link_device";
 import {
   closeApp,
@@ -10,15 +12,13 @@ import {
   openAppTwoDevices,
   SupportedPlatformsType,
 } from "./utils/open_app";
-import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils/index";
-import { parseDataImage } from "./utils/check_colour";
 import { runScriptAndLog } from "./utils/utilities";
 
 async function linkDevice(platform: SupportedPlatformsType) {
   // Open server and two devices
   const { device1, device2 } = await openAppTwoDevices(platform);
   // link device
-  await linkedDevice(device1, device2, "User A", platform);
+  const userA = await linkedDevice(device1, device2, "Alice", platform);
   // Check that 'Youre almost finished' reminder doesn't pop up on device2
   await device2.hasElementBeenDeleted(
     "accessibility id",
@@ -27,8 +27,17 @@ async function linkDevice(platform: SupportedPlatformsType) {
   // Verify username and session ID match
   await device2.clickOnElement("User settings");
   // Check username
-  await device2.findElement("accessibility id", "Username");
-  await device2.findElement("accessibility id", "Session ID");
+
+  await device2.waitForTextElementToBePresent(
+    "accessibility id",
+    "Username",
+    userA.userName
+  );
+  await device2.waitForTextElementToBePresent(
+    "accessibility id",
+    "Session ID",
+    userA.sessionID
+  );
 
   await closeApp(device1, device2);
 }
@@ -192,7 +201,7 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
   // Select delete
   await device1.clickOnElement("Delete message");
   // Select delete for everyone
-  await device1.clickOnElement("Delete just for me");
+  await device1.clickOnElement("Delete for me");
 
   // await waitForLoadingAnimation(device1);
 
@@ -298,7 +307,7 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   await device1.clickOnElement("User settings");
   await sleepFor(100);
   await device1.clickOnElement("Profile picture");
-  await device1.clickOnElement("Photo library");
+  await device1.clickOnElement("Photo Library");
   // Check if permissions need to be enabled
   const permissions = await device1.doesElementExist(
     "accessibility id",
@@ -369,8 +378,80 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
-// async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
-// }
+async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
+  const { device1, device2 } = await openAppTwoDevices(platform);
+  const spongebobsBirthday = "199905010700.00";
+  const userA = await linkedDevice(device1, device2, "Alice", platform);
+
+  await device1.clickOnElement("User settings");
+  await sleepFor(100);
+  await device1.clickOnElement("User settings");
+  await device1.clickOnElementById(
+    "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
+  );
+  await device1.waitForTextElementToBePresent(
+    "id",
+    "android:id/text1",
+    "Files"
+  );
+  await device1.clickOnTextElementById("android:id/text1", "Files");
+  // Check if permissions need to be enabled
+  // Check if image is already on device
+  const profilePicture = await device1.doesElementExist(
+    "accessibility id",
+    `profile_picture.jpg, 27.75 kB, May 1, 1999`,
+    2000
+  );
+  // If no image, push file to device
+  if (!profilePicture) {
+    await runScriptAndLog(
+      `touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/profile_picture.jpg'`
+    );
+
+    await runScriptAndLog(
+      `adb -s emulator-5554 push 'run/test/specs/media/profile_picture.jpg' /storage/emulated/0/Download`,
+      true
+    );
+  }
+  await sleepFor(100);
+  await device1.clickOnElement(`profile_picture.jpg, 27.75 kB, May 1, 1999`);
+  await device1.clickOnElementById(
+    "network.loki.messenger:id/crop_image_menu_crop"
+  );
+  await sleepFor(2000);
+  // Wait for change
+  // Verify change
+  // Take screenshot
+  const el = await device1.waitForElementToBePresent(
+    "accessibility id",
+    "User settings"
+  );
+  await sleepFor(3000);
+  const base64 = await device1.getElementScreenshot(el.ELEMENT);
+  const pixelColor = await parseDataImage(base64);
+  console.log("RGB Value of pixel is:", pixelColor);
+  if (pixelColor === "03cbfe") {
+    console.log("Colour is correct on device 1");
+  } else {
+    console.log("Colour isn't 03cbfe, it is: ", pixelColor);
+  }
+  console.log("Now checking avatar on linked device");
+  // Check avatar on device 2
+  await device2.clickOnElement("User settings");
+  const el2 = await device2.waitForElementToBePresent(
+    "accessibility id",
+    "User settings"
+  );
+  await sleepFor(3000);
+  const base64A = await device2.getElementScreenshot(el2.ELEMENT);
+  const pixelColorLinked = await parseDataImage(base64A);
+  if (pixelColorLinked === "03cbfe") {
+    console.log("Colour is correct on linked device");
+  } else {
+    console.log("Colour isn't 03cbfe, it is: ", pixelColorLinked);
+  }
+  await closeApp(device1, device2);
+}
 
 describe("Linked device tests", async () => {
   await iosIt("Link a device", linkDevice);
@@ -395,7 +476,7 @@ describe("Linked device tests", async () => {
   await androidIt("Check blocked user syncs", blockedUserLinkedDevice);
 
   await iosIt("Check profile picture syncs", avatarRestorediOS);
-  // await androidIt("Check profile picture syncs", avatarRestoredAndroid);
+  await androidIt("Check profile picture syncs", avatarRestoredAndroid);
 });
 
 // TESTS TO WRITE FOR LINKED DEVICE

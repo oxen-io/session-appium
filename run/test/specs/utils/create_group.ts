@@ -1,6 +1,6 @@
 import { Group, User } from "../../../types/testing";
 import { newContact } from "./create_contact";
-import { runOnlyOnIOS, runOnlyOnAndroid } from ".";
+import { runOnlyOnIOS, runOnlyOnAndroid, sleepFor } from ".";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { SupportedPlatformsType } from "./open_app";
 
@@ -38,8 +38,10 @@ export const createGroup = async (
   await device1.selectByText("Contact", userThree.userName);
   // Select tick
   await device1.clickOnElement("Create group");
+  await sleepFor(4000);
+  // Check for empty state on ios
   await runOnlyOnIOS(platform, () =>
-    device1.findConfigurationMessage("Group created")
+    device1.waitForElementToBePresent("accessibility id", "Empty state label")
   );
   await runOnlyOnAndroid(platform, () =>
     device1.findConfigurationMessage("You created a new group.")

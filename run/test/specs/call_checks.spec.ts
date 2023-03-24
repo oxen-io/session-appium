@@ -1,6 +1,6 @@
 import { androidIt, everyPlatformIt, iosIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
-import { runOnlyOnAndroid } from "./utils/index";
+import { runOnlyOnAndroid, sleepFor } from "./utils/index";
 import { openAppTwoDevices, SupportedPlatformsType } from "./utils/open_app";
 
 async function voiceCallAndroid(platform: SupportedPlatformsType) {
@@ -36,39 +36,66 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   await device1.waitForElementToBePresent("id", "android:id/button1");
   await device1.clickOnElementById("android:id/button1");
   // Scroll to bottom of page to voice and video calls
-  // await device1.scrollDown();
-  const callsPermission = await device1.waitForTextElementToBePresent(
+  await sleepFor(1000);
+  await device1.scrollDown();
+  const voicePermissions = await device1.waitForTextElementToBePresent(
     "id",
-    "android:id/title",
-    "Calls (Beta)"
+    "android:id/summary",
+    "Enables voice and video calls to and from other users."
   );
-  await device1.touchScroll(
-    { x: 760, y: 1500 },
-    { x: 760, y: 710 },
-    callsPermission
-  );
+
+  await device1.click(voicePermissions.ELEMENT);
   // Toggle voice settings on
-  await device1.clickOnElement("Allow voice and video calls");
   // Click enable on exposure IP address warning
   await device1.clickOnElement("Enable");
   // Navigate back to conversation
+  await device1.waitForElementToBePresent(
+    "id",
+    "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
+  );
+  await device1.clickOnElementById(
+    "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
+  );
+
   await device1.clickOnElement("Navigate up");
   // Enable voice calls on device 2 for User B
-  await device2.clickOnElement("Call button");
-  await device2.clickOnElement("Settings");
+  await device2.clickOnElement("Call");
+  // Enabled voice calls in privacy settings
+  await device2.waitForElementToBePresent("id", "android:id/button1");
+  await device2.clickOnElementById("android:id/button1");
+  // Scroll to bottom of page to voice and video calls
+  await sleepFor(1000);
   await device2.scrollDown();
-  await device2.clickOnElement("Allow voice and video calls");
+  const voicePermissions2 = await device2.waitForTextElementToBePresent(
+    "id",
+    "android:id/summary",
+    "Enables voice and video calls to and from other users."
+  );
+
+  await device2.click(voicePermissions2.ELEMENT);
+  // Toggle voice settings on
+  // Click enable on exposure IP address warning
   await device2.clickOnElement("Enable");
+  // Navigate back to conversation
+  await device2.waitForElementToBePresent(
+    "id",
+    "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
+  );
+  await device2.clickOnElementById(
+    "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
+  );
   await device2.clickOnElement("Navigate up");
   // Make call on device 1 (userA)
-  await device1.clickOnElement("Call button");
+  await device1.clickOnElement("Call");
   // Answer call on device 2
   await device2.clickOnElement("Answer call");
-  // Wait 10 seconds
+  // Wait 5 seconds
+  await sleepFor(5000);
   // Hang up
-  await device1.clickOnElement("End call button");
+  await device1.clickOnElementById("network.loki.messenger:id/endCallButton");
   // Check for config message 'Called User B' on device 1
-  await device1.findElement("accessibility id", "Configuration message");
+  await device1.findConfigurationMessage(`Called ${userB.userName}`);
+  await device2.findConfigurationMessage(`${userA.userName} called you`);
 }
 
 async function voiceCallIos(platform: SupportedPlatformsType) {
@@ -106,10 +133,12 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   // await device1.clickOnElement("Settings");
   // Scroll to bottom of page to voice and video calls
   await device1.scrollDown();
+
   // Toggle voice settings on
-  await device1.clickOnElement("Allow voice and video calls");
   // Click enable on exposure IP address warning
   await device1.clickOnElement("Enable");
+  await device1.clickOnElement("Allow voice and video calls");
+  await device1.clickOnElement("While using this app");
   // Navigate back to conversation
   await device1.clickOnElement("Navigate up");
   // Enable voice calls on device 2 for User B

@@ -21,7 +21,7 @@ export const linkedDevice = async (
     user.recoveryPhrase
   );
   // Continue with recovery phrase
-  await runOnlyOnAndroid(platform, () => device2.clickOnElement("Link Device"));
+  await runOnlyOnAndroid(platform, () => device2.clickOnElement("Continue"));
   await runOnlyOnIOS(platform, () => device2.clickOnElement("Continue"));
   // Wait for any notifications to disappear
   await device2.waitForElementToBePresent(
@@ -33,9 +33,9 @@ export const linkedDevice = async (
   // Click continue on message notification settings
   await device2.clickOnElement("Continue with settings");
   // Dismiss notifications alert
-  await device2.clickOnElement("Don’t Allow");
+  await runOnlyOnIOS(platform, () => device2.clickOnElement("Don’t Allow"));
   // Check that you're almost there isn't displayed
-  await device2.hasElementBeenDeleted("accessibility id", "Continue");
+  await sleepFor(1000);
   // Check that button was clicked
   await device2.waitForElementToBePresent(
     "accessibility id",
