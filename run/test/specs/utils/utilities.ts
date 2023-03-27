@@ -5,7 +5,10 @@ import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { getAdbFullPath } from "./binaries";
 const exec = util.promisify(require("child_process").exec);
 
-export async function runScriptAndLog(toRun: string, verbose = false) {
+export async function runScriptAndLog(
+  toRun: string,
+  verbose = false
+): Promise<string> {
   try {
     if (verbose) {
       console.log("running ", toRun);
@@ -23,13 +26,19 @@ export async function runScriptAndLog(toRun: string, verbose = false) {
         console.log(`cmd which failed: "${toRun}"`);
         console.log(`result: "${result.stderr}"`);
       }
+      return "".concat(result.stderr, result.stdout);
     }
-  } catch (e) {
-    const cmd = (e as any).cmd;
+    if (verbose) {
+      console.log("was run: ", toRun, result);
+    }
+    return "".concat(result.stderr, result.stdout);
+  } catch (e: any) {
+    const cmd = e.cmd;
     if (verbose) {
       console.warn(`cmd which failed: "${cmd}"`);
       console.warn(pick(e, ["stdout", "stderr"]));
     }
+    return "".concat(e.stderr, e.stdout);
   }
 }
 
@@ -48,13 +57,17 @@ export const installAppToDeviceName = async (
   if (!emulatorName) {
     throw new Error("emulatorName must be set");
   }
+  // await runScriptAndLog(`emulator -avd ${emulatorName}`, true);
+
   const adb = getAdbFullPath();
 
   await runScriptAndLog(
-    `${adb} -s ${emulatorName} uninstall io.appium.uiautomator2.server`
+    `${adb} -s ${emulatorName} uninstall io.appium.uiautomator2.server`,
+    true
   );
   await runScriptAndLog(
-    `${adb} -s ${emulatorName} uninstall io.appium.uiautomator2.server.test`
+    `${adb} -s ${emulatorName} uninstall io.appium.uiautomator2.server.test`,
+    true
   );
   await runScriptAndLog(`${adb} -s ${emulatorName} uninstall io.appium.unlock`);
   await runScriptAndLog(

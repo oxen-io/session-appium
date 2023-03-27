@@ -236,7 +236,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     device4.waitForTextElementToBePresent(
       "accessibility id",
       "Configuration message",
-      "Group created"
+      `${userD.userName}` + " joined the group."
     )
   );
   await runOnlyOnAndroid(platform, () =>
@@ -274,6 +274,7 @@ async function mentionsForGroupsIos(platform: SupportedPlatformsType) {
   await device1.findElement("accessibility id", "Mentions list");
   // Select User B
   await device1.selectByText("Contact", userB.userName);
+  await device1.clickOnElement("Send message button");
   // Check in user B's device if the format is correct
   await device2.findMessageWithBody("@You");
   // Select User C

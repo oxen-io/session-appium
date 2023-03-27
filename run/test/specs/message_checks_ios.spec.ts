@@ -17,7 +17,7 @@ import { runScriptAndLog } from "./utils/utilities";
 
 async function sendImage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const ronSwansonBirthday = "196705060700.00";
+  const ronSwansonBirthday = "196705050700.00";
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
@@ -48,7 +48,7 @@ async function sendImage(platform: SupportedPlatformsType) {
   }
   const testImage = await device1.doesElementExist(
     "accessibility id",
-    `Photo, May 01, 1999, 7:00 AM`,
+    `1967-05-05 21:00:00 +0000`,
     2000
   );
   if (!testImage) {
@@ -62,7 +62,7 @@ async function sendImage(platform: SupportedPlatformsType) {
     );
   }
   await sleepFor(100);
-  await device1.clickOnElement(`Photo, May 01, 1999, 7:00 AM`);
+  await device1.clickOnElement(`1967-05-05 21:00:00 +0000`);
   await device1.clickOnElement("Text input box");
   await device1.inputText("accessibility id", "Text input box", testMessage);
   await device1.clickOnElement("Send button");
@@ -168,6 +168,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
   ]);
+  const bestDayOfYear = `198809090700.00`;
   const testMessage = "Testing-video-1";
   const replyMessage = `Replying to video from ${userA.userName}`;
   // create contact
@@ -178,7 +179,6 @@ async function sendVideo(platform: SupportedPlatformsType) {
   // Select images button/tab
   await sleepFor(100);
   // Check if android or ios (android = documents folder/ ios = images folder)
-  // await device1.clickOnElement("Images folder");
   await clickOnXAndYCoordinates(device1, 34, 498);
   // Select 'continue' on alert
   // Need to put a video on device
@@ -216,23 +216,21 @@ async function sendVideo(platform: SupportedPlatformsType) {
   if (videoFolder) {
     console.log("Videos folder found");
     await device1.clickOnElement("Videos");
-    await device1.clickOnElementXPath(
-      `//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell/XCUIElementTypeOther/XCUIElementTypeImage[1]`
-    );
+    await device1.clickOnElement(`1988-09-08 21:00:00 +0000`);
   } else {
     console.log("Videos folder NOT found");
     await runScriptAndLog(
-      `xcrun simctl addmedia ${process.env.IOS_FIRST_SIMULATOR} 'run/test/specs/media/test_video.mp4'`
+      `touch -a -m -t ${bestDayOfYear} 'run/test/specs/media/test_video.mp4'`,
+      true
+    );
+    await runScriptAndLog(
+      `xcrun simctl addmedia ${process.env.IOS_FIRST_SIMULATOR} 'run/test/specs/media/test_video.mp4'`,
+      true
     );
     await sleepFor(2000);
-    // await device1.clickOnElement("Add");
-    await device1.clickOnElementXPath(
-      `//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell/XCUIElementTypeOther/XCUIElementTypeImage[1]`
-    );
+
+    await device1.clickOnElement(`1988-09-08 21:00:00 +0000`);
   }
-  await device1.clickOnElementXPath(
-    `//XCUIElementTypeCollectionView[@name="Images"]/XCUIElementTypeCell/XCUIElementTypeOther/XCUIElementTypeImage[1]`
-  );
   // Send with captions
   await device1.clickOnElement("Text input box");
   await device1.inputText("accessibility id", "Text input box", testMessage);
@@ -243,7 +241,6 @@ async function sendVideo(platform: SupportedPlatformsType) {
   await sleepFor(500);
   // User B - Click on 'download'
   await device2.clickOnElement("Download media");
-
   // Reply to message
   await sleepFor(3000);
   await device2.longPressMessage(testMessage);
@@ -291,20 +288,14 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
     await sleepFor(100);
     await device1.back();
     await device1.selectByText("Conversation list item", "Alice");
-    // await doFunctionIfElementExists(device1, "accessibility id", "OK", () =>
-    //   device1.clickOnElement("OK")
-    // );
+
     await device1.pressAndHold("New voice message");
   }
-  // await device1.clickOnElement("Allow");
   await device1.waitForElementToBePresent("accessibility id", "Voice message");
 
   await device2.clickOnElement("Untrusted attachment message");
   await sleepFor(200);
   await device2.clickOnElement("Download");
-
-  // await sleepFor(1500);
-
   await device2.longPress("Voice message");
   await device2.clickOnElement("Reply to message");
   await device2.sendMessage(replyMessage);
@@ -313,7 +304,6 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
     "Message Body",
     replyMessage
   );
-
   await closeApp(device1, device2);
 }
 
@@ -336,7 +326,6 @@ async function sendGif(platform: SupportedPlatformsType) {
   await runOnlyOnIOS(platform, () => clickOnXAndYCoordinates(device1, 36, 394));
   await runOnlyOnAndroid(platform, () => device1.clickOnElement("GIF button"));
   await runOnlyOnAndroid(platform, () => device1.clickOnElement("OK"));
-
   // Select gif
   await sleepFor(500);
   // Need to select Continue on GIF warning

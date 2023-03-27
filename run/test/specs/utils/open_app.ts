@@ -11,7 +11,12 @@ import * as iosDriver from "appium-xcuitest-driver";
 
 import { DriverOpts } from "appium/build/lib/appium";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
-import { getAdbFullPath } from "./binaries";
+import {
+  getAdbFullPath,
+  getAvdManagerFullPath,
+  getEmulatorFullPath,
+} from "./binaries";
+import { sleepFor } from "./sleep_for";
 
 const APPIUM_PORT = 4728;
 export const APPIUM_IOS_PORT = 8100;
@@ -94,14 +99,74 @@ export const openAppFourDevices = async (
   };
 };
 
+async function createAndroidEmulator(emulatorName: string) {
+  await runScriptAndLog(
+    `echo "no" | ${getAvdManagerFullPath()} create avd --name ${emulatorName} -k 'system-images;android-31;google_apis;arm64-v8a' --force`,
+    true
+  );
+  return emulatorName;
+}
+
+async function startAndroidEmulator(emulatorName: string) {
+  await runScriptAndLog(
+    `${getEmulatorFullPath()} @${emulatorName} `, // -netdelay none -no-snapshot -wipe-data
+    true
+  );
+}
+
+async function waitForEmulatorToBeRunning(emulatorName: string) {
+  let start = Date.now();
+  let found = false;
+
+  do {
+    const failedWith = await runScriptAndLog(
+      `${getAdbFullPath()} get-state -s  "${emulatorName}";`
+    );
+
+    found =
+      !failedWith ||
+      !(failedWith.includes("error") || failedWith.includes("offline"));
+
+    await sleepFor(500);
+  } while (Date.now() - start < 25000 && !found);
+
+  if (!found) {
+    return;
+  }
+
+  start = Date.now();
+
+  do {
+    const bootedOrNah = await runScriptAndLog(
+      `${getAdbFullPath()} -s  "${emulatorName}" shell getprop sys.boot_completed;`,
+      true
+    );
+
+    found = bootedOrNah.includes("1");
+
+    await sleepFor(500);
+  } while (Date.now() - start < 25000 && !found);
+
+  return found;
+}
+
 const openAndroidApp = async (
   capabilitiesIndex: CapabilitiesIndexType
 ): Promise<{
   device: DeviceWrapper;
 }> => {
+  await killAdbIfNotAlreadyDone();
+  const targetName = getAndroidUuid(capabilitiesIndex);
+  console.log("TargetName: ", targetName);
+
+  await createAndroidEmulator(targetName);
+  void startAndroidEmulator(targetName);
+  await waitForEmulatorToBeRunning(targetName);
+  console.log(targetName, " emulator booted");
+
   await installAppToDeviceName(
     androidCapabilities.androidAppFullPath,
-    getAndroidUuid(capabilitiesIndex)
+    targetName
   );
   const driver = (androidDriver as any).AndroidUiautomator2Driver;
 
@@ -153,6 +218,19 @@ const openiOSApp = async (
   return { device: wrappedDevice };
 };
 
+let adbAlreadyKilled = false;
+
+async function killAdbIfNotAlreadyDone() {
+  if (adbAlreadyKilled) {
+    return;
+  }
+
+  console.info("killing adb server");
+  adbAlreadyKilled = true;
+
+  await runScriptAndLog(`${getAdbFullPath()} kill-server`);
+}
+
 export const closeApp = async (
   device1?: DeviceWrapper,
   device2?: DeviceWrapper,
@@ -165,7 +243,4 @@ export const closeApp = async (
   await device4?.deleteSession();
 
   console.info("sessions closed");
-
-  console.info("killing adb server");
-  await runScriptAndLog(`${getAdbFullPath()} kill-server`);
 };
