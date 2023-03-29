@@ -152,7 +152,7 @@ async function deleteRequest(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
-describe("Message", async () => {
+describe("Message requests", async () => {
   await iosIt("Message requests accept", acceptRequest);
   await androidIt("Message requests accept", acceptRequest);
 
