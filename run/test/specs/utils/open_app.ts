@@ -152,13 +152,13 @@ const openAndroidApp = async (
 ): Promise<{
   device: DeviceWrapper;
 }> => {
-  await killAdbIfNotAlreadyDone();
+  // await killAdbIfNotAlreadyDone();
   const targetName = getAndroidUuid(capabilitiesIndex);
 
-  await createAndroidEmulator(targetName);
-  void startAndroidEmulator(targetName);
-  await waitForEmulatorToBeRunning(targetName);
-  console.log(targetName, " emulator booted");
+  // await createAndroidEmulator(targetName);
+  // void startAndroidEmulator(targetName);
+  // await waitForEmulatorToBeRunning(targetName);
+  // console.log(targetName, " emulator booted");
 
   await installAppToDeviceName(
     androidCapabilities.androidAppFullPath,

@@ -289,10 +289,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return this.toAndroid().touchLongClick(element.ELEMENT);
   }
 
-  public async clickOnElement(accessibilityId: string) {
+  public async clickOnElement(accessibilityId: string, maxWait?: number) {
     const el = await this.waitForElementToBePresent(
       "accessibility id",
-      accessibilityId
+      accessibilityId,
+      maxWait
     );
 
     if (!el) {

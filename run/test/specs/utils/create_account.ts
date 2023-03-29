@@ -1,13 +1,14 @@
 import { getSessionID, runOnlyOnAndroid, runOnlyOnIOS } from ".";
 import { SupportedPlatformsType } from "./open_app";
 import { User } from "../../../types/testing";
-import {} from "./sleep_for";
+import { sleepFor } from "./sleep_for";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 
 export const newUser = async (
   device: DeviceWrapper,
   userName: string,
-  platform: SupportedPlatformsType
+  platform: SupportedPlatformsType,
+  notifications?: boolean
 ): Promise<User> => {
   // Click create session ID
   const createSessionId = "Create session ID";
@@ -47,6 +48,21 @@ export const newUser = async (
   console.log(`${userName}s recovery phrase is "${recoveryPhrase}"`);
   // Exit Modal
   await device.clickOnElement("Navigate up");
+
+  if (platform === "android" && notifications === true) {
+    await device.clickOnElement("User settings");
+    await device.clickOnElement("Notifications");
+    await device.clickOnTextElementById(
+      "network.loki.messenger:id/device_settings_text",
+      "Go to device notification settings"
+    );
+    await device.clickOnElementById("android:id/switch_widget");
+    await device.navigateBack(platform);
+    await sleepFor(100);
+    await device.navigateBack(platform);
+    await sleepFor(100);
+    await device.navigateBack(platform);
+  }
 
   return { userName, sessionID, recoveryPhrase };
 };

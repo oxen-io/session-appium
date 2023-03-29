@@ -13,8 +13,8 @@ async function acceptRequest(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create two users
   const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
+    newUser(device1, "Alice", platform, true),
+    newUser(device2, "Bob", platform, true),
   ]);
   // Send message from Alice to Bob
   await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
@@ -31,6 +31,12 @@ async function acceptRequest(platform: SupportedPlatformsType) {
     "accessibility id",
     "Configuration message",
     "Your message request has been accepted."
+  );
+  await device2.navigateBack(platform);
+  await device2.waitForTextElementToBePresent(
+    "accessibility id",
+    "Conversation list item",
+    userA.userName
   );
   // Close app
   await closeApp(device1, device2);
@@ -125,6 +131,16 @@ async function blockRequest(platform: SupportedPlatformsType) {
   // Need to wait to see if message gets through
   await sleepFor(1000);
   await device2.hasTextElementBeenDeleted("Message Body", blockedMessage);
+  // Check blocked contacts section for user A
+  await device2.clickOnElement("User settings");
+  await device2.clickOnElement("Conversations");
+  await device2.clickOnElement("Blocked contacts");
+  await device2.waitForTextElementToBePresent(
+    "accessibility id",
+    "Contact",
+    userA.userName
+  );
+
   // Close app
   await closeApp(device1, device2);
 }
