@@ -115,10 +115,6 @@ async function blockRequest(platform: SupportedPlatformsType) {
   await runOnlyOnAndroid(platform, () =>
     device2.clickOnElement("Confirm block")
   );
-  // await runOnlyOnAndroid(platform, () =>
-  //   device1.clickOnElementById("android:id/button1")
-  // );
-  // Make sure no messages can get through to Bob
   const blockedMessage = `${userA.userName} to ${userB.userName} - shouldn't get through`;
   await device1.sendMessage(blockedMessage);
   await device2.navigateBack(platform);
@@ -130,6 +126,29 @@ async function blockRequest(platform: SupportedPlatformsType) {
   await sleepFor(1000);
   await device2.hasTextElementBeenDeleted("Message Body", blockedMessage);
   // Close app
+  await closeApp(device1, device2);
+}
+
+async function deleteRequest(platform: SupportedPlatformsType) {
+  const { device1, device2 } = await openAppTwoDevices(platform);
+  const [userA, userB] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+  ]);
+  // Send message from Alice to Bob
+  await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
+  // Wait for banner to appear
+  // Bob clicks on message request banner
+  await device2.clickOnElement("Message requests banner");
+  // Swipe left on ios
+  await runOnlyOnIOS(platform, () =>
+    device2.swipeLeftAny("accessibility id", "Message request")
+  );
+  await device2.clickOnElement("Delete");
+  await sleepFor(1000);
+  await device2.clickOnElement("Delete");
+  await device2.findElement("accessibility id", "No pending message requests");
+
   await closeApp(device1, device2);
 }
 
@@ -145,6 +164,7 @@ describe("Message", async () => {
 
   await iosIt("Message requests block", blockRequest);
   await androidIt("Message requests block", blockRequest);
-});
 
-// Delete request
+  await iosIt("Delete request", deleteRequest);
+  await androidIt("Delete request", deleteRequest);
+});

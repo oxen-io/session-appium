@@ -334,6 +334,44 @@ async function mentionsForGroupsAndroid(platform: SupportedPlatformsType) {
   await closeApp(device1, device2, device3);
 }
 
+async function leaveGroup(platform: SupportedPlatformsType) {
+  const testGroupName = "Otter lovers";
+  const { device1, device2, device3 } = await openAppThreeDevices(platform);
+  // Create users A, B and C
+  const [userA, userB, userC] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+    newUser(device3, "Carl", platform),
+  ]);
+
+  // Create group with user A, user B and User C
+  await createGroup(
+    platform,
+    device1,
+    userA,
+    device2,
+    userB,
+    device3,
+    userC,
+    testGroupName
+  );
+  await device3.clickOnElement("More options");
+  await runOnlyOnAndroid(platform, () =>
+    device1.clickOnTextElementById(
+      `network.loki.messenger:id/title`,
+      "Leave group"
+    )
+  );
+  await runOnlyOnIOS(platform, () => device3.clickOnElement("Leave group"));
+  await device3.clickOnElement("Leave");
+  await device3.navigateBack(platform);
+  // Check for control message
+  await device3.findConfigurationMessage("You have left the group.");
+  await device2.findConfigurationMessage(`${userC.userName} left the group.`);
+  await device1.findConfigurationMessage(`${userC.userName} left the group.`);
+  await closeApp(device1, device2, device3);
+}
+
 describe("Group Testing", async () => {
   await iosIt("Create group", groupCreation);
   await androidIt("Create group", groupCreation);
@@ -346,4 +384,7 @@ describe("Group Testing", async () => {
 
   await iosIt("Test mentions in group chats", mentionsForGroupsIos);
   await androidIt("Test mentions in group chats", mentionsForGroupsAndroid);
+
+  await iosIt("Leave group", leaveGroup);
+  await androidIt("Leave group", leaveGroup);
 });

@@ -24,6 +24,7 @@ type SharedDeviceInterface = {
   clear: (elementId: string) => Promise<void>;
   getText: (elementId: string) => Promise<string>;
   setValueImmediate: (text: string, elementId: string) => Promise<void>;
+  keys: (value: string[]) => Promise<void>;
   getElementRect: (
     elementId: string
   ) => Promise<
@@ -129,6 +130,10 @@ export class DeviceWrapper implements SharedDeviceInterface {
     elementId: string
   ): Promise<void> {
     return this.toShared().setValueImmediate(text, elementId);
+  }
+
+  public async keys(value: string[]): Promise<void> {
+    return this.toShared().keys(value);
   }
 
   public async getElementRect(
@@ -422,7 +427,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
     await this.clear(el.ELEMENT);
 
-    console.warn(`Text has been cleared` + accessibilityId);
+    console.warn(`Text has been cleared ` + accessibilityId);
     return;
   }
 
@@ -575,7 +580,8 @@ export class DeviceWrapper implements SharedDeviceInterface {
       "accessibility id",
       "Configuration message"
     );
-    const configMessage = this.findMatchingTextAndAccessibilityId(
+    const configMessage = this.waitForTextElementToBePresent(
+      "accessibility id",
       "Configuration message",
       messageText
     );
@@ -842,6 +848,22 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   // ACTIONS
+  public async swipeLeftAny(strategy: Strategy, selector: string) {
+    const el = await this.waitForElementToBePresent(strategy, selector);
+    const loc = await this.getElementRect(el.ELEMENT);
+    console.log(loc);
+
+    if (!loc) {
+      throw new Error("did not find element rectangle");
+    }
+    await this.scroll(
+      { x: loc.x + loc.width, y: loc.y + loc.height / 2 },
+      { x: loc.x + loc.width / 2, y: loc.y + loc.height / 2 },
+      1000
+    );
+
+    console.warn("Swiped left on " + strategy, ":", selector);
+  }
 
   public async swipeLeft(accessibilityId: string, text: string) {
     const el = await this.findMatchingTextAndAccessibilityId(

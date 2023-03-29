@@ -101,16 +101,14 @@ export const openAppFourDevices = async (
 
 async function createAndroidEmulator(emulatorName: string) {
   await runScriptAndLog(
-    `echo "no" | ${getAvdManagerFullPath()} create avd --name ${emulatorName} -k 'system-images;android-31;google_apis;arm64-v8a' --force`,
-    true
+    `echo "no" | ${getAvdManagerFullPath()} create avd --name ${emulatorName} -k 'system-images;android-31;google_apis;arm64-v8a' --force`
   );
   return emulatorName;
 }
 
 async function startAndroidEmulator(emulatorName: string) {
   await runScriptAndLog(
-    `${getEmulatorFullPath()} @${emulatorName} `, // -netdelay none -no-snapshot -wipe-data
-    true
+    `${getEmulatorFullPath()} @${emulatorName} ` // -netdelay none -no-snapshot -wipe-data
   );
 }
 
@@ -138,8 +136,7 @@ async function waitForEmulatorToBeRunning(emulatorName: string) {
 
   do {
     const bootedOrNah = await runScriptAndLog(
-      `${getAdbFullPath()} -s  "${emulatorName}" shell getprop sys.boot_completed;`,
-      true
+      `${getAdbFullPath()} -s  "${emulatorName}" shell getprop sys.boot_completed;`
     );
 
     found = bootedOrNah.includes("1");
@@ -157,7 +154,6 @@ const openAndroidApp = async (
 }> => {
   await killAdbIfNotAlreadyDone();
   const targetName = getAndroidUuid(capabilitiesIndex);
-  console.log("TargetName: ", targetName);
 
   await createAndroidEmulator(targetName);
   void startAndroidEmulator(targetName);

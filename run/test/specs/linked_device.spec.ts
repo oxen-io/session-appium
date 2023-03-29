@@ -148,11 +148,13 @@ async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const newUsername = "Alice in chains";
   // link device
-  await linkedDevice(device1, device2, "Alice", platform);
+  const userA = await linkedDevice(device1, device2, "Alice", platform);
   // Change username on device 1
   await device1.clickOnElement("User settings");
   // Select username
   await device1.clickOnElement("Username");
+  await sleepFor(100);
+  await device1.deleteText("Username");
   await device1.inputText("accessibility id", "Username", newUsername);
   // Select apply
   await runOnlyOnAndroid(platform, () => device1.clickOnElement("Apply"));
@@ -165,9 +167,10 @@ async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
     device2.clickOnElement("User settings")
   );
   const changedUsername = await device2.grabTextFromAccessibilityId("Username");
+  console.log("Username is now: ", changedUsername);
   await sleepFor(100);
   if (changedUsername === newUsername) {
-    console.log(`Username changed from Alice to `, changedUsername);
+    console.log(`Username changed from ${userA.userName} to `, changedUsername);
   } else {
     // throw new Error("Username change unsuccessful")
     console.log("changed: ", changedUsername, "new: ", newUsername);
@@ -453,6 +456,48 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
+async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
+  const testGroupName = "Otter lovers";
+  const { device1, device2, device3, device4 } = await openAppFourDevices(
+    platform
+  );
+  const userC = await linkedDevice(device3, device4, "Carl", platform);
+  // Create users A, B and C
+  const [userA, userB] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+  ]);
+
+  // Create group with user A, user B and User C
+  await createGroup(
+    platform,
+    device1,
+    userA,
+    device2,
+    userB,
+    device3,
+    userC,
+    testGroupName
+  );
+  await device3.clickOnElement("More options");
+  await runOnlyOnAndroid(platform, () =>
+    device1.clickOnTextElementById(
+      `network.loki.messenger:id/title`,
+      "Leave group"
+    )
+  );
+  await runOnlyOnIOS(platform, () => device3.clickOnElement("Leave group"));
+  await device3.clickOnElement("Leave");
+  await device3.navigateBack(platform);
+  // Check for control message
+  await device3.findConfigurationMessage("You have left the group.");
+  await device4.clickOnElementByText("accessibility id", testGroupName);
+  await device4.findConfigurationMessage("You have left the group.");
+  await device2.findConfigurationMessage(`${userC.userName} left the group.`);
+  await device1.findConfigurationMessage(`${userC.userName} left the group.`);
+  await closeApp(device1, device2, device3);
+}
+
 describe("Linked device tests", async () => {
   await iosIt("Link a device", linkDevice);
   await androidIt("Link a device", linkDevice);
@@ -477,6 +522,9 @@ describe("Linked device tests", async () => {
 
   await iosIt("Check profile picture syncs", avatarRestorediOS);
   await androidIt("Check profile picture syncs", avatarRestoredAndroid);
+
+  await iosIt("Leaving group syncs", leaveGroupLinkedDevice);
+  await androidIt("Leaving group syncs", leaveGroupLinkedDevice);
 });
 
 // TESTS TO WRITE FOR LINKED DEVICE
