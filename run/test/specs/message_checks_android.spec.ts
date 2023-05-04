@@ -169,7 +169,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
   await sleepFor(100);
   await device1.clickOnTextElementById("android:id/title", "test_video.mp4");
   // User B - Click on untrusted attachment message
-  await device2.clickOnElement("Untrusted attachment message");
+  await device2.clickOnElement("Untrusted attachment message", 8000);
   // await sleepFor(1000);
   // User B - Click on 'download'
   await device2.clickOnElement("Download media");
@@ -279,8 +279,8 @@ async function sendLongMessage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and User B
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A", platform),
-    newUser(device2, "User B", platform),
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
   ]);
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
@@ -414,7 +414,7 @@ describe("Message checks android", async () => {
   await androidIt("Send voice message test", sendVoiceMessage);
   await androidIt("Send document and reply test", sendDocument);
   await androidIt("Send link test", sendLink);
-  await androidIt("Send GIF and reply", sendGif);
+  await androidIt("Send GIF and reply test", sendGif);
   await androidIt("Send long text and reply test", sendLongMessage);
   await androidIt("Unsend message", unsendMessage);
   await androidIt("Delete message", deleteMessage);

@@ -43,9 +43,9 @@ async function linkDevice(platform: SupportedPlatformsType) {
 async function contactsSyncLinkedDevice(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // link device
-  const userA = await linkedDevice(device1, device2, "User A", platform);
+  const userA = await linkedDevice(device1, device2, "Alice", platform);
 
-  const userB = await newUser(device3, "User B", platform);
+  const userB = await newUser(device3, "Bob", platform);
 
   await newContact(platform, device1, userA, device3, userB);
   await runOnlyOnIOS(platform, () => device1.clickOnElement("Back"));
@@ -119,7 +119,10 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
   // Select delete
   await device1.clickOnElement("Delete message");
   // Select delete for everyone
-  await device1.clickOnElement("Delete for me");
+  await runOnlyOnAndroid(platform, () =>
+    device1.clickOnElement("Delete just for me")
+  );
+  await runOnlyOnIOS(platform, () => device1.clickOnElement("Delete for me"));
 
   // await waitForLoadingAnimation(device1);
 
@@ -184,24 +187,32 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
   // Block user on device 1
   await device1.clickOnElement("More options");
   // Select block (menu option for android and toggle for ios)
-  await device1.clickOnElement("Block");
+  await sleepFor(100);
+  await runOnlyOnAndroid(platform, () =>
+    device1.clickOnTextElementById(`network.loki.messenger:id/title`, "Block")
+  );
+  await runOnlyOnIOS(platform, () => device1.clickOnElement("Block"));
   // Confirm block
   await device1.clickOnElement("Confirm block");
   await sleepFor(1000);
   await runOnlyOnIOS(platform, () => device1.clickOnElement("OK_BUTTON"));
   console.log(`${userB.userName}` + " has been blocked");
   // On ios, you need to navigate back to conversation screen to confirm block
-  await runOnlyOnIOS(platform, () => device1.clickOnElement("Back"));
+  await runOnlyOnIOS(platform, () => device1.navigateBack(platform));
   // Check on device 3 if user B is blocked
   // Click on conversation with User B
+  // Need to wait for blocked banner to appear (it appears and disappears quickly, then reappears, test is getting confused...)
+  await sleepFor(5000);
   await device3.selectByText("Conversation list item", userB.userName);
   // Look for blocked banner
   // Unblock on device 3 and check if unblocked on device 1
+
   await device3.clickOnElement("Blocked banner");
   // On ios you need to click ok to confirm unblock
   await runOnlyOnIOS(platform, () => device3.clickOnElement("Confirm block"));
   // check on device 1 if user B is unblocked
-  await sleepFor(1250);
+  // Need to wait for blocked banner to disappear (takes a minute)
+  await sleepFor(8000);
   await device1.hasElementBeenDeleted("accessibility id", "Blocked banner");
   // Send message from user B to user A to see if unblock worked
 
@@ -225,7 +236,7 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   await device1.clickOnElement("User settings");
   await sleepFor(100);
   await device1.clickOnElement("Profile picture");
-  await device1.clickOnElement("Photo Library");
+  await device1.clickOnElement("Photo library");
   // Check if permissions need to be enabled
   const permissions = await device1.doesElementExist(
     "accessibility id",
@@ -393,7 +404,3 @@ describe("Linked device - user tests", async () => {
   await iosIt("Check blocked user syncs", blockedUserLinkedDevice);
   await androidIt("Check blocked user syncs", blockedUserLinkedDevice);
 });
-
-// TESTS TO WRITE FOR LINKED DEVICE
-
-// Message requests

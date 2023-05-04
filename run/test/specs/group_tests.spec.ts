@@ -41,7 +41,7 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
-    newUser(device1, "Alice", platform),
+    newUser(device1, "Alice", platform, true),
     newUser(device2, "Bob", platform),
     newUser(device3, "Carl", platform),
   ]);
@@ -277,8 +277,12 @@ async function mentionsForGroupsIos(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Send message button");
   // Check in user B's device if the format is correct
   await device2.findMessageWithBody("@You");
+  await device2.inputText("accessibility id", "Message input box", "@");
+  // Check that all users are showing in mentions box
+  await device2.findElement("accessibility id", "Mentions list");
   // Select User C
-  await device1.selectByText("Contact", userC.userName);
+  await device2.selectByText("Contact", userC.userName);
+  await device2.clickOnElement("Send message button");
   // Check in User C's device if the format is correct
   await device3.findMessageWithBody("@You");
   // Close app
@@ -318,6 +322,7 @@ async function mentionsForGroupsAndroid(platform: SupportedPlatformsType) {
   // Check in user B's device if the format is correct
   await device2.findMessageWithBody("@You");
   // Select User C
+  await sleepFor(2000);
   await device1.inputText("accessibility id", "Message input box", "@");
   // Check that all users are showing in mentions box
   await device1.waitForElementToBePresent("accessibility id", "Mentions list");
@@ -334,7 +339,7 @@ async function mentionsForGroupsAndroid(platform: SupportedPlatformsType) {
   await closeApp(device1, device2, device3);
 }
 
-async function leaveGroup(platform: SupportedPlatformsType) {
+async function leaveGroupIos(platform: SupportedPlatformsType) {
   const testGroupName = "Otter lovers";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
@@ -356,19 +361,53 @@ async function leaveGroup(platform: SupportedPlatformsType) {
     testGroupName
   );
   await device3.clickOnElement("More options");
-  await runOnlyOnAndroid(platform, () =>
-    device1.clickOnTextElementById(
-      `network.loki.messenger:id/title`,
-      "Leave group"
-    )
-  );
-  await runOnlyOnIOS(platform, () => device3.clickOnElement("Leave group"));
+  await sleepFor(1000);
+  await device3.clickOnElement("Leave group");
   await device3.clickOnElement("Leave");
   await device3.navigateBack(platform);
   // Check for control message
   await device3.findConfigurationMessage("You have left the group.");
   await device2.findConfigurationMessage(`${userC.userName} left the group.`);
   await device1.findConfigurationMessage(`${userC.userName} left the group.`);
+  await closeApp(device1, device2, device3);
+}
+
+async function leaveGroupAndroid(platform: SupportedPlatformsType) {
+  const testGroupName = "Otter lovers";
+  const { device1, device2, device3 } = await openAppThreeDevices(platform);
+  // Create users A, B and C
+  const [userA, userB, userC] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+    newUser(device3, "Carl", platform),
+  ]);
+
+  // Create group with user A, user B and User C
+  await createGroup(
+    platform,
+    device1,
+    userA,
+    device2,
+    userB,
+    device3,
+    userC,
+    testGroupName
+  );
+  await device3.clickOnElement("More options");
+  await sleepFor(1000);
+  await device3.clickOnTextElementById(
+    `network.loki.messenger:id/title`,
+    "Leave group"
+  );
+  await device3.clickOnElementById(`android:id/button1`);
+  // Check for control message
+  await device3.findConfigurationMessage("You have left the group.");
+  await device2.findConfigurationMessage(
+    `${userC.userName} has left the group.`
+  );
+  await device1.findConfigurationMessage(
+    `${userC.userName} has left the group.`
+  );
   await closeApp(device1, device2, device3);
 }
 
@@ -382,9 +421,9 @@ describe("Group Testing", async () => {
   await iosIt("Add contact to group", addContactToGroup);
   await androidIt("Add contact to group", addContactToGroup);
 
-  await iosIt("Test mentions in group chats", mentionsForGroupsIos);
-  await androidIt("Test mentions in group chats", mentionsForGroupsAndroid);
+  await iosIt("Test mentions", mentionsForGroupsIos);
+  await androidIt("Test mentions", mentionsForGroupsAndroid);
 
-  await iosIt("Leave group", leaveGroup);
-  await androidIt("Leave group", leaveGroup);
+  await iosIt("Leave group", leaveGroupIos);
+  await androidIt("Leave group", leaveGroupAndroid);
 });

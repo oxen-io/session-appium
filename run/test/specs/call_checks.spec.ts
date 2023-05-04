@@ -108,7 +108,7 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   ]);
   await device1.sendNewMessage(userB, "Testing calls");
   // Look for phone icon (shouldnt be there)
-  await device1.hasElementBeenDeleted("accessibility id", "Call button");
+  await device1.hasElementBeenDeleted("accessibility id", "Call");
   // Create contact
   await device2.clickOnElement("Message requests banner");
   // Select message from User A
@@ -128,28 +128,25 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   // Phone icon should appear now that conversation has been approved
   await device1.clickOnElement("Call");
   // Enabled voice calls in privacy settings
-  await device1.waitForElementToBePresent("id", "android:id/button1");
-  await device1.clickOnElementById("android:id/button1");
+  await device1.waitForElementToBePresent("accessibility id", "Settings");
+  await device1.clickOnElement("Settings");
   // await device1.clickOnElement("Settings");
   // Scroll to bottom of page to voice and video calls
-  await device1.scrollDown();
-
   // Toggle voice settings on
   // Click enable on exposure IP address warning
-  await device1.clickOnElement("Enable");
   await device1.clickOnElement("Allow voice and video calls");
-  await device1.clickOnElement("While using this app");
+  await device1.clickOnElement("Continue");
   // Navigate back to conversation
-  await device1.clickOnElement("Navigate up");
+  await device1.clickOnElement("Close Button");
   // Enable voice calls on device 2 for User B
-  await device2.clickOnElement("Call button");
+  await device2.clickOnElement("Call");
   await device2.clickOnElement("Settings");
   await device2.scrollDown();
   await device2.clickOnElement("Allow voice and video calls");
   await device2.clickOnElement("Enable");
-  await device2.clickOnElement("Navigate up");
+  await device2.clickOnElement("Close Button");
   // Make call on device 1 (userA)
-  await device1.clickOnElement("Call button");
+  await device1.clickOnElement("Call");
   // Answer call on device 2
   await device2.clickOnElement("Answer call");
   // Wait 10 seconds

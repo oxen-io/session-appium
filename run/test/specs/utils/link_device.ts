@@ -9,7 +9,8 @@ export const linkedDevice = async (
   device2: DeviceWrapper,
   userName: string,
   platform: SupportedPlatformsType,
-  notifications?: boolean
+  notifications?: boolean,
+  noDisplayName?: boolean
 ) => {
   const user = await newUser(device1, userName, platform, notifications);
   // Log in with recovery seed on device 2
@@ -22,8 +23,21 @@ export const linkedDevice = async (
     user.recoveryPhrase
   );
   // Continue with recovery phrase
-  await runOnlyOnAndroid(platform, () => device2.clickOnElement("Continue"));
-  await runOnlyOnIOS(platform, () => device2.clickOnElement("Continue"));
+  await device2.clickOnElement("Continue");
+
+  // DELETE THIS AFTER ANDROID USER CONFIG ****************************
+  // if (!noDisplayName) {
+  //   await sleepFor(10000);
+  //   await device2.clickOnElementById(
+  //     "network.loki.messenger:id/snackbar_action"
+  //   );
+  //   await device2.inputText(
+  //     "accessibility id",
+  //     "Enter display name",
+  //     user.userName
+  //   );
+  //   await device2.clickOnElement("Continue");
+  // }
   // Wait for any notifications to disappear
   await device2.waitForElementToBePresent(
     "accessibility id",
@@ -35,8 +49,10 @@ export const linkedDevice = async (
   // Click continue on message notification settings
   await device2.clickOnElement("Continue with settings");
   // Dismiss notifications alert
+  // Check for recovery phrase reminder
   await runOnlyOnIOS(platform, () => device2.clickOnElement("Don’t Allow"));
-  // Check that you're almost there isn't displayed
+  await sleepFor(1000);
+  await device2.hasElementBeenDeleted("accessibility id", "Continue");
   await sleepFor(1000);
   // Check that button was clicked
   await device2.waitForElementToBePresent(
@@ -47,7 +63,7 @@ export const linkedDevice = async (
   if (platform === "android" && notifications === true) {
     await device2.clickOnElement("User settings");
     await device2.clickOnElement("Notifications");
-    await sleepFor(500);
+    await sleepFor(1000);
     await device2.clickOnTextElementById(
       "network.loki.messenger:id/device_settings_text",
       "Go to device notification settings"

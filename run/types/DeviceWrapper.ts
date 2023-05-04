@@ -1,5 +1,5 @@
 import { W3CCapabilities } from "appium/build/lib/appium";
-import { isArray, isEmpty } from "lodash";
+import { isArray, isEmpty, max } from "lodash";
 import { AppiumNextElementType } from "../../appium_next";
 import { sleepFor } from "../test/specs/utils";
 import { SupportedPlatformsType } from "../test/specs/utils/open_app";
@@ -302,8 +302,16 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.click(el.ELEMENT);
   }
 
-  public async clickOnElementByText(strategy: Strategy, textToClickOn: string) {
-    const el = await this.waitForElementToBePresent(strategy, textToClickOn);
+  public async clickOnElementByText(
+    strategy: Strategy,
+    selector: string,
+    textToClickOn: string
+  ) {
+    const el = await this.waitForTextElementToBePresent(
+      strategy,
+      selector,
+      textToClickOn
+    );
 
     if (!el) {
       throw new Error(
@@ -538,6 +546,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     if (elements && elements.length) {
       const matching = await this.findAsync(elements, async (e) => {
         const text = await this.getTextFromElement(e);
+        // console.error(`text ${text} lookigfor ${textToLookFor}`);
 
         return Boolean(
           text && text.toLowerCase() === textToLookFor.toLowerCase()
@@ -576,15 +585,17 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return lastElement;
   }
 
-  public async findConfigurationMessage(messageText: string) {
+  public async findConfigurationMessage(messageText: string, maxWait?: number) {
     await this.waitForElementToBePresent(
       "accessibility id",
-      "Configuration message"
+      "Configuration message",
+      maxWait
     );
     const configMessage = this.waitForTextElementToBePresent(
       "accessibility id",
       "Configuration message",
-      messageText
+      messageText,
+      maxWait
     );
     if (!configMessage) {
       throw new Error(`Couldnt find ${configMessage}`);
@@ -757,6 +768,17 @@ export class DeviceWrapper implements SharedDeviceInterface {
     console.log(`'${selector}' and '${text}' has been found`);
     return el;
   }
+  // Function A (waitForElement/CheckForElement)
+  // Check if there's a boolean,
+  // If there is then check for condition
+  // If condition is true
+  // Then do this
+  // If condition is false
+  // Continue function
+
+  // public async checkForElementWithCondition(condition: boolean) {
+  //   await this.waitForElementToBePresent()
+  // }
 
   // UTILITY FUNCTIONS
 

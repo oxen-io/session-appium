@@ -152,7 +152,7 @@ const openAndroidApp = async (
 ): Promise<{
   device: DeviceWrapper;
 }> => {
-  // await killAdbIfNotAlreadyDone();
+  await killAdbIfNotAlreadyDone();
   const targetName = getAndroidUuid(capabilitiesIndex);
 
   // await createAndroidEmulator(targetName);

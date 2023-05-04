@@ -16,11 +16,11 @@ async function groupCreationandNameChangeLinkedDevice(
     platform
   );
 
-  const userA = await linkedDevice(device1, device2, "Alice", platform);
+  const userA = await linkedDevice(device1, device2, "Alice", platform, true);
 
   const [userB, userC] = await Promise.all([
-    newUser(device3, "Bob", platform),
-    newUser(device4, "Carl", platform),
+    newUser(device3, "Bob", platform, true),
+    newUser(device4, "Carl", platform, true),
   ]);
   const testGroupName = "Linked device group";
   const newGroupName = "New group name";
@@ -41,19 +41,33 @@ async function groupCreationandNameChangeLinkedDevice(
   // Click on settings/more info
   await device1.clickOnElement("More options");
   // Edit group
-  await device1.clickOnElement("Edit group");
+  await sleepFor(100);
+  await runOnlyOnIOS(platform, () => device1.clickOnElement("Edit group"));
+  await runOnlyOnAndroid(platform, () =>
+    device1.clickOnTextElementById(
+      `network.loki.messenger:id/title`,
+      "Edit group"
+    )
+  );
   // click on group name to change it
   await device1.clickOnElement("Group name");
   // Type in new name
-  await device1.inputText(
-    "accessibility id",
-    "Group name text field",
-    newGroupName
+  await runOnlyOnAndroid(platform, () =>
+    device1.inputText("accessibility id", "Group name", newGroupName)
+  );
+  await runOnlyOnIOS(platform, () =>
+    device1.inputText("accessibility id", "Group name text field", newGroupName)
   );
   // Confirm change (tick on android/ first done on ios)
   await device1.clickOnElement("Accept name change");
   // Apply changes (Apply on android/ second done on ios)
-  await device1.clickOnElement("Apply changes");
+  await runOnlyOnIOS(platform, () => device1.clickOnElement("Apply changes"));
+  await runOnlyOnAndroid(platform, () =>
+    device1.clickOnTextElementById(
+      `network.loki.messenger:id/action_apply`,
+      "APPLY"
+    )
+  );
   // await device1.clickOnElement("Accept name change");
   // If ios click back to match android (which goes back to conversation screen)
   // Check config message for changed name (different on ios and android)
@@ -68,7 +82,7 @@ async function groupCreationandNameChangeLinkedDevice(
   await runOnlyOnAndroid(platform, () =>
     device1.findMatchingTextAndAccessibilityId(
       "Configuration message",
-      "You renamed group to: " + `'${newGroupName}'`
+      "You renamed the group to " + `${newGroupName}`
     )
   );
   // Wait 5 seconds for name to update
@@ -88,7 +102,7 @@ async function groupCreationandNameChangeLinkedDevice(
   await runOnlyOnAndroid(platform, () =>
     device2.findMatchingTextAndAccessibilityId(
       "Configuration message",
-      "You renamed group to " + `'${newGroupName}'`
+      "You renamed the group to " + `${newGroupName}`
     )
   );
   await closeApp(device1, device2, device3, device4);
@@ -117,23 +131,46 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
+  await sleepFor(1000);
   await device3.clickOnElement("More options");
+  await sleepFor(1000);
   await runOnlyOnAndroid(platform, () =>
-    device1.clickOnTextElementById(
+    device3.clickOnTextElementById(
       `network.loki.messenger:id/title`,
       "Leave group"
     )
   );
 
   await runOnlyOnIOS(platform, () => device3.clickOnElement("Leave group"));
-  await device3.clickOnElement("Leave");
-  await device3.navigateBack(platform);
+  await runOnlyOnIOS(platform, () => device3.clickOnElement("Leave"));
+  await runOnlyOnAndroid(platform, () =>
+    device3.clickOnElementById(`android:id/button1`)
+  );
+  // await device3.navigateBack(platform);
   // Check for control message
   await device3.findConfigurationMessage("You have left the group.");
-  await device4.clickOnElementByText("accessibility id", testGroupName);
+
+  await runOnlyOnIOS(platform, () =>
+    device4.clickOnElementByText(
+      "accessibility id",
+      testGroupName,
+      testGroupName
+    )
+  );
+  await runOnlyOnAndroid(platform, () =>
+    device4.clickOnElementByText(
+      "accessibility id",
+      "Conversation list item",
+      testGroupName
+    )
+  );
   await device4.findConfigurationMessage("You have left the group.");
-  await device2.findConfigurationMessage(`${userC.userName} left the group.`);
-  await device1.findConfigurationMessage(`${userC.userName} left the group.`);
+  await device2.findConfigurationMessage(
+    `${userC.userName} has left the group.`
+  );
+  await device1.findConfigurationMessage(
+    `${userC.userName} has left the group.`
+  );
   await closeApp(device1, device2, device3);
 }
 
@@ -150,3 +187,7 @@ describe("Linked device - group tests", async () => {
   await iosIt("Leaving group syncs", leaveGroupLinkedDevice);
   await androidIt("Leaving group syncs", leaveGroupLinkedDevice);
 });
+
+//  Remove user
+//  Add user
+//  Disappearing messages

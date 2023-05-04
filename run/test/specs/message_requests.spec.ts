@@ -58,10 +58,12 @@ async function declineRequest(platform: SupportedPlatformsType) {
   // Bob clicks on request conversation item
   await device2.clickOnElement("Message request");
   // Click on decline button
-  await device2.clickOnElement("Decline message request");
+  await device2.clickOnElement("Delete message request");
   // Are you sure you want to delete message request only for ios
-  await runOnlyOnIOS(platform, () => device2.clickOnElement("Delete"));
+  await sleepFor(2000);
+  await runOnlyOnIOS(platform, () => device2.clickOnElement("Confirm delete"));
   // Navigate back to home page
+  await sleepFor(100);
   await device2.navigateBack(platform);
   // Look for new conversation button to make sure it all worked
   await device2.waitForElementToBePresent(
@@ -157,13 +159,39 @@ async function deleteRequest(platform: SupportedPlatformsType) {
   // Bob clicks on message request banner
   await device2.clickOnElement("Message requests banner");
   // Swipe left on ios
-  await runOnlyOnIOS(platform, () =>
-    device2.swipeLeftAny("accessibility id", "Message request")
-  );
+  await device2.swipeLeftAny("accessibility id", "Message request");
+
   await device2.clickOnElement("Delete");
   await sleepFor(1000);
-  await device2.clickOnElement("Delete");
+  await device2.clickOnElement("Confirm delete");
   await device2.findElement("accessibility id", "No pending message requests");
+
+  await closeApp(device1, device2);
+}
+
+async function clearAllRequests(platform: SupportedPlatformsType) {
+  const { device1, device2 } = await openAppTwoDevices(platform);
+  const [userA, userB] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+  ]);
+  // Send message from Alice to Bob
+  await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
+  // Wait for banner to appear
+  // Bob clicks on message request banner
+  await device2.clickOnElement("Message requests banner");
+  // Select Clear All button
+  await device2.clickOnElement("Clear all");
+  await sleepFor(1000);
+  await runOnlyOnAndroid(platform, () =>
+    device2.clickOnTextElementById("android:id/button1", "YES")
+  );
+  await runOnlyOnIOS(platform, () => device2.clickOnElement("Clear"));
+
+  await device2.waitForElementToBePresent(
+    "accessibility id",
+    "No pending message requests"
+  );
 
   await closeApp(device1, device2);
 }
@@ -182,5 +210,7 @@ describe("Message requests", async () => {
   await androidIt("Message requests block", blockRequest);
 
   await iosIt("Delete request", deleteRequest);
-  await androidIt("Delete request", deleteRequest);
+
+  await iosIt("Message requests clear all", clearAllRequests);
+  await androidIt("Message requests clear all", clearAllRequests);
 });

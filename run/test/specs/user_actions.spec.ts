@@ -145,46 +145,59 @@ async function changeUsername(platform: SupportedPlatformsType) {
 }
 async function changeAvatarAndroid(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
-
+  const spongebobsBirthday = "199905020700.00";
   // Create new user
   const userA = await newUser(device, "Alice", platform);
   // Click on settings/avatar
   await device.clickOnElement("User settings");
   await sleepFor(100);
-
   // Click on Profile picture
   await device.clickOnElement("User settings");
   // Click on Photo library
   await sleepFor(100);
-  await clickOnXAndYCoordinates(device, 315, 316);
-  // await device.back();
+  await device.clickOnElementById(
+    "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
+  );
+  await device.waitForTextElementToBePresent("id", "android:id/text1", "Files");
+  await device.clickOnTextElementById("android:id/text1", "Files");
   // Select file
   await sleepFor(2000);
+  const profilePicture = await device.doesElementExist(
+    "accessibility id",
+    `profile_picture.jpg, 27.75 kB, May 1, 1999`,
+    2000
+  );
+  // If no image, push file to device
+  if (!profilePicture) {
+    await runScriptAndLog(
+      `touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/profile_picture.jpg'`
+    );
 
-  // Need to add a function that if file isn't found, push file to device
-  await device.clickOnElementXPath(
-    '//android.widget.LinearLayout[@content-desc="download.png, 3.59 kB, Jan 30"]/android.widget.RelativeLayout/android.widget.FrameLayout[1]/android.widget.ImageView[1]'
+    await runScriptAndLog(
+      `adb -s emulator-5554 push 'run/test/specs/media/profile_picture.jpg' /storage/emulated/0/Download`,
+      true
+    );
+  }
+  await sleepFor(100);
+  await device.clickOnElement(`profile_picture.jpg, 27.75 kB, May 1, 1999`);
+  await device.clickOnElementById(
+    "network.loki.messenger:id/crop_image_menu_crop"
   );
-  // Click crop
-  await device.clickOnElementXPath(
-    "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.FrameLayout[1]/android.view.ViewGroup/androidx.appcompat.widget.LinearLayoutCompat/android.widget.Button[3]"
-  );
-  // Wait for change
-  await sleepFor(5000);
-  // Verify change somehow...?
-  // Take screenshot
   const el = await device.waitForElementToBePresent(
     "accessibility id",
     "User settings"
   );
+  await sleepFor(3000);
   const base64 = await device.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
   console.log("RGB Value of pixel is:", pixelColor);
-  if (pixelColor === "00cbfe") {
-    console.log("Colour is correct");
+  if (pixelColor === "03cbfe") {
+    console.log("Colour is correct on device 1");
   } else {
-    console.log("Colour isn't 00cbfe, it is: ", pixelColor);
+    console.log("Colour isn't 03cbfe, it is: ", pixelColor);
   }
+  // Check avatar on device 2
+
   await closeApp(device);
 }
 async function changeAvatariOS(platform: SupportedPlatformsType) {
@@ -318,6 +331,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Close app
   await closeApp(device1, device2);
 }
+
 async function setNicknameIos(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const nickName = "New nickname";
@@ -342,6 +356,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   // Check in conversation list also
   await device1.clickOnElement("Back");
   // Save text of conversation list item?
+  await sleepFor(1000);
   await device1.findMatchingTextAndAccessibilityId(
     "Conversation list item",
     nickName

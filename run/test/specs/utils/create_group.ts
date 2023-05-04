@@ -16,7 +16,7 @@ export const createGroup = async (
 ): Promise<Group> => {
   const group: Group = { userName, userOne, userTwo, userThree };
 
-  const userAMessage = `${userOne.userName} to group`;
+  const userAMessage = `${userOne.userName} to ${userName}`;
   // Create contact between User A and User B
   await newContact(platform, device1, userOne, device2, userTwo);
   await device1.navigateBack(platform);
@@ -43,8 +43,11 @@ export const createGroup = async (
   await runOnlyOnIOS(platform, () =>
     device1.waitForElementToBePresent("accessibility id", "Empty state label")
   );
+  // await runOnlyOnIOS(platform, () =>
+  //   device1.findConfigurationMessage("Group created")
+  // );
   await runOnlyOnAndroid(platform, () =>
-    device1.findConfigurationMessage("You created a new group.")
+    device1.findConfigurationMessage("You created a new group.", 2000)
   );
   // Send message from User a to group to verify all working
   await device1.sendMessage(userAMessage);

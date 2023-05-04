@@ -52,6 +52,7 @@ export const newUser = async (
   if (platform === "android" && notifications === true) {
     await device.clickOnElement("User settings");
     await device.clickOnElement("Notifications");
+    await sleepFor(500);
     await device.clickOnTextElementById(
       "network.loki.messenger:id/device_settings_text",
       "Go to device notification settings"

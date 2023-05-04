@@ -1,12 +1,11 @@
-import { iosIt, androidIt } from "../../types/sessionIt";
+import { androidIt, iosIt } from "../../types/sessionIt";
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { linkedDevice } from "./utils/link_device";
 import {
-  SupportedPlatformsType,
   closeApp,
   openAppThreeDevices,
-  openAppTwoDevices,
+  SupportedPlatformsType,
 } from "./utils/open_app";
 
 async function acceptRequestLinked(platform: SupportedPlatformsType) {
@@ -75,10 +74,13 @@ async function declineRequestLinked(platform: SupportedPlatformsType) {
     "Message request"
   );
   // Click on decline button
-  await device2.clickOnElement("Decline message request");
+  await device2.clickOnElement("Delete message request");
   // Are you sure you want to delete message request only for ios
-  await runOnlyOnIOS(platform, () => device2.clickOnElement("Delete"));
+  await sleepFor(3000);
+  await device2.clickOnElement("Confirm delete");
+
   // Navigate back to home page
+  await sleepFor(100);
   await device2.navigateBack(platform);
   // Look for new conversation button to make sure it all worked
   await device2.waitForElementToBePresent(
