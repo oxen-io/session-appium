@@ -234,7 +234,6 @@ async function sendGif(platform: SupportedPlatformsType) {
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
   ]);
-  const testMessage = "Testing-GIF-1";
   const replyMessage = `Replying to GIF from ${userA.userName}`;
   // create contact
   await newContact(platform, device1, userA, device2, userB);

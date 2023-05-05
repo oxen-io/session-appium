@@ -7,7 +7,6 @@ import {
   SupportedPlatformsType,
 } from "./utils/open_app";
 import {
-  doFunctionIfElementExists,
   clickOnXAndYCoordinates,
   sleepFor,
   runOnlyOnAndroid,
@@ -267,30 +266,9 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
   // Select voice message button to activate recording state
   await device1.longPress("New voice message");
   // "Session" would like to access the microphone (Don't allow/ OK)
-  const permissions = await device1.waitForElementToBePresent(
-    "accessibility id",
-    "OK"
-  );
-  if (permissions) {
-    device1.clickOnElement("OK");
-    device1.pressAndHold("New voice message");
-  } else {
-    // Need enable microphone access in settings
-    await doFunctionIfElementExists(
-      device1,
-      "accessibility id",
-      "Settings",
-      () => device1.clickOnElement("Settings")
-    );
-    await device1.clickOnElementXPath(
-      `//XCUIElementTypeSwitch[@name="Microphone"]/XCUIElementTypeSwitch`
-    );
-    await sleepFor(100);
-    await device1.back();
-    await device1.selectByText("Conversation list item", "Alice");
+  await device1.clickOnElement("OK");
+  await device1.pressAndHold("New voice message");
 
-    await device1.pressAndHold("New voice message");
-  }
   await device1.waitForElementToBePresent("accessibility id", "Voice message");
 
   await device2.clickOnElement("Untrusted attachment message");

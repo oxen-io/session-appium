@@ -10,3 +10,14 @@ export const runOnlyOnAndroid = async (
     return value;
   }
 };
+
+export const runOnlyOnIOS = async (
+  platform: SupportedPlatformsType,
+  toRun: () => Promise<any>
+) => {
+  if (platform === "ios") {
+    const value = await toRun();
+
+    return value;
+  }
+};

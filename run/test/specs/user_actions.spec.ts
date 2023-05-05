@@ -420,3 +420,4 @@ describe("User actions", async () => {
 });
 
 // Check read receipts working
+// Typing indicators working

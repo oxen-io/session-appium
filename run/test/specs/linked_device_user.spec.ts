@@ -127,7 +127,7 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
   // await waitForLoadingAnimation(device1);
 
   // Check linked device for deleted message
-  await device1.hasTextElementBeenDeleted("Message body", sentMessage);
+  await device1.hasTextElementBeenDeleted("Message Body", sentMessage);
   // Close app
   await closeApp(device1, device2, device3);
 }
@@ -166,7 +166,7 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
     "Deleted message"
   );
   // Check linked device for deleted message
-  await device3.hasTextElementBeenDeleted("Message body", sentMessage);
+  await device3.hasTextElementBeenDeleted("Message Body", sentMessage);
   // Close app
   await closeApp(device1, device2, device3);
 }

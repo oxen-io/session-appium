@@ -40,9 +40,9 @@ async function disappearingMessages(platform: SupportedPlatformsType) {
   // Wait 5 seconds
 
   // Look for message for User A
-  await device1.hasTextElementBeenDeleted("Message body", message);
+  await device1.hasTextElementBeenDeleted("Message Body", message);
   // Look for message for User B
-  await device2.hasTextElementBeenDeleted("Message body,", message);
+  await device2.hasTextElementBeenDeleted("Message Body", message);
   // Turn off disappearing messages
   // Click on timer icon
   // Android

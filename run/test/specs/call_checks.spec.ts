@@ -13,7 +13,7 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   ]);
   await device1.sendNewMessage(userB, "Testing calls");
   // Look for phone icon (shouldnt be there)
-  await device1.hasElementBeenDeleted("accessibility id", "Call button");
+  await device1.hasElementBeenDeleted("accessibility id", "Call");
   // Create contact
   await device2.clickOnElement("Message requests banner");
   // Select message from User A

@@ -4,7 +4,7 @@ import { AppiumNextElementType } from "../../appium_next";
 import { sleepFor } from "../test/specs/utils";
 import { SupportedPlatformsType } from "../test/specs/utils/open_app";
 import { isDeviceAndroid, isDeviceIOS } from "../test/specs/utils/utilities";
-import { Group, User } from "./testing";
+import { AccessibilityId, Group, Strategy, User } from "./testing";
 
 export type Coordinates = {
   x: number;
@@ -15,7 +15,7 @@ export type ActionSequence = {
   actions: string;
 };
 
-export type Strategy = "accessibility id" | "xpath" | "id" | "class name";
+type Action = Coordinates & { type: "pointer"; duration?: number };
 
 type SharedDeviceInterface = {
   back: () => Promise<void>;
@@ -45,8 +45,8 @@ type SharedDeviceInterface = {
     duration?: number
   ) => Promise<void>;
   performActions: (actions: any) => Promise<any>;
-  performTouch: (actions: any) => Promise<any>;
-  // touchAction: (actions: any) => Promise<any>;
+  performTouch: (actions: Action) => Promise<any>;
+  // touchAction: (actions: Action) => Promise<any>;
   tap: (
     xCoOrdinates: number,
     yCoOrdinates: number,
@@ -212,7 +212,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     yCoOrdinates: number,
     duration?: number
   ): Promise<void> {
-    const actions = {
+    const actions: Action = {
       type: "pointer",
       x: xCoOrdinates,
       y: yCoOrdinates,
@@ -225,7 +225,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return this.toShared().performActions(actions);
   }
 
-  public async performTouch(actions: any): Promise<any> {
+  public async performTouch(actions: Action): Promise<any> {
     return this.toShared().performTouch(actions);
   }
 
@@ -289,7 +289,10 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return this.toAndroid().touchLongClick(element.ELEMENT);
   }
 
-  public async clickOnElement(accessibilityId: string, maxWait?: number) {
+  public async clickOnElement(
+    accessibilityId: AccessibilityId,
+    maxWait?: number
+  ) {
     const el = await this.waitForElementToBePresent(
       "accessibility id",
       accessibilityId,
@@ -338,7 +341,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.click(el.ELEMENT);
   }
 
-  public async tapOnElement(accessibilityId: string) {
+  public async tapOnElement(accessibilityId: AccessibilityId) {
     const el = await this.findElementByAccessibilityId(accessibilityId);
     if (!el) {
       throw new Error(`Tap: Couldnt find accessibilityId: ${accessibilityId}`);
@@ -346,7 +349,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.click(el.ELEMENT);
   }
 
-  public async longPress(accessibilityId: string) {
+  public async longPress(accessibilityId: AccessibilityId) {
     const el = await this.waitForElementToBePresent(
       "accessibility id",
       accessibilityId
@@ -387,7 +390,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.longClick(el, 1000);
   }
 
-  public async pressAndHold(accessibilityId: string) {
+  public async pressAndHold(accessibilityId: AccessibilityId) {
     const el = await this.waitForElementToBePresent(
       "accessibility id",
       accessibilityId
@@ -396,7 +399,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.longClick(el, 2000);
   }
 
-  public async selectByText(accessibilityId: string, text: string) {
+  public async selectByText(accessibilityId: AccessibilityId, text: string) {
     await this.waitForTextElementToBePresent(
       "accessibility id",
       accessibilityId,
@@ -420,7 +423,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async grabTextFromAccessibilityId(
-    accessibilityId: string
+    accessibilityId: AccessibilityId
   ): Promise<string> {
     const elementId = await this.waitForElementToBePresent(
       "accessibility id",
@@ -431,7 +434,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return text;
   }
 
-  public async deleteText(accessibilityId: string) {
+  public async deleteText(accessibilityId: AccessibilityId) {
     const el = await this.findElementByAccessibilityId(accessibilityId);
 
     await this.clear(el.ELEMENT);
@@ -443,7 +446,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   // ELEMENT LOCATORS
 
   public async findElementByAccessibilityId(
-    accessibilityId: string
+    accessibilityId: AccessibilityId
   ): Promise<AppiumNextElementType> {
     const element = await this.findElement("accessibility id", accessibilityId);
     if (!element || isArray(element)) {
@@ -455,7 +458,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async findElementsByAccessibilityId(
-    accessibilityId: string
+    accessibilityId: AccessibilityId
   ): Promise<Array<AppiumNextElementType>> {
     const elements = await this.findElements(
       "accessibility id",
@@ -521,7 +524,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async findMatchingTextAndAccessibilityId(
-    accessibilityId: string,
+    accessibilityId: AccessibilityId,
     textToLookFor: string
   ): Promise<AppiumNextElementType> {
     const elements = await this.findElementsByAccessibilityId(accessibilityId);
@@ -572,7 +575,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async findLastElementInArray(
-    accessibilityId: string
+    accessibilityId: AccessibilityId
   ): Promise<AppiumNextElementType> {
     const elements = await this.findElementsByAccessibilityId(accessibilityId);
 
@@ -678,7 +681,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async hasTextElementBeenDeleted(
-    accessibilityId: string,
+    accessibilityId: AccessibilityId,
     text: string
   ) {
     const fakeError = `${accessibilityId}: has been found, but shouldn't have been. OOPS`;
@@ -768,17 +771,6 @@ export class DeviceWrapper implements SharedDeviceInterface {
     console.log(`'${selector}' and '${text}' has been found`);
     return el;
   }
-  // Function A (waitForElement/CheckForElement)
-  // Check if there's a boolean,
-  // If there is then check for condition
-  // If condition is true
-  // Then do this
-  // If condition is false
-  // Continue function
-
-  // public async checkForElementWithCondition(condition: boolean) {
-  //   await this.waitForElementToBePresent()
-  // }
 
   // UTILITY FUNCTIONS
 
@@ -789,7 +781,8 @@ export class DeviceWrapper implements SharedDeviceInterface {
     // Wait for tick
     await this.waitForElementToBePresent(
       "accessibility id",
-      `Message sent status: Sent`
+      `Message sent status: Sent`,
+      8000
     );
 
     return message;
@@ -817,7 +810,8 @@ export class DeviceWrapper implements SharedDeviceInterface {
     // Wait for tick
     await this.waitForElementToBePresent(
       "accessibility id",
-      `Message sent status: Sent`
+      `Message sent status: Sent`,
+      8000
     );
 
     return message;
@@ -860,7 +854,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return sentMessage;
   }
 
-  public async inputText(strategy: Strategy, selector: string, text: string) {
+  public async inputText(
+    strategy: Extract<Strategy, "accessibility id">,
+    selector: AccessibilityId,
+    text: string
+  ) {
     await this.waitForElementToBePresent(strategy, selector);
     const element = await this.findElementByAccessibilityId(selector);
     if (!element) {
@@ -888,7 +886,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     console.warn("Swiped left on " + strategy, ":", selector);
   }
 
-  public async swipeLeft(accessibilityId: string, text: string) {
+  public async swipeLeft(accessibilityId: AccessibilityId, text: string) {
     const el = await this.findMatchingTextAndAccessibilityId(
       accessibilityId,
       text
