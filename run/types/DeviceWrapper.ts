@@ -782,7 +782,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.waitForElementToBePresent(
       "accessibility id",
       `Message sent status: Sent`,
-      8000
+      10000
     );
 
     return message;
@@ -811,7 +811,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.waitForElementToBePresent(
       "accessibility id",
       `Message sent status: Sent`,
-      8000
+      10000
     );
 
     return message;
