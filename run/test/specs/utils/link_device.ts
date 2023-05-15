@@ -1,6 +1,6 @@
 import { newUser } from "./create_account";
 import { SupportedPlatformsType } from "./open_app";
-import { sleepFor, runOnlyOnAndroid, runOnlyOnIOS } from ".";
+import { sleepFor,  runOnlyOnIOS } from ".";
 
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 
@@ -10,7 +10,6 @@ export const linkedDevice = async (
   userName: string,
   platform: SupportedPlatformsType,
   notifications?: boolean,
-  noDisplayName?: boolean
 ) => {
   const user = await newUser(device1, userName, platform, notifications);
   // Log in with recovery seed on device 2
@@ -25,7 +24,7 @@ export const linkedDevice = async (
   // Continue with recovery phrase
   await device2.clickOnElement("Continue");
 
-  // DELETE THIS AFTER ANDROID USER CONFIG ****************************
+  // TODO DELETE THIS AFTER ANDROID USER CONFIG ****************************
   // if (!noDisplayName) {
   //   await sleepFor(10000);
   //   await device2.clickOnElementById(

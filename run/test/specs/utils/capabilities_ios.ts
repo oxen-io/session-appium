@@ -22,34 +22,34 @@ function getIOSSimulatorUUIDFromEnv(index: CapabilitiesIndexType): string {
   switch (index) {
     case 0:
       if (process.env.IOS_FIRST_SIMULATOR) {
-        return process.env.IOS_FIRST_SIMULATOR as string;
+        return process.env.IOS_FIRST_SIMULATOR ;
       }
       throw new Error(
         `getSimulatorUUIDFromEnv process.env.IOS_FIRST_SIMULATOR is not set`
       );
     case 1:
       if (process.env.IOS_SECOND_SIMULATOR) {
-        return process.env.IOS_SECOND_SIMULATOR as string;
+        return process.env.IOS_SECOND_SIMULATOR ;
       }
       throw new Error(
         `getSimulatorUUIDFromEnv process.env.IOS_SECOND_SIMULATOR is not set`
       );
     case 2:
       if (process.env.IOS_THIRD_SIMULATOR) {
-        return process.env.IOS_THIRD_SIMULATOR as string;
+        return process.env.IOS_THIRD_SIMULATOR ;
       }
       throw new Error(
         `getSimulatorUUIDFromEnv process.env.IOS_THIRD_SIMULATOR is not set`
       );
     case 3:
       if (process.env.IOS_FOURTH_SIMULATOR) {
-        return process.env.IOS_FOURTH_SIMULATOR as string;
+        return process.env.IOS_FOURTH_SIMULATOR ;
       }
       throw new Error(
         `getSimulatorUUIDFromEnv process.env.IOS_THIRD_SIMULATOR is not set`
       );
     default:
-      throw new Error(`getSimulatorUUIDFromEnv unknown index: ${index}`);
+      throw new Error(`getSimulatorUUIDFromEnv unknown index: ${index as number}`);
   }
 }
 

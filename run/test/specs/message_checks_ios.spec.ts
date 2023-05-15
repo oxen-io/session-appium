@@ -56,7 +56,7 @@ async function sendImage(platform: SupportedPlatformsType) {
     );
 
     await runScriptAndLog(
-      `xcrun simctl addmedia ${process.env.IOS_FIRST_SIMULATOR} 'run/test/specs/media/test_image.jpg'`,
+      `xcrun simctl addmedia ${process.env.IOS_FIRST_SIMULATOR || ''} 'run/test/specs/media/test_image.jpg'`,
       true
     );
   }
@@ -88,7 +88,6 @@ async function sendImage(platform: SupportedPlatformsType) {
 
 async function sendDoc(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const spongebobsBirthday = "199905010700.00";
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
@@ -109,7 +108,7 @@ async function sendDoc(platform: SupportedPlatformsType) {
   );
   if (permissions) {
     try {
-      device1.clickOnElement("Allow Access to All Photos");
+      await device1.clickOnElement("Allow Access to All Photos");
     } catch (e) {
       console.log("No permissions dialog");
     }
@@ -223,7 +222,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
       true
     );
     await runScriptAndLog(
-      `xcrun simctl addmedia ${process.env.IOS_FIRST_SIMULATOR} 'run/test/specs/media/test_video.mp4'`,
+      `xcrun simctl addmedia ${process.env.IOS_FIRST_SIMULATOR || ''} 'run/test/specs/media/test_video.mp4'`,
       true
     );
     await sleepFor(2000);
@@ -376,7 +375,7 @@ async function sendLink(platform: SupportedPlatformsType) {
   );
   await device1.waitForElementToBePresent(
     "accessibility id",
-    "Message sent status: Sent"
+    "Message sent status: Sent", 20000
   );
   // Accept dialog for link preview
   await device1.clickOnElement("Enable");
@@ -400,7 +399,7 @@ async function sendLink(platform: SupportedPlatformsType) {
   );
 
   await device2.replyToMessage(userA, "https://nerdlegame.com/");
-  await await closeApp(device1, device2);
+  await closeApp(device1, device2);
 }
 
 async function unsendMessage(platform: SupportedPlatformsType) {
@@ -474,16 +473,16 @@ async function deleteMessage(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
-describe("Message checks ios", async () => {
-  await iosIt("Send image and reply test", sendImage);
-  await iosIt("Send video and reply test", sendVideo);
-  await iosIt("Send voice message test", sendVoiceMessage);
-  await iosIt("Send document and reply test", sendDoc);
-  await iosIt("Send GIF and reply test", sendGif);
-  await iosIt("Send long text and reply test", sendLongMessage);
-  await iosIt("Send link test", sendLink);
-  await iosIt("Unsend message", unsendMessage);
-  await iosIt("Delete message", deleteMessage);
+describe("Message checks ios",  () => {
+  iosIt("Send image and reply test", sendImage);
+  iosIt("Send video and reply test", sendVideo);
+  iosIt("Send voice message test", sendVoiceMessage);
+  iosIt("Send document and reply test", sendDoc);
+  iosIt("Send GIF and reply test", sendGif);
+  iosIt("Send long text and reply test", sendLongMessage);
+  iosIt("Send link test", sendLink);
+  iosIt("Unsend message", unsendMessage);
+  iosIt("Delete message", deleteMessage);
 });
 
 // Media saved notification

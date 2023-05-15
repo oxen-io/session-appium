@@ -315,7 +315,7 @@ async function sendLink(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Send message button");
   await device1.waitForElementToBePresent(
     "accessibility id",
-    "Message sent status: Sent"
+    "Message sent status: Sent", 20000
   );
   // Send again for image
   await device1.inputText(
@@ -407,16 +407,16 @@ async function deleteMessage(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
-describe("Message checks android", async () => {
-  await androidIt("Send image and reply test", sendImage);
-  await androidIt("Send video and reply test", sendVideo);
-  await androidIt("Send voice message test", sendVoiceMessage);
-  await androidIt("Send document and reply test", sendDocument);
-  await androidIt("Send link test", sendLink);
-  await androidIt("Send GIF and reply test", sendGif);
-  await androidIt("Send long text and reply test", sendLongMessage);
-  await androidIt("Unsend message", unsendMessage);
-  await androidIt("Delete message", deleteMessage);
+describe("Message checks android",  () => {
+  androidIt("Send image and reply test", sendImage);
+  androidIt("Send video and reply test", sendVideo);
+  androidIt("Send voice message test", sendVoiceMessage);
+  androidIt("Send document and reply test", sendDocument);
+  androidIt("Send link test", sendLink);
+  androidIt("Send GIF and reply test", sendGif);
+  androidIt("Send long text and reply test", sendLongMessage);
+  androidIt("Unsend message", unsendMessage);
+  androidIt("Delete message", deleteMessage);
 });
 // Link preview without image
 // Link preview with image

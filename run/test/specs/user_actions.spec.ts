@@ -147,7 +147,7 @@ async function changeAvatarAndroid(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
   const spongebobsBirthday = "199905020700.00";
   // Create new user
-  const userA = await newUser(device, "Alice", platform);
+   await newUser(device, "Alice", platform);
   // Click on settings/avatar
   await device.clickOnElement("User settings");
   await sleepFor(100);
@@ -204,7 +204,7 @@ async function changeAvatariOS(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
   const spongebobsBirthday = "199905010700.00";
   // Create new user
-  const userA = await newUser(device, "Alice", platform);
+  await newUser(device, "Alice", platform);
   // Click on settings/avatar
   await device.clickOnElement("User settings");
   await sleepFor(100);
@@ -217,7 +217,7 @@ async function changeAvatariOS(platform: SupportedPlatformsType) {
   );
   if (permissions) {
     try {
-      device.clickOnElement("Allow Access to All Photos");
+      await device.clickOnElement("Allow Access to All Photos");
     } catch (e) {
       console.log("No permissions dialog");
     }
@@ -233,7 +233,7 @@ async function changeAvatariOS(platform: SupportedPlatformsType) {
     );
 
     await runScriptAndLog(
-      `xcrun simctl addmedia ${process.env.IOS_FIRST_SIMULATOR} 'run/test/specs/media/profile_picture.jpg'`,
+      `xcrun simctl addmedia ${process.env.IOS_FIRST_SIMULATOR || ''} 'run/test/specs/media/profile_picture.jpg'`,
       true
     );
   }
@@ -390,33 +390,33 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
-describe("User actions", async () => {
-  await iosIt("Create contact", createContact);
-  await androidIt("Create contact", createContact);
+describe("User actions",  () => {
+  iosIt("Create contact", createContact);
+  androidIt("Create contact", createContact);
 
-  await iosIt(
+  iosIt(
     "Block user in conversation options",
     blockUserInConversationOptions
   );
-  await androidIt(
+  androidIt(
     "Block user in conversation options",
     blockUserInConversationOptions
   );
 
-  await iosIt("Block user in conversation list", blockUserInConversationList);
-  await androidIt(
+  iosIt("Block user in conversation list", blockUserInConversationList);
+  androidIt(
     "Block user in conversation list",
     blockUserInConversationList
   );
 
-  await androidIt("Change username", changeUsername);
-  await iosIt("Change username", changeUsername);
+  androidIt("Change username", changeUsername);
+  iosIt("Change username", changeUsername);
   // NEED TO FIX
-  await androidIt("Change avatar", changeAvatarAndroid);
-  await iosIt("Change avatar", changeAvatariOS);
+  androidIt("Change avatar", changeAvatarAndroid);
+  iosIt("Change avatar", changeAvatariOS);
 
-  await androidIt("Set nickname", setNicknameAndroid);
-  await iosIt("Set nickname", setNicknameIos);
+  androidIt("Set nickname", setNicknameAndroid);
+  iosIt("Set nickname", setNicknameIos);
 });
 
 // Check read receipts working

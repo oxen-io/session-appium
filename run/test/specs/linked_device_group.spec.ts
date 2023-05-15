@@ -174,20 +174,20 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
   await closeApp(device1, device2, device3);
 }
 
-describe("Linked device - group tests", async () => {
-  await iosIt(
+describe("Linked device - group tests", () => {
+  iosIt(
     "Check group and name syncs",
     groupCreationandNameChangeLinkedDevice
   );
-  await androidIt(
+  androidIt(
     "Check group and name syncs",
     groupCreationandNameChangeLinkedDevice
   );
 
-  await iosIt("Leaving group syncs", leaveGroupLinkedDevice);
-  await androidIt("Leaving group syncs", leaveGroupLinkedDevice);
+  iosIt("Leaving group syncs", leaveGroupLinkedDevice);
+  androidIt("Leaving group syncs", leaveGroupLinkedDevice);
 });
 
-//  Remove user
+// Remove user
 //  Add user
 //  Disappearing messages

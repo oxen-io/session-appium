@@ -231,7 +231,7 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
 async function avatarRestorediOS(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const spongebobsBirthday = "199905010700.00";
-  const userA = await linkedDevice(device1, device2, "Alice", platform);
+  await linkedDevice(device1, device2, "Alice", platform);
 
   await device1.clickOnElement("User settings");
   await sleepFor(100);
@@ -245,7 +245,7 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   );
   if (permissions) {
     try {
-      device1.clickOnElement("Allow Access to All Photos");
+      await device1.clickOnElement("Allow Access to All Photos");
     } catch (e) {
       console.log("No permissions dialog");
     }
@@ -263,7 +263,7 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
     );
 
     await runScriptAndLog(
-      `xcrun simctl addmedia ${process.env.IOS_FIRST_SIMULATOR} 'run/test/specs/media/profile_picture.jpg'`,
+      `xcrun simctl addmedia ${process.env.IOS_FIRST_SIMULATOR || ""} 'run/test/specs/media/profile_picture.jpg'`,
       true
     );
   }
@@ -310,7 +310,7 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
 async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const spongebobsBirthday = "199905010700.00";
-  const userA = await linkedDevice(device1, device2, "Alice", platform);
+  await linkedDevice(device1, device2, "Alice", platform);
 
   await device1.clickOnElement("User settings");
   await sleepFor(100);
@@ -382,25 +382,25 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
-describe("Linked device - user tests", async () => {
-  await iosIt("Link a device", linkDevice);
-  await androidIt("Link a device", linkDevice);
+describe("Linked device - user tests",  () => {
+  iosIt("Link a device", linkDevice);
+  androidIt("Link a device", linkDevice);
 
-  await iosIt("Check profile picture syncs", avatarRestorediOS);
-  await androidIt("Check profile picture syncs", avatarRestoredAndroid);
+  iosIt("Check profile picture syncs", avatarRestorediOS);
+  androidIt("Check profile picture syncs", avatarRestoredAndroid);
 
-  await androidIt("Check contact syncs", contactsSyncLinkedDevice);
-  await iosIt("Check contact syncs", contactsSyncLinkedDevice);
+  androidIt("Check contact syncs", contactsSyncLinkedDevice);
+  iosIt("Check contact syncs", contactsSyncLinkedDevice);
 
-  await androidIt("Check changed username syncs", changeUsernameLinkedDevice);
-  await iosIt("Check changed username syncs", changeUsernameLinkedDevice);
+  androidIt("Check changed username syncs", changeUsernameLinkedDevice);
+  iosIt("Check changed username syncs", changeUsernameLinkedDevice);
 
-  await androidIt("Check deleted message syncs", deletedMessageLinkedDevice);
-  await iosIt("Check deleted message syncs", deletedMessageLinkedDevice);
+  androidIt("Check deleted message syncs", deletedMessageLinkedDevice);
+  iosIt("Check deleted message syncs", deletedMessageLinkedDevice);
 
-  await androidIt("Check unsent message syncs", unSendMessageLinkedDevice);
-  await iosIt("Check unsent message syncs", unSendMessageLinkedDevice);
+  androidIt("Check unsent message syncs", unSendMessageLinkedDevice);
+  iosIt("Check unsent message syncs", unSendMessageLinkedDevice);
 
-  await iosIt("Check blocked user syncs", blockedUserLinkedDevice);
-  await androidIt("Check blocked user syncs", blockedUserLinkedDevice);
+  iosIt("Check blocked user syncs", blockedUserLinkedDevice);
+  androidIt("Check blocked user syncs", blockedUserLinkedDevice);
 });

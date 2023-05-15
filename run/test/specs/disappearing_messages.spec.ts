@@ -66,7 +66,7 @@ async function disappearingMessages(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
-describe("Disappearing messages", async () => {
-  await iosIt("Disappearing messages", disappearingMessages);
-  await androidIt("Disappearing messages", disappearingMessages);
+describe("Disappearing messages",  () => {
+  iosIt("Disappearing messages", disappearingMessages);
+  androidIt("Disappearing messages", disappearingMessages);
 });

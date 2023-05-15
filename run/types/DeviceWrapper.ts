@@ -1,5 +1,5 @@
 import { W3CCapabilities } from "appium/build/lib/appium";
-import { isArray, isEmpty, max } from "lodash";
+import { isArray, isEmpty } from "lodash";
 import { AppiumNextElementType } from "../../appium_next";
 import { sleepFor } from "../test/specs/utils";
 import { SupportedPlatformsType } from "../test/specs/utils/open_app";
@@ -218,11 +218,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
       y: yCoOrdinates,
       duration,
     };
-    return this.toShared().performTouch(actions);
+    await this.toShared().performTouch(actions);
   }
 
-  public async performActions(actions: ActionSequence): Promise<Array<void>> {
-    return this.toShared().performActions(actions);
+  public async performActions(actions: ActionSequence): Promise<void> {
+    await this.toShared().performActions(actions);
   }
 
   public async performTouch(actions: Action): Promise<any> {
@@ -292,12 +292,13 @@ export class DeviceWrapper implements SharedDeviceInterface {
   public async clickOnElement(
     accessibilityId: AccessibilityId,
     maxWait?: number
-  ) {
+  ): Promise<void> {
     const el = await this.waitForElementToBePresent(
       "accessibility id",
       accessibilityId,
       maxWait
     );
+    await sleepFor(100);
 
     if (!el) {
       throw new Error(`Tap: Couldnt find accessibilityId: ${accessibilityId}`);
@@ -594,14 +595,14 @@ export class DeviceWrapper implements SharedDeviceInterface {
       "Configuration message",
       maxWait
     );
-    const configMessage = this.waitForTextElementToBePresent(
+    const configMessage = await this.waitForTextElementToBePresent(
       "accessibility id",
       "Configuration message",
       messageText,
       maxWait
     );
     if (!configMessage) {
-      throw new Error(`Couldnt find ${configMessage}`);
+      throw new Error(`Couldnt find configMessage`);
     }
     return configMessage;
   }
@@ -714,7 +715,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
         );
         el = await this.findElement(strategy, selector);
       } catch (e: any) {
-        // console.warn("waitForElementToBePresent failed with", e.message);
+        console.warn("waitForElementToBePresent failed with", e.message);
       }
       if (!el) {
         await sleepFor(waitPerLoop);
@@ -724,7 +725,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       if (currentWait >= maxWaitMSec) {
         // console.log("Waited for too long");
         throw new Error(
-          `waited for too long looking for ${strategy}: ' ${selector}'`
+          `waited for too long looking for ${strategy}: '${selector}'`
         );
       }
     }
@@ -740,8 +741,8 @@ export class DeviceWrapper implements SharedDeviceInterface {
   ): Promise<AppiumNextElementType> {
     let el: null | AppiumNextElementType = null;
     const maxWaitMSec: number = maxWait || 15000;
-    let currentWait: number = 0;
-    const waitPerLoop: number = 100;
+    let currentWait = 0;
+    const waitPerLoop = 100;
 
     while (el === null) {
       try {
@@ -782,7 +783,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.waitForElementToBePresent(
       "accessibility id",
       `Message sent status: Sent`,
-      10000
+      50000
     );
 
     return message;
@@ -801,6 +802,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       user.sessionID
     );
     // Click next
+    await this.scrollDown();
     await this.clickOnElement("Next");
     // Type message into message input box
 
@@ -811,7 +813,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.waitForElementToBePresent(
       "accessibility id",
       `Message sent status: Sent`,
-      10000
+      50000
     );
 
     return message;
@@ -904,7 +906,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       1000
     );
 
-    console.warn("Swiped left on " + el);
+    console.warn("Swiped left on " , el);
     // let some time for swipe action to happen and UI to update
   }
 

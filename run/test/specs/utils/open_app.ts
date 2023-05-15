@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   androidCapabilities,
   getAndroidCapabilities,
@@ -175,7 +176,7 @@ const openAndroidApp = async (
   const device: DeviceWrapper = new driver(opts);
   const wrappedDevice = new DeviceWrapper(device);
 
-  const sess = await wrappedDevice.createSession(
+  await wrappedDevice.createSession(
     getAndroidCapabilities(capabilitiesIndex)
   );
   // this is required to make PopupWindow show up from the Android SDK
@@ -206,7 +207,7 @@ const openiOSApp = async (
   const wrappedDevice = new DeviceWrapper(device);
 
   const caps = getIosCapabilities(capabilitiesIndex);
-  const sess = await wrappedDevice.createSession(caps);
+  await wrappedDevice.createSession(caps);
 
   // deny notification
   // await wrappedDevice.clickOnElement("Don’t Allow");
@@ -225,6 +226,8 @@ async function killAdbIfNotAlreadyDone() {
   adbAlreadyKilled = true;
 
   await runScriptAndLog(`${getAdbFullPath()} kill-server`);
+  await sleepFor(2000);
+  await runScriptAndLog(`${getAdbFullPath()} start-server`);
 }
 
 export const closeApp = async (

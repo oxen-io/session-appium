@@ -1,9 +1,12 @@
-import { pick } from "lodash";
+import {  pick } from "lodash";
 import * as util from "util";
 import { sleepFor } from ".";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { getAdbFullPath } from "./binaries";
-const exec = util.promisify(require("child_process").exec);
+
+
+import {exec as execNotPromised} from 'child_process'
+const exec = util.promisify(execNotPromised);
 
 export async function runScriptAndLog(
   toRun: string,
@@ -35,10 +38,10 @@ export async function runScriptAndLog(
   } catch (e: any) {
     const cmd = e.cmd;
     if (verbose) {
-      console.warn(`cmd which failed: "${cmd}"`);
+      console.warn(`cmd which failed: "${cmd as string}"`);
       console.warn(pick(e, ["stdout", "stderr"]));
     }
-    return "".concat(e.stderr, e.stdout);
+    return "".concat(e.stderr as string, e.stdout as string);
   }
 }
 

@@ -8,7 +8,7 @@ async function tinyTest(platform: SupportedPlatformsType) {
   await linkedDevice(device1, device2, "Alice", platform);
 }
 
-describe("Tiny test", async () => {
-  await iosIt("Tiny test", tinyTest);
-  await androidIt("Tiny test", tinyTest);
+describe("Tiny test",  () => {
+  iosIt("Tiny test", tinyTest);
+  androidIt("Tiny test", tinyTest);
 });

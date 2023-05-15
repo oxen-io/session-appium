@@ -1,4 +1,4 @@
-import { Coordinates, DeviceWrapper } from "../../../types/DeviceWrapper";
+import {  DeviceWrapper } from "../../../types/DeviceWrapper";
 
 export const clickOnXAndYCoordinates = async (
   device: DeviceWrapper,

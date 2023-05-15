@@ -15,9 +15,9 @@ async function groupCreation(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-    newUser(device3, "Carl", platform),
+    newUser(device1, "Alice", platform, true),
+    newUser(device2, "Bob", platform, true),
+    newUser(device3, "Carl", platform, true),
   ]);
 
   // Create contact between User A and User B
@@ -317,7 +317,7 @@ async function mentionsForGroupsAndroid(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Send message button");
   await device1.waitForElementToBePresent(
     "accessibility id",
-    `Message sent status: Sent`
+    `Message sent status: Sent`, 20000
   );
   // Check in user B's device if the format is correct
   await device2.findMessageWithBody("@You");
@@ -331,7 +331,7 @@ async function mentionsForGroupsAndroid(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Send message button");
   await device1.waitForElementToBePresent(
     "accessibility id",
-    `Message sent status: Sent`
+    `Message sent status: Sent`, 20000
   );
   // Check in User C's device if the format is correct
   await device3.findMessageWithBody("@You");
@@ -411,19 +411,19 @@ async function leaveGroupAndroid(platform: SupportedPlatformsType) {
   await closeApp(device1, device2, device3);
 }
 
-describe("Group Testing", async () => {
-  await iosIt("Create group", groupCreation);
-  await androidIt("Create group", groupCreation);
+describe("Group Testing",  () => {
+  iosIt("Create group", groupCreation);
+  androidIt("Create group", groupCreation);
 
-  await iosIt("Change group name", changeGroupNameIos);
-  await androidIt("Change group name", changeGroupNameAndroid);
+  iosIt("Change group name", changeGroupNameIos);
+  androidIt("Change group name", changeGroupNameAndroid);
 
-  await iosIt("Add contact to group", addContactToGroup);
-  await androidIt("Add contact to group", addContactToGroup);
+  iosIt("Add contact to group", addContactToGroup);
+  androidIt("Add contact to group", addContactToGroup);
 
-  await iosIt("Test mentions", mentionsForGroupsIos);
-  await androidIt("Test mentions", mentionsForGroupsAndroid);
+  iosIt("Test mentions", mentionsForGroupsIos);
+  androidIt("Test mentions", mentionsForGroupsAndroid);
 
-  await iosIt("Leave group", leaveGroupIos);
-  await androidIt("Leave group", leaveGroupAndroid);
+  iosIt("Leave group", leaveGroupIos);
+  androidIt("Leave group", leaveGroupAndroid);
 });

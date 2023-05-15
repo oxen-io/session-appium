@@ -1,8 +1,0 @@
-{
-  "extends": "tslint:recommended",
-  "rules": {
-    "no-floating-promises": [true, "error"],
-    "no-console": false,
-    "array-type": [true, "generic"]
-  }
-}

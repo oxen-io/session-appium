@@ -136,13 +136,13 @@ async function blockedRequestLinked(platform: SupportedPlatformsType) {
   await closeApp(device1, device2, device3);
 }
 
-describe("Linked device - message request tests", async () => {
-  await iosIt("Accept request syncs", acceptRequestLinked);
-  await androidIt("Accept request syncs", acceptRequestLinked);
+describe("Linked device - message request tests",  () => {
+  iosIt("Accept request syncs", acceptRequestLinked);
+  androidIt("Accept request syncs", acceptRequestLinked);
 
-  await iosIt("Decline request syncs", declineRequestLinked);
-  await androidIt("Decline request syncs", declineRequestLinked);
+  iosIt("Decline request syncs", declineRequestLinked);
+  androidIt("Decline request syncs", declineRequestLinked);
 
-  await iosIt("Blocked request syncs", blockedRequestLinked);
-  await androidIt("Blocked request syncs", blockedRequestLinked);
+  iosIt("Blocked request syncs", blockedRequestLinked);
+  androidIt("Blocked request syncs", blockedRequestLinked);
 });

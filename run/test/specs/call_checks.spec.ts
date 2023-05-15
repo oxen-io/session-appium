@@ -1,4 +1,4 @@
-import { androidIt, everyPlatformIt, iosIt } from "../../types/sessionIt";
+import { androidIt, iosIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
 import { runOnlyOnAndroid, sleepFor } from "./utils/index";
 import { openAppTwoDevices, SupportedPlatformsType } from "./utils/open_app";
@@ -156,7 +156,7 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   await device1.findElement("accessibility id", "Configuration message");
 }
 
-describe("Voice calls ", async () => {
+describe("Voice calls ",  () => {
   androidIt("Voice calls", voiceCallAndroid);
   iosIt("Voice calls", voiceCallIos);
 });

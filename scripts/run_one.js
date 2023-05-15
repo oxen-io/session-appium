@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable no-undef */
 const testPlatformToRun = process.argv[2];
 const testStringToRun = process.argv[3];
 

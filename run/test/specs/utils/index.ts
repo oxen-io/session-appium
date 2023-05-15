@@ -1,7 +1,6 @@
 import { sleepFor } from "./sleep_for";
 import { saveSessionIDIos, getSessionID } from "./get_session_id";
-import { runOnlyOnIOS } from "./run_on_ios";
-import { runOnlyOnAndroid } from "./run_on_android";
+import { runOnlyOnIOS, runOnlyOnAndroid } from "./run_on";
 
 import { clickOnXAndYCoordinates } from "./click_by_coordinates";
 
