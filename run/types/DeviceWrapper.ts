@@ -650,7 +650,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
           }
         }
       } catch (e: any) {
-        console.warn("doesElementExist failed with", e.message);
+        // console.warn("doesElementExist failed with", e.message);
       }
 
       if (!element) {
@@ -729,7 +729,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
         );
       }
     }
-    console.log(`${strategy}: ' ${selector}' has been found`);
+    console.log(`${strategy}: '${selector}' has been found`);
     return el;
   }
 

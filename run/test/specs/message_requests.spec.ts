@@ -13,8 +13,8 @@ async function acceptRequest(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create two users
   const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform, true),
-    newUser(device2, "Bob", platform, true),
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
   ]);
   // Send message from Alice to Bob
   await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
@@ -58,7 +58,8 @@ async function declineRequest(platform: SupportedPlatformsType) {
   // Bob clicks on request conversation item
   await device2.clickOnElement("Message request");
   // Click on decline button
-  await device2.clickOnElement("Delete message request");
+  await runOnlyOnIOS(platform, () => device2.clickOnElement("Delete message request"));
+  await runOnlyOnAndroid(platform, () => device2.clickOnElement("Decline message request"));
   // Are you sure you want to delete message request only for ios
   await sleepFor(2000);
   await runOnlyOnIOS(platform, () => device2.clickOnElement("Confirm delete"));
@@ -136,7 +137,8 @@ async function blockRequest(platform: SupportedPlatformsType) {
   // Check blocked contacts section for user A
   await device2.clickOnElement("User settings");
   await device2.clickOnElement("Conversations");
-  await device2.clickOnElement("Blocked contacts");
+  await runOnlyOnAndroid(platform, () => device2.clickOnElement("Blocked contacts"));
+  await runOnlyOnIOS(platform, () => device2.clickOnElement("Blocked Contacts"));
   await device2.waitForTextElementToBePresent(
     "accessibility id",
     "Contact",

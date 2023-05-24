@@ -65,12 +65,9 @@ export const installAppToDeviceName = async (
   const adb = getAdbFullPath();
 
   await runScriptAndLog(
-    `${adb} -s ${emulatorName} uninstall io.appium.uiautomator2.server`,
-    true
-  );
+    `${adb} -s ${emulatorName} uninstall io.appium.uiautomator2.server`  );
   await runScriptAndLog(
-    `${adb} -s ${emulatorName} uninstall io.appium.uiautomator2.server.test`,
-    true
+    `${adb} -s ${emulatorName} uninstall io.appium.uiautomator2.server.test`
   );
   await runScriptAndLog(`${adb} -s ${emulatorName} uninstall io.appium.unlock`);
   await runScriptAndLog(

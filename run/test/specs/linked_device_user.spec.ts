@@ -195,7 +195,6 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
   // Confirm block
   await device1.clickOnElement("Confirm block");
   await sleepFor(1000);
-  await runOnlyOnIOS(platform, () => device1.clickOnElement("OK_BUTTON"));
   console.log(`${userB.userName}` + " has been blocked");
   // On ios, you need to navigate back to conversation screen to confirm block
   await runOnlyOnIOS(platform, () => device1.navigateBack(platform));
@@ -230,13 +229,13 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
 
 async function avatarRestorediOS(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const spongebobsBirthday = "199905010700.00";
+  const spongebobsBirthday = "199805010700.00";
   await linkedDevice(device1, device2, "Alice", platform);
 
   await device1.clickOnElement("User settings");
   await sleepFor(100);
   await device1.clickOnElement("Profile picture");
-  await device1.clickOnElement("Photo library");
+  await device1.clickOnElement("Image picker");
   // Check if permissions need to be enabled
   const permissions = await device1.doesElementExist(
     "accessibility id",
@@ -253,7 +252,7 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   // Check if image is already on device
   const profilePicture = await device1.doesElementExist(
     "accessibility id",
-    `Photo, May 01, 1999, 7:00 AM`,
+    `Photo, May 01, 1998, 7:00 AM`,
     2000
   );
   // If no image, push file to device
@@ -269,9 +268,9 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   }
   await sleepFor(100);
   // Select file
-  await device1.clickOnElement(`Photo, May 01, 1999, 7:00 AM`);
+  await device1.clickOnElement(`Photo, May 01, 1998, 7:00 AM`);
   await device1.clickOnElement("Done");
-
+  await device1.clickOnElement("Upload");
   await sleepFor(2000);
   // Wait for change
   // Verify change
@@ -287,7 +286,7 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   if (pixelColor === "04cbfe") {
     console.log("Colour is correct");
   } else {
-    console.log("Colour isn't 04cbfe, it is: ", pixelColor);
+    throw new Error("Colour isn't 04cbfe, it is: "+ pixelColor)
   }
   console.log("Now checking avatar on linked device");
   // Check avatar on device 2
@@ -309,7 +308,7 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
 
 async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const spongebobsBirthday = "199905010700.00";
+  const spongebobsBirthday = "199905020700.00";
   await linkedDevice(device1, device2, "Alice", platform);
 
   await device1.clickOnElement("User settings");

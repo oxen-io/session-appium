@@ -40,13 +40,13 @@ export const createGroup = async (
   await device1.clickOnElement("Create group");
   await sleepFor(4000);
   // Check for empty state on ios
-  // await runOnlyOnIOS(platform, () =>
-  //   device1.waitForElementToBePresent("accessibility id", "Empty state label")
-  // );
-  await runOnlyOnIOS(
-    platform,
-    () => device1.findConfigurationMessage("Group created")
+  await runOnlyOnIOS(platform, () =>
+    device1.waitForElementToBePresent("accessibility id", "Empty state label")
   );
+  // await runOnlyOnIOS(
+  //   platform,
+  //   () => device1.findConfigurationMessage("Group created")
+  // );
   // await runOnlyOnAndroid(platform, () =>
   //   device1.findConfigurationMessage("You created a new group.", 2000)
   // );

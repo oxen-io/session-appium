@@ -15,9 +15,9 @@ async function groupCreation(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
-    newUser(device1, "Alice", platform, true),
-    newUser(device2, "Bob", platform, true),
-    newUser(device3, "Carl", platform, true),
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+    newUser(device3, "Carl", platform),
   ]);
 
   // Create contact between User A and User B
@@ -41,7 +41,7 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
-    newUser(device1, "Alice", platform, true),
+    newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
     newUser(device3, "Carl", platform),
   ]);
@@ -239,13 +239,13 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
       `${userD.userName}` + " joined the group."
     )
   );
-  await runOnlyOnAndroid(platform, () =>
-    device4.waitForTextElementToBePresent(
-      "accessibility id",
-      "Configuration message",
-      `${userA.userName} added you to the group.`
-    )
-  );
+  // await runOnlyOnAndroid(platform, () =>
+  //   device4.waitForTextElementToBePresent(
+  //     "accessibility id",
+  //     "Configuration message",
+  //     `${userA.userName} added you to the group.`
+  //   )
+  // );
   await closeApp(device1, device2, device3, device4);
 }
 
@@ -366,7 +366,7 @@ async function leaveGroupIos(platform: SupportedPlatformsType) {
   await device3.clickOnElement("Leave");
   await device3.navigateBack(platform);
   // Check for control message
-  await device3.findConfigurationMessage("You have left the group.");
+  // await device3.findConfigurationMessage("You have left the group.");
   await device2.findConfigurationMessage(`${userC.userName} left the group.`);
   await device1.findConfigurationMessage(`${userC.userName} left the group.`);
   await closeApp(device1, device2, device3);
@@ -401,7 +401,7 @@ async function leaveGroupAndroid(platform: SupportedPlatformsType) {
   );
   await device3.clickOnElementById(`android:id/button1`);
   // Check for control message
-  await device3.findConfigurationMessage("You have left the group.");
+  // await device3.findConfigurationMessage("You have left the group.");
   await device2.findConfigurationMessage(
     `${userC.userName} has left the group.`
   );

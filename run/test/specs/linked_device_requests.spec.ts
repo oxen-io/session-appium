@@ -13,8 +13,8 @@ async function acceptRequestLinked(platform: SupportedPlatformsType) {
   // Open app
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create two users
-  const userA = await newUser(device1, "Alice", platform, true);
-  const userB = await linkedDevice(device2, device3, "Bob", platform, true);
+  const userA = await newUser(device1, "Alice", platform);
+  const userB = await linkedDevice(device2, device3, "Bob", platform);
 
   // Send message from Alice to Bob
   await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
@@ -74,10 +74,11 @@ async function declineRequestLinked(platform: SupportedPlatformsType) {
     "Message request"
   );
   // Click on decline button
-  await device2.clickOnElement("Delete message request");
+  await runOnlyOnIOS(platform, () => device2.clickOnElement("Delete message request"));
+  await runOnlyOnAndroid(platform, () => device2.clickOnElement("Decline message request"));
   // Are you sure you want to delete message request only for ios
   await sleepFor(3000);
-  await device2.clickOnElement("Confirm delete");
+  await runOnlyOnIOS(platform, () => device2.clickOnElement("Confirm delete"));
 
   // Navigate back to home page
   await sleepFor(100);
@@ -99,8 +100,8 @@ async function declineRequestLinked(platform: SupportedPlatformsType) {
 async function blockedRequestLinked(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
 
-  const userA = await newUser(device1, "Alice", platform, true);
-  const userB = await linkedDevice(device2, device3, "Bob", platform, true);
+  const userA = await newUser(device1, "Alice", platform);
+  const userB = await linkedDevice(device2, device3, "Bob", platform);
   // Send message from Alice to Bob
   await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
   // Wait for banner to appear

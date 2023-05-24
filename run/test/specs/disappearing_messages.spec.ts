@@ -6,7 +6,7 @@ import {
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { iosIt, androidIt } from "../../types/sessionIt";
-import { runOnlyOnAndroid, runOnlyOnIOS } from "./utils";
+import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils";
 
 async function disappearingMessages(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
@@ -21,8 +21,9 @@ async function disappearingMessages(platform: SupportedPlatformsType) {
   await device1.clickOnElement("More options");
   // Select disappearing messages option
   await runOnlyOnIOS(platform, () =>
-    device1.clickOnElement("Disappearing messages")
+  device1.clickOnElement("Disappearing messages")
   );
+  await sleepFor(1000);
   await runOnlyOnAndroid(platform, () =>
     device1.clickOnTextElementById(
       `network.loki.messenger:id/title`,

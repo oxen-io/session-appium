@@ -101,16 +101,31 @@ export const openAppFourDevices = async (
 };
 
 async function createAndroidEmulator(emulatorName: string) {
+  const createCmd = `echo "no" | ${getAvdManagerFullPath()} create avd --name ${emulatorName} -k 'system-images;android-31;google_apis;arm64-v8a' --force --skin pixel_5`
+  console.warn(createCmd)
   await runScriptAndLog(
-    `echo "no" | ${getAvdManagerFullPath()} create avd --name ${emulatorName} -k 'system-images;android-31;google_apis;arm64-v8a' --force`
+    createCmd
   );
   return emulatorName;
 }
 
 async function startAndroidEmulator(emulatorName: string) {
+  await runScriptAndLog(`echo "hw.lcd.density=440" >> ~/.android/avd/${emulatorName}.avd/config.ini
+  `)
+  const startEmulatorCmd =  `${getEmulatorFullPath()} @${emulatorName} -no-snapshot`;
+  console.warn(`${startEmulatorCmd} & ; disown`)
   await runScriptAndLog(
-    `${getEmulatorFullPath()} @${emulatorName} ` // -netdelay none -no-snapshot -wipe-data
+    startEmulatorCmd // -netdelay none -no-snapshot -wipe-data
   );
+}
+
+async function isEmulatorRunning(emulatorName: string) {
+  const failedWith = await runScriptAndLog(
+    `${getAdbFullPath()} -s ${emulatorName} get-state;`
+  );
+
+  return    !failedWith ||
+    !(failedWith.includes("error") || failedWith.includes("offline"));
 }
 
 async function waitForEmulatorToBeRunning(emulatorName: string) {
@@ -118,14 +133,7 @@ async function waitForEmulatorToBeRunning(emulatorName: string) {
   let found = false;
 
   do {
-    const failedWith = await runScriptAndLog(
-      `${getAdbFullPath()} get-state -s  "${emulatorName}";`
-    );
-
-    found =
-      !failedWith ||
-      !(failedWith.includes("error") || failedWith.includes("offline"));
-
+    found = await isEmulatorRunning(emulatorName)
     await sleepFor(500);
   } while (Date.now() - start < 25000 && !found);
 
@@ -156,10 +164,14 @@ const openAndroidApp = async (
   await killAdbIfNotAlreadyDone();
   const targetName = getAndroidUuid(capabilitiesIndex);
 
-  // await createAndroidEmulator(targetName);
-  // void startAndroidEmulator(targetName);
-  // await waitForEmulatorToBeRunning(targetName);
-  // console.log(targetName, " emulator booted");
+  const emulatorAlreadyRunning = await isEmulatorRunning(targetName);
+  console.warn('emulatorAlreadyRunning', targetName, emulatorAlreadyRunning)
+  if(!emulatorAlreadyRunning) {
+    await createAndroidEmulator(targetName);
+    void startAndroidEmulator(targetName);
+  }
+  await waitForEmulatorToBeRunning(targetName);
+  console.log(targetName, " emulator booted");
 
   await installAppToDeviceName(
     androidCapabilities.androidAppFullPath,
@@ -175,6 +187,9 @@ const openAndroidApp = async (
 
   const device: DeviceWrapper = new driver(opts);
   const wrappedDevice = new DeviceWrapper(device);
+
+  await runScriptAndLog(`adb -s ${targetName} shell settings put global heads_up_notifications_enabled 0
+  `)
 
   await wrappedDevice.createSession(
     getAndroidCapabilities(capabilitiesIndex)

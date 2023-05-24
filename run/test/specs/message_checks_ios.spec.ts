@@ -16,7 +16,7 @@ import { runScriptAndLog } from "./utils/utilities";
 
 async function sendImage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const ronSwansonBirthday = "196705050700.00";
+  const ronSwansonBirthday = "196705060700.00";
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),

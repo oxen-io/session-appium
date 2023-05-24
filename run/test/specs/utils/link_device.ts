@@ -1,6 +1,6 @@
 import { newUser } from "./create_account";
 import { SupportedPlatformsType } from "./open_app";
-import { sleepFor,  runOnlyOnIOS } from ".";
+import { sleepFor,  runOnlyOnIOS, runOnlyOnAndroid } from ".";
 
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 
@@ -9,9 +9,8 @@ export const linkedDevice = async (
   device2: DeviceWrapper,
   userName: string,
   platform: SupportedPlatformsType,
-  notifications?: boolean,
 ) => {
-  const user = await newUser(device1, userName, platform, notifications);
+  const user = await newUser(device1, userName, platform);
   // Log in with recovery seed on device 2
 
   await device2.clickOnElement("Link a device");
@@ -21,8 +20,10 @@ export const linkedDevice = async (
     "Enter your recovery phrase",
     user.recoveryPhrase
   );
+  await sleepFor(1000);
   // Continue with recovery phrase
-  await device2.clickOnElement("Continue");
+  await runOnlyOnAndroid(platform, () => device2.clickOnElement('Link Device'))
+  await runOnlyOnIOS(platform, () => device2.clickOnElement("Continue"));
 
   // TODO DELETE THIS AFTER ANDROID USER CONFIG ****************************
   // if (!noDisplayName) {
@@ -41,39 +42,30 @@ export const linkedDevice = async (
   await device2.waitForElementToBePresent(
     "accessibility id",
     "Message Notifications",
-    10000
+    20000
   );
   // Wait for transitiion animation between the two pages
   await await sleepFor(250);
   // Click continue on message notification settings
   await device2.clickOnElement("Continue with settings");
   // Dismiss notifications alert
+  // await device2.inputText(
+  //       "accessibility id",
+  //       "Enter display name",
+  //       user.userName
+  //     );
+  // await device2.clickOnElement("Continue")
   // Check for recovery phrase reminder
+  await sleepFor(1000);
   await runOnlyOnIOS(platform, () => device2.clickOnElement("Don’t Allow"));
   await sleepFor(1000);
   await device2.hasElementBeenDeleted("accessibility id", "Continue");
-  await sleepFor(1000);
   // Check that button was clicked
   await device2.waitForElementToBePresent(
     "accessibility id",
     "New conversation button"
   );
 
-  if (platform === "android" && notifications === true) {
-    await device2.clickOnElement("User settings");
-    await device2.clickOnElement("Notifications");
-    await sleepFor(1000);
-    await device2.clickOnTextElementById(
-      "network.loki.messenger:id/device_settings_text",
-      "Go to device notification settings"
-    );
-    await device2.clickOnElementById("android:id/switch_widget");
-    await device2.navigateBack(platform);
-    await sleepFor(100);
-    await device2.navigateBack(platform);
-    await sleepFor(100);
-    await device2.navigateBack(platform);
-  }
   console.warn("Device 3 linked");
 
   return user;

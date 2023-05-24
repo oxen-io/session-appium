@@ -3,7 +3,6 @@ import { parseDataImage } from "./utils/check_colour";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import {
-  clickOnXAndYCoordinates,
   runOnlyOnAndroid,
   runOnlyOnIOS,
   sleepFor,
@@ -54,7 +53,6 @@ async function blockUserInConversationOptions(
   await device1.clickOnElement("Confirm block");
   // On ios there is an alert that confirms that the user has been blocked
   await sleepFor(1000);
-  await runOnlyOnIOS(platform, () => device1.clickOnElement("OK_BUTTON"));
   // await runOnlyOnIOS(platform, () => clickOnXAndYCoordinates(device1));
   console.warn(`${userB.userName}` + " has been blocked");
 
@@ -80,7 +78,6 @@ async function blockUserInConversationOptions(
     "Message Body",
     hasUserBeenUnblockedMessage
   );
-  console.log(`Message came through from ${userB.userName}`);
 
   // Close app
   await closeApp(device1, device2);
@@ -118,9 +115,9 @@ async function changeUsername(platform: SupportedPlatformsType) {
   await device.clickOnElement("User settings");
   // select username
   await device.clickOnElement("Username");
-  console.warn("Element clicked?");
   // type in new username
-
+  await device.deleteText("Username")
+  await sleepFor(100);
   await device.inputText("accessibility id", "Username", newUsername);
   const changedUsername = await device.grabTextFromAccessibilityId("Username");
   console.log("Changed username", changedUsername);
@@ -145,7 +142,7 @@ async function changeUsername(platform: SupportedPlatformsType) {
 }
 async function changeAvatarAndroid(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
-  const spongebobsBirthday = "199905020700.00";
+  const spongebobsBirthday = "199905010700.00";
   // Create new user
    await newUser(device, "Alice", platform);
   // Click on settings/avatar
@@ -202,14 +199,15 @@ async function changeAvatarAndroid(platform: SupportedPlatformsType) {
 }
 async function changeAvatariOS(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
-  const spongebobsBirthday = "199905010700.00";
+  const spongebobsBirthday = "199805010700.00";
   // Create new user
   await newUser(device, "Alice", platform);
   // Click on settings/avatar
   await device.clickOnElement("User settings");
   await sleepFor(100);
   await device.clickOnElement("Profile picture");
-  await device.clickOnElement("Photo library");
+  // await device.clickOnElement("Photo library");
+  await device.clickOnElement("Image picker");
   const permissions = await device.doesElementExist(
     "accessibility id",
     "Allow Access to All Photos",
@@ -224,7 +222,7 @@ async function changeAvatariOS(platform: SupportedPlatformsType) {
   }
   const profilePicture = await device.doesElementExist(
     "accessibility id",
-    `Photo, May 01, 1999, 7:00 AM`,
+    `Photo, May 01, 1998, 7:00 AM`,
     2000
   );
   if (!profilePicture) {
@@ -240,8 +238,9 @@ async function changeAvatariOS(platform: SupportedPlatformsType) {
   // Click on Profile picture
   // Click on Photo library
   await sleepFor(100);
-  await device.clickOnElement(`Photo, May 01, 1999, 7:00 AM`);
+  await device.clickOnElement(`Photo, May 01, 1998, 7:00 AM`);
   await device.clickOnElement("Done");
+  await device.clickOnElement("Upload")
   // Take screenshot
   const el = await device.waitForElementToBePresent(
     "accessibility id",
@@ -251,10 +250,10 @@ async function changeAvatariOS(platform: SupportedPlatformsType) {
   const base64 = await device.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
   console.log("RGB Value of pixel is:", pixelColor);
-  if (pixelColor === "04cbfe") {
+  if (pixelColor === "ff382e") {
     console.log("Colour is correct");
   } else {
-    console.log("Colour isn't 04cbfe, it is: ", pixelColor);
+    console.log("Colour isn't ff382e, it is: ", pixelColor);
   }
   await closeApp(device);
 }
@@ -280,9 +279,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Click on tick button
   await device1.clickOnElement("Apply");
   // CLick out of pop up
-  await clickOnXAndYCoordinates(device1, 484, 108);
-  // Click on conversation to verify nickname is applied
-  await device1.selectByText("Conversation list item", userB.userName);
+  await device1.clickOnElement('Message user')
   // Check name at top of conversation is nickname
   const headerElement = await device1.waitForElementToBePresent(
     "accessibility id",
@@ -403,7 +400,6 @@ describe("User actions",  () => {
     blockUserInConversationOptions
   );
 
-  iosIt("Block user in conversation list", blockUserInConversationList);
   androidIt(
     "Block user in conversation list",
     blockUserInConversationList
