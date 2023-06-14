@@ -17,7 +17,7 @@ async function groupCreation(platform: SupportedPlatformsType) {
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
-    newUser(device3, "Carl", platform),
+    newUser(device3, "Charlie", platform),
   ]);
 
   // Create contact between User A and User B
@@ -43,7 +43,7 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
-    newUser(device3, "Carl", platform),
+    newUser(device3, "Charlie", platform),
   ]);
   // Create group
 
@@ -102,7 +102,7 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
-    newUser(device3, "Carl", platform),
+    newUser(device3, "Charlie", platform),
   ]);
   // Create group
 
@@ -169,7 +169,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
-    newUser(device3, "Cat", platform),
+    newUser(device3, "Charlie", platform),
   ]);
   const testGroupName = "Group to test adding contact";
   const group = await createGroup(
@@ -249,53 +249,53 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   await closeApp(device1, device2, device3, device4);
 }
 
-async function mentionsForGroupsIos(platform: SupportedPlatformsType) {
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  // Create users A, B and C
-  const [userA, userB, userC] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-    newUser(device3, "Cat", platform),
-  ]);
-  const testGroupName = "Mentions test group";
-  // Create contact between User A and User B
-  await createGroup(
-    platform,
-    device1,
-    userA,
-    device2,
-    userB,
-    device3,
-    userC,
-    testGroupName
-  );
-  await device1.inputText("accessibility id", "Message input box", "@");
-  // Check that all users are showing in mentions box
-  await device1.findElement("accessibility id", "Mentions list");
-  // Select User B
-  await device1.selectByText("Contact", userB.userName);
-  await device1.clickOnElement("Send message button");
-  // Check in user B's device if the format is correct
-  await device2.findMessageWithBody("@You");
-  await device2.inputText("accessibility id", "Message input box", "@");
-  // Check that all users are showing in mentions box
-  await device2.findElement("accessibility id", "Mentions list");
-  // Select User C
-  await device2.selectByText("Contact", userC.userName);
-  await device2.clickOnElement("Send message button");
-  // Check in User C's device if the format is correct
-  await device3.findMessageWithBody("@You");
-  // Close app
-  await closeApp(device1, device2, device3);
-}
+// async function mentionsForGroupsIos(platform: SupportedPlatformsType) {
+//   const { device1, device2, device3 } = await openAppThreeDevices(platform);
+//   // Create users A, B and C
+//   const [userA, userB, userC] = await Promise.all([
+//     newUser(device1, "Alice", platform),
+//     newUser(device2, "Bob", platform),
+//     newUser(device3, "Cat", platform),
+//   ]);
+//   const testGroupName = "Mentions test group";
+//   // Create contact between User A and User B
+//   await createGroup(
+//     platform,
+//     device1,
+//     userA,
+//     device2,
+//     userB,
+//     device3,
+//     userC,
+//     testGroupName
+//   );
+//   await device1.inputText("accessibility id", "Message input box", "@");
+//   // Check that all users are showing in mentions box
+//   await device1.findElement("accessibility id", "Mentions list");
+//   // Select User B
+//   await device1.selectByText("Contact", userB.userName);
+//   await device1.clickOnElement("Send message button");
+//   // Check in user B's device if the format is correct
+//   await device2.findMessageWithBody("@You");
+//   await device2.inputText("accessibility id", "Message input box", "@");
+//   // Check that all users are showing in mentions box
+//   await device2.findElement("accessibility id", "Mentions list");
+//   // Select User C
+//   await device2.selectByText("Contact", userC.userName);
+//   await device2.clickOnElement("Send message button");
+//   // Check in User C's device if the format is correct
+//   await device3.findMessageWithBody("@You");
+//   // Close app
+//   await closeApp(device1, device2, device3);
+// }
 
-async function mentionsForGroupsAndroid(platform: SupportedPlatformsType) {
+async function mentionsForGroups(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
-    newUser(device3, "Cat", platform),
+    newUser(device3, "Charlie", platform),
   ]);
   const testGroupName = "Mentions test group";
   // Create contact between User A and User B
@@ -315,10 +315,7 @@ async function mentionsForGroupsAndroid(platform: SupportedPlatformsType) {
   // Select User B
   await device1.selectByText("Contact mentions", userB.userName);
   await device1.clickOnElement("Send message button");
-  await device1.waitForElementToBePresent(
-    "accessibility id",
-    `Message sent status: Sent`, 20000
-  );
+  await device1.waitForElementToBePresent("accessibility id", `Message sent status: Sent`);
   // Check in user B's device if the format is correct
   await device2.findMessageWithBody("@You");
   // Select User C
@@ -346,7 +343,7 @@ async function leaveGroupIos(platform: SupportedPlatformsType) {
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
-    newUser(device3, "Carl", platform),
+    newUser(device3, "Charlie", platform),
   ]);
 
   // Create group with user A, user B and User C
@@ -379,7 +376,7 @@ async function leaveGroupAndroid(platform: SupportedPlatformsType) {
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
-    newUser(device3, "Carl", platform),
+    newUser(device3, "Charlie", platform),
   ]);
 
   // Create group with user A, user B and User C
@@ -421,8 +418,8 @@ describe("Group Testing",  () => {
   iosIt("Add contact to group", addContactToGroup);
   androidIt("Add contact to group", addContactToGroup);
 
-  iosIt("Test mentions", mentionsForGroupsIos);
-  androidIt("Test mentions", mentionsForGroupsAndroid);
+  iosIt("Test mentions", mentionsForGroups);
+  androidIt("Test mentions", mentionsForGroups);
 
   iosIt("Leave group", leaveGroupIos);
   androidIt("Leave group", leaveGroupAndroid);

@@ -82,6 +82,7 @@ async function blockUserInConversationOptions(
   // Close app
   await closeApp(device1, device2);
 }
+
 async function blockUserInConversationList(platform: SupportedPlatformsType) {
   // Open App
   const { device1, device2 } = await openAppTwoDevices(platform);
@@ -106,6 +107,7 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Block");
   await closeApp(device1, device2);
 }
+
 async function changeUsername(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
 
@@ -140,6 +142,7 @@ async function changeUsername(platform: SupportedPlatformsType) {
 
   await closeApp(device);
 }
+
 async function changeAvatarAndroid(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
   const spongebobsBirthday = "199905010700.00";
@@ -197,6 +200,7 @@ async function changeAvatarAndroid(platform: SupportedPlatformsType) {
 
   await closeApp(device);
 }
+
 async function changeAvatariOS(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
   const spongebobsBirthday = "199805010700.00";
@@ -387,6 +391,23 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
+async function readStatus(platform: SupportedPlatformsType) {
+  const { device1, device2 } = await openAppTwoDevices(platform);
+  const [userA, userB] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+  ]);
+  await newContact(platform, device1, userA, device2, userB);
+  // Go to settings to turn on read status 
+  // Device 1
+  await device1.navigateBack(platform);
+  await device1.clickOnElement("User settings");
+  
+
+  await device2.navigateBack(platform);
+
+}
+
 describe("User actions",  () => {
   iosIt("Create contact", createContact);
   androidIt("Create contact", createContact);
@@ -413,6 +434,9 @@ describe("User actions",  () => {
 
   androidIt("Set nickname", setNicknameAndroid);
   iosIt("Set nickname", setNicknameIos);
+
+  androidIt("Read status", readStatus);
+  iosIt("Read status", readStatus);
 });
 
 // Check read receipts working

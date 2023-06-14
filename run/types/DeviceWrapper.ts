@@ -339,6 +339,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async clickOnTextElementById(id: string, textToLookFor: string) {
     const el = await this.findTextElementArrayById(id, textToLookFor);
+    await this.waitForTextElementToBePresent("id", id, textToLookFor)
     await this.click(el.ELEMENT);
   }
 
@@ -694,7 +695,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
         throw e;
       }
     }
-    console.log(accessibilityId + text, "is not visible, congratulations");
+    console.log(accessibilityId, ": ",text, "is not visible, congratulations");
   }
   // WAIT FOR FUNCTIONS
 
@@ -753,6 +754,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
         const els = await this.findElements(strategy, selector);
 
         el = await this.findMatchingTextInElementArray(els, text);
+        
       } catch (e: any) {
         console.warn("waitForTextElementToBePresent threw: ", e.message);
       }

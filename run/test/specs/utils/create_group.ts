@@ -1,6 +1,6 @@
 import { Group, User } from "../../../types/testing";
 import { newContact } from "./create_contact";
-import { runOnlyOnIOS, sleepFor } from ".";
+import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from ".";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { SupportedPlatformsType } from "./open_app";
 
@@ -43,18 +43,15 @@ export const createGroup = async (
   await runOnlyOnIOS(platform, () =>
     device1.waitForElementToBePresent("accessibility id", "Empty state label")
   );
-  // await runOnlyOnIOS(
-  //   platform,
-  //   () => device1.findConfigurationMessage("Group created")
+  // await runOnlyOnIOS(platform, () =>
+  //   device1.waitForElementToBePresent("accessibility id", "Group created")
   // );
-  // await runOnlyOnAndroid(platform, () =>
-  //   device1.findConfigurationMessage("You created a new group.", 2000)
-  // );
-  // Send message from User a to group to verify all working
+  await runOnlyOnAndroid(platform, () => device1.findConfigurationMessage('You created a new group.'))
+  // Send message from User A to group to verify all working
   await device1.sendMessage(userAMessage);
-  // Check group was created in device 2 by selecting group from list
-
+  // Send message from User B to group
   await device2.sendMessageTo(userTwo, group);
+  // Send message to User C to group
   await device3.sendMessageTo(userThree, group);
 
   return { userName, userOne, userTwo, userThree };

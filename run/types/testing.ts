@@ -55,7 +55,7 @@ export type AccessibilityId =
   | "Close Button"
   | "Enable"
   | "More options"
-  | "Disappearing messages"
+  | "Disappearing Messages"
   | "Disappearing messages time picker"
   | "Time selector"
   | "Message input box"
@@ -130,3 +130,4 @@ export type AccessibilityId =
   | "Decline message request"
   | "Image picker"
   | "Upload"
+  | "Save button"

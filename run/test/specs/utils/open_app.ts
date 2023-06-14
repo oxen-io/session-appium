@@ -121,7 +121,7 @@ async function startAndroidEmulator(emulatorName: string) {
 
 async function isEmulatorRunning(emulatorName: string) {
   const failedWith = await runScriptAndLog(
-    `${getAdbFullPath()} -s ${emulatorName} get-state;`
+    `${getAdbFullPath()} -s ${emulatorName} get-state;`, true
   );
 
   return    !failedWith ||
@@ -161,7 +161,7 @@ const openAndroidApp = async (
 ): Promise<{
   device: DeviceWrapper;
 }> => {
-  await killAdbIfNotAlreadyDone();
+  // await killAdbIfNotAlreadyDone();
   const targetName = getAndroidUuid(capabilitiesIndex);
 
   const emulatorAlreadyRunning = await isEmulatorRunning(targetName);
@@ -230,20 +230,23 @@ const openiOSApp = async (
   return { device: wrappedDevice };
 };
 
-let adbAlreadyKilled = false;
+// let adbAlreadyKilled = false;
 
-async function killAdbIfNotAlreadyDone() {
-  if (adbAlreadyKilled) {
-    return;
-  }
+// async function killAdbIfNotAlreadyDone() {
+//   if (adbAlreadyKilled) {
+//     return;
+//   }
+//   return;
 
-  console.info("killing adb server");
-  adbAlreadyKilled = true;
+//   // console.info("killing adb server");
+//   // adbAlreadyKilled = true;
 
-  await runScriptAndLog(`${getAdbFullPath()} kill-server`);
-  await sleepFor(2000);
-  await runScriptAndLog(`${getAdbFullPath()} start-server`);
-}
+//   // await runScriptAndLog(`${getAdbFullPath()} kill-server`);
+//   // await sleepFor(2000);
+//   // await runScriptAndLog(`${getAdbFullPath()} start-server`);
+
+//   // await sleepFor(2000);
+// }
 
 export const closeApp = async (
   device1?: DeviceWrapper,
