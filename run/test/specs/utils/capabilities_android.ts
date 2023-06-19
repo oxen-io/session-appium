@@ -19,32 +19,50 @@ const sharedCapabilities: AppiumW3CCapabilities = {
   "appium:newCommandTimeout": 300000,
 };
 
+// const usePhysicalDevice = process.argv[2] === "physical";
+
+// const capabilities = usePhysicalDevice ? physicalDeviceCapabilities : emulatorCapabilities;
+
 const emulator1Udid = "emulator-5554";
 const emulator2Udid = "emulator-5556";
 const emulator3Udid = "emulator-5558";
 const emulator4Udid = "emulator-5560";
+const physicalDevice1Udid = "99251FFAZ000TP"
+const physicalDevice2Udid = "SDEDU20311000793"
 
-const capabilities1: AppiumW3CCapabilities = {
+export const physicalDeviceCapabilities1: AppiumW3CCapabilities = {
+  ...sharedCapabilities,
+  "appium:deviceName": "Google Pixel 4",
+  "appium:udid": "99251FFAZ000TP"
+}
+
+export const physicalDeviceCapabilities2: AppiumW3CCapabilities = {
+  ...sharedCapabilities,
+  "appium:deviceName": "HUAWEI YAL-L21",
+  "appium:udid": "SDEDU20311000793"
+}
+
+const emulatorCapabilities1: AppiumW3CCapabilities = {
   ...sharedCapabilities,
   "appium:udid": emulator1Udid,
 };
-const capabilities2: AppiumW3CCapabilities = {
+const emulatorCapabilities2: AppiumW3CCapabilities = {
   ...sharedCapabilities,
   "appium:udid": emulator2Udid,
 };
 
-const capabilities3: AppiumW3CCapabilities = {
+const emulatorCapabilities3: AppiumW3CCapabilities = {
   ...sharedCapabilities,
   "appium:udid": emulator3Udid,
 };
 
-const capabilities4: AppiumW3CCapabilities = {
+const emulatorCapabilities4: AppiumW3CCapabilities = {
   ...sharedCapabilities,
   "appium:udid": emulator4Udid,
 };
-const countOfAndroidCapabilities = 4;
+const countOfAndroidCapabilities = 6;
 
-const uuidsList = [emulator1Udid, emulator2Udid, emulator3Udid, emulator4Udid];
+const uuidsList = [emulator1Udid, emulator2Udid, emulator3Udid, emulator4Udid, physicalDevice1Udid, physicalDevice2Udid];
 
 export const androidCapabilities = {
   sharedCapabilities,
@@ -58,18 +76,18 @@ export function getAndroidCapabilities(
   if (capabilitiesIndex >= countOfAndroidCapabilities) {
     throw new Error(`Asked invalid android cap index: ${capabilitiesIndex}`);
   }
-  const caps =
-    capabilitiesIndex === 0
-      ? capabilities1
-      : capabilitiesIndex === 1
-      ? capabilities2
-      : capabilitiesIndex === 2
-      ? capabilities3
-      : capabilities4;
+  const allCaps = [
+    emulatorCapabilities1,
+    emulatorCapabilities2,
+    emulatorCapabilities3,
+    emulatorCapabilities4, 
+    physicalDeviceCapabilities1,
+    physicalDeviceCapabilities2
+  ]
   return {
     firstMatch: [{}, {}],
     alwaysMatch: {
-      ...caps,
+      ...allCaps,
       "appium:udid": getAndroidUuid(capabilitiesIndex),
     },
   };
