@@ -1,6 +1,5 @@
 import { AppiumW3CCapabilities } from "@wdio/types/build/Capabilities";
 import { W3CCapabilities } from "appium/build/lib/appium";
-
 import { getAndroidBinariesRoot } from "./binaries";
 import { CapabilitiesIndexType } from "./capabilities_ios";
 
@@ -32,14 +31,12 @@ const physicalDevice2Udid = "SDEDU20311000793"
 
 export const physicalDeviceCapabilities1: AppiumW3CCapabilities = {
   ...sharedCapabilities,
-  "appium:deviceName": "Google Pixel 4",
-  "appium:udid": "99251FFAZ000TP"
+  "appium:udid": physicalDevice1Udid
 }
 
 export const physicalDeviceCapabilities2: AppiumW3CCapabilities = {
   ...sharedCapabilities,
-  "appium:deviceName": "HUAWEI YAL-L21",
-  "appium:udid": "SDEDU20311000793"
+  "appium:udid": physicalDevice2Udid
 }
 
 const emulatorCapabilities1: AppiumW3CCapabilities = {
@@ -60,9 +57,10 @@ const emulatorCapabilities4: AppiumW3CCapabilities = {
   ...sharedCapabilities,
   "appium:udid": emulator4Udid,
 };
-const countOfAndroidCapabilities = 6;
+// const countOfAndroidCapabilities = 4;
 
-const uuidsList = [emulator1Udid, emulator2Udid, emulator3Udid, emulator4Udid, physicalDevice1Udid, physicalDevice2Udid];
+// const uuidsList = [emulator1Udid, emulator2Udid, emulator3Udid, emulator4Udid];
+// const deviceList = [physicalDevice1Udid, physicalDevice2Udid]
 
 export const androidCapabilities = {
   sharedCapabilities,
@@ -73,17 +71,22 @@ export function getAndroidCapabilities(
   capabilitiesIndex: CapabilitiesIndexType
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): W3CCapabilities<any> {
-  if (capabilitiesIndex >= countOfAndroidCapabilities) {
+  if (capabilitiesIndex) {
     throw new Error(`Asked invalid android cap index: ${capabilitiesIndex}`);
   }
-  const allCaps = [
+  const emulatorCaps = [
     emulatorCapabilities1,
     emulatorCapabilities2,
     emulatorCapabilities3,
-    emulatorCapabilities4, 
+    emulatorCapabilities4
+  ]
+  const physicalDeviceCaps= [
     physicalDeviceCapabilities1,
     physicalDeviceCapabilities2
   ]
+
+  const allCaps = [ ...physicalDeviceCaps, ...emulatorCaps ]
+
   return {
     firstMatch: [{}, {}],
     alwaysMatch: {
@@ -93,7 +96,7 @@ export function getAndroidCapabilities(
   };
 }
 export function getAndroidUuid(uuidIndex: CapabilitiesIndexType) {
-  if (uuidIndex >= countOfAndroidCapabilities) {
+  if (uuidIndex) {
     throw new Error(`Asked invalid android uuid index: ${uuidIndex}`);
   }
 
