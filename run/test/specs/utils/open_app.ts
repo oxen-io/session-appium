@@ -2,7 +2,7 @@
 import {
   androidCapabilities,
   getAndroidCapabilities,
-  getAndroidUuid,
+  getAndroidUdid,
 } from "./capabilities_android";
 import { CapabilitiesIndexType, getIosCapabilities } from "./capabilities_ios";
 import { installAppToDeviceName, runScriptAndLog } from "./utilities";
@@ -162,7 +162,7 @@ const openAndroidApp = async (
   device: DeviceWrapper;
 }> => {
   // await killAdbIfNotAlreadyDone();
-  const targetName = getAndroidUuid(capabilitiesIndex);
+  const targetName = getAndroidUdid(capabilitiesIndex);
 
   const emulatorAlreadyRunning = await isEmulatorRunning(targetName);
   console.warn('emulatorAlreadyRunning', targetName, emulatorAlreadyRunning)

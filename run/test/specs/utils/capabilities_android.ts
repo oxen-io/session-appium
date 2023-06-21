@@ -1,5 +1,6 @@
 import { AppiumW3CCapabilities } from "@wdio/types/build/Capabilities";
 import { W3CCapabilities } from "appium/build/lib/appium";
+import { isNil, isString } from "lodash";
 import { getAndroidBinariesRoot } from "./binaries";
 import { CapabilitiesIndexType } from "./capabilities_ios";
 
@@ -18,9 +19,6 @@ const sharedCapabilities: AppiumW3CCapabilities = {
   "appium:newCommandTimeout": 300000,
 };
 
-// const usePhysicalDevice = process.argv[2] === "physical";
-
-// const capabilities = usePhysicalDevice ? physicalDeviceCapabilities : emulatorCapabilities;
 
 const emulator1Udid = "emulator-5554";
 const emulator2Udid = "emulator-5556";
@@ -67,13 +65,7 @@ export const androidCapabilities = {
   androidAppFullPath,
 };
 
-export function getAndroidCapabilities(
-  capabilitiesIndex: CapabilitiesIndexType
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-): W3CCapabilities<any> {
-  if (capabilitiesIndex) {
-    throw new Error(`Asked invalid android cap index: ${capabilitiesIndex}`);
-  }
+function getAllCaps() {
   const emulatorCaps = [
     emulatorCapabilities1,
     emulatorCapabilities2,
@@ -84,21 +76,40 @@ export function getAndroidCapabilities(
     physicalDeviceCapabilities1,
     physicalDeviceCapabilities2
   ]
+  const allowPhysicalDevice = !isNil(process.env.ALLOW_PHYSICAL_DEVICES);
 
   const allCaps = [ ...physicalDeviceCaps, ...emulatorCaps ]
 
+  if(allowPhysicalDevice) {
+    return allCaps
+  } 
+    return emulatorCaps
+}
+
+export function getAndroidCapabilities(
+  capabilitiesIndex: CapabilitiesIndexType
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+): W3CCapabilities<any> {
+  const allCaps = getAllCaps();
+  if (capabilitiesIndex >= allCaps.length) {
+    throw new Error(`Asked invalid android capability index: ${capabilitiesIndex}`);
+  }
+  const cap = allCaps[capabilitiesIndex]
   return {
     firstMatch: [{}, {}],
-    alwaysMatch: {
-      ...allCaps,
-      "appium:udid": getAndroidUuid(capabilitiesIndex),
-    },
+    alwaysMatch: { ...cap }
   };
 }
-export function getAndroidUuid(uuidIndex: CapabilitiesIndexType) {
-  if (uuidIndex) {
-    throw new Error(`Asked invalid android uuid index: ${uuidIndex}`);
+export function getAndroidUdid(udidIndex: CapabilitiesIndexType):string {
+  const allCaps = getAllCaps();
+  if (udidIndex >= allCaps.length) {
+    throw new Error(`Asked invalid android udid index: ${udidIndex}`);
   }
+  const cap = allCaps[udidIndex]
 
-  return uuidsList[uuidIndex];
+  const udid = cap["appium:udid"] 
+  if(isString(udid)) {
+    return udid
+  }
+  throw new Error('Udid isnt set')
 }

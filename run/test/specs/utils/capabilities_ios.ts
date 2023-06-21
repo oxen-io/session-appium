@@ -16,7 +16,7 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   "appium:autoDismissAlerts": false,
   // "appium:isHeadless": true,
 } as AppiumXCUITestCapabilities;
-export type CapabilitiesIndexType = 0 | 1 | 2 | 3;
+export type CapabilitiesIndexType = 0 | 1 | 2 | 3 | 4 | 5;
 
 function getIOSSimulatorUUIDFromEnv(index: CapabilitiesIndexType): string {
   switch (index) {
