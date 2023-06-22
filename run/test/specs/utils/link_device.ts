@@ -39,11 +39,11 @@ export const linkedDevice = async (
   //   await device2.clickOnElement("Continue");
   // }
   // Wait for any notifications to disappear
-  await device2.waitForElementToBePresent(
+  await device2.waitForElementToBePresent([
     "accessibility id",
     "Message Notifications",
     20000
-  );
+   ]);
   // Wait for transitiion animation between the two pages
   await await sleepFor(250);
   // Click continue on message notification settings
@@ -61,10 +61,10 @@ export const linkedDevice = async (
   await sleepFor(1000);
   await device2.hasElementBeenDeleted("accessibility id", "Continue");
   // Check that button was clicked
-  await device2.waitForElementToBePresent(
+  await device2.waitForElementToBePresent([
     "accessibility id",
     "New conversation button"
-  );
+  ]);
 
   console.warn("Device 3 linked");
 

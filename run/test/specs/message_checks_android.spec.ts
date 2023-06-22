@@ -174,10 +174,10 @@ async function sendVideo(platform: SupportedPlatformsType) {
   // User B - Click on 'download'
   await device2.clickOnElement("Download media");
   // Reply to message
-  await device2.waitForElementToBePresent(
+  await device2.waitForElementToBePresent([
     "id",
     "network.loki.messenger:id/play_overlay"
-  );
+  ]);
   await device2.longPress("Media message");
   await device2.clickOnElement("Reply to message");
   await device2.sendMessage(replyMessage);
@@ -313,10 +313,10 @@ async function sendLink(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Enable");
   // No preview on first send
   await device1.clickOnElement("Send message button");
-  await device1.waitForElementToBePresent(
+  await device1.waitForElementToBePresent([
     "accessibility id",
     "Message sent status: Sent", 20000
-  );
+  ]);
   // Send again for image
   await device1.inputText(
     "accessibility id",
@@ -364,10 +364,10 @@ async function unsendMessage(platform: SupportedPlatformsType) {
   // Select 'Delete for me and User B'
   await device1.clickOnElement("Delete for everyone");
   // Look in User B's chat for alert 'This message has been deleted?'
-  await device2.waitForElementToBePresent(
+  await device2.waitForElementToBePresent([
     "accessibility id",
     "Deleted message"
-  );
+  ]);
 
   // Excellent
   await closeApp(device1, device2);

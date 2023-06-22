@@ -107,10 +107,10 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
   // Check message came through on linked device(3)
   // Enter conversation with user B on device 3
   // Need to wait for notifications to disappear
-  await device3.waitForElementToBePresent(
+  await device3.waitForElementToBePresent([
     "accessibility id",
     "Conversation list item"
-  );
+  ]);
   await device3.selectByText("Conversation list item", userB.userName);
   // Find message
   await device3.findMessageWithBody(sentMessage);
@@ -145,10 +145,10 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
   // Check message came through on linked device(3)
   // Enter conversation with user B on device 3
   // Need to wait for notifications to disappear
-  await device3.waitForElementToBePresent(
+  await device3.waitForElementToBePresent([
     "accessibility id",
     "Conversation list item"
-  );
+  ]);
   await device3.selectByText("Conversation list item", userB.userName);
   // Find message
   await device3.findMessageWithBody(sentMessage);
@@ -161,10 +161,10 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
 
   // await waitForLoadingAnimation(device1);
 
-  await device2.waitForElementToBePresent(
+  await device2.waitForElementToBePresent([
     "accessibility id",
     "Deleted message"
-  );
+  ]);
   // Check linked device for deleted message
   await device3.hasTextElementBeenDeleted("Message Body", sentMessage);
   // Close app
@@ -275,10 +275,10 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   // Wait for change
   // Verify change
   // Take screenshot
-  const el = await device1.waitForElementToBePresent(
+  const el = await device1.waitForElementToBePresent([
     "accessibility id",
     "Profile picture"
-  );
+  ]);
   await sleepFor(3000);
   const base64 = await device1.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
@@ -291,10 +291,10 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   console.log("Now checking avatar on linked device");
   // Check avatar on device 2
   await device2.clickOnElement("User settings");
-  const el2 = await device2.waitForElementToBePresent(
+  const el2 = await device2.waitForElementToBePresent([
     "accessibility id",
     "Profile picture"
-  );
+  ]);
   await sleepFor(3000);
   const base64A = await device2.getElementScreenshot(el2.ELEMENT);
   const pixelColorLinked = await parseDataImage(base64A);
@@ -350,10 +350,10 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   // Wait for change
   // Verify change
   // Take screenshot
-  const el = await device1.waitForElementToBePresent(
+  const el = await device1.waitForElementToBePresent([
     "accessibility id",
     "User settings"
-  );
+  ]);
   await sleepFor(3000);
   const base64 = await device1.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
@@ -366,10 +366,10 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   console.log("Now checking avatar on linked device");
   // Check avatar on device 2
   await device2.clickOnElement("User settings");
-  const el2 = await device2.waitForElementToBePresent(
+  const el2 = await device2.waitForElementToBePresent([
     "accessibility id",
     "User settings"
-  );
+  ]);
   await sleepFor(3000);
   const base64A = await device2.getElementScreenshot(el2.ELEMENT);
   const pixelColorLinked = await parseDataImage(base64A);

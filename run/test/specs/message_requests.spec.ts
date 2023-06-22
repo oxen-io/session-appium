@@ -67,10 +67,10 @@ async function declineRequest(platform: SupportedPlatformsType) {
   await sleepFor(100);
   await device2.navigateBack(platform);
   // Look for new conversation button to make sure it all worked
-  await device2.waitForElementToBePresent(
+  await device2.waitForElementToBePresent([
     "accessibility id",
     "New conversation button"
-  );
+  ]);
 
   // Close app
   await closeApp(device1, device2);
@@ -127,10 +127,10 @@ async function blockRequest(platform: SupportedPlatformsType) {
   const blockedMessage = `${userA.userName} to ${userB.userName} - shouldn't get through`;
   await device1.sendMessage(blockedMessage);
   await device2.navigateBack(platform);
-  await device2.waitForElementToBePresent(
+  await device2.waitForElementToBePresent([
     "accessibility id",
     "New conversation button"
-  );
+  ]);
   // Need to wait to see if message gets through
   await sleepFor(1000);
   await device2.hasTextElementBeenDeleted("Message Body", blockedMessage);
@@ -161,7 +161,7 @@ async function deleteRequest(platform: SupportedPlatformsType) {
   // Bob clicks on message request banner
   await device2.clickOnElement("Message requests banner");
   // Swipe left on ios
-  await device2.swipeLeftAny("accessibility id", "Message request");
+  await device2.swipeLeftAny("Message request");
 
   await device2.clickOnElement("Delete");
   await sleepFor(1000);
@@ -190,10 +190,10 @@ async function clearAllRequests(platform: SupportedPlatformsType) {
   );
   await runOnlyOnIOS(platform, () => device2.clickOnElement("Clear"));
 
-  await device2.waitForElementToBePresent(
+  await device2.waitForElementToBePresent([
     "accessibility id",
     "No pending message requests"
-  );
+  ]);
 
   await closeApp(device1, device2);
 }

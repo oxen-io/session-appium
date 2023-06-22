@@ -59,7 +59,7 @@ async function blockUserInConversationOptions(
   // On ios, you need to navigate back to conversation screen to confirm block
   await runOnlyOnIOS(platform, () => device1.clickOnElement("Back"));
   // Look for alert at top of screen (Bob is blocked. Unblock them?)
-  await device1.waitForElementToBePresent("accessibility id", "Blocked banner");
+  await device1.waitForElementToBePresent(["accessibility id", "Blocked banner"]);
   console.warn("User has been blocked");
   // Click on alert to unblock
   await device1.clickOnElement("Blocked banner");
@@ -183,10 +183,10 @@ async function changeAvatarAndroid(platform: SupportedPlatformsType) {
   await device.clickOnElementById(
     "network.loki.messenger:id/crop_image_menu_crop"
   );
-  const el = await device.waitForElementToBePresent(
+  const el = await device.waitForElementToBePresent([
     "accessibility id",
     "User settings"
-  );
+  ]);
   await sleepFor(3000);
   const base64 = await device.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
@@ -246,10 +246,10 @@ async function changeAvatariOS(platform: SupportedPlatformsType) {
   await device.clickOnElement("Done");
   await device.clickOnElement("Upload")
   // Take screenshot
-  const el = await device.waitForElementToBePresent(
+  const el = await device.waitForElementToBePresent([
     "accessibility id",
     "Profile picture"
-  );
+  ]);
   await sleepFor(3000);
   const base64 = await device.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
@@ -285,10 +285,10 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // CLick out of pop up
   await device1.clickOnElement('Message user')
   // Check name at top of conversation is nickname
-  const headerElement = await device1.waitForElementToBePresent(
+  const headerElement = await device1.waitForElementToBePresent([
     "accessibility id",
     "Username"
-  );
+  ]);
   await device1.getTextFromElement(headerElement);
   // Send a message so nickname is updated in conversation list
   await device1.sendMessage("Howdy");
@@ -307,10 +307,10 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   await device1.back();
   // Enter conversation to verify change
   await device1.selectByText("Conversation list item", nickName);
-  const changedElement = await device1.waitForElementToBePresent(
+  const changedElement = await device1.waitForElementToBePresent([
     "accessibility id",
     "Username"
-  );
+  ]);
   await device1.getTextFromElement(changedElement);
   // Send message to change in conversation list
   await device1.sendMessage("Howdy");
@@ -319,10 +319,10 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Verify name change in list
   // Save text of conversation list item?
   await device1.selectByText("Conversation list item", userB.userName);
-  const revertedHeader = await device1.waitForElementToBePresent(
+  const revertedHeader = await device1.waitForElementToBePresent([
     "accessibility id",
     "Username"
-  );
+  ]);
   await device1.getTextFromElement(revertedHeader);
   // if (originalUsername === userB.userName) {
   //   console.log("Nickname changed back to original username");

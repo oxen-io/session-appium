@@ -13,6 +13,9 @@ export type Group = {
 
 export type Strategy = "accessibility id" | "xpath" | "id" | "class name";
 
+export type StrategyExtraction = [ Extract<Strategy, "xpath" | "id" | "class name">, string ] | [ Extract<Strategy, "accessibility id">, AccessibilityId ]
+
+
 export type AccessibilityId =
   | "Create session ID"
   | "Session ID"

@@ -41,7 +41,7 @@ export const createGroup = async (
   await sleepFor(4000);
   // Check for empty state on ios
   await runOnlyOnIOS(platform, () =>
-    device1.waitForElementToBePresent("accessibility id", "Empty state label")
+    device1.waitForElementToBePresent(["accessibility id", "Empty state label"])
   );
   // await runOnlyOnIOS(platform, () =>
   //   device1.waitForElementToBePresent("accessibility id", "Group created")

@@ -33,7 +33,7 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   // Phone icon should appear now that conversation has been approved
   await device1.clickOnElement("Call");
   // Enabled voice calls in privacy settings
-  await device1.waitForElementToBePresent("id", "android:id/button1");
+  await device1.waitForElementToBePresent(["id", "android:id/button1"]);
   await device1.clickOnElementById("android:id/button1");
   // Scroll to bottom of page to voice and video calls
   await sleepFor(1000);
@@ -49,9 +49,9 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   // Click enable on exposure IP address warning
   await device1.clickOnElement("Enable");
   // Navigate back to conversation
-  await device1.waitForElementToBePresent(
+  await device1.waitForElementToBePresent([
     "id",
-    "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
+    "com.android.permissioncontroller:id/permission_allow_foreground_only_button"]
   );
   await device1.clickOnElementById(
     "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
@@ -61,7 +61,7 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   // Enable voice calls on device 2 for User B
   await device2.clickOnElement("Call");
   // Enabled voice calls in privacy settings
-  await device2.waitForElementToBePresent("id", "android:id/button1");
+  await device2.waitForElementToBePresent(["id", "android:id/button1"]);
   await device2.clickOnElementById("android:id/button1");
   // Scroll to bottom of page to voice and video calls
   await sleepFor(1000);
@@ -77,10 +77,10 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   // Click enable on exposure IP address warning
   await device2.clickOnElement("Enable");
   // Navigate back to conversation
-  await device2.waitForElementToBePresent(
+  await device2.waitForElementToBePresent([
     "id",
     "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
-  );
+  ]);
   await device2.clickOnElementById(
     "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
   );
@@ -128,7 +128,7 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   // Phone icon should appear now that conversation has been approved
   await device1.clickOnElement("Call");
   // Enabled voice calls in privacy settings
-  await device1.waitForElementToBePresent("accessibility id", "Settings");
+  await device1.waitForElementToBePresent(["accessibility id", "Settings"]);
   await device1.clickOnElement("Settings");
   // await device1.clickOnElement("Settings");
   // Scroll to bottom of page to voice and video calls

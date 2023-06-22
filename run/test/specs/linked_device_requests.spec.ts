@@ -26,10 +26,10 @@ async function acceptRequestLinked(platform: SupportedPlatformsType) {
   await device2.clickOnElement("Message request");
   // Check device 3 (linked device) if message request has synced
   await device3.clickOnElement("Message requests banner");
-  await device3.waitForElementToBePresent(
+  await device3.waitForElementToBePresent([
     "accessibility id",
     "Message request"
-  );
+  ]);
   // Bob clicks accept button on device 2 (original device)
   await device2.clickOnElement("Accept message request");
   // Verify config message for Alice 'Your message request has been accepted'
@@ -39,10 +39,10 @@ async function acceptRequestLinked(platform: SupportedPlatformsType) {
     "Your message request has been accepted."
   );
 
-  await device3.waitForElementToBePresent(
+  await device3.waitForElementToBePresent([
     "accessibility id",
     "No pending message requests"
-  );
+  ]);
   // Check conversation list for new contact (user A)
   await device3.navigateBack(platform);
   await device3.waitForTextElementToBePresent(
@@ -69,10 +69,10 @@ async function declineRequestLinked(platform: SupportedPlatformsType) {
   await device2.clickOnElement("Message request");
   // Check message request appears on linked device (device 3)
   await device3.clickOnElement("Message requests banner");
-  await device3.waitForElementToBePresent(
+  await device3.waitForElementToBePresent([
     "accessibility id",
     "Message request"
-  );
+  ]);
   // Click on decline button
   await runOnlyOnIOS(platform, () => device2.clickOnElement("Delete message request"));
   await runOnlyOnAndroid(platform, () => device2.clickOnElement("Decline message request"));
@@ -84,14 +84,14 @@ async function declineRequestLinked(platform: SupportedPlatformsType) {
   await sleepFor(100);
   await device2.navigateBack(platform);
   // Look for new conversation button to make sure it all worked
-  await device2.waitForElementToBePresent(
+  await device2.waitForElementToBePresent([
     "accessibility id",
     "New conversation button"
-  );
-  await device3.waitForElementToBePresent(
+  ]);
+  await device3.waitForElementToBePresent([
     "accessibility id",
     "No pending message requests"
-  );
+  ]);
 
   // Close app
   await closeApp(device1, device2, device3);
@@ -111,10 +111,10 @@ async function blockedRequestLinked(platform: SupportedPlatformsType) {
   await device2.clickOnElement("Message request");
   // Check on linked device for message request
   await device3.clickOnElement("Message requests banner");
-  await device3.waitForElementToBePresent(
+  await device3.waitForElementToBePresent([
     "accessibility id",
     "Message request"
-  );
+  ]);
   // Bob clicks on block option
   await device2.clickOnElement("Block message request");
   // Confirm block on android
@@ -126,10 +126,10 @@ async function blockedRequestLinked(platform: SupportedPlatformsType) {
   const blockedMessage = `"${userA.userName} to ${userB.userName} - shouldn't get through"`;
   await device1.sendMessage(blockedMessage);
   await device2.navigateBack(platform);
-  await device2.waitForElementToBePresent(
+  await device2.waitForElementToBePresent([
     "accessibility id",
     "New conversation button"
-  );
+  ]);
   // Need to wait to see if message gets through
   await sleepFor(5000);
   await device2.hasTextElementBeenDeleted("Message Body", blockedMessage);

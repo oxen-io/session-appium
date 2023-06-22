@@ -10,10 +10,10 @@ export const newUser = async (
 ): Promise<User> => {
   // Click create session ID
   const createSessionId = "Create session ID";
-  await device.waitForElementToBePresent("accessibility id", createSessionId);
+  await device.waitForElementToBePresent(["accessibility id", createSessionId]);
   await device.clickOnElement(createSessionId);
   // Wait for animation to generate session id
-  await device.waitForElementToBePresent("accessibility id", "Session ID", 8000);
+  await device.waitForElementToBePresent(["accessibility id", "Session ID", 8000]);
   // save session id as variable
   const sessionID = await getSessionID(platform, device);
 
@@ -35,7 +35,7 @@ export const newUser = async (
   await runOnlyOnIOS(platform, () => device.clickOnElement("Don’t Allow"));
   // iOS only
   // Click on 'continue' button to open recovery phrase modal
-  await device.waitForElementToBePresent("accessibility id", "Continue");
+  await device.waitForElementToBePresent(["accessibility id", "Continue"]);
   await device.clickOnElement("Continue");
   // Long Press the recovery phrase to reveal recovery phrase
   await device.longPress("Recovery Phrase");
