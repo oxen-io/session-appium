@@ -27,17 +27,17 @@ async function acceptRequest(platform: SupportedPlatformsType) {
   // Bob clicks accept button
   await device2.clickOnElement("Accept message request");
   // Verify config message for Alice 'Your message request has been accepted'
-  await device1.waitForTextElementToBePresent(
+  await device1.waitForTextElementToBePresent([
     "accessibility id",
     "Configuration message",
     "Your message request has been accepted."
-  );
+  ]);
   await device2.navigateBack(platform);
-  await device2.waitForTextElementToBePresent(
+  await device2.waitForTextElementToBePresent([
     "accessibility id",
     "Conversation list item",
     userA.userName
-  );
+  ]);
   // Close app
   await closeApp(device1, device2);
 }
@@ -94,11 +94,11 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
   // Send message from Bob to Alice
   await device2.sendMessage(`${userB.userName} to ${userA.userName}`);
   // Check config
-  await device1.waitForTextElementToBePresent(
+  await device1.waitForTextElementToBePresent([
     "accessibility id",
     "Configuration message",
     "Your message request has been accepted."
-  );
+  ]);
   // Close app
   await closeApp(device1, device2);
 }
@@ -139,11 +139,11 @@ async function blockRequest(platform: SupportedPlatformsType) {
   await device2.clickOnElement("Conversations");
   await runOnlyOnAndroid(platform, () => device2.clickOnElement("Blocked contacts"));
   await runOnlyOnIOS(platform, () => device2.clickOnElement("Blocked Contacts"));
-  await device2.waitForTextElementToBePresent(
+  await device2.waitForTextElementToBePresent([
     "accessibility id",
     "Contact",
     userA.userName
-  );
+  ]);
 
   // Close app
   await closeApp(device1, device2);

@@ -33,11 +33,11 @@ async function acceptRequestLinked(platform: SupportedPlatformsType) {
   // Bob clicks accept button on device 2 (original device)
   await device2.clickOnElement("Accept message request");
   // Verify config message for Alice 'Your message request has been accepted'
-  await device1.waitForTextElementToBePresent(
+  await device1.waitForTextElementToBePresent([
     "accessibility id",
     "Configuration message",
     "Your message request has been accepted."
-  );
+  ]);
 
   await device3.waitForElementToBePresent([
     "accessibility id",
@@ -45,11 +45,11 @@ async function acceptRequestLinked(platform: SupportedPlatformsType) {
   ]);
   // Check conversation list for new contact (user A)
   await device3.navigateBack(platform);
-  await device3.waitForTextElementToBePresent(
+  await device3.waitForTextElementToBePresent([
     "accessibility id",
     "Conversation list item",
     userA.userName
-  );
+  ]);
   // Close app
   await closeApp(device1, device2, device3);
 }

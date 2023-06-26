@@ -85,11 +85,11 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   await device1.clickOnElementById("network.loki.messenger:id/action_apply");
   // Check config message for changed name (different on ios and android)
   // Config on Android is "You renamed the group to blah"
-  await device1.waitForTextElementToBePresent(
+  await device1.waitForTextElementToBePresent([
     "accessibility id",
     "Configuration message",
     "You renamed the group to " + `${newGroupName}`
-  );
+  ]);
 
   await closeApp(device1, device2, device3);
 }
@@ -151,11 +151,11 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   // If ios click back to match android (which goes back to conversation screen)
   // Check config message for changed name (different on ios and android)
   // Config message on ios is "Title is now blah"
-  await device1.waitForTextElementToBePresent(
+  await device1.waitForTextElementToBePresent([
     "accessibility id",
     "Configuration message",
     "Title is now " + `'${newGroupName}'.`
-  );
+  ]);
   // Config on Android is "You renamed the group to blah"
 
   await closeApp(device1, device2, device3);
@@ -214,18 +214,18 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   );
   // Check config message
   await runOnlyOnIOS(platform, () =>
-    device1.waitForTextElementToBePresent(
+    device1.waitForTextElementToBePresent([
       "accessibility id",
       "Configuration message",
       `${userD.userName}` + " joined the group."
-    )
+    ])
   );
   await runOnlyOnAndroid(platform, () =>
-    device1.waitForTextElementToBePresent(
+    device1.waitForTextElementToBePresent([
       "accessibility id",
       "Configuration message",
       `You added ${userD.userName} to the group.`
-    )
+    ])
   );
   // Exit to conversation list
   await device4.navigateBack(platform);
@@ -233,11 +233,11 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   await device4.selectByText("Conversation list item", group.userName);
   // Check config
   await runOnlyOnIOS(platform, () =>
-    device4.waitForTextElementToBePresent(
+    device4.waitForTextElementToBePresent([
       "accessibility id",
       "Configuration message",
       `${userD.userName}` + " joined the group."
-    )
+    ])
   );
   // await runOnlyOnAndroid(platform, () =>
   //   device4.waitForTextElementToBePresent(

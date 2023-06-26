@@ -26,16 +26,16 @@ async function linkDevice(platform: SupportedPlatformsType) {
   await device2.clickOnElement("User settings");
   // Check username
 
-  await device2.waitForTextElementToBePresent(
+  await device2.waitForTextElementToBePresent([
     "accessibility id",
     "Username",
     userA.userName
-  );
-  await device2.waitForTextElementToBePresent(
+  ]);
+  await device2.waitForTextElementToBePresent([
     "accessibility id",
     "Session ID",
     userA.sessionID
-  );
+  ]);
 
   await closeApp(device1, device2);
 }
@@ -179,11 +179,11 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
   const userB = await newUser(device2, "Bob", platform);
   await newContact(platform, device1, userA, device2, userB);
   // Check that user synced on linked device
-  await device3.waitForTextElementToBePresent(
+  await device3.waitForTextElementToBePresent([
     "accessibility id",
     "Conversation list item",
     userB.userName
-  );
+  ]);
   // Block user on device 1
   await device1.clickOnElement("More options");
   // Select block (menu option for android and toggle for ios)
@@ -217,11 +217,11 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
 
   const sentMessage = await device2.sendMessage("Unsend message");
   // Check on device 1 if user A receives message
-  await device1.waitForTextElementToBePresent(
+  await device1.waitForTextElementToBePresent([
     "accessibility id",
     "Message Body",
     sentMessage
-  );
+  ]);
 
   // Everything works then close app
   await closeApp(device1, device2, device3);
@@ -317,11 +317,11 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   await device1.clickOnElementById(
     "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
   );
-  await device1.waitForTextElementToBePresent(
+  await device1.waitForTextElementToBePresent([
     "id",
     "android:id/text1",
     "Files"
-  );
+  ]);
   await device1.clickOnTextElementById("android:id/text1", "Files");
   // Check if permissions need to be enabled
   // Check if image is already on device

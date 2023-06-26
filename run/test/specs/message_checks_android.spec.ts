@@ -59,11 +59,11 @@ async function sendImage(platform: SupportedPlatformsType) {
   await device2.longPress("Media message");
   await device2.clickOnElement("Reply to message");
   await device2.sendMessage(replyMessage);
-  await device1.waitForTextElementToBePresent(
+  await device1.waitForTextElementToBePresent([
     "accessibility id",
     "Message Body",
     replyMessage
-  );
+  ]);
   // Close app and server
   await closeApp(device1, device2);
 }
@@ -115,11 +115,11 @@ async function sendDocument(platform: SupportedPlatformsType) {
   await device2.longPress("Document");
   await device2.clickOnElement("Reply to message");
   await device2.sendMessage(replyMessage);
-  await device1.waitForTextElementToBePresent(
+  await device1.waitForTextElementToBePresent([
     "accessibility id",
     "Message Body",
     replyMessage
-  );
+  ]);
   // Close app and server
   await closeApp(device1, device2);
 }
@@ -182,11 +182,11 @@ async function sendVideo(platform: SupportedPlatformsType) {
   await device2.clickOnElement("Reply to message");
   await device2.sendMessage(replyMessage);
   await sleepFor(2000);
-  await device1.waitForTextElementToBePresent(
+  await device1.waitForTextElementToBePresent([
     "accessibility id",
     "Message Body",
     replyMessage
-  );
+  ]);
   // Close app and server
   await closeApp(device1, device2);
 }
@@ -216,11 +216,11 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
   await device2.longPress("Voice message");
   await device2.clickOnElement("Reply to message");
   await device2.sendMessage(replyMessage);
-  await device1.waitForTextElementToBePresent(
+  await device1.waitForTextElementToBePresent([
     "accessibility id",
     "Message Body",
     replyMessage
-  );
+  ]);
 
   await closeApp(device1, device2);
 }
@@ -261,11 +261,11 @@ async function sendGif(platform: SupportedPlatformsType) {
   // Check reply came through on device1
   await device2.clickOnElement("Reply to message");
   await device2.sendMessage(replyMessage);
-  await device1.waitForTextElementToBePresent(
+  await device1.waitForTextElementToBePresent([
     "accessibility id",
     "Message Body",
     replyMessage
-  );
+  ]);
   // Close app
   await closeApp(device1, device2);
 }
@@ -328,11 +328,11 @@ async function sendLink(platform: SupportedPlatformsType) {
   // Make sure link works (dialog pop ups saying are you sure?)
 
   // Make sure image preview is available in device 2
-  await device2.waitForTextElementToBePresent(
+  await device2.waitForTextElementToBePresent([
     "accessibility id",
     "Message Body",
     `https://nerdlegame.com/`
-  );
+  ]);
   await closeApp(device1, device2);
 }
 
@@ -351,11 +351,11 @@ async function unsendMessage(platform: SupportedPlatformsType) {
     "Checking unsend functionality"
   );
   // await sleepFor(1000);
-  await device2.waitForTextElementToBePresent(
+  await device2.waitForTextElementToBePresent([
     "accessibility id",
     "Message Body",
     sentMessage
-  );
+  ]);
   console.log("Doing a long click on" + `${sentMessage}`);
   // Select and long press on message to delete it
   await device1.longPressMessage(sentMessage);
@@ -388,11 +388,11 @@ async function deleteMessage(platform: SupportedPlatformsType) {
     "Checking unsend functionality"
   );
   // await sleepFor(1000);
-  await device2.waitForTextElementToBePresent(
+  await device2.waitForTextElementToBePresent([
     "accessibility id",
     "Message Body",
     sentMessage
-  );
+  ]);
   // Select and long press on message to delete it
   await device1.longPressMessage(sentMessage);
   // Select Delete icon

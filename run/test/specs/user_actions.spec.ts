@@ -73,11 +73,11 @@ async function blockUserInConversationOptions(
     "Hey, am I unblocked?"
   );
   // Check in device 1 for message
-  await device1.waitForTextElementToBePresent(
+  await device1.waitForTextElementToBePresent([
     "accessibility id",
     "Message Body",
     hasUserBeenUnblockedMessage
-  );
+  ]);
 
   // Close app
   await closeApp(device1, device2);
@@ -158,7 +158,7 @@ async function changeAvatarAndroid(platform: SupportedPlatformsType) {
   await device.clickOnElementById(
     "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
   );
-  await device.waitForTextElementToBePresent("id", "android:id/text1", "Files");
+  await device.waitForTextElementToBePresent(["id", "android:id/text1", "Files"]);
   await device.clickOnTextElementById("android:id/text1", "Files");
   // Select file
   await sleepFor(2000);
@@ -405,7 +405,24 @@ async function readStatus(platform: SupportedPlatformsType) {
   
 
   await device2.navigateBack(platform);
+<<<<<<< Updated upstream
 
+=======
+  await device2.clickOnElement("User settings");
+  await device1.clickOnElementById(`network.loki.messenger:id/privacyButton`)
+  // await device2.clickOnElement("Privacy");
+  await sleepFor(2000)
+  await device2.clickOnTextElementById('android:id/summary', 'Send read receipts in one-to-one chats.')
+  // await device2.clickOnElement('Enable read receipts');
+  await device2.navigateBack(platform);
+  // Send message from User A to User B to verify read status is working
+  await device1.sendMessage(testMessage);
+  await device2.waitForTextElementToBePresent(['accessibility id', "Message Body", testMessage]);
+  await device2.clickOnElementByText('accessibility id', "Message Body", testMessage)
+  // Check read status on device 1
+  await device1.waitForTextElementToBePresent(['id', 'network.loki.messenger:id/messageStatusTextView', 'Read'])
+  // await device1.waitForElementToBePresent(['accessibility id', 'Message status: Read']);
+>>>>>>> Stashed changes
 }
 
 describe("User actions",  () => {

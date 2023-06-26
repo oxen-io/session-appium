@@ -38,17 +38,17 @@ async function disappearingMessages(platform: SupportedPlatformsType) {
   // Select OK
   // await device1.selectByText("Time selector", "OK");
   // Check config message for User A
-  await device1.waitForTextElementToBePresent(
+  await device1.waitForTextElementToBePresent([
     "accessibility id",
     "Configuration message",
     "You set disappearing message time to 5 seconds"
-  );
+  ]);
   // Check config message for User B
-  await device2.waitForTextElementToBePresent(
+  await device2.waitForTextElementToBePresent([
     "accessibility id",
     "Configuration message",
     `${userA.userName} set disappearing message time to 5 seconds`
-  );
+  ]);
   // Send message
   const message = "Howdy testing disappearing messages";
   await device1.inputText("accessibility id", "Message input box", message);

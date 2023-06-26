@@ -307,16 +307,23 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.click(el.ELEMENT);
   }
 
+  public async clickOnElementAll(strategy: Strategy, selector: string, textToLookFor?: string, maxWait?: number) {
+    if(textToLookFor){
+    const el = await this.waitForTextElementToBePresent([strategy, selector, textToLookFor, maxWait])
+    }
+    const el = await this.waitForElementToBePresent([strategy, selector, maxWait])
+  }
+
   public async clickOnElementByText(
     strategy: Strategy,
     selector: string,
     textToClickOn: string
   ) {
-    const el = await this.waitForTextElementToBePresent(
+    const el = await this.waitForTextElementToBePresent([
       strategy,
       selector,
       textToClickOn
-    );
+    ]);
 
     if (!el) {
       throw new Error(
@@ -340,7 +347,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async clickOnTextElementById(id: string, textToLookFor: string) {
     const el = await this.findTextElementArrayById(id, textToLookFor);
-    await this.waitForTextElementToBePresent("id", id, textToLookFor)
+    await this.waitForTextElementToBePresent(["id", id, textToLookFor])
     await this.click(el.ELEMENT);
   }
 
@@ -367,11 +374,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async longPressMessage(textToLookFor: string) {
     try {
-      const el = await this.waitForTextElementToBePresent(
+      const el = await this.waitForTextElementToBePresent([
         "accessibility id",
         "Message Body",
         textToLookFor
-      );
+      ]);
       await this.longClick(el, 1000);
       console.log("LongClick successful");
       if (!el) {
@@ -385,11 +392,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async longPressConversation(userName: string) {
-    const el = await this.waitForTextElementToBePresent(
+    const el = await this.waitForTextElementToBePresent([
       "accessibility id",
       "Conversation list item",
       userName
-    );
+    ]);
     await this.longClick(el, 1000);
   }
 
@@ -403,11 +410,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async selectByText(accessibilityId: AccessibilityId, text: string) {
-    await this.waitForTextElementToBePresent(
+    await this.waitForTextElementToBePresent([
       "accessibility id",
       accessibilityId,
       text
-    );
+    ]);
     const selector = await this.findMatchingTextAndAccessibilityId(
       accessibilityId,
       text
@@ -597,12 +604,12 @@ export class DeviceWrapper implements SharedDeviceInterface {
       "Configuration message",
       maxWait
     ]);
-    const configMessage = await this.waitForTextElementToBePresent(
+    const configMessage = await this.waitForTextElementToBePresent([
       "accessibility id",
       "Configuration message",
       messageText,
       maxWait
-    );
+    ]);
     if (!configMessage) {
       throw new Error(`Couldnt find configMessage`);
     }
@@ -612,11 +619,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
   public async findMessageWithBody(
     textToLookFor: string
   ): Promise<AppiumNextElementType> {
-    await this.waitForTextElementToBePresent(
+    await this.waitForTextElementToBePresent([
       "accessibility id",
       "Message Body",
       textToLookFor
-    );
+    ]);
     const message = await this.findMatchingTextAndAccessibilityId(
       "Message Body",
       textToLookFor
@@ -735,12 +742,12 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return el;
   }
 
-  public async waitForTextElementToBePresent(
-    strategy: Strategy,
-    selector: string,
-    text: string,
-    maxWait?: number
-  ): Promise<AppiumNextElementType> {
+  public async waitForTextElementToBePresent([
+    strategy,
+    selector,
+    text,
+    maxWait
+  ]:[...StrategyExtraction, string, number?]) {
     let el: null | AppiumNextElementType = null;
     const maxWaitMSec: number = maxWait || 15000;
     let currentWait = 0;
@@ -824,22 +831,22 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async sendMessageTo(sender: User, receiver: User | Group) {
     const message = `'${sender.userName}' to ${receiver.userName}`;
-    await this.waitForTextElementToBePresent(
+    await this.waitForTextElementToBePresent([
       "accessibility id",
       "Conversation list item",
       receiver.userName
-    );
+    ]);
     await this.selectByText("Conversation list item", receiver.userName);
     console.log(
       `'${sender.userName}' + " sent message to ${receiver.userName}`
     );
     await this.sendMessage(message);
     // wait for message to be received before moving on
-    await this.waitForTextElementToBePresent(
+    await this.waitForTextElementToBePresent([
       "accessibility id",
       "Message Body",
       message
-    );
+    ]);
     console.log(
       `Message received by ${receiver.userName} from ${sender.userName}`
     );

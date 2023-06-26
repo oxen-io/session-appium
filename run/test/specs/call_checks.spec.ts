@@ -38,11 +38,11 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   // Scroll to bottom of page to voice and video calls
   await sleepFor(1000);
   await device1.scrollDown();
-  const voicePermissions = await device1.waitForTextElementToBePresent(
+  const voicePermissions = await device1.waitForTextElementToBePresent([
     "id",
     "android:id/summary",
     "Enables voice and video calls to and from other users."
-  );
+  ]);
 
   await device1.click(voicePermissions.ELEMENT);
   // Toggle voice settings on
@@ -66,11 +66,11 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   // Scroll to bottom of page to voice and video calls
   await sleepFor(1000);
   await device2.scrollDown();
-  const voicePermissions2 = await device2.waitForTextElementToBePresent(
+  const voicePermissions2 = await device2.waitForTextElementToBePresent([
     "id",
     "android:id/summary",
     "Enables voice and video calls to and from other users."
-  );
+  ]);
 
   await device2.click(voicePermissions2.ELEMENT);
   // Toggle voice settings on
