@@ -4,7 +4,7 @@ import { AppiumNextElementType } from "../../appium_next";
 import { sleepFor } from "../test/specs/utils";
 import { SupportedPlatformsType } from "../test/specs/utils/open_app";
 import { isDeviceAndroid, isDeviceIOS } from "../test/specs/utils/utilities";
-import { AccessibilityId, Group, Strategy, StrategyExtraction, User } from "./testing";
+import { AccessibilityId, Group, Strategy, StrategyExtraction, StrategyExtractionObj, User } from "./testing";
 
 export type Coordinates = {
   x: number;
@@ -307,27 +307,26 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.click(el.ELEMENT);
   }
 
-  public async clickOnElementAll(strategy: Strategy, selector: string, textToLookFor?: string, maxWait?: number) {
-    if(textToLookFor){
-    const el = await this.waitForTextElementToBePresent([strategy, selector, textToLookFor, maxWait])
-    }
-    const el = await this.waitForElementToBePresent([strategy, selector, maxWait])
+  public async clickOnElementAll({strategy, selector, text, maxWait}: {text?: string, maxWait?: number} & (StrategyExtractionObj)) {
+    let el: null | AppiumNextElementType = null
+    if(text){
+       el = await this.waitForTextElementToBePresent({strategy, selector, text, maxWait})
+    } 
+       el = await this.waitForElementToBePresent({strategy, selector, maxWait})
+    return el
   }
 
-  public async clickOnElementByText(
-    strategy: Strategy,
-    selector: string,
-    textToClickOn: string
-  ) {
-    const el = await this.waitForTextElementToBePresent([
-      strategy,
-      selector,
-      textToClickOn
-    ]);
+  public async clickOnElementByText({
+    strategy, 
+    selector,
+    text,
+    maxWait
+  }:{ text: string, maxWait?: number} & StrategyExtractionObj) {
+    const el = await this.waitForTextElementToBePresent({strategy, selector, text, maxWait});
 
     if (!el) {
       throw new Error(
-        `clickOnElementByText: Couldnt find text: ${textToClickOn}`
+        `clickOnElementByText: Couldnt find text: ${text}`
       );
     }
     await this.click(el.ELEMENT);
@@ -345,9 +344,9 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.click(el.ELEMENT);
   }
 
-  public async clickOnTextElementById(id: string, textToLookFor: string) {
-    const el = await this.findTextElementArrayById(id, textToLookFor);
-    await this.waitForTextElementToBePresent(["id", id, textToLookFor])
+  public async clickOnTextElementById(id: string, text: string) {
+    const el = await this.findTextElementArrayById(id, text);
+    await this.waitForTextElementToBePresent({strategy: "id", selector: id, text})
     await this.click(el.ELEMENT);
   }
 
@@ -374,11 +373,10 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async longPressMessage(textToLookFor: string) {
     try {
-      const el = await this.waitForTextElementToBePresent([
-        "accessibility id",
-        "Message Body",
-        textToLookFor
-      ]);
+      const el = await this.waitForTextElementToBePresent({
+        strategyAndSelector: ["accessibility id", "Message Body"],
+        text: textToLookFor
+    });
       await this.longClick(el, 1000);
       console.log("LongClick successful");
       if (!el) {
@@ -392,11 +390,12 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async longPressConversation(userName: string) {
-    const el = await this.waitForTextElementToBePresent([
-      "accessibility id",
-      "Conversation list item",
-      userName
-    ]);
+    const el = await this.waitForTextElementToBePresent({
+      
+      strategy: "accessibility id",
+      selector: "Conversation list item",
+      text: userName
+  });
     await this.longClick(el, 1000);
   }
 
@@ -411,8 +410,8 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async selectByText(accessibilityId: AccessibilityId, text: string) {
     await this.waitForTextElementToBePresent([
-      "accessibility id",
-      accessibilityId,
+      strategy: "accessibility id",
+      selector: accessibilityId,
       text
     ]);
     const selector = await this.findMatchingTextAndAccessibilityId(
@@ -708,21 +707,21 @@ export class DeviceWrapper implements SharedDeviceInterface {
   // WAIT FOR FUNCTIONS
 
   public async waitForElementToBePresent([
-    strategy,
-    selector,
+    strategyAndSelector,
     maxWait
   ]:[...StrategyExtraction, number?]) {
-    const maxWaitMSec = maxWait || 6000;
+    const maxWaitMSec: number = typeof maxWait === 'number' ? maxWait : 6000;
     let currentWait = 0;
     const waitPerLoop = 100;
     let el: AppiumNextElementType | null = null;
+    const [strategy, selector] = strategyAndSelector;
 
     while (el === null) {
       try {
         console.log(
           `Waiting for '${strategy}' and '${selector}' to be present`
         );
-        el = await this.findElement(strategy, selector);
+        el = await this.findElement(strategy as Strategy, selector);
       } catch (e: any) {
         console.warn("waitForElementToBePresent failed with", e.message);
       }
@@ -742,24 +741,23 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return el;
   }
 
-  public async waitForTextElementToBePresent([
+  public async waitForTextElementToBePresent({
     strategy,
     selector,
     text,
     maxWait
-  ]:[...StrategyExtraction, string, number?]) {
+  }:{text: string, maxWait?: number} & StrategyExtractionObj) {
     let el: null | AppiumNextElementType = null;
-    const maxWaitMSec: number = maxWait || 15000;
+    const maxWaitMSec: number = typeof maxWait === 'number' ? maxWait : 15000;
     let currentWait = 0;
     const waitPerLoop = 100;
-
     while (el === null) {
       try {
         console.log(
           `Waiting for accessibility ID '${selector}' to be present with ${text}`
         );
 
-        const els = await this.findElements(strategy, selector);
+        const els = await this.findElements(strategy as Strategy, selector);
 
         el = await this.findMatchingTextInElementArray(els, text);
         

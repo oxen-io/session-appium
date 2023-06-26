@@ -31,7 +31,7 @@ async function disappearingMessages(platform: SupportedPlatformsType) {
     )
   );
   // Select 5 seconds
-  await device1.clickOnElementByText("id", "5 seconds", "5 seconds");
+  await device1.clickOnElementByText(["id", "5 seconds", "5 seconds"]);
   await device1.clickOnElement("Save button");
   await device1.navigateBack(platform);
   // await device1.selectByText("Disappearing messages time picker", "5 seconds");

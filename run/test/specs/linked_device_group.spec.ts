@@ -159,11 +159,11 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
   //   )
   // );
   await runOnlyOnAndroid(platform, () =>
-    device4.clickOnElementByText(
+    device4.clickOnElementByText([
       "accessibility id",
       "Conversation list item",
       testGroupName
-    )
+    ])
   );
   // await device4.findConfigurationMessage("You have left the group.");
   await device2.findConfigurationMessage(

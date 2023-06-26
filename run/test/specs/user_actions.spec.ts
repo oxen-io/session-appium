@@ -340,7 +340,6 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
   ]);
-
   await newContact(platform, device1, userA, device2, userB);
   // Click on settings/more info
   await device1.clickOnElement("More options");
@@ -397,6 +396,7 @@ async function readStatus(platform: SupportedPlatformsType) {
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
   ]);
+  const testMessage = 'Testing read status'
   await newContact(platform, device1, userA, device2, userB);
   // Go to settings to turn on read status 
   // Device 1
@@ -405,9 +405,6 @@ async function readStatus(platform: SupportedPlatformsType) {
   
 
   await device2.navigateBack(platform);
-<<<<<<< Updated upstream
-
-=======
   await device2.clickOnElement("User settings");
   await device1.clickOnElementById(`network.loki.messenger:id/privacyButton`)
   // await device2.clickOnElement("Privacy");
@@ -418,11 +415,10 @@ async function readStatus(platform: SupportedPlatformsType) {
   // Send message from User A to User B to verify read status is working
   await device1.sendMessage(testMessage);
   await device2.waitForTextElementToBePresent(['accessibility id', "Message Body", testMessage]);
-  await device2.clickOnElementByText('accessibility id', "Message Body", testMessage)
+  await device2.clickOnElementByText(['accessibility id', "Message Body", testMessage])
   // Check read status on device 1
   await device1.waitForTextElementToBePresent(['id', 'network.loki.messenger:id/messageStatusTextView', 'Read'])
   // await device1.waitForElementToBePresent(['accessibility id', 'Message status: Read']);
->>>>>>> Stashed changes
 }
 
 describe("User actions",  () => {

@@ -13,8 +13,11 @@ export type Group = {
 
 export type Strategy = "accessibility id" | "xpath" | "id" | "class name";
 
-export type StrategyExtraction = [ Extract<Strategy, "xpath" | "id" | "class name">, string ] | [ Extract<Strategy, "accessibility id">, AccessibilityId ]
+export type StrategyExtraction = 
+[ Extract<Strategy, "xpath" | "id" | "class name">, string ]|
+[ Extract<Strategy, "accessibility id">, AccessibilityId ]
 
+export type StrategyExtractionObj = {strategy: Extract<Strategy, "xpath" | "id" | "class name">, selector: string } | {strategy: Extract<Strategy, "accessibility id">, selector: AccessibilityId}
 
 export type AccessibilityId =
   | "Create session ID"
