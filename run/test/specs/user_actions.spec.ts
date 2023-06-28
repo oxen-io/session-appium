@@ -2,11 +2,7 @@ import { androidIt, iosIt } from "../../types/sessionIt";
 import { parseDataImage } from "./utils/check_colour";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
-import {
-  runOnlyOnAndroid,
-  runOnlyOnIOS,
-  sleepFor,
-} from "./utils/index";
+import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils/index";
 import {
   closeApp,
   openAppOnPlatformSingleDevice,
@@ -59,7 +55,10 @@ async function blockUserInConversationOptions(
   // On ios, you need to navigate back to conversation screen to confirm block
   await runOnlyOnIOS(platform, () => device1.clickOnElement("Back"));
   // Look for alert at top of screen (Bob is blocked. Unblock them?)
-  await device1.waitForElementToBePresent(["accessibility id", "Blocked banner"]);
+  await device1.waitForElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Blocked banner",
+  });
   console.warn("User has been blocked");
   // Click on alert to unblock
   await device1.clickOnElement("Blocked banner");
@@ -73,11 +72,11 @@ async function blockUserInConversationOptions(
     "Hey, am I unblocked?"
   );
   // Check in device 1 for message
-  await device1.waitForTextElementToBePresent([
-    "accessibility id",
-    "Message Body",
-    hasUserBeenUnblockedMessage
-  ]);
+  await device1.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Message Body",
+    text: hasUserBeenUnblockedMessage,
+  });
 
   // Close app
   await closeApp(device1, device2);
@@ -118,7 +117,7 @@ async function changeUsername(platform: SupportedPlatformsType) {
   // select username
   await device.clickOnElement("Username");
   // type in new username
-  await device.deleteText("Username")
+  await device.deleteText("Username");
   await sleepFor(100);
   await device.inputText("accessibility id", "Username", newUsername);
   const changedUsername = await device.grabTextFromAccessibilityId("Username");
@@ -147,7 +146,7 @@ async function changeAvatarAndroid(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
   const spongebobsBirthday = "199905010700.00";
   // Create new user
-   await newUser(device, "Alice", platform);
+  await newUser(device, "Alice", platform);
   // Click on settings/avatar
   await device.clickOnElement("User settings");
   await sleepFor(100);
@@ -158,7 +157,11 @@ async function changeAvatarAndroid(platform: SupportedPlatformsType) {
   await device.clickOnElementById(
     "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
   );
-  await device.waitForTextElementToBePresent(["id", "android:id/text1", "Files"]);
+  await device.waitForTextElementToBePresent({
+    strategy: "id",
+    selector: "android:id/text1",
+    text: "Files",
+  });
   await device.clickOnTextElementById("android:id/text1", "Files");
   // Select file
   await sleepFor(2000);
@@ -183,10 +186,10 @@ async function changeAvatarAndroid(platform: SupportedPlatformsType) {
   await device.clickOnElementById(
     "network.loki.messenger:id/crop_image_menu_crop"
   );
-  const el = await device.waitForElementToBePresent([
-    "accessibility id",
-    "User settings"
-  ]);
+  const el = await device.waitForElementToBePresent({
+    strategy: "accessibility id",
+    selector: "User settings",
+  });
   await sleepFor(3000);
   const base64 = await device.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
@@ -235,7 +238,9 @@ async function changeAvatariOS(platform: SupportedPlatformsType) {
     );
 
     await runScriptAndLog(
-      `xcrun simctl addmedia ${process.env.IOS_FIRST_SIMULATOR || ''} 'run/test/specs/media/profile_picture.jpg'`,
+      `xcrun simctl addmedia ${
+        process.env.IOS_FIRST_SIMULATOR || ""
+      } 'run/test/specs/media/profile_picture.jpg'`,
       true
     );
   }
@@ -244,12 +249,12 @@ async function changeAvatariOS(platform: SupportedPlatformsType) {
   await sleepFor(100);
   await device.clickOnElement(`Photo, May 01, 1998, 7:00 AM`);
   await device.clickOnElement("Done");
-  await device.clickOnElement("Upload")
+  await device.clickOnElement("Upload");
   // Take screenshot
-  const el = await device.waitForElementToBePresent([
-    "accessibility id",
-    "Profile picture"
-  ]);
+  const el = await device.waitForElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Profile picture",
+  });
   await sleepFor(3000);
   const base64 = await device.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
@@ -283,12 +288,12 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Click on tick button
   await device1.clickOnElement("Apply");
   // CLick out of pop up
-  await device1.clickOnElement('Message user')
+  await device1.clickOnElement("Message user");
   // Check name at top of conversation is nickname
-  const headerElement = await device1.waitForElementToBePresent([
-    "accessibility id",
-    "Username"
-  ]);
+  const headerElement = await device1.waitForElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Username",
+  });
   await device1.getTextFromElement(headerElement);
   // Send a message so nickname is updated in conversation list
   await device1.sendMessage("Howdy");
@@ -307,10 +312,10 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   await device1.back();
   // Enter conversation to verify change
   await device1.selectByText("Conversation list item", nickName);
-  const changedElement = await device1.waitForElementToBePresent([
-    "accessibility id",
-    "Username"
-  ]);
+  const changedElement = await device1.waitForElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Username",
+  });
   await device1.getTextFromElement(changedElement);
   // Send message to change in conversation list
   await device1.sendMessage("Howdy");
@@ -319,10 +324,10 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Verify name change in list
   // Save text of conversation list item?
   await device1.selectByText("Conversation list item", userB.userName);
-  const revertedHeader = await device1.waitForElementToBePresent([
-    "accessibility id",
-    "Username"
-  ]);
+  const revertedHeader = await device1.waitForElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Username",
+  });
   await device1.getTextFromElement(revertedHeader);
   // if (originalUsername === userB.userName) {
   //   console.log("Nickname changed back to original username");
@@ -396,48 +401,55 @@ async function readStatus(platform: SupportedPlatformsType) {
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
   ]);
-  const testMessage = 'Testing read status'
+  const testMessage = "Testing read status";
   await newContact(platform, device1, userA, device2, userB);
-  // Go to settings to turn on read status 
+  // Go to settings to turn on read status
   // Device 1
   await device1.navigateBack(platform);
   await device1.clickOnElement("User settings");
-  
-
   await device2.navigateBack(platform);
   await device2.clickOnElement("User settings");
-  await device1.clickOnElementById(`network.loki.messenger:id/privacyButton`)
+  await device1.clickOnElementById(`network.loki.messenger:id/privacyButton`);
   // await device2.clickOnElement("Privacy");
-  await sleepFor(2000)
-  await device2.clickOnTextElementById('android:id/summary', 'Send read receipts in one-to-one chats.')
+  await sleepFor(2000);
+  await device2.clickOnTextElementById(
+    "android:id/summary",
+    "Send read receipts in one-to-one chats."
+  );
   // await device2.clickOnElement('Enable read receipts');
   await device2.navigateBack(platform);
   // Send message from User A to User B to verify read status is working
   await device1.sendMessage(testMessage);
-  await device2.waitForTextElementToBePresent(['accessibility id', "Message Body", testMessage]);
-  await device2.clickOnElementByText(['accessibility id', "Message Body", testMessage])
+  await device2.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Message Body",
+    text: testMessage,
+  });
+  await device2.clickOnElementByText({
+    strategy: "accessibility id",
+    selector: "Message Body",
+    text: testMessage,
+  });
   // Check read status on device 1
-  await device1.waitForTextElementToBePresent(['id', 'network.loki.messenger:id/messageStatusTextView', 'Read'])
+  await device1.waitForTextElementToBePresent({
+    strategy: "id",
+    selector: "network.loki.messenger:id/messageStatusTextView",
+    text: "Read",
+  });
   // await device1.waitForElementToBePresent(['accessibility id', 'Message status: Read']);
 }
 
-describe("User actions",  () => {
+describe("User actions", () => {
   iosIt("Create contact", createContact);
   androidIt("Create contact", createContact);
 
-  iosIt(
-    "Block user in conversation options",
-    blockUserInConversationOptions
-  );
+  iosIt("Block user in conversation options", blockUserInConversationOptions);
   androidIt(
     "Block user in conversation options",
     blockUserInConversationOptions
   );
 
-  androidIt(
-    "Block user in conversation list",
-    blockUserInConversationList
-  );
+  androidIt("Block user in conversation list", blockUserInConversationList);
 
   androidIt("Change username", changeUsername);
   iosIt("Change username", changeUsername);

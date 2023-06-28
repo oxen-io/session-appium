@@ -6,14 +6,21 @@ import { DeviceWrapper } from "../../../types/DeviceWrapper";
 export const newUser = async (
   device: DeviceWrapper,
   userName: string,
-  platform: SupportedPlatformsType,
+  platform: SupportedPlatformsType
 ): Promise<User> => {
   // Click create session ID
   const createSessionId = "Create session ID";
-  await device.waitForElementToBePresent(["accessibility id", createSessionId]);
+  await device.waitForElementToBePresent({
+    strategy: "accessibility id",
+    selector: createSessionId,
+  });
   await device.clickOnElement(createSessionId);
   // Wait for animation to generate session id
-  await device.waitForElementToBePresent(["accessibility id", "Session ID", 8000]);
+  await device.waitForElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Session ID",
+    maxWait: 8000,
+  });
   // save session id as variable
   const sessionID = await getSessionID(platform, device);
 
@@ -35,7 +42,10 @@ export const newUser = async (
   await runOnlyOnIOS(platform, () => device.clickOnElement("Don’t Allow"));
   // iOS only
   // Click on 'continue' button to open recovery phrase modal
-  await device.waitForElementToBePresent(["accessibility id", "Continue"]);
+  await device.waitForElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Continue",
+  });
   await device.clickOnElement("Continue");
   // Long Press the recovery phrase to reveal recovery phrase
   await device.longPress("Recovery Phrase");
@@ -46,7 +56,6 @@ export const newUser = async (
   console.log(`${userName}s recovery phrase is "${recoveryPhrase}"`);
   // Exit Modal
   await device.clickOnElement("Navigate up");
-
 
   return { userName, sessionID, recoveryPhrase };
 };
