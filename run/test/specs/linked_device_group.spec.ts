@@ -79,6 +79,7 @@ async function groupCreationandNameChangeLinkedDevice(
     )
   );
   // Config on Android is "You renamed the group to blah"
+  await sleepFor(2000);
   await runOnlyOnAndroid(platform, () =>
     device1.findMatchingTextAndAccessibilityId(
       "Configuration message",
@@ -113,7 +114,7 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
   const { device1, device2, device3, device4 } = await openAppFourDevices(
     platform
   );
-  const userC = await linkedDevice(device3, device4, "Carl", platform);
+  const userC = await linkedDevice(device3, device4, "Charlie", platform);
   // Create users A, B and C
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),

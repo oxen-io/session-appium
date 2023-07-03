@@ -6,7 +6,7 @@ const iosAppFullPath = `/Users/emilyburton/Library/Developer/Xcode/DerivedData/S
 const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   "appium:app": iosAppFullPath,
   "appium:platformName": "iOS",
-  "appium:platformVersion": "16.2",
+  "appium:platformVersion": "16.4",
   "appium:deviceName": "iPhone 14 Pro Max",
   "appium:automationName": "XCUITest",
   "appium:bundleId": "com.loki-project.loki-messenger",
@@ -22,34 +22,36 @@ function getIOSSimulatorUUIDFromEnv(index: CapabilitiesIndexType): string {
   switch (index) {
     case 0:
       if (process.env.IOS_FIRST_SIMULATOR) {
-        return process.env.IOS_FIRST_SIMULATOR ;
+        return process.env.IOS_FIRST_SIMULATOR;
       }
       throw new Error(
         `getSimulatorUUIDFromEnv process.env.IOS_FIRST_SIMULATOR is not set`
       );
     case 1:
       if (process.env.IOS_SECOND_SIMULATOR) {
-        return process.env.IOS_SECOND_SIMULATOR ;
+        return process.env.IOS_SECOND_SIMULATOR;
       }
       throw new Error(
         `getSimulatorUUIDFromEnv process.env.IOS_SECOND_SIMULATOR is not set`
       );
     case 2:
       if (process.env.IOS_THIRD_SIMULATOR) {
-        return process.env.IOS_THIRD_SIMULATOR ;
+        return process.env.IOS_THIRD_SIMULATOR;
       }
       throw new Error(
         `getSimulatorUUIDFromEnv process.env.IOS_THIRD_SIMULATOR is not set`
       );
     case 3:
       if (process.env.IOS_FOURTH_SIMULATOR) {
-        return process.env.IOS_FOURTH_SIMULATOR ;
+        return process.env.IOS_FOURTH_SIMULATOR;
       }
       throw new Error(
         `getSimulatorUUIDFromEnv process.env.IOS_THIRD_SIMULATOR is not set`
       );
     default:
-      throw new Error(`getSimulatorUUIDFromEnv unknown index: ${index as number}`);
+      throw new Error(
+        `getSimulatorUUIDFromEnv unknown index: ${index as number}`
+      );
   }
 }
 

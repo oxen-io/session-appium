@@ -4,7 +4,7 @@ import { isNil, isString } from "lodash";
 import { getAndroidBinariesRoot } from "./binaries";
 import { CapabilitiesIndexType } from "./capabilities_ios";
 
-const androidAppFullPath = `${getAndroidBinariesRoot()}/session-1.16.7-universal.apk`;
+const androidAppFullPath = `${getAndroidBinariesRoot()}/session-1.17.0-universal.apk`;
 
 // const androidAppFullPath = `/Users/emilyburton/Desktop/session-1.16.7-universal.apk`;
 
@@ -19,23 +19,22 @@ const sharedCapabilities: AppiumW3CCapabilities = {
   "appium:newCommandTimeout": 300000,
 };
 
-
 const emulator1Udid = "emulator-5554";
 const emulator2Udid = "emulator-5556";
 const emulator3Udid = "emulator-5558";
 const emulator4Udid = "emulator-5560";
-const physicalDevice1Udid = "99251FFAZ000TP"
-const physicalDevice2Udid = "SDEDU20311000793"
+const physicalDevice1Udid = "99251FFAZ000TP";
+const physicalDevice2Udid = "SDEDU20311000793";
 
 export const physicalDeviceCapabilities1: AppiumW3CCapabilities = {
   ...sharedCapabilities,
-  "appium:udid": physicalDevice1Udid
-}
+  "appium:udid": physicalDevice1Udid,
+};
 
 export const physicalDeviceCapabilities2: AppiumW3CCapabilities = {
   ...sharedCapabilities,
-  "appium:udid": physicalDevice2Udid
-}
+  "appium:udid": physicalDevice2Udid,
+};
 
 const emulatorCapabilities1: AppiumW3CCapabilities = {
   ...sharedCapabilities,
@@ -70,46 +69,48 @@ function getAllCaps() {
     emulatorCapabilities1,
     emulatorCapabilities2,
     emulatorCapabilities3,
-    emulatorCapabilities4
-  ]
-  const physicalDeviceCaps= [
+    emulatorCapabilities4,
+  ];
+  const physicalDeviceCaps = [
     physicalDeviceCapabilities1,
-    physicalDeviceCapabilities2
-  ]
+    physicalDeviceCapabilities2,
+  ];
   const allowPhysicalDevice = !isNil(process.env.ALLOW_PHYSICAL_DEVICES);
 
-  const allCaps = [ ...physicalDeviceCaps, ...emulatorCaps ]
+  const allCaps = [...physicalDeviceCaps, ...emulatorCaps];
 
-  if(allowPhysicalDevice) {
-    return allCaps
-  } 
-    return emulatorCaps
+  if (allowPhysicalDevice) {
+    return allCaps;
+  }
+  return emulatorCaps;
 }
 
 export function getAndroidCapabilities(
   capabilitiesIndex: CapabilitiesIndexType
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): W3CCapabilities<any> {
   const allCaps = getAllCaps();
   if (capabilitiesIndex >= allCaps.length) {
-    throw new Error(`Asked invalid android capability index: ${capabilitiesIndex}`);
+    throw new Error(
+      `Asked invalid android capability index: ${capabilitiesIndex}`
+    );
   }
-  const cap = allCaps[capabilitiesIndex]
+  const cap = allCaps[capabilitiesIndex];
   return {
     firstMatch: [{}, {}],
-    alwaysMatch: { ...cap }
+    alwaysMatch: { ...cap },
   };
 }
-export function getAndroidUdid(udidIndex: CapabilitiesIndexType):string {
+export function getAndroidUdid(udidIndex: CapabilitiesIndexType): string {
   const allCaps = getAllCaps();
   if (udidIndex >= allCaps.length) {
     throw new Error(`Asked invalid android udid index: ${udidIndex}`);
   }
-  const cap = allCaps[udidIndex]
+  const cap = allCaps[udidIndex];
 
-  const udid = cap["appium:udid"] 
-  if(isString(udid)) {
-    return udid
+  const udid = cap["appium:udid"];
+  if (isString(udid)) {
+    return udid;
   }
-  throw new Error('Udid isnt set')
+  throw new Error("Udid isnt set");
 }
