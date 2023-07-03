@@ -639,12 +639,12 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return message;
   }
 
-  public async doesElementExist(
-    strategy: Strategy,
-    selector: string,
-    maxWait?: number,
-    text?: string
-  ): Promise<AppiumNextElementType | null> {
+  public async doesElementExist({
+    strategy,
+    selector,
+    text,
+    maxWait,
+  }: { text: string; maxWait?: number } & StrategyExtractionObj) {
     const beforeStart = Date.now();
     const maxWaitMSec = maxWait || 300000;
     const waitPerLoop = 100;

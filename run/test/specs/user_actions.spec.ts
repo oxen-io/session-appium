@@ -227,11 +227,11 @@ async function changeAvatariOS(platform: SupportedPlatformsType) {
       console.log("No permissions dialog");
     }
   }
-  const profilePicture = await device.doesElementExist(
-    "accessibility id",
-    `Photo, May 01, 1998, 7:00 AM`,
-    2000
-  );
+  const profilePicture = await device.doesElementExist({
+    strategy: "accessibility id",
+    selector: `Photo, May 01, 1998, 7:00 AM`,
+    maxWait: 2000,
+  });
   if (!profilePicture) {
     await runScriptAndLog(
       `touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/profile_picture.jpg'`

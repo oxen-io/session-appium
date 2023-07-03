@@ -210,7 +210,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
   // Select video
   const videoFolder = await device1.doesElementExist(
     "xpath",
-    `//XCUIElementTypeStaticText[@name="Videos"]`,
+    `//XCUIElementTypeStaticText[@name="Video`,
     1000
   );
   if (videoFolder) {
