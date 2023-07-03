@@ -25,7 +25,13 @@ export type StrategyExtractionObj =
   | {
       strategy: Extract<Strategy, "accessibility id">;
       selector: AccessibilityId;
-    };
+    }
+  | {
+      strategy: Extract<Strategy, "xpath">;
+      selector: XPath
+  }
+
+export type XPath = ;
 
 export type AccessibilityId =
   | "Create session ID"
