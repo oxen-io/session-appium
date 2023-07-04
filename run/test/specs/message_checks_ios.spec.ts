@@ -59,6 +59,9 @@ async function sendImage(platform: SupportedPlatformsType) {
       `xcrun simctl addmedia ${
         process.env.IOS_FIRST_SIMULATOR || ""
       } 'run/test/specs/media/test_image.jpg'`,
+      `xcrun simctl addmedia ${
+        process.env.IOS_FIRST_SIMULATOR || ""
+      } 'run/test/specs/media/test_image.jpg'`,
       true
     );
   }
@@ -227,6 +230,9 @@ async function sendVideo(platform: SupportedPlatformsType) {
       `xcrun simctl addmedia ${
         process.env.IOS_FIRST_SIMULATOR || ""
       } 'run/test/specs/media/test_video.mp4'`,
+      `xcrun simctl addmedia ${
+        process.env.IOS_FIRST_SIMULATOR || ""
+      } 'run/test/specs/media/test_video.mp4'`,
       true
     );
     await sleepFor(2000);
@@ -239,7 +245,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Send button");
   // Check if the 'Tap to download media' config appears
   // User B - Click on untrusted attachment message
-  await device2.clickOnElement("Untrusted attachment message");
+  await device2.clickOnElement("Untrusted attachment message", 10000);
   await sleepFor(500);
   // User B - Click on 'download'
   await device2.clickOnElement("Download media");
@@ -322,7 +328,7 @@ async function sendGif(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Send button");
   // Check if the 'Tap to download media' config appears
   // Click on config
-  await device2.clickOnElement("Untrusted attachment message");
+  await device2.clickOnElement("Untrusted attachment message", 15000);
   await sleepFor(100);
   // Click on 'download'
   await device2.clickOnElement("Download media");
@@ -379,6 +385,11 @@ async function sendLink(platform: SupportedPlatformsType) {
     "accessibility id",
     "Message input box",
     `https://nerdlegame.com/`
+  );
+  await device1.waitForElementToBePresent(
+    "accessibility id",
+    "Message sent status: Sent",
+    20000
   );
   await device1.waitForElementToBePresent({
     strategy: "accessibility id",
@@ -481,6 +492,7 @@ async function deleteMessage(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
+describe("Message checks ios", () => {
 describe("Message checks ios", () => {
   iosIt("Send image and reply test", sendImage);
   iosIt("Send video and reply test", sendVideo);
