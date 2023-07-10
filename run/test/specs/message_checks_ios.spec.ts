@@ -59,9 +59,6 @@ async function sendImage(platform: SupportedPlatformsType) {
       `xcrun simctl addmedia ${
         process.env.IOS_FIRST_SIMULATOR || ""
       } 'run/test/specs/media/test_image.jpg'`,
-      `xcrun simctl addmedia ${
-        process.env.IOS_FIRST_SIMULATOR || ""
-      } 'run/test/specs/media/test_image.jpg'`,
       true
     );
   }
@@ -230,9 +227,6 @@ async function sendVideo(platform: SupportedPlatformsType) {
       `xcrun simctl addmedia ${
         process.env.IOS_FIRST_SIMULATOR || ""
       } 'run/test/specs/media/test_video.mp4'`,
-      `xcrun simctl addmedia ${
-        process.env.IOS_FIRST_SIMULATOR || ""
-      } 'run/test/specs/media/test_video.mp4'`,
       true
     );
     await sleepFor(2000);
@@ -386,11 +380,7 @@ async function sendLink(platform: SupportedPlatformsType) {
     "Message input box",
     `https://nerdlegame.com/`
   );
-  await device1.waitForElementToBePresent(
-    "accessibility id",
-    "Message sent status: Sent",
-    20000
-  );
+
   await device1.waitForElementToBePresent({
     strategy: "accessibility id",
     selector: "Message sent status: Sent",
@@ -487,12 +477,31 @@ async function deleteMessage(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Delete for me");
   // Look in User B's chat for alert 'This message has been deleted?'
   await device1.hasElementBeenDeleted("accessibility id", sentMessage);
-
   // Excellent
   await closeApp(device1, device2);
 }
 
-describe("Message checks ios", () => {
+async function checkPerformance(platform: SupportedPlatformsType) {
+  const { device1, device2 } = await openAppTwoDevices(platform);
+  // Create two users
+  const [userA, userB] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+  ]);
+  // Create contact
+  await newContact(platform, device1, userA, device2, userB);
+  const timesArray: Array<number> = [];
+
+  let i
+  for (i = 1; i <= 10; i++) {
+    const timeMs = await device1.measureSendingTime(i);
+    timesArray.push(timeMs);
+  }
+  console.log(timesArray)
+}
+
+
+
 describe("Message checks ios", () => {
   iosIt("Send image and reply test", sendImage);
   iosIt("Send video and reply test", sendVideo);
@@ -503,6 +512,7 @@ describe("Message checks ios", () => {
   iosIt("Send link test", sendLink);
   iosIt("Unsend message", unsendMessage);
   iosIt("Delete message", deleteMessage);
+  iosIt("Check performance", checkPerformance);
 });
 
 // Media saved notification

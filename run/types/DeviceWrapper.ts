@@ -319,10 +319,12 @@ export class DeviceWrapper implements SharedDeviceInterface {
     const { text } = args;
     if (text) {
       el = await this.waitForTextElementToBePresent({ ...args, text });
+
     } else {
       el = await this.waitForElementToBePresent(args);
     }
-    return el;
+    await this.click(el.ELEMENT)
+    return 
   }
 
   public async clickOnElementByText(
@@ -791,6 +793,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   // UTILITY FUNCTIONS
 
   public async sendMessage(message: string) {
+    
     await this.inputText("accessibility id", "Message input box", message);
     // Click send
     await this.clickOnElement("Send message button");
@@ -869,6 +872,19 @@ export class DeviceWrapper implements SharedDeviceInterface {
     );
 
     return sentMessage;
+  }
+
+  public async measureSendingTime(messageNumber: number) {
+    const message = `Test-message`
+    const timeStart = Date.now()
+    
+    await this.sendMessage(message)
+    
+    const timeEnd = Date.now()
+    const timeMs = timeEnd - timeStart
+
+    console.log(`Message ${messageNumber}: ${timeMs}`);
+    return timeMs
   }
 
   public async inputText(

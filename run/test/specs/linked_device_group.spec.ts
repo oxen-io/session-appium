@@ -161,16 +161,20 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
   //     testGroupName
   //   )
   // );
-  await runOnlyOnAndroid(platform, () =>
-    device4.clickOnElementByText({
-      strategy: "accessibility id",
-      selector: "Conversation list item",
-      text: testGroupName,
-    })
-  );
+  // await runOnlyOnAndroid(platform, () =>
+  //   device4.clickOnElementByText({
+  //     strategy: "accessibility id",
+  //     selector: "Conversation list item",
+  //     text: testGroupName,
+  //   })
+  // );
   // await device4.findConfigurationMessage("You have left the group.");
-  await device2.findConfigurationMessage(`${userC.userName} left the group.`);
-  await device1.findConfigurationMessage(`${userC.userName} left the group.`);
+  await runOnlyOnIOS(platform, () => device2.findConfigurationMessage(`${userC.userName} left the group.`));
+  await runOnlyOnIOS(platform, () => device1.findConfigurationMessage(`${userC.userName} left the group.`));
+  await runOnlyOnAndroid(platform, () => 
+    device2.findConfigurationMessage(`${userC.userName} has left the group.`)
+  );
+  await runOnlyOnAndroid(platform, () => device1.findConfigurationMessage(`${userC.userName} has left the group.`));
   await closeApp(device1, device2, device3, device4);
 }
 

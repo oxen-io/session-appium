@@ -104,7 +104,9 @@ async function sendDocument(platform: SupportedPlatformsType) {
     );
   }
   await sleepFor(100);
+  await device1.scrollDown();
   await device1.clickOnTextElementById("android:id/title", "test_file.pdf");
+  await device1.clickOnElementAll({strategy: 'id', selector: "com.google.android.documentsui:id/action_menu_select", text: "SELECT"})
   await device2.clickOnElement("Untrusted attachment message");
   await sleepFor(500);
   // User B - Click on 'download'
@@ -251,13 +253,13 @@ async function sendGif(platform: SupportedPlatformsType) {
   );
   // Check if the 'Tap to download media' config appears
   // Click on config
-  await device2.clickOnElement("Untrusted attachment message");
+  await device2.clickOnElement("Untrusted attachment message", 10000);
   await sleepFor(500);
   // Click on 'download'
   await device2.clickOnElement("Download media");
   // Reply to message
-  await sleepFor(3000);
-  await device2.longPressMessage("Media message");
+  await sleepFor(5000);
+  await device2.longPress("Media message");
   // Check reply came through on device1
   await device2.clickOnElement("Reply to message");
   await device2.sendMessage(replyMessage);
@@ -288,6 +290,7 @@ async function sendLongMessage(platform: SupportedPlatformsType) {
   // Reply to message (User B to User A)
   const sentMessage = await device2.replyToMessage(userA, longText);
   // Check reply came through on device1
+  await device1.clickOnElementAll({strategy: 'id', selector: "network.loki.messenger:id/scrollToBottomButton"})
   await device1.findMessageWithBody(sentMessage);
   // Close app
   await closeApp(device1, device2);
@@ -386,7 +389,7 @@ async function deleteMessage(platform: SupportedPlatformsType) {
   await newContact(platform, device1, userA, device2, userB);
   // send message from User A to User B
   const sentMessage = await device1.sendMessage(
-    "Checking unsend functionality"
+    "Checking deletion functionality"
   );
   // await sleepFor(1000);
   await device2.waitForTextElementToBePresent({
@@ -408,6 +411,33 @@ async function deleteMessage(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
+async function checkPerformance(platform: SupportedPlatformsType) {
+  const { device1, device2 } = await openAppTwoDevices(platform);
+  // Create two users
+  const [userA, userB] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+  ]);
+  // Create contact
+  await newContact(platform, device1, userA, device2, userB);
+  const timesArray: Array<number> = [];
+
+  let i
+  for (i = 1; i <= 10; i++) {
+    const timeMs = await device1.measureSendingTime(i);
+    timesArray.push(timeMs);
+  }
+  console.log(timesArray)
+}
+
+
+
+
+
+
+
+
+
 describe("Message checks android", () => {
   androidIt("Send image and reply test", sendImage);
   androidIt("Send video and reply test", sendVideo);
@@ -418,7 +448,9 @@ describe("Message checks android", () => {
   androidIt("Send long text and reply test", sendLongMessage);
   androidIt("Unsend message", unsendMessage);
   androidIt("Delete message", deleteMessage);
+  androidIt("Check performance", checkPerformance)
 });
+
 // Link preview without image
 // Link preview with image
 // Media saved notification

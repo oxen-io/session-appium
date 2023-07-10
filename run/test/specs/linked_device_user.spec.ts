@@ -316,6 +316,8 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   await device1.clickOnElement("User settings");
   await sleepFor(100);
   await device1.clickOnElement("User settings");
+  await sleepFor(500)
+  await device1.clickOnElementAll({strategy: 'id', selector: 'android:id/button1', text: 'UPLOAD', maxWait: 8000})
   await device1.clickOnElementById(
     "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
   );
