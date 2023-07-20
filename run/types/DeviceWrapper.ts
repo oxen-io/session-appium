@@ -807,6 +807,22 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return message;
   }
 
+  public async waitForSentConfirmation() {
+    let pendingStatus = await this.waitForElementToBePresent({
+      strategy: "accessibility id",
+      selector: 'Message sent status pending',
+    })
+    if(pendingStatus){
+      await sleepFor(100)
+      pendingStatus = await this.waitForElementToBePresent({
+        strategy: "accessibility id",
+        selector: 'Message sent status pending',
+      })
+    }
+  }
+
+
+
   public async sendNewMessage(user: User, message: string) {
     // Sender workflow
     // Click on plus button

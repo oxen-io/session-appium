@@ -90,6 +90,7 @@ export type AccessibilityId =
   | "Send message button"
   | "Mentions list"
   | "Message sent status: Sent"
+  | "Message sent status pending"
   | "Leave group"
   | "Leave"
   | "Username"
