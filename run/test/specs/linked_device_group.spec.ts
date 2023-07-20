@@ -179,9 +179,9 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
 }
 
 describe("Linked device - group tests", () => {
-  iosIt("Check group and name syncs", groupCreationandNameChangeLinkedDevice);
+  iosIt("Group and name syncs", groupCreationandNameChangeLinkedDevice);
   androidIt(
-    "Check group and name syncs",
+    "Group and name syncs",
     groupCreationandNameChangeLinkedDevice
   );
 

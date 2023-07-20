@@ -503,13 +503,13 @@ async function checkPerformance(platform: SupportedPlatformsType) {
 
 
 describe("Message checks ios", () => {
-  iosIt("Send image and reply test", sendImage);
-  iosIt("Send video and reply test", sendVideo);
-  iosIt("Send voice message test", sendVoiceMessage);
-  iosIt("Send document and reply test", sendDoc);
-  iosIt("Send GIF and reply test", sendGif);
-  iosIt("Send long text and reply test", sendLongMessage);
-  iosIt("Send link test", sendLink);
+  iosIt("Send image", sendImage);
+  iosIt("Send video", sendVideo);
+  iosIt("Send voice message", sendVoiceMessage);
+  iosIt("Send document", sendDoc);
+  iosIt("Send GIF", sendGif);
+  iosIt("Send long text", sendLongMessage);
+  iosIt("Send link", sendLink);
   iosIt("Unsend message", unsendMessage);
   iosIt("Delete message", deleteMessage);
   iosIt("Check performance", checkPerformance);

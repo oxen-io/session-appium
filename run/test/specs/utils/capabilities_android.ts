@@ -4,7 +4,7 @@ import { isNil, isString } from "lodash";
 import { getAndroidBinariesRoot } from "./binaries";
 import { CapabilitiesIndexType } from "./capabilities_ios";
 
-const androidAppFullPath = `${getAndroidBinariesRoot()}/session-1.17.0-universal.apk`;
+const androidAppFullPath = `${getAndroidBinariesRoot()}/session-1.16.9-universal.apk`;
 
 // const androidAppFullPath = `/Users/emilyburton/Desktop/session-1.17.0-universal.apk`;
 // const androidAppFullPath = `/Users/emilyburton/Desktop/session-1.16.9-universal.apk`;

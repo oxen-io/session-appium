@@ -107,7 +107,7 @@ async function sendDocument(platform: SupportedPlatformsType) {
   await device1.scrollDown();
   await device1.clickOnTextElementById("android:id/title", "test_file.pdf");
   await device1.clickOnElementAll({strategy: 'id', selector: "com.google.android.documentsui:id/action_menu_select", text: "SELECT"})
-  await device2.clickOnElement("Untrusted attachment message");
+  await device2.clickOnElement("Untrusted attachment message", 7000);
   await sleepFor(500);
   // User B - Click on 'download'
   await device2.clickOnElement("Download media");
@@ -171,7 +171,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
   await sleepFor(100);
   await device1.clickOnTextElementById("android:id/title", "test_video.mp4");
   // User B - Click on untrusted attachment message
-  await device2.clickOnElement("Untrusted attachment message", 8000);
+  await device2.clickOnElement("Untrusted attachment message", 10000);
   // await sleepFor(1000);
   // User B - Click on 'download'
   await device2.clickOnElement("Download media");
@@ -251,9 +251,10 @@ async function sendGif(platform: SupportedPlatformsType) {
   await device1.clickOnElementXPath(
     `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.ScrollView/androidx.viewpager.widget.ViewPager/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.FrameLayout[1]`
   );
+
   // Check if the 'Tap to download media' config appears
   // Click on config
-  await device2.clickOnElement("Untrusted attachment message", 10000);
+  await device2.clickOnElement("Untrusted attachment message");
   await sleepFor(500);
   // Click on 'download'
   await device2.clickOnElement("Download media");

@@ -154,8 +154,12 @@ async function changeAvatarAndroid(platform: SupportedPlatformsType) {
   await device.clickOnElement("User settings");
   // Click on Photo library
   await sleepFor(100);
-  await device.clickOnElementAll({strategy: 'id', selector: 'android:id/button1', text: 'UPLOAD'});
-  await sleepFor(100)
+  await device.clickOnElementAll({
+    strategy: "id",
+    selector: "android:id/button1",
+    text: "UPLOAD",
+  });
+  await sleepFor(100);
   await device.clickOnElementById(
     "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
   );
@@ -408,17 +412,19 @@ async function readStatus(platform: SupportedPlatformsType) {
   // Go to settings to turn on read status
   // Device 1
   await device1.navigateBack(platform);
-  await sleepFor(100)
+  await sleepFor(100);
   await device1.clickOnElement("User settings");
   await device2.navigateBack(platform);
-  await sleepFor(500)
+  await sleepFor(500);
   await device2.clickOnElement("User settings");
   await device1.clickOnElementById(`network.loki.messenger:id/privacyButton`);
   // await device2.clickOnElement("Privacy");
   await sleepFor(2000);
-  await device1.clickOnElementAll({ strategy: 'id', selector: "android:id/summary",
-    text: "Send read receipts in one-to-one chats."
-});
+  await device1.clickOnElementAll({
+    strategy: "id",
+    selector: "android:id/summary",
+    text: "Send read receipts in one-to-one chats.",
+  });
   // await device2.clickOnElement('Enable read receipts');
   await device2.navigateBack(platform);
   // Send message from User A to User B to verify read status is working
@@ -456,8 +462,8 @@ describe("User actions", () => {
   androidIt("Change username", changeUsername);
   iosIt("Change username", changeUsername);
   // NEED TO FIX
-  androidIt("Change avatar", changeAvatarAndroid);
-  iosIt("Change avatar", changeAvatariOS);
+  androidIt("Change profile picture", changeAvatarAndroid);
+  iosIt("Change profile picture", changeAvatariOS);
 
   androidIt("Set nickname", setNicknameAndroid);
   iosIt("Set nickname", setNicknameIos);

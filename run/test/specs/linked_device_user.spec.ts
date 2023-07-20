@@ -389,21 +389,21 @@ describe("Linked device - user tests", () => {
   iosIt("Link a device", linkDevice);
   androidIt("Link a device", linkDevice);
 
-  iosIt("Check profile picture syncs", avatarRestorediOS);
-  androidIt("Check profile picture syncs", avatarRestoredAndroid);
+  iosIt("Profile picture syncs", avatarRestorediOS);
+  androidIt("Profile picture syncs", avatarRestoredAndroid);
 
-  androidIt("Check contact syncs", contactsSyncLinkedDevice);
-  iosIt("Check contact syncs", contactsSyncLinkedDevice);
+  androidIt("Contact syncs", contactsSyncLinkedDevice);
+  iosIt("Contact syncs", contactsSyncLinkedDevice);
 
-  androidIt("Check changed username syncs", changeUsernameLinkedDevice);
-  iosIt("Check changed username syncs", changeUsernameLinkedDevice);
+  androidIt("Changed username syncs", changeUsernameLinkedDevice);
+  iosIt("Changed username syncs", changeUsernameLinkedDevice);
 
-  androidIt("Check deleted message syncs", deletedMessageLinkedDevice);
-  iosIt("Check deleted message syncs", deletedMessageLinkedDevice);
+  androidIt("Deleted message syncs", deletedMessageLinkedDevice);
+  iosIt("Deleted message syncs", deletedMessageLinkedDevice);
 
-  androidIt("Check unsent message syncs", unSendMessageLinkedDevice);
-  iosIt("Check unsent message syncs", unSendMessageLinkedDevice);
+  androidIt("Unsent message syncs", unSendMessageLinkedDevice);
+  iosIt("Unsent message syncs", unSendMessageLinkedDevice);
 
-  iosIt("Check blocked user syncs", blockedUserLinkedDevice);
-  androidIt("Check blocked user syncs", blockedUserLinkedDevice);
+  iosIt("Blocked user syncs", blockedUserLinkedDevice);
+  androidIt("Blocked user syncs", blockedUserLinkedDevice);
 });
