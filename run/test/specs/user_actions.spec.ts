@@ -382,7 +382,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   // Click on edit
   await device1.clickOnElement("Username");
   // Empty username input
-  await device1.deleteText("Nickname");
+  await device1.deleteTextIos("Nickname");
   await device1.clickOnElement("Done");
   // Check in conversation header
   await device1.clickOnElement("Back");
