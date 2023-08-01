@@ -67,9 +67,10 @@ async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
   // Change username on device 1
   await device1.clickOnElement("User settings");
   // Select username
-  await device1.clickOnElement("Username");
+  // await device1.clickOnElement("Username");
   await sleepFor(100);
-  await device1.deleteText("Username");
+  await device1.deleteTextIos("Username");
+  await device1.deleteTextAndroid("Username");
   await device1.inputText("accessibility id", "Username", newUsername);
   // Select apply
   await runOnlyOnAndroid(platform, () => device1.clickOnElement("Apply"));
@@ -77,7 +78,7 @@ async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
   // Check on linked device if name has updated
   await device2.clickOnElement("User settings");
   await runOnlyOnAndroid(platform, () => device2.navigateBack(platform));
-  await sleepFor(100);
+  await sleepFor(1000);
   await runOnlyOnAndroid(platform, () =>
     device2.clickOnElement("User settings")
   );
@@ -316,8 +317,13 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   await device1.clickOnElement("User settings");
   await sleepFor(100);
   await device1.clickOnElement("User settings");
-  await sleepFor(500)
-  await device1.clickOnElementAll({strategy: 'id', selector: 'android:id/button1', text: 'UPLOAD', maxWait: 8000})
+  await sleepFor(500);
+  await device1.clickOnElementAll({
+    strategy: "id",
+    selector: "android:id/button1",
+    text: "UPLOAD",
+    maxWait: 8000,
+  });
   await device1.clickOnElementById(
     "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
   );

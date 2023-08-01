@@ -319,12 +319,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
     const { text } = args;
     if (text) {
       el = await this.waitForTextElementToBePresent({ ...args, text });
-
     } else {
       el = await this.waitForElementToBePresent(args);
     }
-    await this.click(el.ELEMENT)
-    return 
+    await this.click(el.ELEMENT);
+    return;
   }
 
   public async clickOnElementByText(
@@ -454,8 +453,23 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return text;
   }
 
-  public async deleteText(accessibilityId: AccessibilityId) {
+  public async deleteTextAndroid(accessibilityId: AccessibilityId) {
     const el = await this.findElementByAccessibilityId(accessibilityId);
+    await this.longClick(el, 200);
+
+    await this.clear(el.ELEMENT);
+
+    console.warn(`Text has been cleared ` + accessibilityId);
+    return;
+  }
+  public async deleteTextIos(accessibilityId: AccessibilityId) {
+    const el = await this.findElementByAccessibilityId(accessibilityId);
+    await this.longClick(el, 200);
+    await this.clickOnElementByText({
+      strategy: "id",
+      selector: "Select All",
+      text: "Select All",
+    });
 
     await this.clear(el.ELEMENT);
 
@@ -793,7 +807,6 @@ export class DeviceWrapper implements SharedDeviceInterface {
   // UTILITY FUNCTIONS
 
   public async sendMessage(message: string) {
-    
     await this.inputText("accessibility id", "Message input box", message);
     // Click send
     await this.clickOnElement("Send message button");
@@ -810,18 +823,16 @@ export class DeviceWrapper implements SharedDeviceInterface {
   public async waitForSentConfirmation() {
     let pendingStatus = await this.waitForElementToBePresent({
       strategy: "accessibility id",
-      selector: 'Message sent status pending',
-    })
-    if(pendingStatus){
-      await sleepFor(100)
+      selector: "Message sent status pending",
+    });
+    if (pendingStatus) {
+      await sleepFor(100);
       pendingStatus = await this.waitForElementToBePresent({
         strategy: "accessibility id",
-        selector: 'Message sent status pending',
-      })
+        selector: "Message sent status pending",
+      });
     }
   }
-
-
 
   public async sendNewMessage(user: User, message: string) {
     // Sender workflow
@@ -891,16 +902,16 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async measureSendingTime(messageNumber: number) {
-    const message = `Test-message`
-    const timeStart = Date.now()
-    
-    await this.sendMessage(message)
-    
-    const timeEnd = Date.now()
-    const timeMs = timeEnd - timeStart
+    const message = `Test-message`;
+    const timeStart = Date.now();
+
+    await this.sendMessage(message);
+
+    const timeEnd = Date.now();
+    const timeMs = timeEnd - timeStart;
 
     console.log(`Message ${messageNumber}: ${timeMs}`);
-    return timeMs
+    return timeMs;
   }
 
   public async inputText(

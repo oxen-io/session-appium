@@ -117,7 +117,9 @@ async function changeUsername(platform: SupportedPlatformsType) {
   // select username
   await device.clickOnElement("Username");
   // type in new username
-  await device.deleteText("Username");
+  await sleepFor(1000);
+  await runOnlyOnIOS(platform, () => device.deleteTextIos("Username"));
+  await runOnlyOnAndroid(platform, () => device.deleteTextAndroid("Username"));
   await sleepFor(100);
   await device.inputText("accessibility id", "Username", newUsername);
   const changedUsername = await device.grabTextFromAccessibilityId("Username");
@@ -356,6 +358,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   await device1.clickOnElement("More options");
   // Click on username to set nickname
   await device1.clickOnElement("Username");
+  await device1.deleteTextIos("Username");
   // Type in nickname
   await device1.inputText("accessibility id", "Username", nickName);
   // Click apply/done

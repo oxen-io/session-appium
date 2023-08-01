@@ -106,7 +106,11 @@ async function sendDocument(platform: SupportedPlatformsType) {
   await sleepFor(100);
   await device1.scrollDown();
   await device1.clickOnTextElementById("android:id/title", "test_file.pdf");
-  await device1.clickOnElementAll({strategy: 'id', selector: "com.google.android.documentsui:id/action_menu_select", text: "SELECT"})
+  await device1.clickOnElementAll({
+    strategy: "id",
+    selector: "com.google.android.documentsui:id/action_menu_select",
+    text: "SELECT",
+  });
   await device2.clickOnElement("Untrusted attachment message", 7000);
   await sleepFor(500);
   // User B - Click on 'download'
@@ -291,7 +295,10 @@ async function sendLongMessage(platform: SupportedPlatformsType) {
   // Reply to message (User B to User A)
   const sentMessage = await device2.replyToMessage(userA, longText);
   // Check reply came through on device1
-  await device1.clickOnElementAll({strategy: 'id', selector: "network.loki.messenger:id/scrollToBottomButton"})
+  await device1.clickOnElementAll({
+    strategy: "id",
+    selector: "network.loki.messenger:id/scrollToBottomButton",
+  });
   await device1.findMessageWithBody(sentMessage);
   // Close app
   await closeApp(device1, device2);
@@ -423,33 +430,25 @@ async function checkPerformance(platform: SupportedPlatformsType) {
   await newContact(platform, device1, userA, device2, userB);
   const timesArray: Array<number> = [];
 
-  let i
+  let i;
   for (i = 1; i <= 10; i++) {
     const timeMs = await device1.measureSendingTime(i);
     timesArray.push(timeMs);
   }
-  console.log(timesArray)
+  console.log(timesArray);
 }
 
-
-
-
-
-
-
-
-
 describe("Message checks android", () => {
-  androidIt("Send image and reply test", sendImage);
-  androidIt("Send video and reply test", sendVideo);
-  androidIt("Send voice message test", sendVoiceMessage);
-  androidIt("Send document and reply test", sendDocument);
-  androidIt("Send link test", sendLink);
-  androidIt("Send GIF and reply test", sendGif);
-  androidIt("Send long text and reply test", sendLongMessage);
+  androidIt("Send image", sendImage);
+  androidIt("Send video", sendVideo);
+  androidIt("Send voice message", sendVoiceMessage);
+  androidIt("Send document", sendDocument);
+  androidIt("Send link", sendLink);
+  androidIt("Send GIF", sendGif);
+  androidIt("Send long text", sendLongMessage);
   androidIt("Unsend message", unsendMessage);
   androidIt("Delete message", deleteMessage);
-  androidIt("Check performance", checkPerformance)
+  androidIt("Check performance", checkPerformance);
 });
 
 // Link preview without image
