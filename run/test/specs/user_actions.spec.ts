@@ -144,9 +144,9 @@ async function changeUsername(platform: SupportedPlatformsType) {
   await closeApp(device);
 }
 
-async function changeAvatarAndroid(platform: SupportedPlatformsType) {
+async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
-  const spongebobsBirthday = "199905010700.00";
+  const spongebobsBirthday = "199905020700.00";
   // Create new user
   await newUser(device, "Alice", platform);
   // Click on settings/avatar
@@ -157,9 +157,8 @@ async function changeAvatarAndroid(platform: SupportedPlatformsType) {
   // Click on Photo library
   await sleepFor(100);
   await device.clickOnElementAll({
-    strategy: "id",
-    selector: "android:id/button1",
-    text: "UPLOAD",
+    strategy: "accessibility id",
+    selector: "Upload",
   });
   await sleepFor(100);
   await device.clickOnElementById(
@@ -414,24 +413,28 @@ async function readStatus(platform: SupportedPlatformsType) {
   await newContact(platform, device1, userA, device2, userB);
   // Go to settings to turn on read status
   // Device 1
-  await device1.navigateBack(platform);
+  await Promise.all([
+    device1.turnOnReadReceipts(platform),
+    device2.turnOnReadReceipts(platform),
+  ]);
+  await device1.navigateBack(platform),
+    await sleepFor(100),
+    await device1.navigateBack(platform),
+    await device1.clickOnElementAll({
+      strategy: "accessibility id",
+      selector: "Conversation list item",
+      text: userB.userName,
+    }),
+    // Send message from User A to User B to verify read status is working
+    await device1.sendMessage(testMessage);
+  await device2.navigateBack(platform);
   await sleepFor(100);
-  await device1.clickOnElement("User settings");
   await device2.navigateBack(platform);
-  await sleepFor(500);
-  await device2.clickOnElement("User settings");
-  await device1.clickOnElementById(`network.loki.messenger:id/privacyButton`);
-  // await device2.clickOnElement("Privacy");
-  await sleepFor(2000);
-  await device1.clickOnElementAll({
-    strategy: "id",
-    selector: "android:id/summary",
-    text: "Send read receipts in one-to-one chats.",
+  await device2.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: "Conversation list item",
+    text: userA.userName,
   });
-  // await device2.clickOnElement('Enable read receipts');
-  await device2.navigateBack(platform);
-  // Send message from User A to User B to verify read status is working
-  await device1.sendMessage(testMessage);
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message Body",
@@ -448,6 +451,7 @@ async function readStatus(platform: SupportedPlatformsType) {
     selector: "network.loki.messenger:id/messageStatusTextView",
     text: "Read",
   });
+  await closeApp(device1, device2);
 }
 
 describe("User actions", () => {
@@ -465,7 +469,7 @@ describe("User actions", () => {
   androidIt("Change username", changeUsername);
   iosIt("Change username", changeUsername);
   // NEED TO FIX
-  androidIt("Change profile picture", changeAvatarAndroid);
+  androidIt("Change profile picture", changeProfilePictureAndroid);
   iosIt("Change profile picture", changeAvatariOS);
 
   androidIt("Set nickname", setNicknameAndroid);

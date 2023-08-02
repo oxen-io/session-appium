@@ -104,13 +104,7 @@ async function sendDocument(platform: SupportedPlatformsType) {
     );
   }
   await sleepFor(100);
-  await device1.scrollDown();
   await device1.clickOnTextElementById("android:id/title", "test_file.pdf");
-  await device1.clickOnElementAll({
-    strategy: "id",
-    selector: "com.google.android.documentsui:id/action_menu_select",
-    text: "SELECT",
-  });
   await device2.clickOnElement("Untrusted attachment message", 7000);
   await sleepFor(500);
   // User B - Click on 'download'
@@ -248,7 +242,10 @@ async function sendGif(platform: SupportedPlatformsType) {
   // Select GIF tab
 
   await device1.clickOnElement("GIF button");
-  await device1.clickOnElementById(`android:id/button1`);
+  await device1.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: "Continue",
+  });
 
   // Select gif
   await sleepFor(3000);
@@ -258,7 +255,7 @@ async function sendGif(platform: SupportedPlatformsType) {
 
   // Check if the 'Tap to download media' config appears
   // Click on config
-  await device2.clickOnElement("Untrusted attachment message");
+  await device2.clickOnElement("Untrusted attachment message", 9000);
   await sleepFor(500);
   // Click on 'download'
   await device2.clickOnElement("Download media");

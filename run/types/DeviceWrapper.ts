@@ -983,6 +983,26 @@ export class DeviceWrapper implements SharedDeviceInterface {
     }
   }
 
+  /* ======= Settings functions =========*/
+
+  public async turnOnReadReceipts(platform: SupportedPlatformsType) {
+    if (platform === "android") {
+      await this.navigateBack(platform),
+        await sleepFor(100),
+        await this.clickOnElement("User settings"),
+        await sleepFor(500),
+        await this.clickOnElementById(
+          `network.loki.messenger:id/privacyButton`
+        ),
+        await sleepFor(2000),
+        await this.clickOnElementAll({
+          strategy: "id",
+          selector: "android:id/summary",
+          text: "Send read receipts in one-to-one chats.",
+        });
+    }
+  }
+
   /* === all the utilities function ===  */
   private isIOS(): boolean {
     return isDeviceIOS(this.device);

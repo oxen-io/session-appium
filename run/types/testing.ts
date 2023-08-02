@@ -145,4 +145,6 @@ export type AccessibilityId =
   | "Decline message request"
   | "Image picker"
   | "Upload"
-  | "Save button";
+  | "Save button"
+  | "Yes"
+  | "No";
