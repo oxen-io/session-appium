@@ -148,14 +148,14 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Allow voice and video calls");
   await device1.clickOnElement("Continue");
   // Navigate back to conversation
-  await device1.clickOnElement("Close Button");
+  await device1.clickOnElement("Close button");
   // Enable voice calls on device 2 for User B
   await device2.clickOnElement("Call");
   await device2.clickOnElement("Settings");
   await device2.scrollDown();
   await device2.clickOnElement("Allow voice and video calls");
   await device2.clickOnElement("Enable");
-  await device2.clickOnElement("Close Button");
+  await device2.clickOnElement("Close button");
   // Make call on device 1 (userA)
   await device1.clickOnElement("Call");
   // Answer call on device 2

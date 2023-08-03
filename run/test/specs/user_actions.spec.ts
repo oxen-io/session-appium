@@ -211,7 +211,7 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   await closeApp(device);
 }
 
-async function changeAvatariOS(platform: SupportedPlatformsType) {
+async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
   const spongebobsBirthday = "199805010700.00";
   // Create new user
@@ -417,19 +417,14 @@ async function readStatus(platform: SupportedPlatformsType) {
     device1.turnOnReadReceipts(platform),
     device2.turnOnReadReceipts(platform),
   ]);
-  await device1.navigateBack(platform),
-    await sleepFor(100),
-    await device1.navigateBack(platform),
-    await device1.clickOnElementAll({
-      strategy: "accessibility id",
-      selector: "Conversation list item",
-      text: userB.userName,
-    }),
-    // Send message from User A to User B to verify read status is working
-    await device1.sendMessage(testMessage);
-  await device2.navigateBack(platform);
+  await device1.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: "Conversation list item",
+    text: userB.userName,
+  });
+  // Send message from User A to User B to verify read status is working
+  await device1.sendMessage(testMessage);
   await sleepFor(100);
-  await device2.navigateBack(platform);
   await device2.clickOnElementAll({
     strategy: "accessibility id",
     selector: "Conversation list item",
@@ -446,11 +441,20 @@ async function readStatus(platform: SupportedPlatformsType) {
     text: testMessage,
   });
   // Check read status on device 1
-  await device1.waitForTextElementToBePresent({
-    strategy: "id",
-    selector: "network.loki.messenger:id/messageStatusTextView",
-    text: "Read",
-  });
+  await runOnlyOnAndroid(platform, () =>
+    device1.waitForTextElementToBePresent({
+      strategy: "id",
+      selector: "network.loki.messenger:id/messageStatusTextView",
+      text: "Read",
+    })
+  );
+  await runOnlyOnIOS(platform, () =>
+    device1.waitForElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Message sent status: Read",
+    })
+  );
+
   await closeApp(device1, device2);
 }
 
@@ -470,7 +474,7 @@ describe("User actions", () => {
   iosIt("Change username", changeUsername);
   // NEED TO FIX
   androidIt("Change profile picture", changeProfilePictureAndroid);
-  iosIt("Change profile picture", changeAvatariOS);
+  iosIt("Change profile picture", changeProfilePictureiOS);
 
   androidIt("Set nickname", setNicknameAndroid);
   iosIt("Set nickname", setNicknameIos);
