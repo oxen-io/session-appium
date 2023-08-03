@@ -1013,8 +1013,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       await this.clickOnElementAll({ strategy: "id", selector: "Privacy" });
       await this.clickOnElementAll({
         strategy: "xpath",
-        selector: `	
-      //XCUIElementTypeSwitch[@name="Read Receipts, Send read receipts in one-to-one chats."]`,
+        selector: `//XCUIElementTypeSwitch[@name="Read Receipts, Send read receipts in one-to-one chats."]`,
       });
       await this.navigateBack(platform);
       await sleepFor(100);

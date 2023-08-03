@@ -30,11 +30,11 @@ async function sendImage(platform: SupportedPlatformsType) {
   await sleepFor(100);
   await clickOnXAndYCoordinates(device1, 34, 498);
 
-  const permissions = await device1.doesElementExist(
-    "accessibility id",
-    "Allow Access to All Photos",
-    1000
-  );
+  const permissions = await device1.doesElementExist({
+    strategy: "accessibility id",
+    selector: "Allow Access to All Photos",
+    maxWait: 1000,
+  });
   if (permissions) {
     try {
       await device1.clickOnElement(`Allow Access to All Photos`);
@@ -45,11 +45,11 @@ async function sendImage(platform: SupportedPlatformsType) {
   } else {
     console.log("No permissions dialog");
   }
-  const testImage = await device1.doesElementExist(
-    "accessibility id",
-    `1967-05-05 21:00:00 +0000`,
-    2000
-  );
+  const testImage = await device1.doesElementExist({
+    strategy: "accessibility id",
+    selector: `1967-05-05 21:00:00 +0000`,
+    maxWait: 2000,
+  });
   if (!testImage) {
     await runScriptAndLog(
       `touch -a -m -t ${ronSwansonBirthday} 'run/test/specs/media/test_image.jpg'`
@@ -492,15 +492,13 @@ async function checkPerformance(platform: SupportedPlatformsType) {
   await newContact(platform, device1, userA, device2, userB);
   const timesArray: Array<number> = [];
 
-  let i
+  let i;
   for (i = 1; i <= 10; i++) {
     const timeMs = await device1.measureSendingTime(i);
     timesArray.push(timeMs);
   }
-  console.log(timesArray)
+  console.log(timesArray);
 }
-
-
 
 describe("Message checks ios", () => {
   iosIt("Send image", sendImage);
