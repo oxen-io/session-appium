@@ -19,7 +19,7 @@ export type Strategy = "accessibility id" | "xpath" | "id" | "class name";
 
 export type StrategyExtractionObj =
   | {
-      strategy: Extract<Strategy, "xpath" | "id" | "class name">;
+      strategy: Extract<Strategy, "id" | "class name">;
       selector: string;
     }
   | {

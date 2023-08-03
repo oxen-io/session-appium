@@ -10,6 +10,7 @@ import {
   Strategy,
   StrategyExtractionObj,
   User,
+  XPath,
 } from "./testing";
 
 export type Coordinates = {
@@ -337,9 +338,12 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.click(el.ELEMENT);
   }
 
-  public async clickOnElementXPath(selector: string) {
-    await this.waitForElementToBePresent({ strategy: "xpath", selector });
-    const el = await this.findElementByXpath(selector);
+  public async clickOnElementXPath(xpath: XPath) {
+    await this.waitForElementToBePresent({
+      strategy: "xpath",
+      selector: xpath,
+    });
+    const el = await this.findElementByXPath(xpath);
     await this.click(el.ELEMENT);
   }
 
@@ -350,6 +354,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async clickOnTextElementById(id: string, text: string) {
+    ``;
     const el = await this.findTextElementArrayById(id, text);
     await this.waitForTextElementToBePresent({
       strategy: "id",
@@ -491,7 +496,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return elements;
   }
 
-  public async findElementByXpath(xpath: string) {
+  public async findElementByXPath(xpath: XPath) {
     const element = await this.findElement("xpath", xpath);
     if (!element) {
       throw new Error(`findElementByXpath: Did not find xpath: ${xpath}`);
@@ -644,7 +649,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     selector,
     text,
     maxWait,
-  }: { text: string; maxWait?: number } & StrategyExtractionObj) {
+  }: { text?: string; maxWait?: number } & StrategyExtractionObj) {
     const beforeStart = Date.now();
     const maxWaitMSec = maxWait || 300000;
     const waitPerLoop = 100;

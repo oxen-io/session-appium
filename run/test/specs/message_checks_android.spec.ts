@@ -34,12 +34,12 @@ async function sendImage(platform: SupportedPlatformsType) {
     throw new Error("imageButton was not found in android");
   }
   await device1.click(imageButton.ELEMENT);
-  const testImage = await device1.doesElementExist(
-    "id",
-    "android:id/title",
-    2000,
-    "test_image.jpg"
-  );
+  const testImage = await device1.doesElementExist({
+    strategy: "id",
+    selector: "android:id/title",
+    maxWait: 2000,
+    text: "test_image.jpg",
+  });
   if (!testImage) {
     await runScriptAndLog(
       `adb -s emulator-5554 push 'run/test/specs/media/test_image.jpg' /storage/emulated/0/Download`,
@@ -91,12 +91,12 @@ async function sendDocument(platform: SupportedPlatformsType) {
     throw new Error("documentsButton was not found");
   }
   await device1.click(documentsButton.ELEMENT);
-  const testDocument = await device1.doesElementExist(
-    "id",
-    "android:id/title",
-    1000,
-    "test_file.pdf"
-  );
+  const testDocument = await device1.doesElementExist({
+    strategy: "id",
+    selector: "android:id/title",
+    maxWait: 1000,
+    text: "test_file.pdf",
+  });
   if (!testDocument) {
     await runScriptAndLog(
       `adb -s emulator-5554 push 'run/test/specs/media/test_file.pdf' /storage/emulated/0/Download`,
@@ -153,12 +153,12 @@ async function sendVideo(platform: SupportedPlatformsType) {
     throw new Error("videosButton was not found");
   }
   await device1.click(videosButton.ELEMENT);
-  const testVideo = await device1.doesElementExist(
-    "id",
-    "android:id/title",
-    1000,
-    "test_video.mp4"
-  );
+  const testVideo = await device1.doesElementExist({
+    strategy: "id",
+    selector: "android:id/title",
+    maxWait: 1000,
+    text: "test_video.mp4",
+  });
   if (!testVideo) {
     // Adds video to downloads folder if it isn't already there
     await runScriptAndLog(

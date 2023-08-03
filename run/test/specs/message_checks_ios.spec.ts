@@ -103,11 +103,11 @@ async function sendDoc(platform: SupportedPlatformsType) {
   await sleepFor(100);
   await clickOnXAndYCoordinates(device1, 36, 447);
 
-  const permissions = await device1.doesElementExist(
-    "accessibility id",
-    "Allow Access to All Photos",
-    1000
-  );
+  const permissions = await device1.doesElementExist({
+    strategy: "accessibility id",
+    selector: "Allow Access to All Photos",
+    maxWait: 1000,
+  });
   if (permissions) {
     try {
       await device1.clickOnElement("Allow Access to All Photos");
@@ -184,21 +184,21 @@ async function sendVideo(platform: SupportedPlatformsType) {
   // Need to put a video on device
   // Session would like to access your photos
   await sleepFor(1000);
-  const permissions = await device1.doesElementExist(
-    "accessibility id",
-    "Allow Access to All Photos",
-    1000
-  );
+  const permissions = await device1.doesElementExist({
+    strategy: "accessibility id",
+    selector: "Allow Access to All Photos",
+    maxWait: 1000,
+  });
   if (permissions) {
     await device1.clickOnElement("Allow Access to All Photos");
   } else {
     console.log("No permissions");
   }
-  const settingsPermissions = await device1.doesElementExist(
-    "accessibility id",
-    "Settings",
-    1000
-  );
+  const settingsPermissions = await device1.doesElementExist({
+    strategy: "accessibility id",
+    selector: "Settings",
+    maxWait: 1000,
+  });
   if (settingsPermissions) {
     await device1.clickOnElement("Photos");
     await device1.clickOnElement("All Photos");
@@ -208,11 +208,11 @@ async function sendVideo(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Recents");
   await sleepFor(2000);
   // Select video
-  const videoFolder = await device1.doesElementExist(
-    "xpath",
-    `//XCUIElementTypeStaticText[@name="Video`,
-    1000
-  );
+  const videoFolder = await device1.doesElementExist({
+    strategy: "xpath",
+    selector: `//XCUIElementTypeStaticText[@name="Videos"]`,
+    maxWait: 1000,
+  });
   if (videoFolder) {
     console.log("Videos folder found");
     await device1.clickOnElement("Videos");

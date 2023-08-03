@@ -237,11 +237,11 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Profile picture");
   await device1.clickOnElement("Image picker");
   // Check if permissions need to be enabled
-  const permissions = await device1.doesElementExist(
-    "accessibility id",
-    "Allow Access to All Photos",
-    1000
-  );
+  const permissions = await device1.doesElementExist({
+    strategy: "accessibility id",
+    selector: "Allow Access to All Photos",
+    maxWait: 1000,
+  });
   if (permissions) {
     try {
       await device1.clickOnElement("Allow Access to All Photos");
@@ -250,11 +250,11 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
     }
   }
   // Check if image is already on device
-  const profilePicture = await device1.doesElementExist(
-    "accessibility id",
-    `Photo, May 01, 1998, 7:00 AM`,
-    2000
-  );
+  const profilePicture = await device1.doesElementExist({
+    strategy: "accessibility id",
+    selector: `Photo, May 01, 1998, 7:00 AM`,
+    maxWait: 2000,
+  });
   // If no image, push file to device
   if (!profilePicture) {
     await runScriptAndLog(
@@ -327,11 +327,11 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   await device1.clickOnTextElementById("android:id/text1", "Files");
   // Check if permissions need to be enabled
   // Check if image is already on device
-  const profilePicture = await device1.doesElementExist(
-    "accessibility id",
-    `profile_picture.jpg, 27.75 kB, May 1, 1999`,
-    2000
-  );
+  const profilePicture = await device1.doesElementExist({
+    strategy: "accessibility id",
+    selector: `profile_picture.jpg, 27.75 kB, May 1, 1999`,
+    maxWait: 2000,
+  });
   // If no image, push file to device
   if (!profilePicture) {
     await runScriptAndLog(

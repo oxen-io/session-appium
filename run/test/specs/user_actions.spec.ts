@@ -165,11 +165,11 @@ async function changeAvatarAndroid(platform: SupportedPlatformsType) {
   await device.clickOnTextElementById("android:id/text1", "Files");
   // Select file
   await sleepFor(2000);
-  const profilePicture = await device.doesElementExist(
-    "accessibility id",
-    `profile_picture.jpg, 27.75 kB, May 1, 1999`,
-    2000
-  );
+  const profilePicture = await device.doesElementExist({
+    strategy: "accessibility id",
+    selector: `profile_picture.jpg, 27.75 kB, May 1, 1999`,
+    maxWait: 2000,
+  });
   // If no image, push file to device
   if (!profilePicture) {
     await runScriptAndLog(
@@ -215,11 +215,11 @@ async function changeAvatariOS(platform: SupportedPlatformsType) {
   await device.clickOnElement("Profile picture");
   // await device.clickOnElement("Photo library");
   await device.clickOnElement("Image picker");
-  const permissions = await device.doesElementExist(
-    "accessibility id",
-    "Allow Access to All Photos",
-    1000
-  );
+  const permissions = await device.doesElementExist({
+    strategy: "accessibility id",
+    selector: "Allow Access to All Photos",
+    maxWait: 1000,
+  });
   if (permissions) {
     try {
       await device.clickOnElement("Allow Access to All Photos");
