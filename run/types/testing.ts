@@ -76,7 +76,7 @@ export type AccessibilityId =
   | "Answer call"
   | "Allow voice and video calls"
   | "End call button"
-  | "Close Button"
+  | "Close button"
   | "Enable"
   | "More options"
   | "Disappearing Messages"
@@ -100,6 +100,8 @@ export type AccessibilityId =
   | "Send message button"
   | "Mentions list"
   | "Message sent status: Sent"
+  | "Message sent status: Read"
+  | "Message sent status pending"
   | "Leave group"
   | "Leave"
   | "Username"
@@ -154,4 +156,6 @@ export type AccessibilityId =
   | "Decline message request"
   | "Image picker"
   | "Upload"
-  | "Save button";
+  | "Save button"
+  | "Yes"
+  | "No";

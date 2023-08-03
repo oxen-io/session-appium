@@ -67,9 +67,10 @@ async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
   // Change username on device 1
   await device1.clickOnElement("User settings");
   // Select username
-  await device1.clickOnElement("Username");
+  // await device1.clickOnElement("Username");
   await sleepFor(100);
-  await device1.deleteText("Username");
+  await device1.deleteTextIos("Username");
+  await device1.deleteTextAndroid("Username");
   await device1.inputText("accessibility id", "Username", newUsername);
   // Select apply
   await runOnlyOnAndroid(platform, () => device1.clickOnElement("Apply"));
@@ -77,7 +78,7 @@ async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
   // Check on linked device if name has updated
   await device2.clickOnElement("User settings");
   await runOnlyOnAndroid(platform, () => device2.navigateBack(platform));
-  await sleepFor(100);
+  await sleepFor(1000);
   await runOnlyOnAndroid(platform, () =>
     device2.clickOnElement("User settings")
   );
@@ -316,6 +317,13 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   await device1.clickOnElement("User settings");
   await sleepFor(100);
   await device1.clickOnElement("User settings");
+  await sleepFor(500);
+  await device1.clickOnElementAll({
+    strategy: "id",
+    selector: "android:id/button1",
+    text: "UPLOAD",
+    maxWait: 8000,
+  });
   await device1.clickOnElementById(
     "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
   );
@@ -387,21 +395,21 @@ describe("Linked device - user tests", () => {
   iosIt("Link a device", linkDevice);
   androidIt("Link a device", linkDevice);
 
-  iosIt("Check profile picture syncs", avatarRestorediOS);
-  androidIt("Check profile picture syncs", avatarRestoredAndroid);
+  iosIt("Profile picture syncs", avatarRestorediOS);
+  androidIt("Profile picture syncs", avatarRestoredAndroid);
 
-  androidIt("Check contact syncs", contactsSyncLinkedDevice);
-  iosIt("Check contact syncs", contactsSyncLinkedDevice);
+  androidIt("Contact syncs", contactsSyncLinkedDevice);
+  iosIt("Contact syncs", contactsSyncLinkedDevice);
 
-  androidIt("Check changed username syncs", changeUsernameLinkedDevice);
-  iosIt("Check changed username syncs", changeUsernameLinkedDevice);
+  androidIt("Changed username syncs", changeUsernameLinkedDevice);
+  iosIt("Changed username syncs", changeUsernameLinkedDevice);
 
-  androidIt("Check deleted message syncs", deletedMessageLinkedDevice);
-  iosIt("Check deleted message syncs", deletedMessageLinkedDevice);
+  androidIt("Deleted message syncs", deletedMessageLinkedDevice);
+  iosIt("Deleted message syncs", deletedMessageLinkedDevice);
 
-  androidIt("Check unsent message syncs", unSendMessageLinkedDevice);
-  iosIt("Check unsent message syncs", unSendMessageLinkedDevice);
+  androidIt("Unsent message syncs", unSendMessageLinkedDevice);
+  iosIt("Unsent message syncs", unSendMessageLinkedDevice);
 
-  iosIt("Check blocked user syncs", blockedUserLinkedDevice);
-  androidIt("Check blocked user syncs", blockedUserLinkedDevice);
+  iosIt("Blocked user syncs", blockedUserLinkedDevice);
+  androidIt("Blocked user syncs", blockedUserLinkedDevice);
 });

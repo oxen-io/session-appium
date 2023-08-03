@@ -117,7 +117,9 @@ async function changeUsername(platform: SupportedPlatformsType) {
   // select username
   await device.clickOnElement("Username");
   // type in new username
-  await device.deleteText("Username");
+  await sleepFor(1000);
+  await runOnlyOnIOS(platform, () => device.deleteTextIos("Username"));
+  await runOnlyOnAndroid(platform, () => device.deleteTextAndroid("Username"));
   await sleepFor(100);
   await device.inputText("accessibility id", "Username", newUsername);
   const changedUsername = await device.grabTextFromAccessibilityId("Username");
@@ -142,9 +144,9 @@ async function changeUsername(platform: SupportedPlatformsType) {
   await closeApp(device);
 }
 
-async function changeAvatarAndroid(platform: SupportedPlatformsType) {
+async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
-  const spongebobsBirthday = "199905010700.00";
+  const spongebobsBirthday = "199905020700.00";
   // Create new user
   await newUser(device, "Alice", platform);
   // Click on settings/avatar
@@ -153,6 +155,11 @@ async function changeAvatarAndroid(platform: SupportedPlatformsType) {
   // Click on Profile picture
   await device.clickOnElement("User settings");
   // Click on Photo library
+  await sleepFor(100);
+  await device.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: "Upload",
+  });
   await sleepFor(100);
   await device.clickOnElementById(
     "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
@@ -204,7 +211,7 @@ async function changeAvatarAndroid(platform: SupportedPlatformsType) {
   await closeApp(device);
 }
 
-async function changeAvatariOS(platform: SupportedPlatformsType) {
+async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
   const spongebobsBirthday = "199805010700.00";
   // Create new user
@@ -350,6 +357,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   await device1.clickOnElement("More options");
   // Click on username to set nickname
   await device1.clickOnElement("Username");
+  await device1.deleteTextIos("Username");
   // Type in nickname
   await device1.inputText("accessibility id", "Username", nickName);
   // Click apply/done
@@ -373,7 +381,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   // Click on edit
   await device1.clickOnElement("Username");
   // Empty username input
-  await device1.deleteText("Nickname");
+  await device1.deleteTextIos("Nickname");
   await device1.clickOnElement("Done");
   // Check in conversation header
   await device1.clickOnElement("Back");
@@ -405,21 +413,23 @@ async function readStatus(platform: SupportedPlatformsType) {
   await newContact(platform, device1, userA, device2, userB);
   // Go to settings to turn on read status
   // Device 1
-  await device1.navigateBack(platform);
-  await device1.clickOnElement("User settings");
-  await device2.navigateBack(platform);
-  await device2.clickOnElement("User settings");
-  await device1.clickOnElementById(`network.loki.messenger:id/privacyButton`);
-  // await device2.clickOnElement("Privacy");
-  await sleepFor(2000);
-  await device2.clickOnTextElementById(
-    "android:id/summary",
-    "Send read receipts in one-to-one chats."
-  );
-  // await device2.clickOnElement('Enable read receipts');
-  await device2.navigateBack(platform);
+  await Promise.all([
+    device1.turnOnReadReceipts(platform),
+    device2.turnOnReadReceipts(platform),
+  ]);
+  await device1.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: "Conversation list item",
+    text: userB.userName,
+  });
   // Send message from User A to User B to verify read status is working
   await device1.sendMessage(testMessage);
+  await sleepFor(100);
+  await device2.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: "Conversation list item",
+    text: userA.userName,
+  });
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message Body",
@@ -431,12 +441,21 @@ async function readStatus(platform: SupportedPlatformsType) {
     text: testMessage,
   });
   // Check read status on device 1
-  await device1.waitForTextElementToBePresent({
-    strategy: "id",
-    selector: "network.loki.messenger:id/messageStatusTextView",
-    text: "Read",
-  });
-  // await device1.waitForElementToBePresent(['accessibility id', 'Message status: Read']);
+  await runOnlyOnAndroid(platform, () =>
+    device1.waitForTextElementToBePresent({
+      strategy: "id",
+      selector: "network.loki.messenger:id/messageStatusTextView",
+      text: "Read",
+    })
+  );
+  await runOnlyOnIOS(platform, () =>
+    device1.waitForElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Message sent status: Read",
+    })
+  );
+
+  await closeApp(device1, device2);
 }
 
 describe("User actions", () => {
@@ -454,8 +473,8 @@ describe("User actions", () => {
   androidIt("Change username", changeUsername);
   iosIt("Change username", changeUsername);
   // NEED TO FIX
-  androidIt("Change avatar", changeAvatarAndroid);
-  iosIt("Change avatar", changeAvatariOS);
+  androidIt("Change profile picture", changeProfilePictureAndroid);
+  iosIt("Change profile picture", changeProfilePictureiOS);
 
   androidIt("Set nickname", setNicknameAndroid);
   iosIt("Set nickname", setNicknameIos);

@@ -323,7 +323,8 @@ export class DeviceWrapper implements SharedDeviceInterface {
     } else {
       el = await this.waitForElementToBePresent(args);
     }
-    return el;
+    await this.click(el.ELEMENT);
+    return;
   }
 
   public async clickOnElementByText(
@@ -457,8 +458,23 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return text;
   }
 
-  public async deleteText(accessibilityId: AccessibilityId) {
+  public async deleteTextAndroid(accessibilityId: AccessibilityId) {
     const el = await this.findElementByAccessibilityId(accessibilityId);
+    await this.longClick(el, 200);
+
+    await this.clear(el.ELEMENT);
+
+    console.warn(`Text has been cleared ` + accessibilityId);
+    return;
+  }
+  public async deleteTextIos(accessibilityId: AccessibilityId) {
+    const el = await this.findElementByAccessibilityId(accessibilityId);
+    await this.longClick(el, 200);
+    await this.clickOnElementByText({
+      strategy: "id",
+      selector: "Select All",
+      text: "Select All",
+    });
 
     await this.clear(el.ELEMENT);
 
@@ -809,6 +825,20 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return message;
   }
 
+  public async waitForSentConfirmation() {
+    let pendingStatus = await this.waitForElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Message sent status pending",
+    });
+    if (pendingStatus) {
+      await sleepFor(100);
+      pendingStatus = await this.waitForElementToBePresent({
+        strategy: "accessibility id",
+        selector: "Message sent status pending",
+      });
+    }
+  }
+
   public async sendNewMessage(user: User, message: string) {
     // Sender workflow
     // Click on plus button
@@ -874,6 +904,19 @@ export class DeviceWrapper implements SharedDeviceInterface {
     );
 
     return sentMessage;
+  }
+
+  public async measureSendingTime(messageNumber: number) {
+    const message = `Test-message`;
+    const timeStart = Date.now();
+
+    await this.sendMessage(message);
+
+    const timeEnd = Date.now();
+    const timeMs = timeEnd - timeStart;
+
+    console.log(`Message ${messageNumber}: ${timeMs}`);
+    return timeMs;
   }
 
   public async inputText(
@@ -942,6 +985,40 @@ export class DeviceWrapper implements SharedDeviceInterface {
       await this.clickOnElement("Back");
     } else {
       await this.clickOnElement("Navigate up");
+    }
+  }
+
+  /* ======= Settings functions =========*/
+
+  public async turnOnReadReceipts(platform: SupportedPlatformsType) {
+    if (platform === "android") {
+      await this.navigateBack(platform);
+      await sleepFor(100);
+      await this.clickOnElement("User settings");
+      await sleepFor(500);
+      await this.clickOnElementById(`network.loki.messenger:id/privacyButton`);
+      await sleepFor(2000);
+      await this.clickOnElementAll({
+        strategy: "id",
+        selector: "android:id/summary",
+        text: "Send read receipts in one-to-one chats.",
+      });
+      await this.navigateBack(platform);
+      await sleepFor(100);
+      await this.navigateBack(platform);
+    } else {
+      await this.navigateBack(platform);
+      await sleepFor(100);
+      await this.clickOnElement("User settings");
+      await this.clickOnElementAll({ strategy: "id", selector: "Privacy" });
+      await this.clickOnElementAll({
+        strategy: "xpath",
+        selector: `	
+      //XCUIElementTypeSwitch[@name="Read Receipts, Send read receipts in one-to-one chats."]`,
+      });
+      await this.navigateBack(platform);
+      await sleepFor(100);
+      await this.clickOnElement("Close button");
     }
   }
 

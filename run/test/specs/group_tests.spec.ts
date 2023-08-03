@@ -75,7 +75,7 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   // Alert should pop up 'Please enter group name', click ok
   // If ios click ok / If Android go to next step
 
-  await device1.deleteText("Group name");
+  await device1.deleteTextAndroid("Group name");
   // Enter new group name
   await device1.clickOnElement("Group name");
 

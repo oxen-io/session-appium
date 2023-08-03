@@ -3,6 +3,8 @@ import { W3CCapabilities } from "appium/build/lib/appium";
 
 const iosAppFullPath = `/Users/emilyburton/Library/Developer/Xcode/DerivedData/Session-bkhewuibvlxdsxevpurvxorzvqpd/Build/Products/App Store Release-iphonesimulator/Session.app`;
 
+
+
 const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   "appium:app": iosAppFullPath,
   "appium:platformName": "iOS",
