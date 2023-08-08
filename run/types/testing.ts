@@ -160,4 +160,5 @@ export type AccessibilityId =
   | "Upload"
   | "Save button"
   | "Yes"
-  | "No";
+  | "No"
+  | "covid";

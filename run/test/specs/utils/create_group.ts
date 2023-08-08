@@ -20,9 +20,9 @@ export const createGroup = async (
   // Create contact between User A and User B
   await newContact(platform, device1, userOne, device2, userTwo);
   await device1.navigateBack(platform);
+  await newContact(platform, device1, userOne, device3, userThree);
   await device2.navigateBack(platform);
   // Create contact between User A and User C
-  await newContact(platform, device1, userOne, device3, userThree);
   // Exit conversation back to list
   await device1.navigateBack(platform);
   // Exit conversation back to list

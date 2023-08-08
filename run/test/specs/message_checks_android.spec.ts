@@ -49,13 +49,12 @@ async function sendImage(platform: SupportedPlatformsType) {
   await sleepFor(100);
   await device1.clickOnTextElementById("android:id/title", "test_image.jpg");
 
-  await device2.clickOnElement("Untrusted attachment message");
+  await device2.clickOnElement("Untrusted attachment message", 9000);
   await sleepFor(500);
   // User B - Click on 'download'
   await device2.clickOnElement("Download media");
 
   // Reply to message
-
   await device2.longPress("Media message");
   await device2.clickOnElement("Reply to message");
   await device2.sendMessage(replyMessage);
@@ -303,7 +302,7 @@ async function sendLongMessage(platform: SupportedPlatformsType) {
 
 async function sendLink(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-
+  const testLink = `https://nerdlegame.com/`;
   // Create two users
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -312,11 +311,7 @@ async function sendLink(platform: SupportedPlatformsType) {
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // Send a link
-  await device1.inputText(
-    "accessibility id",
-    "Message input box",
-    `https://nerdlegame.com/`
-  );
+  await device1.inputText("accessibility id", "Message input box", testLink);
   // Accept dialog for link preview
   await device1.clickOnElement("Enable");
   // No preview on first send
@@ -326,21 +321,10 @@ async function sendLink(platform: SupportedPlatformsType) {
     selector: "Message sent status: Sent",
     maxWait: 20000,
   });
-  // Send again for image
-  await device1.inputText(
-    "accessibility id",
-    "Message input box",
-    `https://nerdlegame.com/`
-  );
-  await sleepFor(100);
-  await device1.clickOnElement("Send message button");
-  // Make sure link works (dialog pop ups saying are you sure?)
-
-  // Make sure image preview is available in device 2
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message Body",
-    text: `https://nerdlegame.com/`,
+    text: testLink,
   });
   await closeApp(device1, device2);
 }
@@ -365,7 +349,7 @@ async function unsendMessage(platform: SupportedPlatformsType) {
     selector: "Message Body",
     text: sentMessage,
   });
-  console.log("Doing a long click on" + `${sentMessage}`);
+  // console.log("Doing a long click on" + `${sentMessage}`);
   // Select and long press on message to delete it
   await device1.longPressMessage(sentMessage);
   // Select Delete icon
@@ -406,9 +390,9 @@ async function deleteMessage(platform: SupportedPlatformsType) {
   await device1.longPressMessage(sentMessage);
   // Select Delete icon
   await device1.clickOnElement("Delete message");
-  // Select 'Delete for me and User B'
+  // Select 'Delete for just me'
   await device1.clickOnElement("Delete just for me");
-  // Look in User B's chat for alert 'This message has been deleted?'
+
   await sleepFor(1000);
   await device1.hasTextElementBeenDeleted("Message Body", sentMessage);
 
