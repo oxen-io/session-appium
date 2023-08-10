@@ -8,7 +8,7 @@ import { newContact } from "./utils/create_contact";
 import { iosIt, androidIt } from "../../types/sessionIt";
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils";
 
-async function disappearingMessages(platform: SupportedPlatformsType) {
+async function disappearingMessagesLegacy(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and user B
   const [userA, userB] = await Promise.all([
@@ -21,7 +21,7 @@ async function disappearingMessages(platform: SupportedPlatformsType) {
   await device1.clickOnElement("More options");
   // Select disappearing messages option
   await runOnlyOnIOS(platform, () =>
-  device1.clickOnElement("Disappearing Messages")
+    device1.clickOnElement("Disappearing Messages")
   );
   await sleepFor(1000);
   await runOnlyOnAndroid(platform, () =>
@@ -62,7 +62,31 @@ async function disappearingMessages(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
-describe("Disappearing messages",  () => {
-  iosIt("Disappearing messages", disappearingMessages);
-  androidIt("Disappearing messages", disappearingMessages);
+async function disappearAfterSend(platform: SupportedPlatformsType) {
+  const { device1, device2 } = await openAppTwoDevices(platform);
+  // Create user A and user B
+  const [userA, userB] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+  ]);
+  // Create contact
+  await newContact(platform, device1, userA, device2, userB);
+  // Click conversation options menu (three dots)
+  await device1.clickOnElement("More options");
+  // Select disappearing messages option
+  await device1.clickOnElement("Disappearing messages");
+  const defaultTime = await device1.waitForElementToBePresent(
+    "accessibility id",
+    "One day"
+  );
+  // Need to validate that default time is checked somehow
+
+  await closeApp(device1, device2);
+}
+
+describe("Disappearing messages", () => {
+  iosIt("Disappearing messages legacy", disappearingMessagesLegacy);
+  androidIt("Disappearing messages legacy", disappearingMessagesLegacy);
+  iosIt("Disappear after send", disappearAfterSend);
+  androidIt("Disappear after send", disappearAfterSend);
 });
