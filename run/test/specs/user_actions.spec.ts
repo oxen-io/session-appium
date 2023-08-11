@@ -2,11 +2,7 @@ import { androidIt, iosIt } from "../../types/sessionIt";
 import { parseDataImage } from "./utils/check_colour";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
-import {
-  runOnlyOnAndroid,
-  runOnlyOnIOS,
-  sleepFor,
-} from "./utils/index";
+import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils/index";
 import {
   closeApp,
   openAppOnPlatformSingleDevice,
@@ -118,7 +114,7 @@ async function changeUsername(platform: SupportedPlatformsType) {
   // select username
   await device.clickOnElement("Username");
   // type in new username
-  await device.deleteText("Username")
+  await device.deleteText("Username");
   await sleepFor(100);
   await device.inputText("accessibility id", "Username", newUsername);
   const changedUsername = await device.grabTextFromAccessibilityId("Username");
@@ -147,7 +143,7 @@ async function changeAvatarAndroid(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
   const spongebobsBirthday = "199905010700.00";
   // Create new user
-   await newUser(device, "Alice", platform);
+  await newUser(device, "Alice", platform);
   // Click on settings/avatar
   await device.clickOnElement("User settings");
   await sleepFor(100);
@@ -235,7 +231,9 @@ async function changeAvatariOS(platform: SupportedPlatformsType) {
     );
 
     await runScriptAndLog(
-      `xcrun simctl addmedia ${process.env.IOS_FIRST_SIMULATOR || ''} 'run/test/specs/media/profile_picture.jpg'`,
+      `xcrun simctl addmedia ${
+        process.env.IOS_FIRST_SIMULATOR || ""
+      } 'run/test/specs/media/profile_picture.jpg'`,
       true
     );
   }
@@ -244,7 +242,7 @@ async function changeAvatariOS(platform: SupportedPlatformsType) {
   await sleepFor(100);
   await device.clickOnElement(`Photo, May 01, 1998, 7:00 AM`);
   await device.clickOnElement("Done");
-  await device.clickOnElement("Upload")
+  await device.clickOnElement("Upload");
   // Take screenshot
   const el = await device.waitForElementToBePresent(
     "accessibility id",
@@ -283,7 +281,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Click on tick button
   await device1.clickOnElement("Apply");
   // CLick out of pop up
-  await device1.clickOnElement('Message user')
+  await device1.clickOnElement("Message user");
   // Check name at top of conversation is nickname
   const headerElement = await device1.waitForElementToBePresent(
     "accessibility id",
@@ -398,33 +396,25 @@ async function readStatus(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  // Go to settings to turn on read status 
+  // Go to settings to turn on read status
   // Device 1
   await device1.navigateBack(platform);
   await device1.clickOnElement("User settings");
-  
 
   await device2.navigateBack(platform);
-
 }
 
-describe("User actions",  () => {
+describe("User actions", () => {
   iosIt("Create contact", createContact);
   androidIt("Create contact", createContact);
 
-  iosIt(
-    "Block user in conversation options",
-    blockUserInConversationOptions
-  );
+  iosIt("Block user in conversation options", blockUserInConversationOptions);
   androidIt(
     "Block user in conversation options",
     blockUserInConversationOptions
   );
 
-  androidIt(
-    "Block user in conversation list",
-    blockUserInConversationList
-  );
+  androidIt("Block user in conversation list", blockUserInConversationList);
 
   androidIt("Change username", changeUsername);
   iosIt("Change username", changeUsername);
@@ -439,5 +429,4 @@ describe("User actions",  () => {
   iosIt("Read status", readStatus);
 });
 
-// Check read receipts working
 // Typing indicators working

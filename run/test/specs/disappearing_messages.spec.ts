@@ -81,6 +81,10 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
   );
   // Need to validate that default time is checked somehow
 
+  // Change timer to ten seconds (testing time)
+  await device1.clickOnElement("Ten seconds");
+  // Check control message is correct
+
   await closeApp(device1, device2);
 }
 

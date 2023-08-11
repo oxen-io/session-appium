@@ -59,6 +59,7 @@ export type AccessibilityId =
   | "Disappearing messages"
   | "Disappear after read option"
   | "Disappear after send option"
+  | "Ten seconds"
   | "Twelve hours"
   | "One day"
   | "One week"
