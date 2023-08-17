@@ -1,19 +1,24 @@
-import { DesiredCapabilities } from "@wdio/types/build/Capabilities";
+import { AppiumXCUITestCapabilities } from "@wdio/types/build/Capabilities";
+import { W3CCapabilities } from "appium/build/lib/appium";
 
-const iosAppFullPath = `/Users/emilyburton/Desktop/Session.app`;
+const iosAppFullPath = `/Users/emilyburton/Library/Developer/Xcode/DerivedData/Session-bkhewuibvlxdsxevpurvxorzvqpd/Build/Products/App Store Release-iphonesimulator/Session.app`;
 
-let sharediOSCapabilities: DesiredCapabilities = {
-  platformName: "iOS",
-  platformVersion: "16.1",
-  deviceName: "iPhone 13 Pro Max",
-  automationName: "XCUITest",
-  app: iosAppFullPath,
-  bundleId: "com.loki-project.loki-messenger",
-  autoAcceptAlerts: true,
-  newCommandTimeout: 30000,
-  useNewWDA: true,
-} as DesiredCapabilities;
-export type CapabilitiesIndexType = 0 | 1 | 2 | 3;
+
+
+const sharediOSCapabilities: AppiumXCUITestCapabilities = {
+  "appium:app": iosAppFullPath,
+  "appium:platformName": "iOS",
+  "appium:platformVersion": "16.4",
+  "appium:deviceName": "iPhone 14 Pro Max",
+  "appium:automationName": "XCUITest",
+  "appium:bundleId": "com.loki-project.loki-messenger",
+  "appium:newCommandTimeout": 300000,
+  "appium:useNewWDA": false,
+  "appium:showXcodeLog": false,
+  "appium:autoDismissAlerts": false,
+  // "appium:isHeadless": true,
+} as AppiumXCUITestCapabilities;
+export type CapabilitiesIndexType = 0 | 1 | 2 | 3 | 4 | 5;
 
 function getIOSSimulatorUUIDFromEnv(index: CapabilitiesIndexType): string {
   switch (index) {
@@ -46,7 +51,9 @@ function getIOSSimulatorUUIDFromEnv(index: CapabilitiesIndexType): string {
         `getSimulatorUUIDFromEnv process.env.IOS_THIRD_SIMULATOR is not set`
       );
     default:
-      throw new Error(`getSimulatorUUIDFromEnv unknown index: ${index}`);
+      throw new Error(
+        `getSimulatorUUIDFromEnv unknown index: ${index as number}`
+      );
   }
 }
 
@@ -55,55 +62,50 @@ const emulator2Udid = getIOSSimulatorUUIDFromEnv(1);
 const emulator3Udid = getIOSSimulatorUUIDFromEnv(2);
 const emulator4Udid = getIOSSimulatorUUIDFromEnv(3);
 
-const capabilities1: DesiredCapabilities = {
+const capabilities1: AppiumXCUITestCapabilities = {
   ...sharediOSCapabilities,
-  udid: emulator1Udid,
-  wdaLocalPort: 8102,
-} as DesiredCapabilities;
-const capabilities2: DesiredCapabilities = {
+  "appium:udid": emulator1Udid,
+  "appium:wdaLocalPort": 1253,
+};
+const capabilities2: AppiumXCUITestCapabilities = {
   ...sharediOSCapabilities,
-  udid: emulator2Udid,
-  wdaLocalPort: 8104,
-} as DesiredCapabilities;
-
-const capabilities3: DesiredCapabilities = {
-  ...sharediOSCapabilities,
-  udid: emulator3Udid,
-  wdaLocalPort: 8106,
-} as DesiredCapabilities;
-
-const capabilities4: DesiredCapabilities = {
-  ...sharediOSCapabilities,
-  udid: emulator4Udid,
-  wdaLocalPort: 8108,
-} as DesiredCapabilities;
-
-const capabilitiesList = [
-  capabilities1,
-  capabilities2,
-  capabilities3,
-  capabilities4,
-];
-const uuidsList = [emulator1Udid, emulator2Udid, emulator3Udid, emulator4Udid];
-
-export const iosCapabilities = {
-  sharediOSCapabilities,
-  iosAppFullPath,
+  "appium:wdaLocalPort": 1254,
+  "appium:udid": emulator2Udid,
 };
 
-const countOfIosCapabilities = capabilitiesList.length;
+const capabilities3: AppiumXCUITestCapabilities = {
+  ...sharediOSCapabilities,
+  "appium:udid": emulator3Udid,
+  "appium:wdaLocalPort": 1255,
+};
 
-export function getIosCapabilities(capabilitiesIndex: CapabilitiesIndexType) {
+const capabilities4: AppiumXCUITestCapabilities = {
+  ...sharediOSCapabilities,
+  "appium:udid": emulator4Udid,
+  "appium:wdaLocalPort": 1256,
+};
+
+const countOfIosCapabilities = 4;
+
+export function getIosCapabilities(
+  capabilitiesIndex: CapabilitiesIndexType
+): W3CCapabilities<any> {
   if (capabilitiesIndex >= countOfIosCapabilities) {
     throw new Error(`Asked invalid ios cap index: ${capabilitiesIndex}`);
   }
-  return capabilitiesList[capabilitiesIndex];
-}
+  const caps =
+    capabilitiesIndex === 0
+      ? capabilities1
+      : capabilitiesIndex === 1
+      ? capabilities2
+      : capabilitiesIndex === 2
+      ? capabilities3
+      : capabilities4;
 
-export function getIosUuid(uuidIndex: CapabilitiesIndexType) {
-  if (uuidIndex >= countOfIosCapabilities) {
-    throw new Error(`Asked invalid ios uuid index: ${uuidIndex}`);
-  }
-
-  return uuidsList[uuidIndex];
+  return {
+    firstMatch: [{}, {}],
+    alwaysMatch: {
+      ...caps,
+    },
+  };
 }

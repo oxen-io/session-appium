@@ -1,37 +1,33 @@
-import {
-  clickOnElement,
-  findConfigurationMessage,
-  inputText,
-} from "./utilities";
-import { User } from "./create_account";
-import { sendNewMessage } from "./send_new_message";
-import { sendMessage } from "./send_message";
+import { runOnlyOnAndroid } from ".";
+import { DeviceWrapper } from "../../../types/DeviceWrapper";
+import { User } from "../../../types/testing";
+import { SupportedPlatformsType } from "./open_app";
 
 export const newContact = async (
-  device1: wd.PromiseWebdriver,
+  platform: SupportedPlatformsType,
+  device1: DeviceWrapper,
   user1: User,
-  device2: wd.PromiseWebdriver,
+  device2: DeviceWrapper,
   user2: User
 ) => {
-  await sendNewMessage(device1, user2, "howdy");
+  await device1.sendNewMessage(user2, `${user1.userName} to ${user2.userName}`);
 
   // USER B WORKFLOW
   // Click on message request panel
   // Wait for push notification to disappear (otherwise appium can't find element)
-  await device2.setImplicitWaitTimeout(20000);
-  await clickOnElement(device2, "Message requests banner");
+  await device2.clickOnElement("Message requests banner", 10000);
   // Select message from User A
-  await device2.setImplicitWaitTimeout(10000);
-  await clickOnElement(device2, "Message request");
+  await device2.clickOnElement("Message request");
+  await runOnlyOnAndroid(platform, () =>
+    device2.clickOnElement("Accept message request")
+  );
   // Type into message input box
-  await sendMessage(
-    device2,
+  await device2.sendMessage(
     `Reply-message-${user2.userName}-to-${user1.userName}`
   );
 
   // Verify config message states message request was accepted
-  await findConfigurationMessage(
-    device1,
+  await device1.findConfigurationMessage(
     "Your message request has been accepted."
   );
 

@@ -5,7 +5,7 @@
 # IntelliJ
 #
 .idea
-
+.vscode/
 # node.js
 #
 node_modules/
@@ -19,3 +19,5 @@ chromeDriver
 
 run/**/*.js
 *.js.map
+run/test/specs/to do 
+

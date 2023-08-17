@@ -5,113 +5,222 @@ import {
   openAppTwoDevices,
   closeApp,
 } from "./utils/open_app";
-import { sendNewMessage } from "./utils/send_new_message";
-import {
-  clickOnElement,
-  findElement,
-  hasElementBeenDeleted,
-} from "./utils/utilities";
+import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils/index";
 
 async function acceptRequest(platform: SupportedPlatformsType) {
   // Check 'accept' button
   // Open app
-  const { server, device1, device2 } = await openAppTwoDevices(platform);
+  const { device1, device2 } = await openAppTwoDevices(platform);
   // Create two users
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A", platform),
-    newUser(device2, "User B", platform),
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
   ]);
-  // Send message from User A to User B
-  await sendNewMessage(device1, userB, "howdy");
+  // Send message from Alice to Bob
+  await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
   // Wait for banner to appear
-  await device2.setImplicitWaitTimeout(5000);
-  // User B clicks on message request banner
-  await clickOnElement(device2, "Message requests banner");
-  // User B clicks on request conversation item
-  await clickOnElement(device2, "Message request");
-  // User B clicks accept button
-  await clickOnElement(device2, "Accept message request");
-  // Verify config message for User A 'Your message request has been accepted'
-  await findElement(device1, "Message request has been accepted");
+
+  // Bob clicks on message request banner
+  await device2.clickOnElement("Message requests banner");
+  // Bob clicks on request conversation item
+  await device2.clickOnElement("Message request");
+  // Bob clicks accept button
+  await device2.clickOnElement("Accept message request");
+  // Verify config message for Alice 'Your message request has been accepted'
+  await device1.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Configuration message",
+    text: "Your message request has been accepted.",
+  });
+  await device2.navigateBack(platform);
+  await device2.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Conversation list item",
+    text: userA.userName,
+  });
   // Close app
-  await closeApp(server, device1, device2);
+  await closeApp(device1, device2);
 }
 
 async function declineRequest(platform: SupportedPlatformsType) {
   // Check 'decline' button
-  const { server, device1, device2 } = await openAppTwoDevices(platform);
+  const { device1, device2 } = await openAppTwoDevices(platform);
   // Create two users
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A", platform),
-    newUser(device2, "User B", platform),
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
   ]);
-  // Send message from User A to User B
-  await sendNewMessage(device1, userB, "howdy");
+  // Send message from Alice to Bob
+  await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
   // Wait for banner to appear
-  await device2.setImplicitWaitTimeout(5000);
-  // User B clicks on message request banner
-  await clickOnElement(device2, "Message requests banner");
-  // User B clicks on request conversation item
-  await clickOnElement(device2, "Message request");
+  // Bob clicks on message request banner
+  await device2.clickOnElement("Message requests banner");
+  // Bob clicks on request conversation item
+  await device2.clickOnElement("Message request");
   // Click on decline button
-  await clickOnElement(device2, "Decline message request");
-  // Look for message request list item
-  await hasElementBeenDeleted(device2, "Message request");
+  await runOnlyOnIOS(platform, () =>
+    device2.clickOnElement("Delete message request")
+  );
+  await runOnlyOnAndroid(platform, () =>
+    device2.clickOnElement("Decline message request")
+  );
+  // Are you sure you want to delete message request only for ios
+  await sleepFor(2000);
+  await runOnlyOnIOS(platform, () => device2.clickOnElement("Confirm delete"));
+  // Navigate back to home page
+  await sleepFor(100);
+  await device2.navigateBack(platform);
+  // Look for new conversation button to make sure it all worked
+  await device2.waitForElementToBePresent({
+    strategy: "accessibility id",
+    selector: "New conversation button",
+  });
+
   // Close app
-  await closeApp(server, device1, device2);
+  await closeApp(device1, device2);
 }
 
 async function acceptRequestWithText(platform: SupportedPlatformsType) {
   // Check accept request by sending text message
-  const { server, device1, device2 } = await openAppTwoDevices(platform);
+  const { device1, device2 } = await openAppTwoDevices(platform);
   // Create two users
   const [userA, userB] = await Promise.all([
-    newUser(device1, "User A", platform),
-    newUser(device2, "User B", platform),
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
   ]);
-  // Send message from User A to User B
-  await sendNewMessage(device1, userB, "howdy");
+  // Send message from Alice to Bob
+  await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
   // Wait for banner to appear
-  await device2.setImplicitWaitTimeout(5000);
-  // User B clicks on message request banner
-  await clickOnElement(device2, "Message requests banner");
-  // User B clicks on request conversation item
-  await clickOnElement(device2, "Message request");
-  // Send message from User B to User A
-  await sendNewMessage(device2, userA, "howdy");
+  // Bob clicks on message request banner
+  await device2.clickOnElement("Message requests banner");
+  // Bob clicks on request conversation item
+  await device2.clickOnElement("Message request");
+  // Send message from Bob to Alice
+  await device2.sendMessage(`${userB.userName} to ${userA.userName}`);
   // Check config
-  await findElement(device1, "Message request has been accepted");
+  await device1.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Configuration message",
+    text: "Your message request has been accepted.",
+  });
   // Close app
-  await closeApp(server, device1, device2);
+  await closeApp(device1, device2);
 }
 
-// async function blockRequest(platform: SupportedPlatformsType) {
-//   const { server, device1, device2 } = await openAppTwoDevices(platform);
-//   const [userA, userB] = await Promise.all([
-//     newUser(device1, "User A"),
-//     newUser(device2, "User B"),
-//   ]);
-//   // Send message from User A to User B
-//   await sendNewMessage(device1, userB);
-//   // Wait for banner to appear
-//   await device2.setImplicitWaitTimeout(5000);
-//   // User B clicks on message request banner
-//   await clickOnElement(device2, "Message requests banner");
-//   // User B clicks on request conversation item
-//   await clickOnElement(device2, "Message request");
-//   // User B clicks on block option
-//   await clickOnElement(device2, "Block message request");
-//   // Close app
-//   await closeApp(server, device1, device2);
-// }
+async function blockRequest(platform: SupportedPlatformsType) {
+  const { device1, device2 } = await openAppTwoDevices(platform);
+  const [userA, userB] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+  ]);
+  // Send message from Alice to Bob
+  await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
+  // Wait for banner to appear
+  // Bob clicks on message request banner
+  await device2.clickOnElement("Message requests banner");
+  // Bob clicks on request conversation item
+  await device2.clickOnElement("Message request");
+  // Bob clicks on block option
+  await device2.clickOnElement("Block message request");
+  // Confirm block on android
+  await sleepFor(1000);
+  await runOnlyOnIOS(platform, () => device2.clickOnElement("Block"));
+  await runOnlyOnAndroid(platform, () =>
+    device2.clickOnElement("Confirm block")
+  );
+  const blockedMessage = `${userA.userName} to ${userB.userName} - shouldn't get through`;
+  await device1.sendMessage(blockedMessage);
+  await device2.navigateBack(platform);
+  await device2.waitForElementToBePresent({
+    strategy: "accessibility id",
+    selector: "New conversation button",
+  });
+  // Need to wait to see if message gets through
+  await sleepFor(1000);
+  await device2.hasTextElementBeenDeleted("Message Body", blockedMessage);
+  // Check blocked contacts section for user A
+  await device2.clickOnElement("User settings");
+  await device2.clickOnElement("Conversations");
+  await runOnlyOnAndroid(platform, () =>
+    device2.clickOnElement("Blocked contacts")
+  );
+  await runOnlyOnIOS(platform, () =>
+    device2.clickOnElement("Blocked Contacts")
+  );
+  await device2.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Contact",
+    text: userA.userName,
+  });
 
-describe("Message", () => {
-  iosIt("Message requests decline", acceptRequest);
-  androidIt("Message requests decline", acceptRequest);
+  // Close app
+  await closeApp(device1, device2);
+}
+
+async function deleteRequest(platform: SupportedPlatformsType) {
+  const { device1, device2 } = await openAppTwoDevices(platform);
+  const [userA, userB] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+  ]);
+  // Send message from Alice to Bob
+  await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
+  // Wait for banner to appear
+  // Bob clicks on message request banner
+  await device2.clickOnElement("Message requests banner");
+  // Swipe left on ios
+  await device2.swipeLeftAny("Message request");
+
+  await device2.clickOnElement("Delete");
+  await sleepFor(1000);
+  await device2.clickOnElement("Confirm delete");
+  await device2.findElement("accessibility id", "No pending message requests");
+
+  await closeApp(device1, device2);
+}
+
+async function clearAllRequests(platform: SupportedPlatformsType) {
+  const { device1, device2 } = await openAppTwoDevices(platform);
+  const [userA, userB] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+  ]);
+  // Send message from Alice to Bob
+  await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
+  // Wait for banner to appear
+  // Bob clicks on message request banner
+  await device2.clickOnElement("Message requests banner");
+  // Select Clear All button
+  await device2.clickOnElement("Clear all");
+  await sleepFor(1000);
+  await runOnlyOnAndroid(platform, () =>
+    device2.clickOnTextElementById("android:id/button1", "YES")
+  );
+  await runOnlyOnIOS(platform, () => device2.clickOnElement("Clear"));
+
+  await device2.waitForElementToBePresent({
+    strategy: "accessibility id",
+    selector: "No pending message requests",
+  });
+
+  await closeApp(device1, device2);
+}
+
+describe("Message requests", () => {
+  iosIt("Message requests accept", acceptRequest);
+  androidIt("Message requests accept", acceptRequest);
 
   iosIt("Message requests decline", declineRequest);
   androidIt("Message requests decline", declineRequest);
 
-  iosIt("Message requests decline", acceptRequestWithText);
-  androidIt("Message requests decline", acceptRequestWithText);
+  iosIt("Message requests text reply", acceptRequestWithText);
+  androidIt("Message requests text reply", acceptRequestWithText);
+
+  iosIt("Message requests block", blockRequest);
+  androidIt("Message requests block", blockRequest);
+
+  iosIt("Delete request", deleteRequest);
+
+  iosIt("Message requests clear all", clearAllRequests);
+  androidIt("Message requests clear all", clearAllRequests);
 });

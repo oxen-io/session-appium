@@ -2,31 +2,38 @@
   "scripts": {
     "tsc": "npm run clean-tsc && tsc",
     "clean-tsc": "find run/test/specs -type f -name '*.js' -delete",
-    "tsc-watch": "tsc -w",
-    "test": "_TESTING=1 mocha --timeout 300000 --retries 2 --jobs 1 ./run/test/specs/*.spec.js ",
+    "tsc-watch": "npm run clean-tsc && tsc -w",
+    "test": "_TESTING=1 mocha --timeout 300000 --retries 2 --jobs 1 ./run/test/specs/*.spec.js -- --grep ",
+    "test-no-retry": "_TESTING=1 mocha --timeout 300000 --retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep ",
     "test-one": "_TESTING=1 mocha --timeout 300000 --retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep ",
     "test-one-android": "node ./scripts/run_one.js android",
     "test-one-ios": "node ./scripts/run_one.js ios",
     "test-ios": "_TESTING=1 mocha --timeout 300000 -retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep ios",
     "test-android": "_TESTING=1 mocha --timeout 300000 -retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep android",
-    "build-and-test": "npm run tsc && npm run test",
-    "test-testing": "npx mocha --timeout 30000 --jobs 1 ./run/test/specs/experiment.spec.js"
+    "build-and-test": "npm run tsc && npm run test"
   },
   "devDependencies": {
-    "@wdio/appium-service": "^7.20.7",
-    "@wdio/cli": "^7.20.7",
-    "@wdio/local-runner": "^7.20.7",
-    "@wdio/mocha-framework": "^7.20.7",
-    "@wdio/selenium-standalone-service": "^7.20.7",
-    "@wdio/spec-reporter": "^7.20.7",
-    "appium": "^1.22.3",
+    "@appium/execute-driver-plugin": "^3.0.1",
+    "@appium/images-plugin": "^2.0.1",
+    "@types/lodash": "^4.14.191",
+    "@typescript-eslint/eslint-plugin": "^5.51.0",
+    "@typescript-eslint/parser": "^5.59.5",
+    "@wdio/types": "^8.1.2",
+    "appium-uiautomator2-driver": "^2.12.1",
+    "appium-xcuitest-driver": "^4.16.7",
+    "eslint": "^8.33.0",
+    "mocha": "^10.2.0",
     "ts-node": "^10.9.1",
-    "typescript": "^4.7.4",
+    "typescript": "^4.9.5",
     "wdio-wait-for": "^2.2.6"
   },
   "dependencies": {
-    "@wdio/types": "^7.20.7",
+    "@types/jest": "^29.2.5",
+    "appium": "^2.0.0-beta.48",
+    "ci": "^2.2.0",
+    "jest": "^29.3.1",
     "lodash": "^4.17.21",
+    "png-js": "^1.0.0",
     "wd": "^1.14.0"
   }
 }

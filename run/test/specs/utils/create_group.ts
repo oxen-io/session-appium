@@ -1,39 +1,63 @@
-import { User } from "./create_account";
+import { Group, User } from "../../../types/testing";
 import { newContact } from "./create_contact";
-import { sendMessage } from "./send_message";
-import { clickOnElement, inputText, selectByText } from "./utilities";
+import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from ".";
+import { DeviceWrapper } from "../../../types/DeviceWrapper";
+import { SupportedPlatformsType } from "./open_app";
 
 export const createGroup = async (
-  device1: wd.PromiseWebdriver,
-  userA: User,
-  device2: wd.PromiseWebdriver,
-  userB: User,
-  device3: wd.PromiseWebdriver,
-  userC: User,
-  groupName: string
-) => {
-  const message = "User A to group";
+  platform: SupportedPlatformsType,
+  device1: DeviceWrapper,
+  userOne: User,
+  device2: DeviceWrapper,
+  userTwo: User,
+  device3: DeviceWrapper,
+  userThree: User,
+  userName: string
+): Promise<Group> => {
+  const group: Group = { userName, userOne, userTwo, userThree };
+
+  const userAMessage = `${userOne.userName} to ${userName}`;
   // Create contact between User A and User B
-  await newContact(device1, userA, device2, userB);
-  await clickOnElement(device1, "Back");
-  await clickOnElement(device2, "Back");
+  await newContact(platform, device1, userOne, device2, userTwo);
+  await device1.navigateBack(platform);
+  await device2.navigateBack(platform);
   // Create contact between User A and User C
-  await newContact(device1, userA, device3, userC);
+  await newContact(platform, device1, userOne, device3, userThree);
   // Exit conversation back to list
-  await clickOnElement(device1, "Back");
+  await device1.navigateBack(platform);
   // Exit conversation back to list
-  await clickOnElement(device3, "Back");
+  await device3.navigateBack(platform);
   // Click plus button
-  await clickOnElement(device1, "New conversation button");
+  await device1.clickOnElement("New conversation button");
   // Select Closed Group option
-  await clickOnElement(device1, "Create group");
+  await device1.clickOnElement("Create group");
   // Type in group name
-  await inputText(device1, "Group name input", groupName);
+  await device1.inputText("accessibility id", "Group name input", userName);
   // Select User B and User C
-  await selectByText(device1, "Contact", userB.userName);
-  await selectByText(device1, "Contact", userC.userName);
+  await device1.selectByText("Contact", userTwo.userName);
+  await device1.selectByText("Contact", userThree.userName);
   // Select tick
-  await clickOnElement(device1, "Create group");
-  // Send message from User a to group to verify all working
-  await sendMessage(device1, message);
+  await device1.clickOnElement("Create group");
+  await sleepFor(4000);
+  // Check for empty state on ios
+  await runOnlyOnIOS(platform, () =>
+    device1.waitForElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Empty state label",
+    })
+  );
+  // await runOnlyOnIOS(platform, () =>
+  //   device1.waitForElementToBePresent("accessibility id", "Group created")
+  // );
+  await runOnlyOnAndroid(platform, () =>
+    device1.findConfigurationMessage("You created a new group.")
+  );
+  // Send message from User A to group to verify all working
+  await device1.sendMessage(userAMessage);
+  // Send message from User B to group
+  await device2.sendMessageTo(userTwo, group);
+  // Send message to User C to group
+  await device3.sendMessageTo(userThree, group);
+
+  return { userName, userOne, userTwo, userThree };
 };
