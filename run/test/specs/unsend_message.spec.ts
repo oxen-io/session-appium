@@ -6,7 +6,7 @@ import {
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 
-import * as wd from "wd";
+import {TouchAction} from "wd";
 import {
   inputText,
   clickOnElement,
@@ -34,7 +34,7 @@ async function unsendMessage(platform: SupportedPlatformsType) {
   const foundMessage = await findMessageWithBody(device1, unsendMessage);
   console.info("doing long click on" + `${unsendMessage}`);
 
-  const action = new wd.TouchAction(device1);
+  const action = new TouchAction(device1);
   action.longPress({ el: foundMessage });
   await action.perform();
   // Select Delete icon

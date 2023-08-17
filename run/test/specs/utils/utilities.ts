@@ -1,10 +1,10 @@
-import { pick } from "lodash";
-import * as util from "util";
-import * as wd from "wd";
+import { pick } from 'lodash';
+import * as util from 'util';
+import { PromiseWebdriver, TouchAction } from 'wd';
 
-const exec = util.promisify(require("child_process").exec);
-import { getAdbFullPath } from "./binaries";
-import { SupportedPlatformsType } from "./open_app";
+const exec = util.promisify(require('child_process').exec);
+import { getAdbFullPath } from './binaries';
+import { SupportedPlatformsType } from './open_app';
 
 export function sleepFor(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -14,7 +14,7 @@ export const runOnlyOnIOS = async (
   platform: SupportedPlatformsType,
   toRun: () => Promise<any>
 ) => {
-  if (platform === "ios") {
+  if (platform === 'ios') {
     const value = await toRun();
 
     return value;
@@ -25,7 +25,7 @@ export const runOnlyOnAndroid = async (
   platform: SupportedPlatformsType,
   toRun: () => Promise<any>
 ) => {
-  if (platform === "android") {
+  if (platform === 'android') {
     const value = await toRun();
 
     return value;
@@ -34,24 +34,24 @@ export const runOnlyOnAndroid = async (
 
 export const saveSessionIDIos = async (
   platform: SupportedPlatformsType,
-  device: wd.PromiseWebdriver
+  device: PromiseWebdriver
 ) => {
-  const selector = await saveText(device, "Session ID generated");
+  const selector = await saveText(device, 'Session ID generated');
 
   return selector;
 };
 
 export const getSessionID = async (
   platform: SupportedPlatformsType,
-  device: wd.PromiseWebdriver
+  device: PromiseWebdriver
 ) => {
   let sessionID;
 
-  if (platform === "android") {
+  if (platform === 'android') {
     sessionID = await Promise.all([
-      runOnlyOnAndroid(platform, () => saveText(device, "Session ID")),
+      runOnlyOnAndroid(platform, () => saveText(device, 'Session ID')),
     ]);
-  } else if (platform === "ios") {
+  } else if (platform === 'ios') {
     sessionID = await runOnlyOnIOS(platform, () =>
       saveSessionIDIos(platform, device)
     );
@@ -61,7 +61,7 @@ export const getSessionID = async (
 };
 
 export const clickOnElement = async (
-  device: wd.PromiseWebdriver,
+  device: PromiseWebdriver,
   accessibilityId: string
 ) => {
   const el = await device.elementByAccessibilityId(accessibilityId);
@@ -71,14 +71,14 @@ export const clickOnElement = async (
     );
   }
 
-  const action = new wd.TouchAction(device);
+  const action = new TouchAction(device);
   await action.tap({ el });
   await action.perform();
   return;
 };
 
 export const tapOnElement = async (
-  device: wd.PromiseWebdriver,
+  device: PromiseWebdriver,
   accessibilityId: string
 ) => {
   const el = await device.elementByAccessibilityId(accessibilityId);
@@ -88,13 +88,13 @@ export const tapOnElement = async (
     );
   }
   device.waitForElementByAccessibilityId(accessibilityId);
-  const action = new wd.TouchAction(device);
+  const action = new TouchAction(device);
   action.tap({ el });
   await action.perform();
 };
 
 export const findElement = async (
-  device: wd.PromiseWebdriver,
+  device: PromiseWebdriver,
   accessibilityId: string
 ) => {
   const selector = await device.elementByAccessibilityId(accessibilityId);
@@ -109,7 +109,7 @@ export const findElement = async (
 };
 
 export const hasElementBeenDeleted = async (
-  device: wd.PromiseWebdriver,
+  device: PromiseWebdriver,
   accessibilityId: string
 ) => {
   const fakeError = `${accessibilityId}: has been found, but shouldn't have been. OOPS`;
@@ -125,7 +125,7 @@ export const hasElementBeenDeleted = async (
 };
 
 export const hasTextElementBeenDeleted = async (
-  device: wd.PromiseWebdriver,
+  device: PromiseWebdriver,
   accessibilityId: string,
   text: string
 ) => {
@@ -141,7 +141,7 @@ export const hasTextElementBeenDeleted = async (
 };
 
 export const selectByText = async (
-  device: wd.PromiseWebdriver,
+  device: PromiseWebdriver,
   accessibilityId: string,
   text: string
 ) => {
@@ -155,7 +155,7 @@ export const selectByText = async (
 };
 
 export const saveText = async (
-  device: wd.PromiseWebdriver,
+  device: PromiseWebdriver,
   accessibilityId: string
 ) => {
   const selector = await device.elementByAccessibilityId(accessibilityId);
@@ -163,7 +163,7 @@ export const saveText = async (
 };
 
 export const deleteText = async (
-  device: wd.PromiseWebdriver,
+  device: PromiseWebdriver,
   accessibilityId: string
 ) => {
   const selector = await device.elementByAccessibilityId(accessibilityId);
@@ -173,7 +173,7 @@ export const deleteText = async (
 };
 
 export const inputText = async (
-  device: wd.PromiseWebdriver,
+  device: PromiseWebdriver,
   accessibilityId: string,
   text: string
 ) => {
@@ -188,7 +188,7 @@ export const inputText = async (
 };
 
 export const longPress = async (
-  device: wd.PromiseWebdriver,
+  device: PromiseWebdriver,
   accessibilityId: string
 ) => {
   const el = await device.elementByAccessibilityId(accessibilityId);
@@ -197,7 +197,7 @@ export const longPress = async (
       `longPress: could not find this accessibilityId: ${accessibilityId}`
     );
   }
-  const action = new wd.TouchAction(device);
+  const action = new TouchAction(device);
   action.longPress({ el });
   await action.perform();
 
@@ -205,7 +205,7 @@ export const longPress = async (
 };
 
 export const pressAndHold = async (
-  device: wd.PromiseWebdriver,
+  device: PromiseWebdriver,
   accessibilityId: string
 ) => {
   const el = await device.elementByAccessibilityId(accessibilityId);
@@ -214,7 +214,7 @@ export const pressAndHold = async (
       `pressAndHold: could not find this accessibilityID: ${accessibilityId}`
     );
   }
-  const actions = new wd.TouchAction(device);
+  const actions = new TouchAction(device);
 
   actions.longPress({ el });
   actions.wait(5000);
@@ -224,11 +224,11 @@ export const pressAndHold = async (
 };
 
 export const longPressMessage = async (
-  device: wd.PromiseWebdriver,
+  device: PromiseWebdriver,
   textToLookFor: string
 ) => {
   const selector = await findMessageWithBody(device, textToLookFor);
-  const action = new wd.TouchAction(device);
+  const action = new TouchAction(device);
   action.longPress({ el: selector });
   action.wait(5000);
   action.release();
@@ -236,23 +236,23 @@ export const longPressMessage = async (
 };
 
 export const longPressConversation = async (
-  device: wd.PromiseWebdriver,
+  device: PromiseWebdriver,
   userName: string
 ) => {
   const el = await findMatchingTextAndAccessibilityId(
     device,
-    "Conversation list item",
+    'Conversation list item',
     userName
   );
-  const action = new wd.TouchAction(device);
+  const action = new TouchAction(device);
   action.longPress({ el });
   action.wait(5000);
   action.release();
   await action.perform();
 };
 
-export const scrollDown = async (device: wd.PromiseWebdriver) => {
-  const action = new wd.TouchAction(device);
+export const scrollDown = async (device: PromiseWebdriver) => {
+  const action = new TouchAction(device);
   action.press({ x: 760, y: 1500 });
   action.moveTo({ x: 760, y: 710 });
   action.release();
@@ -260,7 +260,7 @@ export const scrollDown = async (device: wd.PromiseWebdriver) => {
 };
 
 export const swipeLeft = async (
-  device: wd.PromiseWebdriver,
+  device: PromiseWebdriver,
   accessibilityId: string,
   text: string
 ) => {
@@ -271,18 +271,18 @@ export const swipeLeft = async (
   );
 
   try {
-    const actions = new wd.TouchAction(device);
+    const actions = new TouchAction(device);
 
     actions.longPress({ el });
     actions.moveTo({ x: -100 });
     actions.release();
 
     await actions.perform();
-    console.warn("Swiped left on " + el);
+    console.warn('Swiped left on ' + el);
     // let some time for swipe action to happen and UI to update
     await sleepFor(300);
   } catch (e: any) {
-    console.warn("error happened while trying to swipe: ", e.message);
+    console.warn('error happened while trying to swipe: ', e.message);
   }
 };
 
@@ -315,19 +315,19 @@ export const findMatchingTextInElementArray = async (
 };
 
 export const findMessageWithBody = async (
-  device: wd.PromiseWebdriver,
+  device: PromiseWebdriver,
   textToLookFor: string
 ): Promise<AppiumElement> => {
   const message = await findMatchingTextAndAccessibilityId(
     device,
-    "Message Body",
+    'Message Body',
     textToLookFor
   );
   return message;
 };
 
 export const findMatchingTextAndAccessibilityId = async (
-  device: wd.PromiseWebdriver,
+  device: PromiseWebdriver,
   accessibilityId: string,
   textToLookFor: string
 ): Promise<AppiumElement> => {
@@ -355,13 +355,13 @@ export const findMatchingTextAndAccessibilityId = async (
 };
 
 export const findConfigurationMessage = async (
-  device: wd.PromiseWebdriver,
+  device: PromiseWebdriver,
   messageText: string
 ) => {
   console.warn(`Looking for configuration message with ` + messageText);
   return findMatchingTextAndAccessibilityId(
     device,
-    "Configuration message",
+    'Configuration message',
     messageText
   );
 };
@@ -375,7 +375,7 @@ async function runScriptAndLog(toRun: string) {
       result &&
       result.stderr &&
       !result.stderr.startsWith(
-        "All files should be loaded. Notifying the device"
+        'All files should be loaded. Notifying the device'
       )
     ) {
       // console.log(`cmd which failed: "${toRun}"`);
@@ -401,7 +401,7 @@ export const installAppToDeviceName = async (
   emulatorName: string
 ) => {
   if (!emulatorName) {
-    throw new Error("emulatorName must be set");
+    throw new Error('emulatorName must be set');
   }
   const adb = getAdbFullPath();
 

@@ -1,24 +1,24 @@
-import { main as appiumMain } from "appium";
+import { main as appiumMain } from 'appium';
 import {
   androidCapabilities,
   getAndroidCapabilities,
   getAndroidUuid,
-} from "./capabilities_android";
+} from './capabilities_android';
 import {
   CapabilitiesIndexType,
   getIosCapabilities,
   getIosUuid,
   iosCapabilities,
-} from "./capabilities_ios";
-import { installAppToDeviceName } from "./utilities";
+} from './capabilities_ios';
+import { installAppToDeviceName } from './utilities';
 
-import * as wd from "wd";
-import { AppiumServer } from "../../../types/appiumServerType";
+import { PromiseWebdriver, promiseChainRemote } from 'wd';
+import { AppiumServer } from '../../../types/appiumServerType';
 
 const APPIUM_PORT = 4728;
 export const APPIUM_IOS_PORT = 8100;
 
-export type SupportedPlatformsType = "android" | "ios";
+export type SupportedPlatformsType = 'android' | 'ios';
 
 const openAppOnPlatform = async (
   platform: SupportedPlatformsType,
@@ -26,9 +26,9 @@ const openAppOnPlatform = async (
   server: AppiumServer | null
 ): Promise<{
   server: AppiumServer;
-  device: wd.PromiseWebdriver;
+  device: PromiseWebdriver;
 }> => {
-  return platform === "ios"
+  return platform === 'ios'
     ? openiOSApp(capabilitiesIndex, server)
     : openAndroidApp(capabilitiesIndex, server);
 };
@@ -37,7 +37,7 @@ export const openAppOnPlatformSingleDevice = async (
   platform: SupportedPlatformsType
 ): Promise<{
   server: AppiumServer;
-  device: wd.PromiseWebdriver;
+  device: PromiseWebdriver;
 }> => {
   return openAppOnPlatform(platform, 0, null);
 };
@@ -46,8 +46,8 @@ export const openAppTwoDevices = async (
   platform: SupportedPlatformsType
 ): Promise<{
   server: AppiumServer;
-  device1: wd.PromiseWebdriver;
-  device2: wd.PromiseWebdriver;
+  device1: PromiseWebdriver;
+  device2: PromiseWebdriver;
 }> => {
   const server = await openAppiumServerOnly(platform);
 
@@ -63,9 +63,9 @@ export const openAppThreeDevices = async (
   platform: SupportedPlatformsType
 ): Promise<{
   server: AppiumServer;
-  device1: wd.PromiseWebdriver;
-  device2: wd.PromiseWebdriver;
-  device3: wd.PromiseWebdriver;
+  device1: PromiseWebdriver;
+  device2: PromiseWebdriver;
+  device3: PromiseWebdriver;
 }> => {
   const server = await openAppiumServerOnly(platform);
 
@@ -87,10 +87,10 @@ export const openAppFourDevices = async (
   platform: SupportedPlatformsType
 ): Promise<{
   server: AppiumServer;
-  device1: wd.PromiseWebdriver;
-  device2: wd.PromiseWebdriver;
-  device3: wd.PromiseWebdriver;
-  device4: wd.PromiseWebdriver;
+  device1: PromiseWebdriver;
+  device2: PromiseWebdriver;
+  device3: PromiseWebdriver;
+  device4: PromiseWebdriver;
 }> => {
   const server = await openAppiumServerOnly(platform);
 
@@ -115,17 +115,17 @@ const openAndroidApp = async (
   server: AppiumServer | null
 ): Promise<{
   server: AppiumServer;
-  device: wd.PromiseWebdriver;
+  device: PromiseWebdriver;
 }> => {
   const newServer: AppiumServer =
-    server || (await openAppiumServerOnly("android"));
+    server || (await openAppiumServerOnly('android'));
 
   await installAppToDeviceName(
     androidCapabilities.androidAppFullPath,
     getAndroidUuid(capabilitiesIndex)
   );
 
-  const device = await wd.promiseChainRemote("localhost", APPIUM_PORT);
+  const device = await promiseChainRemote('localhost', APPIUM_PORT);
 
   await device.init(getAndroidCapabilities(capabilitiesIndex));
 
@@ -137,17 +137,17 @@ const openiOSApp = async (
   server: AppiumServer | null
 ): Promise<{
   server: AppiumServer;
-  device: wd.PromiseWebdriver;
+  device: PromiseWebdriver;
 }> => {
-  console.warn("openiOSApp");
-  const newServer = server || (await openAppiumServerOnly("ios"));
-  console.warn("openiOSApp server");
+  console.warn('openiOSApp');
+  const newServer = server || (await openAppiumServerOnly('ios'));
+  console.warn('openiOSApp server');
 
-  const device = await wd.promiseChainRemote("127.0.0.1", APPIUM_IOS_PORT);
-  console.warn("openiOSAp device ");
+  const device = await promiseChainRemote('127.0.0.1', APPIUM_IOS_PORT);
+  console.warn('openiOSAp device ');
 
   await device.init(getIosCapabilities(capabilitiesIndex));
-  console.warn("openiOSAp init ");
+  console.warn('openiOSAp init ');
 
   return { server: newServer, device };
 };
@@ -155,11 +155,11 @@ const openiOSApp = async (
 let serverAndroid: any = undefined;
 let serverIos: any = undefined;
 const openAppiumServerOnly = async (platform: SupportedPlatformsType) => {
-  if (platform === "android") {
+  if (platform === 'android') {
     if (!serverAndroid) {
       serverAndroid = appiumMain({
         port: APPIUM_PORT,
-        host: "localhost",
+        host: 'localhost',
         setTimeout: 30000,
       });
     }
@@ -169,7 +169,7 @@ const openAppiumServerOnly = async (platform: SupportedPlatformsType) => {
   if (!serverIos) {
     serverIos = appiumMain({
       port: APPIUM_IOS_PORT,
-      host: "127.0.0.1",
+      host: '127.0.0.1',
       setTimeout: 30000,
     });
   }
@@ -179,18 +179,18 @@ const openAppiumServerOnly = async (platform: SupportedPlatformsType) => {
 
 export const closeApp = async (
   server: AppiumServer,
-  device1?: wd.PromiseWebdriver,
-  device2?: wd.PromiseWebdriver,
-  device3?: wd.PromiseWebdriver,
-  device4?: wd.PromiseWebdriver
+  device1?: PromiseWebdriver,
+  device2?: PromiseWebdriver,
+  device3?: PromiseWebdriver,
+  device4?: PromiseWebdriver
 ) => {
   await device1?.quit();
   await device2?.quit();
   await device3?.quit();
   await device4?.quit();
 
-  console.info("waiting server close");
+  console.info('waiting server close');
 
   await server.close();
-  console.info("server closed");
+  console.info('server closed');
 };

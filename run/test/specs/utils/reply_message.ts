@@ -1,12 +1,13 @@
-import { sendNewMessage } from "./send_new_message";
+import { PromiseWebdriver } from 'wd';
+import { sendNewMessage } from './send_new_message';
 import {
   longPressMessage,
   clickOnElement,
   findMessageWithBody,
-} from "./utilities";
+} from './utilities';
 
 export const replyToMessage = async (
-  device: wd.PromiseWebdriver,
+  device: PromiseWebdriver,
   user: any,
   selector: any
 ) => {
@@ -14,9 +15,9 @@ export const replyToMessage = async (
   // Long press on imageSent element
   await longPressMessage(device, selector);
   // Select 'Reply' option
-  await clickOnElement(device, "Reply to message");
+  await clickOnElement(device, 'Reply to message');
   // Send message
-  const sentMessage = await sendNewMessage(device, user, "howdy");
+  const sentMessage = await sendNewMessage(device, user, 'howdy');
 
   return sentMessage;
 };

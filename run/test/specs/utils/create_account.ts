@@ -4,9 +4,9 @@ import {
   saveText,
   pressAndHold,
   getSessionID,
-} from "./utilities";
-import * as wd from "wd";
-import { SupportedPlatformsType } from "./open_app";
+} from './utilities';
+import { PromiseWebdriver } from 'wd';
+import { SupportedPlatformsType } from './open_app';
 
 export interface User {
   userName: string;
@@ -15,13 +15,13 @@ export interface User {
 }
 
 export const newUser = async (
-  device: wd.PromiseWebdriver,
+  device: PromiseWebdriver,
   userName: string,
   platform: SupportedPlatformsType
 ): Promise<User> => {
   // Click create session ID
   await device.setImplicitWaitTimeout(5000);
-  await clickOnElement(device, "Create Session ID");
+  await clickOnElement(device, 'Create Session ID');
   // Wait for animation to generate session id
   await device.setImplicitWaitTimeout(5000);
 
@@ -34,23 +34,23 @@ export const newUser = async (
   );
 
   // Click continue on session Id creation
-  await clickOnElement(device, "Continue");
+  await clickOnElement(device, 'Continue');
   // Input username
-  await inputText(device, "Enter display name", userName);
+  await inputText(device, 'Enter display name', userName);
   // Click continue
-  await clickOnElement(device, "Continue");
+  await clickOnElement(device, 'Continue');
   // Choose message notification options
-  await clickOnElement(device, "Continue with settings");
+  await clickOnElement(device, 'Continue with settings');
   // Click on 'continue' button to open recovery phrase modal
   await device.setImplicitWaitTimeout(5000);
-  await clickOnElement(device, "Continue");
+  await clickOnElement(device, 'Continue');
   // Long Press the recovery phrase to reveal recovery phrase
-  await pressAndHold(device, "Recovery Phrase");
+  await pressAndHold(device, 'Recovery Phrase');
   // Save recovery phrase as variable
-  const recoveryPhrase = await saveText(device, "Recovery Phrase");
+  const recoveryPhrase = await saveText(device, 'Recovery Phrase');
   console.log(`Recovery Phrase is "${recoveryPhrase}"`);
   // Exit Modal
-  await clickOnElement(device, "Navigate up");
+  await clickOnElement(device, 'Navigate up');
 
   return { userName, sessionID, recoveryPhrase };
 };
