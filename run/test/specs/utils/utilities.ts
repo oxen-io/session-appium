@@ -12,7 +12,7 @@ export function sleepFor(ms: number) {
 
 export const runOnlyOnIOS = async (
   platform: SupportedPlatformsType,
-  toRun: () => Promise<any>
+  toRun: () => Promise<any>,
 ) => {
   if (platform === 'ios') {
     const value = await toRun();
@@ -23,7 +23,7 @@ export const runOnlyOnIOS = async (
 
 export const runOnlyOnAndroid = async (
   platform: SupportedPlatformsType,
-  toRun: () => Promise<any>
+  toRun: () => Promise<any>,
 ) => {
   if (platform === 'android') {
     const value = await toRun();
@@ -34,7 +34,7 @@ export const runOnlyOnAndroid = async (
 
 export const saveSessionIDIos = async (
   platform: SupportedPlatformsType,
-  device: PromiseWebdriver
+  device: PromiseWebdriver,
 ) => {
   const selector = await saveText(device, 'Session ID generated');
 
@@ -43,7 +43,7 @@ export const saveSessionIDIos = async (
 
 export const getSessionID = async (
   platform: SupportedPlatformsType,
-  device: PromiseWebdriver
+  device: PromiseWebdriver,
 ) => {
   let sessionID;
 
@@ -53,7 +53,7 @@ export const getSessionID = async (
     ]);
   } else if (platform === 'ios') {
     sessionID = await runOnlyOnIOS(platform, () =>
-      saveSessionIDIos(platform, device)
+      saveSessionIDIos(platform, device),
     );
   }
 
@@ -62,12 +62,12 @@ export const getSessionID = async (
 
 export const clickOnElement = async (
   device: PromiseWebdriver,
-  accessibilityId: string
+  accessibilityId: string,
 ) => {
   const el = await device.elementByAccessibilityId(accessibilityId);
   if (!el) {
     throw new Error(
-      `tap: could not find this accessibilityId: ${accessibilityId}`
+      `tap: could not find this accessibilityId: ${accessibilityId}`,
     );
   }
 
@@ -79,12 +79,12 @@ export const clickOnElement = async (
 
 export const tapOnElement = async (
   device: PromiseWebdriver,
-  accessibilityId: string
+  accessibilityId: string,
 ) => {
   const el = await device.elementByAccessibilityId(accessibilityId);
   if (!el) {
     throw new Error(
-      `tap: could not find this accessibilityId: ${accessibilityId}`
+      `tap: could not find this accessibilityId: ${accessibilityId}`,
     );
   }
   device.waitForElementByAccessibilityId(accessibilityId);
@@ -95,12 +95,12 @@ export const tapOnElement = async (
 
 export const findElement = async (
   device: PromiseWebdriver,
-  accessibilityId: string
+  accessibilityId: string,
 ) => {
   const selector = await device.elementByAccessibilityId(accessibilityId);
   if (!selector) {
     throw new Error(
-      `findElement: Did not find accessibilityId: ${accessibilityId} `
+      `findElement: Did not find accessibilityId: ${accessibilityId} `,
     );
   }
   console.warn(`"Element found", ${accessibilityId}`);
@@ -110,7 +110,7 @@ export const findElement = async (
 
 export const hasElementBeenDeleted = async (
   device: PromiseWebdriver,
-  accessibilityId: string
+  accessibilityId: string,
 ) => {
   const fakeError = `${accessibilityId}: has been found, but shouldn't have been. OOPS`;
   try {
@@ -127,7 +127,7 @@ export const hasElementBeenDeleted = async (
 export const hasTextElementBeenDeleted = async (
   device: PromiseWebdriver,
   accessibilityId: string,
-  text: string
+  text: string,
 ) => {
   const fakeError = `${accessibilityId}: has been found, but shouldn't have been. OOPS`;
   try {
@@ -143,12 +143,12 @@ export const hasTextElementBeenDeleted = async (
 export const selectByText = async (
   device: PromiseWebdriver,
   accessibilityId: string,
-  text: string
+  text: string,
 ) => {
   const selector = await findMatchingTextAndAccessibilityId(
     device,
     accessibilityId,
-    text
+    text,
   );
   await selector.click();
   return;
@@ -156,7 +156,7 @@ export const selectByText = async (
 
 export const saveText = async (
   device: PromiseWebdriver,
-  accessibilityId: string
+  accessibilityId: string,
 ) => {
   const selector = await device.elementByAccessibilityId(accessibilityId);
   return await selector.text();
@@ -164,7 +164,7 @@ export const saveText = async (
 
 export const deleteText = async (
   device: PromiseWebdriver,
-  accessibilityId: string
+  accessibilityId: string,
 ) => {
   const selector = await device.elementByAccessibilityId(accessibilityId);
   await selector.clear();
@@ -175,12 +175,12 @@ export const deleteText = async (
 export const inputText = async (
   device: PromiseWebdriver,
   accessibilityId: string,
-  text: string
+  text: string,
 ) => {
   const element = await device.elementByAccessibilityId(accessibilityId);
   if (!element) {
     throw new Error(
-      `inputText: Did not find accessibilityId: ${accessibilityId} `
+      `inputText: Did not find accessibilityId: ${accessibilityId} `,
     );
   }
   // not sure what is the type of element here, but there is a type available for it...
@@ -189,12 +189,12 @@ export const inputText = async (
 
 export const longPress = async (
   device: PromiseWebdriver,
-  accessibilityId: string
+  accessibilityId: string,
 ) => {
   const el = await device.elementByAccessibilityId(accessibilityId);
   if (!el) {
     throw new Error(
-      `longPress: could not find this accessibilityId: ${accessibilityId}`
+      `longPress: could not find this accessibilityId: ${accessibilityId}`,
     );
   }
   const action = new TouchAction(device);
@@ -206,12 +206,12 @@ export const longPress = async (
 
 export const pressAndHold = async (
   device: PromiseWebdriver,
-  accessibilityId: string
+  accessibilityId: string,
 ) => {
   const el = await device.elementByAccessibilityId(accessibilityId);
   if (!el) {
     throw new Error(
-      `pressAndHold: could not find this accessibilityID: ${accessibilityId}`
+      `pressAndHold: could not find this accessibilityID: ${accessibilityId}`,
     );
   }
   const actions = new TouchAction(device);
@@ -225,7 +225,7 @@ export const pressAndHold = async (
 
 export const longPressMessage = async (
   device: PromiseWebdriver,
-  textToLookFor: string
+  textToLookFor: string,
 ) => {
   const selector = await findMessageWithBody(device, textToLookFor);
   const action = new TouchAction(device);
@@ -237,12 +237,12 @@ export const longPressMessage = async (
 
 export const longPressConversation = async (
   device: PromiseWebdriver,
-  userName: string
+  userName: string,
 ) => {
   const el = await findMatchingTextAndAccessibilityId(
     device,
     'Conversation list item',
-    userName
+    userName,
   );
   const action = new TouchAction(device);
   action.longPress({ el });
@@ -262,12 +262,12 @@ export const scrollDown = async (device: PromiseWebdriver) => {
 export const swipeLeft = async (
   device: PromiseWebdriver,
   accessibilityId: string,
-  text: string
+  text: string,
 ) => {
   const el = await findMatchingTextAndAccessibilityId(
     device,
     accessibilityId,
-    text
+    text,
   );
 
   try {
@@ -288,7 +288,7 @@ export const swipeLeft = async (
 
 async function findAsync(
   arr: Array<any>,
-  asyncCallback: (opts?: any) => Promise<any>
+  asyncCallback: (opts?: any) => Promise<any>,
 ) {
   const promises = arr.map(asyncCallback);
   const results = await Promise.all(promises);
@@ -298,13 +298,13 @@ async function findAsync(
 
 export const findMatchingTextInElementArray = async (
   elements: Array<AppiumElement>,
-  textToLookFor: string
+  textToLookFor: string,
 ): Promise<AppiumElement | undefined> => {
   if (elements && elements.length) {
     const matching = await findAsync(elements, async (e) => {
       const text = await e?.text?.();
       console.warn(
-        `Looking for text: "${textToLookFor}" and found text: "${text}"`
+        `Looking for text: "${textToLookFor}" and found text: "${text}"`,
       );
       return text && text.toLowerCase() === textToLookFor.toLowerCase();
     });
@@ -316,12 +316,12 @@ export const findMatchingTextInElementArray = async (
 
 export const findMessageWithBody = async (
   device: PromiseWebdriver,
-  textToLookFor: string
+  textToLookFor: string,
 ): Promise<AppiumElement> => {
   const message = await findMatchingTextAndAccessibilityId(
     device,
     'Message Body',
-    textToLookFor
+    textToLookFor,
   );
   return message;
 };
@@ -329,25 +329,25 @@ export const findMessageWithBody = async (
 export const findMatchingTextAndAccessibilityId = async (
   device: PromiseWebdriver,
   accessibilityId: string,
-  textToLookFor: string
+  textToLookFor: string,
 ): Promise<AppiumElement> => {
   console.warn(
-    `Looking for all elements with accessibilityId: "${accessibilityId}" and text: "${textToLookFor}" `
+    `Looking for all elements with accessibilityId: "${accessibilityId}" and text: "${textToLookFor}" `,
   );
 
   const elements = await device.elementsByAccessibilityId(accessibilityId);
 
   console.info(
-    `found ${elements.length} matching accessibilityId ${accessibilityId}. Now filtering for text`
+    `found ${elements.length} matching accessibilityId ${accessibilityId}. Now filtering for text`,
   );
 
   const foundElementMatchingText = await findMatchingTextInElementArray(
     elements,
-    textToLookFor
+    textToLookFor,
   );
   if (!foundElementMatchingText) {
     throw new Error(
-      `Did not find element with accessibilityId ${accessibilityId} and text body: ${textToLookFor}`
+      `Did not find element with accessibilityId ${accessibilityId} and text body: ${textToLookFor}`,
     );
   }
 
@@ -356,13 +356,13 @@ export const findMatchingTextAndAccessibilityId = async (
 
 export const findConfigurationMessage = async (
   device: PromiseWebdriver,
-  messageText: string
+  messageText: string,
 ) => {
   console.warn(`Looking for configuration message with ` + messageText);
   return findMatchingTextAndAccessibilityId(
     device,
     'Configuration message',
-    messageText
+    messageText,
   );
 };
 
@@ -375,7 +375,7 @@ async function runScriptAndLog(toRun: string) {
       result &&
       result.stderr &&
       !result.stderr.startsWith(
-        'All files should be loaded. Notifying the device'
+        'All files should be loaded. Notifying the device',
       )
     ) {
       // console.log(`cmd which failed: "${toRun}"`);
@@ -398,7 +398,7 @@ async function runScriptAndLog(toRun: string) {
  */
 export const installAppToDeviceName = async (
   appFullPath: string,
-  emulatorName: string
+  emulatorName: string,
 ) => {
   if (!emulatorName) {
     throw new Error('emulatorName must be set');
@@ -406,28 +406,28 @@ export const installAppToDeviceName = async (
   const adb = getAdbFullPath();
 
   await runScriptAndLog(
-    `${adb} -s ${emulatorName} uninstall io.appium.uiautomator2.server`
+    `${adb} -s ${emulatorName} uninstall io.appium.uiautomator2.server`,
   );
   await runScriptAndLog(
-    `${adb} -s ${emulatorName} uninstall io.appium.uiautomator2.server.test`
+    `${adb} -s ${emulatorName} uninstall io.appium.uiautomator2.server.test`,
   );
   await runScriptAndLog(`${adb} -s ${emulatorName} uninstall io.appium.unlock`);
   await runScriptAndLog(
-    `${adb} -s ${emulatorName} uninstall io.appium.settings`
+    `${adb} -s ${emulatorName} uninstall io.appium.settings`,
   );
   await sleepFor(500);
 
   await runScriptAndLog(
-    `${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-debug-androidTest.apk`
+    `${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-debug-androidTest.apk`,
   );
   await sleepFor(500);
 
   await runScriptAndLog(
-    `${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-v4.27.0.apk`
+    `${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-v4.27.0.apk`,
   );
   await sleepFor(500);
   await runScriptAndLog(
-    `${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/io.appium.settings/apks/settings_apk-debug.apk`
+    `${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/io.appium.settings/apks/settings_apk-debug.apk`,
   );
   await sleepFor(500);
 
@@ -442,7 +442,7 @@ export const installAppToDeviceName = async (
 
   await sleepFor(500);
   await runScriptAndLog(
-    `${adb} -s ${emulatorName} install -g -t ${appFullPath}`
+    `${adb} -s ${emulatorName} install -g -t ${appFullPath}`,
   );
 
   await sleepFor(500);

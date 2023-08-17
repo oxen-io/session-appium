@@ -4,7 +4,7 @@ import { PromiseWebdriver } from 'wd';
 export const sendNewMessage = async (
   device: PromiseWebdriver,
   user: any,
-  message: string
+  message: string,
 ) => {
   // Sender workflow
   // Click on plus button

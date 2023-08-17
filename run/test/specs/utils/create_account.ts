@@ -17,7 +17,7 @@ export interface User {
 export const newUser = async (
   device: PromiseWebdriver,
   userName: string,
-  platform: SupportedPlatformsType
+  platform: SupportedPlatformsType,
 ): Promise<User> => {
   // Click create session ID
   await device.setImplicitWaitTimeout(5000);
@@ -30,7 +30,7 @@ export const newUser = async (
   const sessionID = await getSessionID(platform, device);
 
   console.log(
-    `sessionID found: "${sessionID}" "${platform}" for "${userName}"`
+    `sessionID found: "${sessionID}" "${platform}" for "${userName}"`,
   );
 
   // Click continue on session Id creation

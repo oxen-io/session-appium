@@ -23,7 +23,7 @@ export type SupportedPlatformsType = 'android' | 'ios';
 const openAppOnPlatform = async (
   platform: SupportedPlatformsType,
   capabilitiesIndex: CapabilitiesIndexType,
-  server: AppiumServer | null
+  server: AppiumServer | null,
 ): Promise<{
   server: AppiumServer;
   device: PromiseWebdriver;
@@ -34,7 +34,7 @@ const openAppOnPlatform = async (
 };
 
 export const openAppOnPlatformSingleDevice = async (
-  platform: SupportedPlatformsType
+  platform: SupportedPlatformsType,
 ): Promise<{
   server: AppiumServer;
   device: PromiseWebdriver;
@@ -43,7 +43,7 @@ export const openAppOnPlatformSingleDevice = async (
 };
 
 export const openAppTwoDevices = async (
-  platform: SupportedPlatformsType
+  platform: SupportedPlatformsType,
 ): Promise<{
   server: AppiumServer;
   device1: PromiseWebdriver;
@@ -60,7 +60,7 @@ export const openAppTwoDevices = async (
 };
 
 export const openAppThreeDevices = async (
-  platform: SupportedPlatformsType
+  platform: SupportedPlatformsType,
 ): Promise<{
   server: AppiumServer;
   device1: PromiseWebdriver;
@@ -84,7 +84,7 @@ export const openAppThreeDevices = async (
 };
 
 export const openAppFourDevices = async (
-  platform: SupportedPlatformsType
+  platform: SupportedPlatformsType,
 ): Promise<{
   server: AppiumServer;
   device1: PromiseWebdriver;
@@ -112,7 +112,7 @@ export const openAppFourDevices = async (
 
 const openAndroidApp = async (
   capabilitiesIndex: CapabilitiesIndexType,
-  server: AppiumServer | null
+  server: AppiumServer | null,
 ): Promise<{
   server: AppiumServer;
   device: PromiseWebdriver;
@@ -122,7 +122,7 @@ const openAndroidApp = async (
 
   await installAppToDeviceName(
     androidCapabilities.androidAppFullPath,
-    getAndroidUuid(capabilitiesIndex)
+    getAndroidUuid(capabilitiesIndex),
   );
 
   const device = await promiseChainRemote('localhost', APPIUM_PORT);
@@ -134,7 +134,7 @@ const openAndroidApp = async (
 
 const openiOSApp = async (
   capabilitiesIndex: CapabilitiesIndexType,
-  server: AppiumServer | null
+  server: AppiumServer | null,
 ): Promise<{
   server: AppiumServer;
   device: PromiseWebdriver;
@@ -182,7 +182,7 @@ export const closeApp = async (
   device1?: PromiseWebdriver,
   device2?: PromiseWebdriver,
   device3?: PromiseWebdriver,
-  device4?: PromiseWebdriver
+  device4?: PromiseWebdriver,
 ) => {
   await device1?.quit();
   await device2?.quit();

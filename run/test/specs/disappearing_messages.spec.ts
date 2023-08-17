@@ -34,13 +34,13 @@ async function disappearingMessages(platform: SupportedPlatformsType) {
   await selectByText(
     device1,
     'Configuration message',
-    'You set the disappearing message timer to 5 seconds'
+    'You set the disappearing message timer to 5 seconds',
   );
   // Check config message for User B
   await selectByText(
     device1,
     'Configuration message',
-    `${userA.userName} set the disappearing message timer to 5 seconds`
+    `${userA.userName} set the disappearing message timer to 5 seconds`,
   );
   // Send message
   const message = 'Howdy testing disappearing messages';

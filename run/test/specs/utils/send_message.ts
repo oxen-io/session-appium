@@ -3,7 +3,7 @@ import { PromiseWebdriver } from 'wd';
 
 export const sendMessage = async (
   device: PromiseWebdriver,
-  message: string
+  message: string,
 ) => {
   await inputText(device, 'Message input box', message);
   // Click send

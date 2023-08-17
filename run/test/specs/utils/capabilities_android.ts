@@ -1,24 +1,24 @@
-import { DesiredCapabilities } from "@wdio/types/build/Capabilities";
-import { getAndroidBinariesRoot } from "./binaries";
-import { CapabilitiesIndexType } from "./capabilities_ios";
+import { DesiredCapabilities } from '@wdio/types/build/Capabilities';
+import { getAndroidBinariesRoot } from './binaries';
+import { CapabilitiesIndexType } from './capabilities_ios';
 
 const androidAppFullPath = `${getAndroidBinariesRoot()}/session-1.16.1-x86.apk`;
 
 const sharedCapabilities: DesiredCapabilities = {
-  platformName: "Android",
-  platformVersion: "12",
+  platformName: 'Android',
+  platformVersion: '12',
   app: androidAppFullPath,
-  appPackage: "network.loki.messenger",
-  appActivity: "network.loki.messenger.RoutingActivity",
-  automationName: "UiAutomator2",
-  browserName: "",
+  appPackage: 'network.loki.messenger',
+  appActivity: 'network.loki.messenger.RoutingActivity',
+  automationName: 'UiAutomator2',
+  browserName: '',
   newCommandTimeout: 300000,
 };
 
-const emulator1Udid = "emulator-5554";
-const emulator2Udid = "emulator-5556";
-const emulator3Udid = "emulator-5558";
-const emulator4Udid = "emulator-5560";
+const emulator1Udid = 'emulator-5554';
+const emulator2Udid = 'emulator-5556';
+const emulator3Udid = 'emulator-5558';
+const emulator4Udid = 'emulator-5560';
 
 const capabilities1: DesiredCapabilities = {
   ...sharedCapabilities,
@@ -55,7 +55,7 @@ export const androidCapabilities = {
 const countOfAndroidCapabilities = capabilitiesList.length;
 
 export function getAndroidCapabilities(
-  capabilitiesIndex: CapabilitiesIndexType
+  capabilitiesIndex: CapabilitiesIndexType,
 ) {
   if (capabilitiesIndex >= countOfAndroidCapabilities) {
     throw new Error(`Asked invalid android cap index: ${capabilitiesIndex}`);

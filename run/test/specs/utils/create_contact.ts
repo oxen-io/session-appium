@@ -12,7 +12,7 @@ export const newContact = async (
   device1: PromiseWebdriver,
   user1: User,
   device2: PromiseWebdriver,
-  user2: User
+  user2: User,
 ) => {
   await sendNewMessage(device1, user2, 'howdy');
 
@@ -27,13 +27,13 @@ export const newContact = async (
   // Type into message input box
   await sendMessage(
     device2,
-    `Reply-message-${user2.userName}-to-${user1.userName}`
+    `Reply-message-${user2.userName}-to-${user1.userName}`,
   );
 
   // Verify config message states message request was accepted
   await findConfigurationMessage(
     device1,
-    'Your message request has been accepted.'
+    'Your message request has been accepted.',
   );
 
   console.warn(`${user1.userName} and ${user2.userName} are now contacts`);

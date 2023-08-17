@@ -9,7 +9,7 @@ import {
 export const replyToMessage = async (
   device: PromiseWebdriver,
   user: any,
-  selector: any
+  selector: any,
 ) => {
   // Reply to media message from user B
   // Long press on imageSent element

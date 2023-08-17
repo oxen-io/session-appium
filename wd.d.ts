@@ -74,7 +74,7 @@ declare namespace wd {
 
   const promiseChainRemote: (
     host: string,
-    port: number
+    port: number,
   ) => Promise<PromiseWebdriver>;
 
   // the type PromiseWebDriver is most likely correct and full
@@ -83,17 +83,17 @@ declare namespace wd {
 
     init(
       desired?: any,
-      cb?: (err: any, sessionID: any, capabilities: any) => void
+      cb?: (err: any, sessionID: any, capabilities: any) => void,
     ): PromiseWebdriver;
 
     sessions(cb?: (err: any, sessions: any) => void): PromiseWebdriver;
 
     altSessionCapabilities(
-      cb?: (err: any, capabilities: any) => void
+      cb?: (err: any, capabilities: any) => void,
     ): PromiseWebdriver;
 
     sessionCapabilities(
-      cb?: (err: any, capabilities: any) => void
+      cb?: (err: any, capabilities: any) => void,
     ): PromiseWebdriver;
 
     quit(cb?: (err: any) => void): PromiseWebdriver;
@@ -109,7 +109,7 @@ declare namespace wd {
     windowHandle(cb?: (err: any, handle: any) => void): PromiseWebdriver;
 
     windowHandles(
-      cb?: (err: any, arrayOfHandles: any) => void
+      cb?: (err: any, arrayOfHandles: any) => void,
     ): PromiseWebdriver;
 
     url(cb?: (err: any, url: any) => void): PromiseWebdriver;
@@ -125,7 +125,7 @@ declare namespace wd {
     execute(
       code?: any,
       args?: any,
-      cb?: (err: any, result: any) => void
+      cb?: (err: any, result: any) => void,
     ): PromiseWebdriver;
 
     execute(code?: any, cb?: (err: any, result: any) => void): PromiseWebdriver;
@@ -133,12 +133,12 @@ declare namespace wd {
     safeExecute(
       code?: any,
       args?: any,
-      cb?: (err: any, result: any) => void
+      cb?: (err: any, result: any) => void,
     ): PromiseWebdriver;
 
     safeExecute(
       code?: any,
-      cb?: (err: any, result: any) => void
+      cb?: (err: any, result: any) => void,
     ): PromiseWebdriver;
 
     eval(code?: any, cb?: (err: any, value: any) => void): PromiseWebdriver;
@@ -148,33 +148,33 @@ declare namespace wd {
     executeAsync(
       code?: any,
       args?: any,
-      cb?: (err: any, result: any) => void
+      cb?: (err: any, result: any) => void,
     ): PromiseWebdriver;
 
     executeAsync(
       code?: any,
-      cb?: (err: any, result: any) => void
+      cb?: (err: any, result: any) => void,
     ): PromiseWebdriver;
 
     safeExecuteAsync(
       code?: any,
       args?: any,
-      cb?: (err: any, result: any) => void
+      cb?: (err: any, result: any) => void,
     ): PromiseWebdriver;
 
     safeExecuteAsync(
       code?: any,
-      cb?: (err: any, result: any) => void
+      cb?: (err: any, result: any) => void,
     ): PromiseWebdriver;
 
     takeScreenshot(cb?: (err: any, screenshot: any) => void): PromiseWebdriver;
 
     availableIMEEngines(
-      cb?: (err: any, engines: any) => void
+      cb?: (err: any, engines: any) => void,
     ): PromiseWebdriver;
 
     activeIMEEngine(
-      cb?: (err: any, activeEngine: any) => void
+      cb?: (err: any, activeEngine: any) => void,
     ): PromiseWebdriver;
 
     activatedIMEEngine(cb?: (err: any, active: any) => void): PromiseWebdriver;
@@ -193,25 +193,25 @@ declare namespace wd {
       handle?: any,
       width?: any,
       height?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
 
     setWindowSize(
       width?: any,
       height?: any,
       handle?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
 
     setWindowSize(
       width?: any,
       height?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
 
     getWindowSize(
       handle?: any,
-      cb?: (err: any, size: any) => void
+      cb?: (err: any, size: any) => void,
     ): PromiseWebdriver;
 
     getWindowSize(cb?: (err: any, size: any) => void): PromiseWebdriver;
@@ -220,18 +220,18 @@ declare namespace wd {
       x?: any,
       y?: any,
       handle?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
 
     setWindowPosition(
       x?: any,
       y?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
 
     getWindowPosition(
       handle?: any,
-      cb?: (err: any, position: any) => void
+      cb?: (err: any, position: any) => void,
     ): PromiseWebdriver;
 
     getWindowPosition(cb?: (err: any, position: any) => void): PromiseWebdriver;
@@ -253,376 +253,376 @@ declare namespace wd {
     element(
       using?: any,
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseWebdriver;
 
     elementByClassName(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByCssSelector(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementById(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByName(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseWebdriver;
 
     elementByLinkText(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByPartialLinkText(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByTagName(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByXPath(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByCss(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByIosUIAutomation(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByIosClassChain(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByAndroidUIAutomator(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByAccessibilityId(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elements(
       using?: any,
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     elementsByClassName(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     elementsByCssSelector(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     elementsById(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     elementsByName(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     elementsByLinkText(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     elementsByPartialLinkText(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     elementsByTagName(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     elementsByXPath(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     elementsByCss(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     elementsByIosUIAutomation(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     elementsByIosClassChain(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseWebdriver;
 
     elementsByIosPredicateString(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     elementsByAndroidUIAutomator(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     elementsByAccessibilityId(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     elementOrNull(
       using?: any,
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseWebdriver;
 
     elementByClassNameOrNull(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByCssSelectorOrNull(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByIdOrNull(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByNameOrNull(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByLinkTextOrNull(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByPartialLinkTextOrNull(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByTagNameOrNull(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByXPathOrNull(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByCssOrNull(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByIosUIAutomationOrNull(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByIosClassChainOrNull(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByIosPredicateStringOrNull(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByAndroidUIAutomatorOrNull(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByAccessibilityIdOrNull(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementIfExists(
       using?: any,
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseWebdriver;
 
     elementByClassNameIfExists(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByCssSelectorIfExists(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByIdIfExists(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByNameIfExists(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByLinkTextIfExists(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByPartialLinkTextIfExists(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByTagNameIfExists(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByXPathIfExists(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByCssIfExists(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByIosUIAutomationIfExists(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByIosClassChainIfExists(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByIosPredicateStringIfExists(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByAndroidUIAutomatorIfExists(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByAccessibilityIdIfExists(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     hasElement(
       using?: any,
       value?: any,
-      cb?: (err: any, boolean: any) => void
+      cb?: (err: any, boolean: any) => void,
     ): PromiseWebdriver;
 
     hasElementByClassName(
       value?: any,
-      cb?: (err: any, boolean: any) => void
+      cb?: (err: any, boolean: any) => void,
     ): PromiseWebdriver;
 
     hasElementByCssSelector(
       value?: any,
-      cb?: (err: any, boolean: any) => void
+      cb?: (err: any, boolean: any) => void,
     ): PromiseWebdriver;
 
     hasElementById(
       value?: any,
-      cb?: (err: any, boolean: any) => void
+      cb?: (err: any, boolean: any) => void,
     ): PromiseWebdriver;
 
     hasElementByName(
       value?: any,
-      cb?: (err: any, boolean: any) => void
+      cb?: (err: any, boolean: any) => void,
     ): PromiseWebdriver;
 
     hasElementByLinkText(
       value?: any,
-      cb?: (err: any, boolean: any) => void
+      cb?: (err: any, boolean: any) => void,
     ): PromiseWebdriver;
 
     hasElementByPartialLinkText(
       value?: any,
-      cb?: (err: any, boolean: any) => void
+      cb?: (err: any, boolean: any) => void,
     ): PromiseWebdriver;
 
     hasElementByTagName(
       value?: any,
-      cb?: (err: any, boolean: any) => void
+      cb?: (err: any, boolean: any) => void,
     ): PromiseWebdriver;
 
     hasElementByXPath(
       value?: any,
-      cb?: (err: any, boolean: any) => void
+      cb?: (err: any, boolean: any) => void,
     ): PromiseWebdriver;
 
     hasElementByCss(
       value?: any,
-      cb?: (err: any, boolean: any) => void
+      cb?: (err: any, boolean: any) => void,
     ): PromiseWebdriver;
 
     hasElementByIosUIAutomation(
       value?: any,
-      cb?: (err: any, boolean: any) => void
+      cb?: (err: any, boolean: any) => void,
     ): PromiseWebdriver;
 
     hasElementByIosClassChain(
       value?: any,
-      cb?: (err: any, boolean: any) => void
+      cb?: (err: any, boolean: any) => void,
     ): PromiseWebdriver;
 
     hasElementByIosPredicateString(
       value?: any,
-      cb?: (err: any, boolean: any) => void
+      cb?: (err: any, boolean: any) => void,
     ): PromiseWebdriver;
 
     hasElementByAndroidUIAutomator(
       value?: any,
-      cb?: (err: any, boolean: any) => void
+      cb?: (err: any, boolean: any) => void,
     ): PromiseWebdriver;
 
     hasElementByAccessibilityId(
       value?: any,
-      cb?: (err: any, boolean: any) => void
+      cb?: (err: any, boolean: any) => void,
     ): PromiseWebdriver;
 
     active(cb?: (err: any, element: any) => void): PromiseWebdriver;
@@ -630,153 +630,153 @@ declare namespace wd {
     element(
       using?: any,
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseWebdriver;
 
     elementByClassName(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByCssSelector(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementById(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByName(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByLinkText(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByPartialLinkText(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByTagName(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByXPath(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByCss(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByIosUIAutomation(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByIosClassChain(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByIosPredicateString(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByAndroidUIAutomator(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elementByAccessibilityId(
       value?: any,
-      cb?: (err: any, element: any) => void
+      cb?: (err: any, element: any) => void,
     ): PromiseElement;
 
     elements(
       using?: any,
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     elementsByClassName(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     elementsByCssSelector(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseWebdriver;
 
     elementsById(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     elementsByName(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     elementsByLinkText(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     elementsByPartialLinkText(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     elementsByTagName(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     elementsByXPath(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     elementsByCss(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     elementsByIosUIAUtomation(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     elementsByIosClassChain(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     elementsByIosPredicateString(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     elementsByAndroidUIAutomator(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseWebdriver;
 
     elementsByAccessibilityId(
       value?: any,
-      cb?: (err: any, elements: any) => void
+      cb?: (err: any, elements: any) => void,
     ): PromiseElementArray;
 
     clickElement(element?: any, cb?: (err: any) => void): PromiseWebdriver;
@@ -794,12 +794,12 @@ declare namespace wd {
     textPresent(
       searchText?: any,
       element?: any,
-      cb?: (err: any, boolean: any) => void
+      cb?: (err: any, boolean: any) => void,
     ): PromiseWebdriver;
 
     textPresent(
       searchText?: any,
-      cb?: (err: any, boolean: any) => void
+      cb?: (err: any, boolean: any) => void,
     ): PromiseWebdriver;
 
     type(element?: any, keys?: any, cb?: (err: any) => void): PromiseWebdriver;
@@ -812,7 +812,7 @@ declare namespace wd {
 
     getTagName(
       element?: any,
-      cb?: (err: any, name: any) => void
+      cb?: (err: any, name: any) => void,
     ): PromiseWebdriver;
 
     getTagName(cb?: (err: any, name: any) => void): PromiseWebdriver;
@@ -823,14 +823,14 @@ declare namespace wd {
 
     isSelected(
       element?: any,
-      cb?: (err: any, selected: any) => void
+      cb?: (err: any, selected: any) => void,
     ): PromiseWebdriver;
 
     isSelected(cb?: (err: any, selected: any) => void): PromiseWebdriver;
 
     isEnabled(
       element?: any,
-      cb?: (err: any, enabled: any) => void
+      cb?: (err: any, enabled: any) => void,
     ): PromiseWebdriver;
 
     isEnabled(cb?: (err: any, enabled: any) => void): PromiseWebdriver;
@@ -838,17 +838,17 @@ declare namespace wd {
     getAttribute(
       element?: any,
       attrName?: any,
-      cb?: (err: any, value: any) => void
+      cb?: (err: any, value: any) => void,
     ): PromiseWebdriver;
 
     getAttribute(
       attrName?: any,
-      cb?: (err: any, value: any) => void
+      cb?: (err: any, value: any) => void,
     ): PromiseWebdriver;
 
     getValue(
       element?: any,
-      cb?: (err: any, value: any) => void
+      cb?: (err: any, value: any) => void,
     ): PromiseWebdriver;
 
     getValue(cb?: (err: any, value: any) => void): PromiseWebdriver;
@@ -858,19 +858,19 @@ declare namespace wd {
     equalsElement(
       element?: any,
       other?: any,
-      cb?: (err: any, value: any) => void
+      cb?: (err: any, value: any) => void,
     ): PromiseWebdriver;
 
     isDisplayed(
       element?: any,
-      cb?: (err: any, displayed: any) => void
+      cb?: (err: any, displayed: any) => void,
     ): PromiseWebdriver;
 
     isDisplayed(cb?: (err: any, displayed: any) => void): PromiseWebdriver;
 
     getLocation(
       element?: any,
-      cb?: (err: any, location: any) => void
+      cb?: (err: any, location: any) => void,
     ): PromiseWebdriver;
 
     getLocation(cb?: (err: any, location: any) => void): PromiseWebdriver;
@@ -879,12 +879,12 @@ declare namespace wd {
 
     getLocationInView(
       element?: any,
-      cb?: (err: any, location: any) => void
+      cb?: (err: any, location: any) => void,
     ): PromiseWebdriver;
 
     getSize(
       element?: any,
-      cb?: (err: any, size: any) => void
+      cb?: (err: any, size: any) => void,
     ): PromiseWebdriver;
 
     getSize(cb?: (err: any, size: any) => void): PromiseWebdriver;
@@ -892,12 +892,12 @@ declare namespace wd {
     getComputedCss(
       element?: any,
       cssProperty?: any,
-      cb?: (err: any, value: any) => void
+      cb?: (err: any, value: any) => void,
     ): PromiseWebdriver;
 
     getComputedCss(
       cssProperty?: any,
-      cb?: (err: any, value: any) => void
+      cb?: (err: any, value: any) => void,
     ): PromiseWebdriver;
 
     getOrientation(cb?: (err: any, orientation: any) => void): PromiseWebdriver;
@@ -916,13 +916,13 @@ declare namespace wd {
       element?: any,
       xoffset?: any,
       yoffset?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
 
     moveTo(
       xoffset?: any,
       yoffset?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
 
     click(button?: any, cb?: (err: any) => void): PromiseWebdriver;
@@ -943,7 +943,7 @@ declare namespace wd {
       xSpeed?: any,
       ySpeed?: any,
       swipe?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
 
     flick(
@@ -951,31 +951,31 @@ declare namespace wd {
       xoffset?: any,
       yoffset?: any,
       speed?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
 
     flick(
       xoffset?: any,
       yoffset?: any,
       speed?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
 
     getGeoLocation(
-      cb?: (err: any, geoLocationObj: any) => void
+      cb?: (err: any, geoLocationObj: any) => void,
     ): PromiseWebdriver;
 
     setGeoLocation(
       lat?: any,
       lon?: any,
       alt?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
 
     setLocalStorageKey(
       key?: any,
       value?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
 
     clearLocalStorage(cb?: (err: any) => void): PromiseWebdriver;
@@ -986,7 +986,7 @@ declare namespace wd {
 
     log(
       logType?: any,
-      cb?: (err: any, arrayOfLogs: any) => void
+      cb?: (err: any, arrayOfLogs: any) => void,
     ): PromiseWebdriver;
 
     logTypes(cb?: (err: any, arrayOfLogTypes: any) => void): PromiseWebdriver;
@@ -995,7 +995,7 @@ declare namespace wd {
 
     context(
       contextRef?: any,
-      cb?: (err: any, context: any) => void
+      cb?: (err: any, context: any) => void,
     ): PromiseWebdriver;
 
     contexts(cb?: (err: any, handle: any) => void): PromiseWebdriver;
@@ -1023,31 +1023,31 @@ declare namespace wd {
     deviceKeyEvent(
       keycode?: any,
       metastate?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
 
     pressDeviceKey(
       keycode?: any,
       metastate?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
 
     pressKeycode(
       keycode?: any,
       metastate?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
 
     longPressKeycode(
       keycode?: any,
       metastate?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
 
     rotateDevice(
       element?: any,
       opts?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
 
     rotateDevice(opts?: any, cb?: (err: any) => void): PromiseWebdriver;
@@ -1055,7 +1055,7 @@ declare namespace wd {
     rotate(
       element?: any,
       opts?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
 
     rotate(opts?: any, cb?: (err: any) => void): PromiseWebdriver;
@@ -1070,7 +1070,7 @@ declare namespace wd {
 
     installAppOnDevice(
       appPath?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
 
     installApp(appPath?: any, cb?: (err: any) => void): PromiseWebdriver;
@@ -1081,44 +1081,44 @@ declare namespace wd {
 
     isAppInstalledOnDevice(
       bundleId?: any,
-      cb?: (isInstalled: any, err: any) => void
+      cb?: (isInstalled: any, err: any) => void,
     ): PromiseWebdriver;
 
     isAppInstalled(
       bundleId?: any,
-      cb?: (isInstalled: any, err: any) => void
+      cb?: (isInstalled: any, err: any) => void,
     ): PromiseWebdriver;
 
     pushFileToDevice(
       pathOnDevice?: any,
       base64Data?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
 
     pushFile(
       pathOnDevice?: any,
       base64Data?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
 
     pullFileFromDevice(
       pathOnDevice?: any,
-      cb?: (base64EncodedData: any, err: any) => void
+      cb?: (base64EncodedData: any, err: any) => void,
     ): PromiseWebdriver;
 
     pullFile(
       pathOnDevice?: any,
-      cb?: (base64EncodedData: any, err: any) => void
+      cb?: (base64EncodedData: any, err: any) => void,
     ): PromiseWebdriver;
 
     pullFolderFromDevice(
       pathOnDevice?: any,
-      cb?: (base64EncodedData: any, err: any) => void
+      cb?: (base64EncodedData: any, err: any) => void,
     ): PromiseWebdriver;
 
     pullFolder(
       pathOnDevice?: any,
-      cb?: (base64EncodedData: any, err: any) => void
+      cb?: (base64EncodedData: any, err: any) => void,
     ): PromiseWebdriver;
 
     toggleAirplaneModeOnDevice(cb?: (err: any) => void): PromiseWebdriver;
@@ -1146,7 +1146,7 @@ declare namespace wd {
     setClipboard(
       content?: any,
       contentType?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
 
     launchApp(cb?: (err: any) => void): PromiseWebdriver;
@@ -1159,12 +1159,12 @@ declare namespace wd {
 
     endTestCoverageForApp(
       intentToBroadcast?: any,
-      pathOnDevice?: any
+      pathOnDevice?: any,
     ): PromiseWebdriver;
 
     endTestCoverage(
       intentToBroadcast?: any,
-      pathOnDevice?: any
+      pathOnDevice?: any,
     ): PromiseWebdriver;
 
     endCoverage(intentToBroadcast?: any, pathOnDevice?: any): PromiseWebdriver;
@@ -1178,24 +1178,24 @@ declare namespace wd {
     setImmediateValueInApp(
       element?: any,
       value?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
 
     setImmediateValue(
       element?: any,
       value?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
 
     setImmediateValueInApp(
       value?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
 
     setImmediateValue(value?: any, cb?: (err: any) => void): PromiseWebdriver;
 
     getNetworkConnection(
-      cb?: (err: any, networkConnectionInfo: any) => void
+      cb?: (err: any, networkConnectionInfo: any) => void,
     ): PromiseWebdriver;
 
     setNetworkConnection(type?: any, cb?: (err: any) => void): PromiseWebdriver;
@@ -1214,7 +1214,7 @@ declare namespace wd {
       packageName?: any,
       dataType?: any,
       dataReadTimeout?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
 
     touchId(cb?: (err: any) => void): PromiseWebdriver;
@@ -1239,7 +1239,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, return_value: any) => void
+      cb?: (err: any, return_value: any) => void,
     ): PromiseWebdriver;
 
     waitFor(opts?: any, cb?: (err: any) => void): PromiseWebdriver;
@@ -1250,7 +1250,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, el: any) => void
+      cb?: (err: any, el: any) => void,
     ): PromiseWebdriver;
 
     waitForElement(
@@ -1258,14 +1258,14 @@ declare namespace wd {
       value?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, el: any) => void
+      cb?: (err: any, el: any) => void,
     ): PromiseWebdriver;
 
     waitForElement(
       using?: any,
       value?: any,
       opts?: any,
-      cb?: (err: any, el: any) => void
+      cb?: (err: any, el: any) => void,
     ): PromiseWebdriver;
 
     waitForElements(
@@ -1274,7 +1274,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, els: any) => void
+      cb?: (err: any, els: any) => void,
     ): PromiseWebdriver;
 
     waitForElements(
@@ -1282,19 +1282,19 @@ declare namespace wd {
       value?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, els: any) => void
+      cb?: (err: any, els: any) => void,
     ): PromiseWebdriver;
 
     waitForElements(
       using?: any,
       value?: any,
       opts?: any,
-      cb?: (err: any, els: any) => void
+      cb?: (err: any, els: any) => void,
     ): PromiseWebdriver;
 
     saveScreenshot(
       path?: any,
-      cb?: (err: any, filePath: any) => void
+      cb?: (err: any, filePath: any) => void,
     ): PromiseWebdriver;
 
     waitForElementByClassName(
@@ -1302,7 +1302,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, el: any) => void
+      cb?: (err: any, el: any) => void,
     ): PromiseWebdriver;
 
     waitForElementByCssSelector(
@@ -1310,7 +1310,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, el: any) => void
+      cb?: (err: any, el: any) => void,
     ): PromiseWebdriver;
 
     waitForElementById(
@@ -1318,7 +1318,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, el: any) => void
+      cb?: (err: any, el: any) => void,
     ): PromiseWebdriver;
 
     waitForElementByName(
@@ -1326,7 +1326,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, el: any) => void
+      cb?: (err: any, el: any) => void,
     ): PromiseWebdriver;
 
     waitForElementByLinkText(
@@ -1334,7 +1334,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, el: any) => void
+      cb?: (err: any, el: any) => void,
     ): PromiseWebdriver;
 
     waitForElementByPartialLinkText(
@@ -1342,7 +1342,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, el: any) => void
+      cb?: (err: any, el: any) => void,
     ): PromiseWebdriver;
 
     waitForElementByTagName(
@@ -1350,7 +1350,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, el: any) => void
+      cb?: (err: any, el: any) => void,
     ): PromiseWebdriver;
 
     waitForElementByXPath(
@@ -1358,7 +1358,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, el: any) => void
+      cb?: (err: any, el: any) => void,
     ): PromiseWebdriver;
 
     waitForElementByCss(
@@ -1366,7 +1366,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, el: any) => void
+      cb?: (err: any, el: any) => void,
     ): PromiseWebdriver;
 
     waitForElementByIosUIAutomation(
@@ -1374,7 +1374,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, el: any) => void
+      cb?: (err: any, el: any) => void,
     ): PromiseWebdriver;
 
     waitForElementByIosClassChain(
@@ -1382,7 +1382,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, el: any) => void
+      cb?: (err: any, el: any) => void,
     ): PromiseWebdriver;
 
     waitForElementByAndroidUIAutomator(
@@ -1390,7 +1390,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, el: any) => void
+      cb?: (err: any, el: any) => void,
     ): PromiseWebdriver;
 
     waitForElementByAccessibilityId(
@@ -1398,7 +1398,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, el: any) => void
+      cb?: (err: any, el: any) => void,
     ): PromiseWebdriver;
 
     waitForElementsByClassName(
@@ -1406,7 +1406,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, els: any) => void
+      cb?: (err: any, els: any) => void,
     ): PromiseWebdriver;
 
     waitForElementsByCssSelector(
@@ -1414,7 +1414,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, els: any) => void
+      cb?: (err: any, els: any) => void,
     ): PromiseWebdriver;
 
     waitForElementsById(
@@ -1422,7 +1422,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, els: any) => void
+      cb?: (err: any, els: any) => void,
     ): PromiseWebdriver;
 
     waitForElementsByName(
@@ -1430,7 +1430,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, els: any) => void
+      cb?: (err: any, els: any) => void,
     ): PromiseWebdriver;
 
     waitForElementsByLinkText(
@@ -1438,7 +1438,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, els: any) => void
+      cb?: (err: any, els: any) => void,
     ): PromiseWebdriver;
 
     waitForElementsByPartialLinkText(
@@ -1446,7 +1446,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, els: any) => void
+      cb?: (err: any, els: any) => void,
     ): PromiseWebdriver;
 
     waitForElementsByTagName(
@@ -1454,7 +1454,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, els: any) => void
+      cb?: (err: any, els: any) => void,
     ): PromiseWebdriver;
 
     waitForElementsByXPath(
@@ -1462,7 +1462,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, els: any) => void
+      cb?: (err: any, els: any) => void,
     ): PromiseWebdriver;
 
     waitForElementsByCss(
@@ -1470,7 +1470,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, els: any) => void
+      cb?: (err: any, els: any) => void,
     ): PromiseWebdriver;
 
     waitForElementsByIosUIAutomation(
@@ -1478,7 +1478,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, el: any) => void
+      cb?: (err: any, el: any) => void,
     ): PromiseWebdriver;
 
     waitForElementsByIosClassChain(
@@ -1486,7 +1486,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, el: any) => void
+      cb?: (err: any, el: any) => void,
     ): PromiseWebdriver;
 
     waitForElementsByAndroidUIAutomator(
@@ -1494,7 +1494,7 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, el: any) => void
+      cb?: (err: any, el: any) => void,
     ): PromiseWebdriver;
 
     waitForElementsByAccessibilityId(
@@ -1502,24 +1502,24 @@ declare namespace wd {
       asserter?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, el: any) => void
+      cb?: (err: any, el: any) => void,
     ): PromiseWebdriver;
 
     getPageIndex(
       element?: any,
-      cb?: (err: any, pageIndex: any) => void
+      cb?: (err: any, pageIndex: any) => void,
     ): PromiseWebdriver;
 
     uploadFile(
       filepath?: any,
-      cb?: (err: any, filepath: any) => void
+      cb?: (err: any, filepath: any) => void,
     ): PromiseWebdriver;
 
     waitForConditionInBrowser(
       conditionExpr?: any,
       timeout?: any,
       pollFreq?: any,
-      cb?: (err: any, boolean: any) => void
+      cb?: (err: any, boolean: any) => void,
     ): PromiseWebdriver;
 
     sauceJobUpdate(jsonData?: any, cb?: (err: any) => void): PromiseWebdriver;
@@ -1568,13 +1568,13 @@ declare namespace wd {
 
     updateSettings(
       settingsObject?: any,
-      cb?: (err: any) => void
+      cb?: (err: any) => void,
     ): PromiseWebdriver;
   }
 
   const VERSION: string;
 }
 
-declare module "wd" {
+declare module 'wd' {
   export = wd;
 }

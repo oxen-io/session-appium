@@ -1,1 +1,1 @@
-declare module "appium";
+declare module 'appium';

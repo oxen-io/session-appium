@@ -11,7 +11,7 @@ export const createGroup = async (
   userB: User,
   device3: PromiseWebdriver,
   userC: User,
-  groupName: string
+  groupName: string,
 ) => {
   const message = 'User A to group';
   // Create contact between User A and User B

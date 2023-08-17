@@ -7,7 +7,7 @@ export const linkedDevice = async (
   device1: PromiseWebdriver,
   device2: PromiseWebdriver,
   userName: string,
-  platform: SupportedPlatformsType
+  platform: SupportedPlatformsType,
 ) => {
   const user = await newUser(device1, userName, platform);
   // Log in with recovery seed on device 2

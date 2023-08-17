@@ -1,14 +1,14 @@
-import { DesiredCapabilities } from "@wdio/types/build/Capabilities";
+import { DesiredCapabilities } from '@wdio/types/build/Capabilities';
 
 const iosAppFullPath = `/Users/emilyburton/Desktop/Session.app`;
 
 let sharediOSCapabilities: DesiredCapabilities = {
-  platformName: "iOS",
-  platformVersion: "16.1",
-  deviceName: "iPhone 13 Pro Max",
-  automationName: "XCUITest",
+  platformName: 'iOS',
+  platformVersion: '16.1',
+  deviceName: 'iPhone 13 Pro Max',
+  automationName: 'XCUITest',
   app: iosAppFullPath,
-  bundleId: "com.loki-project.loki-messenger",
+  bundleId: 'com.loki-project.loki-messenger',
   autoAcceptAlerts: true,
   newCommandTimeout: 30000,
   useNewWDA: true,
@@ -22,28 +22,28 @@ function getIOSSimulatorUUIDFromEnv(index: CapabilitiesIndexType): string {
         return process.env.IOS_FIRST_SIMULATOR;
       }
       throw new Error(
-        `getSimulatorUUIDFromEnv process.env.IOS_FIRST_SIMULATOR is not set`
+        `getSimulatorUUIDFromEnv process.env.IOS_FIRST_SIMULATOR is not set`,
       );
     case 1:
       if (process.env.IOS_SECOND_SIMULATOR) {
         return process.env.IOS_SECOND_SIMULATOR;
       }
       throw new Error(
-        `getSimulatorUUIDFromEnv process.env.IOS_SECOND_SIMULATOR is not set`
+        `getSimulatorUUIDFromEnv process.env.IOS_SECOND_SIMULATOR is not set`,
       );
     case 2:
       if (process.env.IOS_THIRD_SIMULATOR) {
         return process.env.IOS_THIRD_SIMULATOR;
       }
       throw new Error(
-        `getSimulatorUUIDFromEnv process.env.IOS_THIRD_SIMULATOR is not set`
+        `getSimulatorUUIDFromEnv process.env.IOS_THIRD_SIMULATOR is not set`,
       );
     case 3:
       if (process.env.IOS_FOURTH_SIMULATOR) {
         return process.env.IOS_FOURTH_SIMULATOR;
       }
       throw new Error(
-        `getSimulatorUUIDFromEnv process.env.IOS_THIRD_SIMULATOR is not set`
+        `getSimulatorUUIDFromEnv process.env.IOS_THIRD_SIMULATOR is not set`,
       );
     default:
       throw new Error(`getSimulatorUUIDFromEnv unknown index: ${index}`);
