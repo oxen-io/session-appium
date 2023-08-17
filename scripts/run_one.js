@@ -3,6 +3,6 @@ const testStringToRun = process.argv[3];
 
 const { execSync } = require('child_process');
 
-execSync(`npm run test-one "${testStringToRun} ${testPlatformToRun}"`, {
+execSync(`yarn test-one "${testStringToRun} ${testPlatformToRun}"`, {
   stdio: 'inherit',
 });

@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "tsc": "npm run clean-tsc && tsc",
+    "tsc": "yarn clean-tsc && tsc",
     "clean-tsc": "find run/test/specs -type f -name '*.js' -delete",
     "tsc-watch": "tsc -w",
     "test": "_TESTING=1 mocha --timeout 300000 --retries 2 --jobs 1 ./run/test/specs/*.spec.js ",
@@ -9,7 +9,8 @@
     "test-one-ios": "node ./scripts/run_one.js ios",
     "test-ios": "_TESTING=1 mocha --timeout 300000 -retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep ios",
     "test-android": "_TESTING=1 mocha --timeout 300000 -retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep android",
-    "build-and-test": "npm run tsc && npm run test",
+    "build-and-test": "yarn tsc && yarn test",
+    "lint": "yarn prettier . --write",
     "test-testing": "npx mocha --timeout 30000 --jobs 1 ./run/test/specs/experiment.spec.js"
   },
   "devDependencies": {
