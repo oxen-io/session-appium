@@ -316,7 +316,7 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
     selector: "Mentions list",
   });
   // Select User B
-  await device1.selectByText("Contact mentions", userB.userName);
+  await device1.selectByText("Contact", userB.userName);
   await device1.clickOnElement("Send message button");
   await device1.waitForElementToBePresent({
     strategy: "accessibility id",
@@ -333,7 +333,7 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
     selector: "Mentions list",
   });
   // Select User B
-  await device1.selectByText("Contact mentions", userC.userName);
+  await device1.selectByText("Contact", userC.userName);
   await device1.clickOnElement("Send message button");
   await device1.waitForElementToBePresent({
     strategy: "accessibility id",

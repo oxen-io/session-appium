@@ -256,7 +256,7 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
   await sleepFor(100);
   await device.clickOnElement(`Photo, May 01, 1998, 7:00 AM`);
   await device.clickOnElement("Done");
-  await device.clickOnElement("Upload");
+  await device.clickOnElement("Save");
   // Take screenshot
   const el = await device.waitForElementToBePresent({
     strategy: "accessibility id",
