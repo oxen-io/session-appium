@@ -254,10 +254,9 @@ export const closeApp = async (
   device3?: DeviceWrapper,
   device4?: DeviceWrapper
 ) => {
-  await device1?.deleteSession();
-  await device2?.deleteSession();
-  await device3?.deleteSession();
-  await device4?.deleteSession();
+  await Promise.all(
+    compact([device1, device2, device3, device4]).map((d) => d.deleteSession())
+  );
 
-  console.info("sessions closed");
+  console.info('sessions closed');
 };
