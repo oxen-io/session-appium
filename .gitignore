@@ -19,11 +19,5 @@ chromeDriver
 
 run/**/*.js
 *.js.map
-<<<<<<< Updated upstream
 run/test/specs/to do 
 
-=======
-
-to do
-.vscode/
->>>>>>> Stashed changes
