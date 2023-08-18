@@ -458,29 +458,35 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return text;
   }
 
-  public async deleteTextAndroid(accessibilityId: AccessibilityId) {
+  public async deleteText(accessibilityId: AccessibilityId) {
     const el = await this.findElementByAccessibilityId(accessibilityId);
     await this.longClick(el, 200);
-
+    if (this.isIOS()) {
+      await this.clickOnElementByText({
+        strategy: "id",
+        selector: "Select All",
+        text: "Select All",
+      });
+    }
     await this.clear(el.ELEMENT);
 
     console.warn(`Text has been cleared ` + accessibilityId);
     return;
   }
-  public async deleteTextIos(accessibilityId: AccessibilityId) {
-    const el = await this.findElementByAccessibilityId(accessibilityId);
-    await this.longClick(el, 200);
-    await this.clickOnElementByText({
-      strategy: "id",
-      selector: "Select All",
-      text: "Select All",
-    });
+  // public async deleteTextIos(accessibilityId: AccessibilityId) {
+  //   const el = await this.findElementByAccessibilityId(accessibilityId);
+  //   await this.longClick(el, 200);
+  //   await this.clickOnElementByText({
+  //     strategy: "id",
+  //     selector: "Select All",
+  //     text: "Select All",
+  //   });
 
-    await this.clear(el.ELEMENT);
+  //   await this.clear(el.ELEMENT);
 
-    console.warn(`Text has been cleared ` + accessibilityId);
-    return;
-  }
+  //   console.warn(`Text has been cleared ` + accessibilityId);
+  //   return;
+  // }
 
   // ELEMENT LOCATORS
 
@@ -740,7 +746,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     args: { maxWait?: number } & StrategyExtractionObj
   ) {
     const { strategy, selector, maxWait } = args;
-    const maxWaitMSec: number = maxWait ?? 6000;
+    const maxWaitMSec: number = maxWait ?? 8000;
     let currentWait = 0;
     const waitPerLoop = 100;
     let el: AppiumNextElementType | null = null;
@@ -809,6 +815,24 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return el;
   }
 
+  public async waitForLoadingAnimation() {
+    let loadingAnimation: AppiumNextElementType | null = null;
+
+    do {
+      try {
+        loadingAnimation = await this.waitForElementToBePresent({
+          strategy: "id",
+          selector: "network.loki.messenger:id/thumbnail_load_indicator",
+        });
+        await sleepFor(100);
+        console.info("loading-animation was found, waiting for it to be gone");
+      } catch (e: any) {
+        console.log("Loading animation not found");
+      }
+    } while (loadingAnimation);
+    console.info("Loading animation has finished");
+  }
+
   // UTILITY FUNCTIONS
 
   public async sendMessage(message: string) {
@@ -870,16 +894,15 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async sendMessageTo(sender: User, receiver: User | Group) {
-    const message = `'${sender.userName}' to ${receiver.userName}`;
+    const message = `${sender.userName} to ${receiver.userName}`;
     await this.waitForTextElementToBePresent({
       strategy: "accessibility id",
       selector: "Conversation list item",
       text: receiver.userName,
     });
+    await sleepFor(100);
     await this.selectByText("Conversation list item", receiver.userName);
-    console.log(
-      `'${sender.userName}' + " sent message to ${receiver.userName}`
-    );
+    console.log(`${sender.userName} + " sent message to ${receiver.userName}`);
     await this.sendMessage(message);
     // wait for message to be received before moving on
     await this.waitForTextElementToBePresent({
