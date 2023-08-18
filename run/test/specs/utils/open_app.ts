@@ -18,6 +18,7 @@ import {
   getEmulatorFullPath,
 } from "./binaries";
 import { sleepFor } from "./sleep_for";
+import { compact } from "lodash";
 
 const APPIUM_PORT = 4728;
 export const APPIUM_IOS_PORT = 8100;
@@ -101,19 +102,17 @@ export const openAppFourDevices = async (
 };
 
 async function createAndroidEmulator(emulatorName: string) {
-  const createCmd = `echo "no" | ${getAvdManagerFullPath()} create avd --name ${emulatorName} -k 'system-images;android-31;google_apis;arm64-v8a' --force --skin pixel_5`
-  console.warn(createCmd)
-  await runScriptAndLog(
-    createCmd
-  );
+  const createCmd = `echo "no" | ${getAvdManagerFullPath()} create avd --name ${emulatorName} -k 'system-images;android-31;google_apis;arm64-v8a' --force --skin pixel_5`;
+  console.warn(createCmd);
+  await runScriptAndLog(createCmd);
   return emulatorName;
 }
 
 async function startAndroidEmulator(emulatorName: string) {
   await runScriptAndLog(`echo "hw.lcd.density=440" >> ~/.android/avd/${emulatorName}.avd/config.ini
-  `)
-  const startEmulatorCmd =  `${getEmulatorFullPath()} @${emulatorName} -no-snapshot`;
-  console.warn(`${startEmulatorCmd} & ; disown`)
+  `);
+  const startEmulatorCmd = `${getEmulatorFullPath()} @${emulatorName} -no-snapshot`;
+  console.warn(`${startEmulatorCmd} & ; disown`);
   await runScriptAndLog(
     startEmulatorCmd // -netdelay none -no-snapshot -wipe-data
   );
@@ -121,11 +120,14 @@ async function startAndroidEmulator(emulatorName: string) {
 
 async function isEmulatorRunning(emulatorName: string) {
   const failedWith = await runScriptAndLog(
-    `${getAdbFullPath()} -s ${emulatorName} get-state;`, true
+    `${getAdbFullPath()} -s ${emulatorName} get-state;`,
+    true
   );
 
-  return    !failedWith ||
-    !(failedWith.includes("error") || failedWith.includes("offline"));
+  return (
+    !failedWith ||
+    !(failedWith.includes("error") || failedWith.includes("offline"))
+  );
 }
 
 async function waitForEmulatorToBeRunning(emulatorName: string) {
@@ -133,7 +135,7 @@ async function waitForEmulatorToBeRunning(emulatorName: string) {
   let found = false;
 
   do {
-    found = await isEmulatorRunning(emulatorName)
+    found = await isEmulatorRunning(emulatorName);
     await sleepFor(500);
   } while (Date.now() - start < 25000 && !found);
 
@@ -165,8 +167,8 @@ const openAndroidApp = async (
   const targetName = getAndroidUdid(capabilitiesIndex);
 
   const emulatorAlreadyRunning = await isEmulatorRunning(targetName);
-  console.warn('emulatorAlreadyRunning', targetName, emulatorAlreadyRunning)
-  if(!emulatorAlreadyRunning) {
+  console.warn("emulatorAlreadyRunning", targetName, emulatorAlreadyRunning);
+  if (!emulatorAlreadyRunning) {
     await createAndroidEmulator(targetName);
     void startAndroidEmulator(targetName);
   }
@@ -189,11 +191,9 @@ const openAndroidApp = async (
   const wrappedDevice = new DeviceWrapper(device);
 
   await runScriptAndLog(`adb -s ${targetName} shell settings put global heads_up_notifications_enabled 0
-  `)
+  `);
 
-  await wrappedDevice.createSession(
-    getAndroidCapabilities(capabilitiesIndex)
-  );
+  await wrappedDevice.createSession(getAndroidCapabilities(capabilitiesIndex));
   // this is required to make PopupWindow show up from the Android SDK
   // this `any` was approved by Audric
   await (device as any).updateSettings({
@@ -254,10 +254,9 @@ export const closeApp = async (
   device3?: DeviceWrapper,
   device4?: DeviceWrapper
 ) => {
-  await device1?.deleteSession();
-  await device2?.deleteSession();
-  await device3?.deleteSession();
-  await device4?.deleteSession();
+  await Promise.all(
+    compact([device1, device2, device3, device4]).map((d) => d.deleteSession())
+  );
 
   console.info("sessions closed");
 };
