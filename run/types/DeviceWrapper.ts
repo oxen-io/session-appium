@@ -383,7 +383,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
         `longPress: Could not find accessibilityId: ${accessibilityId}`
       );
     }
-    await this.longClick(el, 1000);
+    await this.longClick(el, 2000);
   }
 
   public async longPressMessage(textToLookFor: string) {
@@ -460,7 +460,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async deleteText(accessibilityId: AccessibilityId) {
     const el = await this.findElementByAccessibilityId(accessibilityId);
-    await this.longClick(el, 200);
+    await this.longClick(el, 500);
     if (this.isIOS()) {
       await this.clickOnElementByText({
         strategy: "id",
