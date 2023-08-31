@@ -13,6 +13,15 @@ export type Group = {
 
 export type Strategy = "accessibility id" | "xpath" | "id" | "class name";
 
+export type ConversationType = "1o1" | "Group" | "Community" | "Note to Self";
+
+export type DMTimeOption =
+  | "Ten seconds"
+  | "Twelve hours"
+  | "One day"
+  | "One week"
+  | "Two weeks";
+
 export type AccessibilityId =
   | "Create session ID"
   | "Session ID"

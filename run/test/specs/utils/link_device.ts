@@ -1,6 +1,6 @@
 import { newUser } from "./create_account";
 import { SupportedPlatformsType } from "./open_app";
-import { sleepFor,  runOnlyOnIOS, runOnlyOnAndroid } from ".";
+import { sleepFor, runOnlyOnIOS, runOnlyOnAndroid } from ".";
 
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 
@@ -8,7 +8,7 @@ export const linkedDevice = async (
   device1: DeviceWrapper,
   device2: DeviceWrapper,
   userName: string,
-  platform: SupportedPlatformsType,
+  platform: SupportedPlatformsType
 ) => {
   const user = await newUser(device1, userName, platform);
   // Log in with recovery seed on device 2
@@ -22,22 +22,8 @@ export const linkedDevice = async (
   );
   await sleepFor(1000);
   // Continue with recovery phrase
-  await runOnlyOnAndroid(platform, () => device2.clickOnElement('Link Device'))
+  await runOnlyOnAndroid(platform, () => device2.clickOnElement("Link Device"));
   await runOnlyOnIOS(platform, () => device2.clickOnElement("Continue"));
-
-  // TODO DELETE THIS AFTER ANDROID USER CONFIG ****************************
-  // if (!noDisplayName) {
-  //   await sleepFor(10000);
-  //   await device2.clickOnElementById(
-  //     "network.loki.messenger:id/snackbar_action"
-  //   );
-  //   await device2.inputText(
-  //     "accessibility id",
-  //     "Enter display name",
-  //     user.userName
-  //   );
-  //   await device2.clickOnElement("Continue");
-  // }
   // Wait for any notifications to disappear
   await device2.waitForElementToBePresent(
     "accessibility id",

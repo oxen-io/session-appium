@@ -3,9 +3,13 @@ import { isArray, isEmpty } from "lodash";
 import { AppiumNextElementType } from "../../appium_next";
 import { sleepFor } from "../test/specs/utils";
 import { SupportedPlatformsType } from "../test/specs/utils/open_app";
-import { isDeviceAndroid, isDeviceIOS } from "../test/specs/utils/utilities";
+import {
+  isDeviceAndroid,
+  isDeviceIOS,
+  runScriptAndLog,
+} from "../test/specs/utils/utilities";
 import { AccessibilityId, Group, Strategy, User } from "./testing";
-
+import { clickOnXAndYCoordinates } from "../test/specs/utils";
 export type Coordinates = {
   x: number;
   y: number;
@@ -339,8 +343,16 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async clickOnTextElementById(id: string, textToLookFor: string) {
     const el = await this.findTextElementArrayById(id, textToLookFor);
-    await this.waitForTextElementToBePresent("id", id, textToLookFor)
+    await this.waitForTextElementToBePresent("id", id, textToLookFor);
     await this.click(el.ELEMENT);
+  }
+
+  public async clickOnXAndYCoordinates(
+    xCoOrdinates: number,
+    yCoOrdinates: number
+  ) {
+    await this.pressCoordinates(xCoOrdinates, yCoOrdinates);
+    console.log(`Tapped coordinates ${xCoOrdinates}, ${yCoOrdinates}`);
   }
 
   public async tapOnElement(accessibilityId: AccessibilityId) {
@@ -695,7 +707,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
         throw e;
       }
     }
-    console.log(accessibilityId, ": ",text, "is not visible, congratulations");
+    console.log(accessibilityId, ": ", text, "is not visible, congratulations");
   }
   // WAIT FOR FUNCTIONS
 
@@ -754,7 +766,6 @@ export class DeviceWrapper implements SharedDeviceInterface {
         const els = await this.findElements(strategy, selector);
 
         el = await this.findMatchingTextInElementArray(els, text);
-        
       } catch (e: any) {
         console.warn("waitForTextElementToBePresent threw: ", e.message);
       }
@@ -872,6 +883,42 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.setValueImmediate(text, element.ELEMENT);
   }
 
+  public async sendImageIos() {
+    const ronSwansonBirthday = "196705060700.00";
+    const testMessage = "Ron Swanson doesn't like birthdays";
+    await this.clickOnElement("Attachments button");
+    await sleepFor(100);
+    await this.clickOnXAndYCoordinates(34, 498);
+    await this.clickOnElement("Allow Access to All Photos");
+    const testImage = await this.doesElementExist(
+      "accessibility id",
+      `1967-05-05 21:00:00 +0000`,
+      2000
+    );
+    if (!testImage) {
+      await runScriptAndLog(
+        `touch -a -m -t ${ronSwansonBirthday} 'run/test/specs/media/test_image.jpg'`
+      );
+
+      await runScriptAndLog(
+        `xcrun simctl addmedia ${
+          process.env.IOS_FIRST_SIMULATOR || ""
+        } 'run/test/specs/media/test_image.jpg'`,
+        true
+      );
+    }
+    await sleepFor(100);
+    await this.clickOnElement(`1967-05-05 21:00:00 +0000`);
+    await this.clickOnElement("Text input box");
+    await this.inputText("accessibility id", "Text input box", testMessage);
+    await this.clickOnElement("Send button");
+    await this.waitForElementToBePresent(
+      "accessibility id",
+      `Message sent status: Sent`,
+      50000
+    );
+  }
+
   // ACTIONS
   public async swipeLeftAny(strategy: Strategy, selector: string) {
     const el = await this.waitForElementToBePresent(strategy, selector);
@@ -908,7 +955,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       1000
     );
 
-    console.warn("Swiped left on " , el);
+    console.warn("Swiped left on ", el);
     // let some time for swipe action to happen and UI to update
   }
 
