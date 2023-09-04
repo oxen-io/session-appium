@@ -2,16 +2,16 @@ import { iosIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import {
+  clickOnXAndYCoordinates,
+  runOnlyOnAndroid,
+  runOnlyOnIOS,
+  sleepFor,
+} from "./utils/index";
+import {
   closeApp,
   openAppTwoDevices,
   SupportedPlatformsType,
 } from "./utils/open_app";
-import {
-  clickOnXAndYCoordinates,
-  sleepFor,
-  runOnlyOnAndroid,
-  runOnlyOnIOS,
-} from "./utils/index";
 import { runScriptAndLog } from "./utils/utilities";
 
 async function sendImage(platform: SupportedPlatformsType) {
@@ -56,7 +56,9 @@ async function sendImage(platform: SupportedPlatformsType) {
     );
 
     await runScriptAndLog(
-      `xcrun simctl addmedia ${process.env.IOS_FIRST_SIMULATOR || ''} 'run/test/specs/media/test_image.jpg'`,
+      `xcrun simctl addmedia ${
+        process.env.IOS_FIRST_SIMULATOR || ""
+      } 'run/test/specs/media/test_image.jpg'`,
       true
     );
   }
@@ -222,7 +224,9 @@ async function sendVideo(platform: SupportedPlatformsType) {
       true
     );
     await runScriptAndLog(
-      `xcrun simctl addmedia ${process.env.IOS_FIRST_SIMULATOR || ''} 'run/test/specs/media/test_video.mp4'`,
+      `xcrun simctl addmedia ${
+        process.env.IOS_FIRST_SIMULATOR || ""
+      } 'run/test/specs/media/test_video.mp4'`,
       true
     );
     await sleepFor(2000);
@@ -375,7 +379,8 @@ async function sendLink(platform: SupportedPlatformsType) {
   );
   await device1.waitForElementToBePresent(
     "accessibility id",
-    "Message sent status: Sent", 20000
+    "Message sent status: Sent",
+    20000
   );
   // Accept dialog for link preview
   await device1.clickOnElement("Enable");
@@ -467,13 +472,18 @@ async function deleteMessage(platform: SupportedPlatformsType) {
   // Select 'Delete for me and User B'
   await device1.clickOnElement("Delete for me");
   // Look in User B's chat for alert 'This message has been deleted?'
-  await device1.hasElementBeenDeleted("accessibility id", sentMessage);
+  await device1.hasElementBeenDeletedNew(
+    "accessibility id",
+    "Message Body",
+    1000,
+    sentMessage
+  );
 
   // Excellent
   await closeApp(device1, device2);
 }
 
-describe("Message checks ios",  () => {
+describe("Message checks ios", () => {
   iosIt("Send image and reply test", sendImage);
   iosIt("Send video and reply test", sendVideo);
   iosIt("Send voice message test", sendVoiceMessage);

@@ -1,14 +1,30 @@
+import { DeviceWrapper } from "../../types/DeviceWrapper";
 import { androidIt, iosIt } from "../../types/sessionIt";
+import { newUser } from "./utils/create_account";
 import { linkedDevice } from "./utils/link_device";
 
-import { openAppTwoDevices, SupportedPlatformsType } from "./utils/open_app";
+import {
+  openAppOnPlatformSingleDevice,
+  openAppTwoDevices,
+  SupportedPlatformsType,
+} from "./utils/open_app";
 
 async function tinyTest(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  await linkedDevice(device1, device2, "Alice", platform);
+  const { device } = await openAppOnPlatformSingleDevice(platform);
+  await newUser(device, "Alice", platform);
+  await device.clickOnElement("User settings");
+  await device.clickOnElementById(`Appearance`);
+
+  const button = await device.waitForElementToBePresent("id", "RadioButton");
+  const attr = await device.getAttribute("value", button.ELEMENT);
+  if (attr === "selected") {
+    console.log("Great success");
+  } else {
+    console.log("Dammit");
+  }
 }
 
-describe("Tiny test",  () => {
+describe("Tiny test", () => {
   iosIt("Tiny test", tinyTest);
   androidIt("Tiny test", tinyTest);
 });

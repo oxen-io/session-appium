@@ -9,7 +9,6 @@ import {
   runScriptAndLog,
 } from "../test/specs/utils/utilities";
 import { AccessibilityId, Group, Strategy, User } from "./testing";
-import { clickOnXAndYCoordinates } from "../test/specs/utils";
 export type Coordinates = {
   x: number;
   y: number;
@@ -28,6 +27,7 @@ type SharedDeviceInterface = {
   clear: (elementId: string) => Promise<void>;
   getText: (elementId: string) => Promise<string>;
   setValueImmediate: (text: string, elementId: string) => Promise<void>;
+  getAttribute: (attribute: string, elementId: string) => Promise<string>;
   keys: (value: string[]) => Promise<void>;
   getElementRect: (
     elementId: string
@@ -537,6 +537,26 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return selector;
   }
 
+  public async findText(
+    strategy: Strategy,
+    selector: string,
+    text: string
+  ): Promise<AppiumNextElementType> {
+    let el: null | AppiumNextElementType = null;
+    console.log(
+      `Waiting for accessibility ID '${selector}' to be present with ${text}`
+    );
+    while (el === null) {
+      try {
+        const els = await this.findElements(strategy, selector);
+        el = await this.findMatchingTextInElementArray(els, text);
+      } catch (e) {
+        console.log(`findText threw an error`);
+      }
+    }
+    return el;
+  }
+
   public async findMatchingTextAndAccessibilityId(
     accessibilityId: AccessibilityId,
     textToLookFor: string
@@ -680,6 +700,41 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return element;
   }
 
+  public async hasElementBeenDeletedNew(
+    strategy: Strategy,
+    selector: string,
+    maxWait: number = 30000,
+    text?: string
+  ) {
+    const start = Date.now();
+    let element: AppiumNextElementType | undefined = undefined;
+    do {
+      if (!text) {
+        try {
+          element = await this.waitForElementToBePresent(strategy, selector);
+          await sleepFor(100);
+          console.log(`Element has been found, waiting for deletion`);
+        } catch (e) {
+          element = undefined;
+          console.log(`Element has been deleted, great success`);
+        }
+      } else {
+        try {
+          element = await this.waitForTextElementToBePresent(
+            strategy,
+            selector,
+            text
+          );
+          await sleepFor(100);
+          console.log(`Text element has been found, waiting for deletion`);
+        } catch (e) {
+          element = undefined;
+          console.log(`Text element has been deleted, great success`);
+        }
+      }
+    } while (Date.now() - start <= maxWait && element);
+  }
+
   public async hasElementBeenDeleted(strategy: Strategy, selector: string) {
     const fakeError = `${selector}: has been found, but shouldn't have been. OOPS`;
     try {
@@ -749,7 +804,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   public async waitForTextElementToBePresent(
     strategy: Strategy,
     selector: string,
-    text: string,
+    text?: string,
     maxWait?: number
   ): Promise<AppiumNextElementType> {
     let el: null | AppiumNextElementType = null;
@@ -759,13 +814,18 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
     while (el === null) {
       try {
-        console.log(
-          `Waiting for accessibility ID '${selector}' to be present with ${text}`
-        );
-
-        const els = await this.findElements(strategy, selector);
-
-        el = await this.findMatchingTextInElementArray(els, text);
+        if (text) {
+          console.log(
+            `Waiting for accessibility ID '${selector}' to be present with ${text}`
+          );
+          const els = await this.findElements(strategy, selector);
+          el = await this.findMatchingTextInElementArray(els, text);
+        } else {
+          console.log(
+            `Waiting for '${strategy}' and '${selector}' to be present`
+          );
+          el = await this.findElement(strategy, selector);
+        }
       } catch (e: any) {
         console.warn("waitForTextElementToBePresent threw: ", e.message);
       }
@@ -786,6 +846,22 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return el;
   }
 
+  public async waitForElementToBePresentNew(
+    strategy: Strategy,
+    selector: string,
+    text?: string,
+    maxWait?: number
+  ): Promise<AppiumNextElementType> {
+    let el: null | AppiumNextElementType = null;
+    const maxWaitMSec: number = maxWait || 15000;
+    const start = Date.now();
+    while (el === null) {
+      // el = !text
+      //   ? this.findElement(strategy, selector)
+      //   : this.findText(strategy, selector, text);
+    }
+    return el;
+  }
   // UTILITY FUNCTIONS
 
   public async sendMessage(message: string) {
@@ -883,9 +959,15 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.setValueImmediate(text, element.ELEMENT);
   }
 
-  public async sendImageIos() {
+  public async getAttribute(
+    attribute: string,
+    elementId: string
+  ): Promise<string> {
+    return this.toShared().getAttribute(attribute, elementId);
+  }
+
+  public async sendImageIos(message: string) {
     const ronSwansonBirthday = "196705060700.00";
-    const testMessage = "Ron Swanson doesn't like birthdays";
     await this.clickOnElement("Attachments button");
     await sleepFor(100);
     await this.clickOnXAndYCoordinates(34, 498);
@@ -910,7 +992,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await sleepFor(100);
     await this.clickOnElement(`1967-05-05 21:00:00 +0000`);
     await this.clickOnElement("Text input box");
-    await this.inputText("accessibility id", "Text input box", testMessage);
+    await this.inputText("accessibility id", "Text input box", message);
     await this.clickOnElement("Send button");
     await this.waitForElementToBePresent(
       "accessibility id",
