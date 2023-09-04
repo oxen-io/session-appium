@@ -20,7 +20,7 @@ async function tinyTest(platform: SupportedPlatformsType) {
   if (attr === "selected") {
     console.log("Great success");
   } else {
-    console.log("Dammit");
+    throw new Error("Dammit");
   }
 }
 

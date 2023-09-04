@@ -3,13 +3,12 @@ import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { createGroup } from "./utils/create_group";
-import { setDisappearingMessage } from "./utils/set_disappearing_messages";
 import {
+  SupportedPlatformsType,
   closeApp,
   openAppOnPlatformSingleDevice,
   openAppThreeDevices,
   openAppTwoDevices,
-  SupportedPlatformsType,
 } from "./utils/open_app";
 
 async function disappearingMessagesLegacy(platform: SupportedPlatformsType) {
@@ -82,11 +81,16 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Disappearing messages");
   await device1.clickOnElement("Disappear after send option");
   // Need to validate that default time is checked somehow
-  // const defaultTime = await device1.waitForElementToBePresent(
-  //   "accessibility id",
-  //   "One day"
-  // );
-  // await defaultTime.isSelected(true);
+  const defaultTime = await device1.waitForElementToBePresent(
+    "accessibility id",
+    "One day"
+  );
+  const attr = await device1.getAttribute("value", defaultTime.ELEMENT);
+  if (attr === "selected") {
+    console.log("Great success");
+  } else {
+    throw new Error("Dammit");
+  }
   // Change timer to ten seconds (testing time)
   await device1.clickOnElement("Ten seconds");
   // Click on set to save setting
@@ -132,11 +136,16 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Disappearing messages");
   await device1.clickOnElement("Disappear after read option");
   // Need to validate that default time is checked somehow
-  // const defaultTime = await device1.waitForElementToBePresent(
-  //   "accessibility id",
-  //   "Twelve hours"
-  // );
-  // await defaultTime.isSelected(true);
+  const defaultTime = await device1.waitForElementToBePresent(
+    "accessibility id",
+    "Twelve hours"
+  );
+  const attr = await device1.getAttribute("value", defaultTime.ELEMENT);
+  if (attr === "selected") {
+    console.log("Great success");
+  } else {
+    throw new Error("Dammit");
+  }
   // Change timer to ten seconds (testing time)
   await device1.clickOnElement("Ten seconds");
   // Click on set to save setting
@@ -186,11 +195,16 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   // Select disappearing messages option
   await device1.clickOnElement("Disappearing messages");
   // Check the default time is set to
-  // const defaultTime = await device1.waitForElementToBePresent(
-  //   "accessibility id",
-  //   "Twelve hours"
-  // );
-  // await defaultTime.isSelected(true);
+  const defaultTime = await device1.waitForElementToBePresent(
+    "accessibility id",
+    "Twelve hours"
+  );
+  const attr = await device1.getAttribute("value", defaultTime.ELEMENT);
+  if (attr === "selected") {
+    console.log("Great success");
+  } else {
+    throw new Error("Dammit");
+  }
   // Change time to testing time of 10 seconds
   await device1.clickOnElement("Ten seconds");
   // Save setting
@@ -237,11 +251,16 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   await device.clickOnElement("More options");
   await device.clickOnElement("Disappearing messages");
   // Check default timer is set
-  // const defaultTime = await device1.waitForElementToBePresent(
-  //   "accessibility id",
-  //   "One day"
-  // );
-  // await defaultTime.isSelected(true);
+  const defaultTime = await device.waitForElementToBePresent(
+    "accessibility id",
+    "One day"
+  );
+  const attr = await device.getAttribute("value", defaultTime.ELEMENT);
+  if (attr === "selected") {
+    console.log("Great success");
+  } else {
+    throw new Error("Dammit");
+  }
   await device.clickOnElement("Ten seconds");
   await device.findConfigurationMessage(
     `You have set messages to disappear ten seconds after they have been sent`
