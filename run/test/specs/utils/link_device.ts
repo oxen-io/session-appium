@@ -25,9 +25,10 @@ export const linkedDevice = async (
   await runOnlyOnAndroid(platform, () => device2.clickOnElement("Link Device"));
   await runOnlyOnIOS(platform, () => device2.clickOnElement("Continue"));
   // Wait for any notifications to disappear
-  await device2.waitForElementToBePresent(
+  await device2.waitForTextElementToBePresent(
     "accessibility id",
     "Message Notifications",
+    undefined,
     20000
   );
   // Wait for transitiion animation between the two pages
@@ -47,7 +48,7 @@ export const linkedDevice = async (
   await sleepFor(1000);
   await device2.hasElementBeenDeleted("accessibility id", "Continue");
   // Check that button was clicked
-  await device2.waitForElementToBePresent(
+  await device2.waitForTextElementToBePresent(
     "accessibility id",
     "New conversation button"
   );

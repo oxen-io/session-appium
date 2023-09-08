@@ -4,9 +4,9 @@ import { W3CCapabilities } from "appium/build/lib/appium";
 import { getAndroidBinariesRoot } from "./binaries";
 import { CapabilitiesIndexType } from "./capabilities_ios";
 
-const androidAppFullPath = `${getAndroidBinariesRoot()}/session-1.16.8-universal.apk`;
+// const androidAppFullPath = `${getAndroidBinariesRoot()}/session-1.16.8-universal.apk`;
 
-// const androidAppFullPath = `/Users/emilyburton/Desktop/session-1.16.7-universal.apk`;
+const androidAppFullPath = `/Users/emilyburton/Desktop/session-1.17.1-universal.apk`;
 
 const sharedCapabilities: AppiumW3CCapabilities = {
   "appium:app": androidAppFullPath,
@@ -53,7 +53,7 @@ export const androidCapabilities = {
 
 export function getAndroidCapabilities(
   capabilitiesIndex: CapabilitiesIndexType
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): W3CCapabilities<any> {
   if (capabilitiesIndex >= countOfAndroidCapabilities) {
     throw new Error(`Asked invalid android cap index: ${capabilitiesIndex}`);

@@ -81,15 +81,15 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Disappearing messages");
   await device1.clickOnElement("Disappear after send option");
   // Need to validate that default time is checked somehow
-  const defaultTime = await device1.waitForElementToBePresent(
+  const defaultTime = await device1.waitForTextElementToBePresent(
     "accessibility id",
     "One day"
   );
   const attr = await device1.getAttribute("value", defaultTime.ELEMENT);
   if (attr === "selected") {
-    console.log("Great success");
+    console.log("Great success - default time is correct");
   } else {
-    throw new Error("Dammit");
+    throw new Error("Dammit - default time was not correct");
   }
   // Change timer to ten seconds (testing time)
   await device1.clickOnElement("Ten seconds");
@@ -136,15 +136,15 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Disappearing messages");
   await device1.clickOnElement("Disappear after read option");
   // Need to validate that default time is checked somehow
-  const defaultTime = await device1.waitForElementToBePresent(
+  const defaultTime = await device1.waitForTextElementToBePresent(
     "accessibility id",
     "Twelve hours"
   );
   const attr = await device1.getAttribute("value", defaultTime.ELEMENT);
   if (attr === "selected") {
-    console.log("Great success");
+    console.log("Great success - default time is correct");
   } else {
-    throw new Error("Dammit");
+    throw new Error("Dammit - default time was not correct");
   }
   // Change timer to ten seconds (testing time)
   await device1.clickOnElement("Ten seconds");
@@ -195,7 +195,7 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   // Select disappearing messages option
   await device1.clickOnElement("Disappearing messages");
   // Check the default time is set to
-  const defaultTime = await device1.waitForElementToBePresent(
+  const defaultTime = await device1.waitForTextElementToBePresent(
     "accessibility id",
     "Twelve hours"
   );
@@ -251,15 +251,15 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   await device.clickOnElement("More options");
   await device.clickOnElement("Disappearing messages");
   // Check default timer is set
-  const defaultTime = await device.waitForElementToBePresent(
+  const defaultTime = await device.waitForTextElementToBePresent(
     "accessibility id",
     "One day"
   );
   const attr = await device.getAttribute("value", defaultTime.ELEMENT);
   if (attr === "selected") {
-    console.log("Great success");
+    console.log("Great success - default time is correct");
   } else {
-    throw new Error("Dammit");
+    throw new Error("Dammit - default time was not correct");
   }
   await device.clickOnElement("Ten seconds");
   await device.findConfigurationMessage(

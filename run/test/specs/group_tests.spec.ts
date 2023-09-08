@@ -311,24 +311,35 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
   );
   await device1.inputText("accessibility id", "Message input box", "@");
   // Check that all users are showing in mentions box
-  await device1.waitForElementToBePresent("accessibility id", "Mentions list");
+  await device1.waitForTextElementToBePresent(
+    "accessibility id",
+    "Mentions list"
+  );
   // Select User B
   await device1.selectByText("Contact mentions", userB.userName);
   await device1.clickOnElement("Send message button");
-  await device1.waitForElementToBePresent("accessibility id", `Message sent status: Sent`);
+  await device1.waitForTextElementToBePresent(
+    "accessibility id",
+    `Message sent status: Sent`
+  );
   // Check in user B's device if the format is correct
   await device2.findMessageWithBody("@You");
   // Select User C
   await sleepFor(2000);
   await device1.inputText("accessibility id", "Message input box", "@");
   // Check that all users are showing in mentions box
-  await device1.waitForElementToBePresent("accessibility id", "Mentions list");
+  await device1.waitForTextElementToBePresent(
+    "accessibility id",
+    "Mentions list"
+  );
   // Select User B
   await device1.selectByText("Contact mentions", userC.userName);
   await device1.clickOnElement("Send message button");
-  await device1.waitForElementToBePresent(
+  await device1.waitForTextElementToBePresent(
     "accessibility id",
-    `Message sent status: Sent`, 20000
+    `Message sent status: Sent`,
+    undefined,
+    20000
   );
   // Check in User C's device if the format is correct
   await device3.findMessageWithBody("@You");
@@ -408,7 +419,7 @@ async function leaveGroupAndroid(platform: SupportedPlatformsType) {
   await closeApp(device1, device2, device3);
 }
 
-describe("Group Testing",  () => {
+describe("Group Testing", () => {
   iosIt("Create group", groupCreation);
   androidIt("Create group", groupCreation);
 

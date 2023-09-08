@@ -107,7 +107,7 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
   // Check message came through on linked device(3)
   // Enter conversation with user B on device 3
   // Need to wait for notifications to disappear
-  await device3.waitForElementToBePresent(
+  await device3.waitForTextElementToBePresent(
     "accessibility id",
     "Conversation list item"
   );
@@ -145,7 +145,7 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
   // Check message came through on linked device(3)
   // Enter conversation with user B on device 3
   // Need to wait for notifications to disappear
-  await device3.waitForElementToBePresent(
+  await device3.waitForTextElementToBePresent(
     "accessibility id",
     "Conversation list item"
   );
@@ -161,7 +161,7 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
 
   // await waitForLoadingAnimation(device1);
 
-  await device2.waitForElementToBePresent(
+  await device2.waitForTextElementToBePresent(
     "accessibility id",
     "Deleted message"
   );
@@ -262,7 +262,9 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
     );
 
     await runScriptAndLog(
-      `xcrun simctl addmedia ${process.env.IOS_FIRST_SIMULATOR || ""} 'run/test/specs/media/profile_picture.jpg'`,
+      `xcrun simctl addmedia ${
+        process.env.IOS_FIRST_SIMULATOR || ""
+      } 'run/test/specs/media/profile_picture.jpg'`,
       true
     );
   }
@@ -275,7 +277,7 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   // Wait for change
   // Verify change
   // Take screenshot
-  const el = await device1.waitForElementToBePresent(
+  const el = await device1.waitForTextElementToBePresent(
     "accessibility id",
     "Profile picture"
   );
@@ -286,12 +288,12 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   if (pixelColor === "04cbfe") {
     console.log("Colour is correct");
   } else {
-    throw new Error("Colour isn't 04cbfe, it is: "+ pixelColor)
+    throw new Error("Colour isn't 04cbfe, it is: " + pixelColor);
   }
   console.log("Now checking avatar on linked device");
   // Check avatar on device 2
   await device2.clickOnElement("User settings");
-  const el2 = await device2.waitForElementToBePresent(
+  const el2 = await device2.waitForTextElementToBePresent(
     "accessibility id",
     "Profile picture"
   );
@@ -350,7 +352,7 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   // Wait for change
   // Verify change
   // Take screenshot
-  const el = await device1.waitForElementToBePresent(
+  const el = await device1.waitForTextElementToBePresent(
     "accessibility id",
     "User settings"
   );
@@ -366,7 +368,7 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   console.log("Now checking avatar on linked device");
   // Check avatar on device 2
   await device2.clickOnElement("User settings");
-  const el2 = await device2.waitForElementToBePresent(
+  const el2 = await device2.waitForTextElementToBePresent(
     "accessibility id",
     "User settings"
   );
@@ -381,7 +383,7 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
-describe("Linked device - user tests",  () => {
+describe("Linked device - user tests", () => {
   iosIt("Link a device", linkDevice);
   androidIt("Link a device", linkDevice);
 

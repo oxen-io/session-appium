@@ -174,7 +174,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
   // User B - Click on 'download'
   await device2.clickOnElement("Download media");
   // Reply to message
-  await device2.waitForElementToBePresent(
+  await device2.waitForTextElementToBePresent(
     "id",
     "network.loki.messenger:id/play_overlay"
   );
@@ -208,7 +208,7 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
     `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.Button[1]`
   );
   await device1.pressAndHold("New voice message");
-  // await device1.waitForElementToBePresent("Voice message");
+  // await device1.waitForTextElementToBePresent("Voice message");
   await device2.clickOnElement("Untrusted attachment message");
   await sleepFor(200);
   await device2.clickOnElement("Download media");
@@ -313,9 +313,11 @@ async function sendLink(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Enable");
   // No preview on first send
   await device1.clickOnElement("Send message button");
-  await device1.waitForElementToBePresent(
+  await device1.waitForTextElementToBePresent(
     "accessibility id",
-    "Message sent status: Sent", 20000
+    "Message sent status: Sent",
+    undefined,
+    20000
   );
   // Send again for image
   await device1.inputText(
@@ -364,7 +366,7 @@ async function unsendMessage(platform: SupportedPlatformsType) {
   // Select 'Delete for me and User B'
   await device1.clickOnElement("Delete for everyone");
   // Look in User B's chat for alert 'This message has been deleted?'
-  await device2.waitForElementToBePresent(
+  await device2.waitForTextElementToBePresent(
     "accessibility id",
     "Deleted message"
   );
@@ -407,7 +409,7 @@ async function deleteMessage(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
-describe("Message checks android",  () => {
+describe("Message checks android", () => {
   androidIt("Send image and reply test", sendImage);
   androidIt("Send video and reply test", sendVideo);
   androidIt("Send voice message test", sendVoiceMessage);

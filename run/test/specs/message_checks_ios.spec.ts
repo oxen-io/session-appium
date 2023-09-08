@@ -272,7 +272,10 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
   await device1.clickOnElement("OK");
   await device1.pressAndHold("New voice message");
 
-  await device1.waitForElementToBePresent("accessibility id", "Voice message");
+  await device1.waitForTextElementToBePresent(
+    "accessibility id",
+    "Voice message"
+  );
 
   await device2.clickOnElement("Untrusted attachment message");
   await sleepFor(200);
@@ -377,9 +380,10 @@ async function sendLink(platform: SupportedPlatformsType) {
     "Message input box",
     `https://nerdlegame.com/`
   );
-  await device1.waitForElementToBePresent(
+  await device1.waitForTextElementToBePresent(
     "accessibility id",
     "Message sent status: Sent",
+    undefined,
     20000
   );
   // Accept dialog for link preview
@@ -435,7 +439,7 @@ async function unsendMessage(platform: SupportedPlatformsType) {
   // Select 'Delete for me and User B'
   await device1.clickOnElement("Delete for everyone");
   // Look in User B's chat for alert 'This message has been deleted?'
-  await device2.waitForElementToBePresent(
+  await device2.waitForTextElementToBePresent(
     "accessibility id",
     "Deleted message"
   );

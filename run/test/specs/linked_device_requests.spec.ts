@@ -26,7 +26,7 @@ async function acceptRequestLinked(platform: SupportedPlatformsType) {
   await device2.clickOnElement("Message request");
   // Check device 3 (linked device) if message request has synced
   await device3.clickOnElement("Message requests banner");
-  await device3.waitForElementToBePresent(
+  await device3.waitForTextElementToBePresent(
     "accessibility id",
     "Message request"
   );
@@ -39,7 +39,7 @@ async function acceptRequestLinked(platform: SupportedPlatformsType) {
     "Your message request has been accepted."
   );
 
-  await device3.waitForElementToBePresent(
+  await device3.waitForTextElementToBePresent(
     "accessibility id",
     "No pending message requests"
   );
@@ -69,13 +69,17 @@ async function declineRequestLinked(platform: SupportedPlatformsType) {
   await device2.clickOnElement("Message request");
   // Check message request appears on linked device (device 3)
   await device3.clickOnElement("Message requests banner");
-  await device3.waitForElementToBePresent(
+  await device3.waitForTextElementToBePresent(
     "accessibility id",
     "Message request"
   );
   // Click on decline button
-  await runOnlyOnIOS(platform, () => device2.clickOnElement("Delete message request"));
-  await runOnlyOnAndroid(platform, () => device2.clickOnElement("Decline message request"));
+  await runOnlyOnIOS(platform, () =>
+    device2.clickOnElement("Delete message request")
+  );
+  await runOnlyOnAndroid(platform, () =>
+    device2.clickOnElement("Decline message request")
+  );
   // Are you sure you want to delete message request only for ios
   await sleepFor(3000);
   await runOnlyOnIOS(platform, () => device2.clickOnElement("Confirm delete"));
@@ -84,11 +88,11 @@ async function declineRequestLinked(platform: SupportedPlatformsType) {
   await sleepFor(100);
   await device2.navigateBack(platform);
   // Look for new conversation button to make sure it all worked
-  await device2.waitForElementToBePresent(
+  await device2.waitForTextElementToBePresent(
     "accessibility id",
     "New conversation button"
   );
-  await device3.waitForElementToBePresent(
+  await device3.waitForTextElementToBePresent(
     "accessibility id",
     "No pending message requests"
   );
@@ -111,7 +115,7 @@ async function blockedRequestLinked(platform: SupportedPlatformsType) {
   await device2.clickOnElement("Message request");
   // Check on linked device for message request
   await device3.clickOnElement("Message requests banner");
-  await device3.waitForElementToBePresent(
+  await device3.waitForTextElementToBePresent(
     "accessibility id",
     "Message request"
   );
@@ -126,7 +130,7 @@ async function blockedRequestLinked(platform: SupportedPlatformsType) {
   const blockedMessage = `"${userA.userName} to ${userB.userName} - shouldn't get through"`;
   await device1.sendMessage(blockedMessage);
   await device2.navigateBack(platform);
-  await device2.waitForElementToBePresent(
+  await device2.waitForTextElementToBePresent(
     "accessibility id",
     "New conversation button"
   );
@@ -137,7 +141,7 @@ async function blockedRequestLinked(platform: SupportedPlatformsType) {
   await closeApp(device1, device2, device3);
 }
 
-describe("Linked device - message request tests",  () => {
+describe("Linked device - message request tests", () => {
   iosIt("Accept request syncs", acceptRequestLinked);
   androidIt("Accept request syncs", acceptRequestLinked);
 

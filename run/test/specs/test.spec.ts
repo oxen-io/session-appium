@@ -15,7 +15,10 @@ async function tinyTest(platform: SupportedPlatformsType) {
   await device.clickOnElement("User settings");
   await device.clickOnElementById(`Appearance`);
 
-  const button = await device.waitForElementToBePresent("id", "RadioButton");
+  const button = await device.waitForTextElementToBePresent(
+    "id",
+    "RadioButton"
+  );
   const attr = await device.getAttribute("value", button.ELEMENT);
   if (attr === "selected") {
     console.log("Great success");
