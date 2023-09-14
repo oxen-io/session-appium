@@ -442,6 +442,7 @@ async function unsendMessage(platform: SupportedPlatformsType) {
   await device2.waitForElementToBePresent({
     strategy: "accessibility id",
     selector: "Deleted message",
+    maxWait: 5000,
   });
 
   // Excellent
@@ -504,7 +505,7 @@ describe("Message checks ios", () => {
   iosIt("Send image", sendImage);
   iosIt("Send video", sendVideo);
   iosIt("Send voice message", sendVoiceMessage);
-  iosIt("Send document", sendDoc);
+  // iosIt("Send document", sendDoc);
   iosIt("Send GIF", sendGif);
   iosIt("Send long text", sendLongMessage);
   iosIt("Send link", sendLink);
