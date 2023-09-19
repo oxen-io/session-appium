@@ -357,7 +357,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   // Click on username to set nickname
   await device1.clickOnElement("Username");
   await sleepFor(1000);
-  await device1.clickOnElement("username");
+  await device1.clickOnElement("Username");
   await device1.deleteText("Username");
   // Type in nickname
   await device1.inputText("accessibility id", "Username", nickName);
