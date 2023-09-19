@@ -1,6 +1,10 @@
 import { androidIt, iosIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
-import { runOnlyOnAndroid, sleepFor } from "./utils/index";
+import {
+  clickOnXAndYCoordinates,
+  runOnlyOnAndroid,
+  sleepFor,
+} from "./utils/index";
 import { openAppTwoDevices, SupportedPlatformsType } from "./utils/open_app";
 
 async function voiceCallAndroid(platform: SupportedPlatformsType) {
@@ -18,14 +22,11 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   await device2.clickOnElement("Message requests banner");
   // Select message from User A
   await device2.clickOnElement("Message request");
-  await runOnlyOnAndroid(platform, () =>
-    device2.clickOnElement("Accept message request")
-  );
+  await device2.clickOnElement("Accept message request");
   // Type into message input box
   await device2.sendMessage(
     `Reply-message-${userB.userName}-to-${userA.userName}`
   );
-
   // Verify config message states message request was accepted
   await device1.findConfigurationMessage(
     "Your message request has been accepted."
@@ -130,7 +131,6 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   // Enabled voice calls in privacy settings
   await device1.waitForTextElementToBePresent("accessibility id", "Settings");
   await device1.clickOnElement("Settings");
-  // await device1.clickOnElement("Settings");
   // Scroll to bottom of page to voice and video calls
   // Toggle voice settings on
   // Click enable on exposure IP address warning
@@ -147,13 +147,26 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   await device2.clickOnElement("Close Button");
   // Make call on device 1 (userA)
   await device1.clickOnElement("Call");
+  // await device1.clickOnElement("OK");
+  // Wait for call to come through
+  await sleepFor(1000);
   // Answer call on device 2
+  await device2.clickOnElement("Answer call");
+  // Have to press answer twice, once in drop down and once in full screen
+  await sleepFor(500);
   await device2.clickOnElement("Answer call");
   // Wait 10 seconds
   // Hang up
-  await device1.clickOnElement("End call button");
-  // Check for config message 'Called User B' on device 1
-  await device1.findElement("accessibility id", "Configuration message");
+  await device1.clickOnElement("End call");
+  // Check for control messages on both devices
+  await device1.waitForTextElementToBePresent(
+    "accessibility id",
+    `You called ${userB.userName}`
+  );
+  await device2.waitForTextElementToBePresent(
+    "accessibility id",
+    `${userA.userName} called you`
+  );
 }
 
 describe("Voice calls ", () => {

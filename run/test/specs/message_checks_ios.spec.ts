@@ -67,6 +67,12 @@ async function sendImage(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Text input box");
   await device1.inputText("accessibility id", "Text input box", testMessage);
   await device1.clickOnElement("Send button");
+  await device1.waitForTextElementToBePresent(
+    "accessibility id",
+    `Message sent status: Sent`,
+    undefined,
+    50000
+  );
   await device2.clickOnElement("Untrusted attachment message");
   await sleepFor(500);
   // User B - Click on 'download'
@@ -307,9 +313,7 @@ async function sendGif(platform: SupportedPlatformsType) {
   // Click on attachments button
   await device1.clickOnElement("Attachments button");
   // Select GIF tab
-  await runOnlyOnIOS(platform, () => clickOnXAndYCoordinates(device1, 36, 394));
-  await runOnlyOnAndroid(platform, () => device1.clickOnElement("GIF button"));
-  await runOnlyOnAndroid(platform, () => device1.clickOnElement("OK"));
+  await clickOnXAndYCoordinates(device1, 36, 394);
   // Select gif
   await sleepFor(500);
   // Need to select Continue on GIF warning
@@ -411,6 +415,67 @@ async function sendLink(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
+async function sendCommunityInvitation(platform: SupportedPlatformsType) {
+  const { device1, device2 } = await openAppTwoDevices(platform);
+  const communityLink = `https://chat.lokinet.dev/testing-all-the-things?public_key=1d7e7f92b1ed3643855c98ecac02fc7274033a3467653f047d6e433540c03f17`;
+  const communityName = "Testing All The Things!";
+  // Create two users
+  const [userA, userB] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+  ]);
+  // Create contact
+  await newContact(platform, device1, userA, device2, userB);
+  // Join community on device 1
+  // Click on plus button
+  await device1.navigateBack(platform);
+  await device1.clickOnElement("New conversation button");
+  await device1.clickOnElement("Join Community");
+  await device1.inputText(
+    "accessibility id",
+    "Enter Community URL",
+    communityLink
+  );
+  await device1.clickOnElement("Join");
+  // Wait for community to load
+  await sleepFor(1000);
+
+  await device1.clickOnElement("More options");
+  await device1.clickOnElement("Add Members");
+  await device1.clickOnElementByText(
+    "accessibility id",
+    "Contact",
+    userB.userName
+  );
+  await device1.clickOnElement("Done");
+  // Check device 2 for invitation from user A
+  // await device2.clickOnElementByText(
+  //   "accessibility id",
+  //   "Conversation list item",
+  //   userA.userName
+  // );
+  await device2.clickOnElementByText(
+    "accessibility id",
+    "Community invitation",
+    communityName
+  );
+  await device2.clickOnElement("Join");
+  // Check that join worked
+  await device2.navigateBack(platform);
+  await device2.clickOnElementByText(
+    "accessibility id",
+    "Conversation list item",
+    communityName
+  );
+  await device2.waitForTextElementToBePresent(
+    "accessibility id",
+    "Username",
+    communityName
+  );
+
+  await closeApp(device1, device2);
+}
+
 async function unsendMessage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
 
@@ -495,6 +560,7 @@ describe("Message checks ios", () => {
   iosIt("Send GIF and reply test", sendGif);
   iosIt("Send long text and reply test", sendLongMessage);
   iosIt("Send link test", sendLink);
+  iosIt("Send community invitation test", sendCommunityInvitation);
   iosIt("Unsend message", unsendMessage);
   iosIt("Delete message", deleteMessage);
 });

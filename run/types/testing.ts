@@ -46,6 +46,9 @@ export type AccessibilityId =
   | "No pending message requests"
   | "New conversation button"
   | "New direct message"
+  | "Join Community"
+  | "Enter Community URL"
+  | "Join"
   | "Conversations"
   | "Create group"
   | "Group name input"
@@ -60,7 +63,7 @@ export type AccessibilityId =
   | "Call"
   | "Answer call"
   | "Allow voice and video calls"
-  | "End call button"
+  | "End call"
   | "Close Button"
   | "Enable"
   | "More options"
@@ -89,6 +92,7 @@ export type AccessibilityId =
   | "Apply"
   | "Conversation list item"
   | "Add members"
+  | "Add Members"
   | "Done"
   | "Configuration message"
   | "Mentions list"
@@ -149,4 +153,5 @@ export type AccessibilityId =
   | "Decline message request"
   | "Image picker"
   | "Upload"
-  | "Save button";
+  | "Save button"
+  | "Scroll button";
