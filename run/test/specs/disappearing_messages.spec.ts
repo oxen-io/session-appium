@@ -59,9 +59,9 @@ async function disappearingMessagesLegacy(platform: SupportedPlatformsType) {
   // Wait 5 seconds
   await sleepFor(10000);
   // Look for message for User A
-  await device1.hasTextElementBeenDeleted("Message Body", message);
+  await device1.hasTextElementBeenDeleted("Message body", message);
   // Look for message for User B
-  await device2.hasTextElementBeenDeleted("Message Body", message);
+  await device2.hasTextElementBeenDeleted("Message body", message);
   await closeApp(device1, device2);
 }
 
@@ -81,41 +81,35 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Disappearing messages");
   await device1.clickOnElement("Disappear after send option");
   // Need to validate that default time is checked somehow
-  const defaultTime = await device1.waitForTextElementToBePresent(
-    "accessibility id",
-    "One day"
-  );
-  const attr = await device1.getAttribute("value", defaultTime.ELEMENT);
-  if (attr === "selected") {
-    console.log("Great success - default time is correct");
-  } else {
-    throw new Error("Dammit - default time was not correct");
-  }
+  await device1.waitForTextElementToBePresent("accessibility id", "1 day");
+
+  await device1.radioButtonSelected("1 day");
   // Change timer to ten seconds (testing time)
-  await device1.clickOnElement("Ten seconds");
+  await device1.clickOnElement("10 seconds");
   // Click on set to save setting
   await device1.clickOnElement("Set button");
-
-  await device1.findConfigurationMessage(
-    `You have set messages to disappear 10 seconds after they have been read`
+  await device1.navigateBack(platform);
+  await device1.waitForTextElementToBePresent(
+    "accessibility id",
+    `You have set messages to disappear 10 seconds after they have been sent`
   );
   // Check control message is correct on device 2
   await device2.findConfigurationMessage(
-    `${userA.userName} has set messages to disappear 10 seconds after they have been read`
+    `${userA.userName} has set messages to disappear 10 seconds after they have been sent`
   );
   // Send message to verify that deletion is working
   await device1.sendMessage(testMessage);
   await device2.clickOnElementByText(
     "accessibility id",
-    "Message Body",
+    "Message body",
     testMessage
   );
   // Wait for 10 seconds
   await sleepFor(10000);
   // Check if message is deleted in device 1
-  await device1.hasTextElementBeenDeleted("Message Body", testMessage);
+  await device1.hasTextElementBeenDeleted("Message body", testMessage);
   // Check on device 2
-  await device1.hasTextElementBeenDeleted("Message Body", testMessage);
+  await device1.hasTextElementBeenDeleted("Message body", testMessage);
   // Great success
   await closeApp(device1, device2);
 }
@@ -136,43 +130,49 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Disappearing messages");
   await device1.clickOnElement("Disappear after read option");
   // Need to validate that default time is checked somehow
-  const defaultTime = await device1.waitForTextElementToBePresent(
-    "accessibility id",
-    "Twelve hours"
-  );
-  const attr = await device1.getAttribute("value", defaultTime.ELEMENT);
-  if (attr === "selected") {
-    console.log("Great success - default time is correct");
-  } else {
-    throw new Error("Dammit - default time was not correct");
-  }
+  await device1.waitForTextElementToBePresent("accessibility id", "12 hours");
+  await device1.radioButtonSelected("12 hours");
   // Change timer to ten seconds (testing time)
-  await device1.clickOnElement("Ten seconds");
+  await device1.clickOnElement("10 seconds");
   // Click on set to save setting
   await device1.clickOnElement("Set button");
-
-  await device1.findConfigurationMessage(
+  await device1.navigateBack(platform);
+  await sleepFor(1000);
+  await device1.waitForTextElementToBePresent(
+    "accessibility id",
     `You have set messages to disappear 10 seconds after they have been read`
   );
   // Check control message is correct on device 2
   await device2.findConfigurationMessage(
     `${userA.userName} has set messages to disappear 10 seconds after they have been read`
   );
+
   // Send message to verify that deletion is working
   await device1.sendMessage(testMessage);
   // Wait for 10 seconds
   await sleepFor(10000);
   // Check if message is deleted in device 1
-  await device1.hasTextElementBeenDeleted("Message Body", testMessage);
+  await device1.hasElementBeenDeletedNew(
+    "accessibility id",
+    "Message body",
+    undefined,
+    testMessage
+  );
+  // await sleepFor(9000);
   // Check on device 2
-  await device1.hasTextElementBeenDeleted("Message Body", testMessage);
+  await device2.hasElementBeenDeletedNew(
+    "accessibility id",
+    "Message body",
+    undefined,
+    testMessage
+  );
   // Great success
   await closeApp(device1, device2);
 }
 
 async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
-  const testGroupName = "Disappear after read test";
-  const testMessage = "Testing disappear after read in groups";
+  const testGroupName = "Disappear after sent test";
+  const testMessage = "Testing disappear after sent in groups";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
@@ -195,34 +195,36 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   // Select disappearing messages option
   await device1.clickOnElement("Disappearing messages");
   // Check the default time is set to
-  const defaultTime = await device1.waitForTextElementToBePresent(
-    "accessibility id",
-    "Twelve hours"
-  );
-  const attr = await device1.getAttribute("value", defaultTime.ELEMENT);
-  if (attr === "selected") {
-    console.log("Great success");
-  } else {
-    throw new Error("Dammit");
-  }
+  await device1.waitForTextElementToBePresent("accessibility id", "1 day");
+  await device1.radioButtonSelected("1 day");
   // Change time to testing time of 10 seconds
-  await device1.clickOnElement("Ten seconds");
+  await device1.clickOnElement("10 seconds");
   // Save setting
   await device1.clickOnElement("Set button");
+  await device1.navigateBack(platform);
   // Check control message
-  await device1.findConfigurationMessage(
-    `You have set messages to disappear ten seconds after they have been sent`
-  );
-  await device2.findConfigurationMessage(
-    `${userA.userName} has set messages to disappear ten seconds after they have been sent`
-  );
+  await Promise.all([
+    device1.waitForTextElementToBePresent(
+      "accessibility id",
+      `You have set messages to disappear 10 seconds after they have been sent`
+    ),
+    device2.findConfigurationMessage(
+      `${userA.userName} has set messages to disappear 10 seconds after they have been sent`
+    ),
+    device3.findConfigurationMessage(
+      `${userA.userName} has set messages to disappear 10 seconds after they have been sent`
+    ),
+  ]);
   // Send message to verify deletion
   await device1.sendMessage(testMessage);
   // Wait for ten seconds
-  await sleepFor(10000);
+  await sleepFor(12000);
   // Check for test messages (should be deleted)
-  await device1.hasTextElementBeenDeleted("Message Body", testMessage);
-  await device2.hasTextElementBeenDeleted("Message Body", testMessage);
+  await Promise.all([
+    device1.hasTextElementBeenDeleted("Message body", testMessage),
+    device2.hasTextElementBeenDeleted("Message body", testMessage),
+    device3.hasTextElementBeenDeleted("Message body", testMessage),
+  ]);
   // Close server and devices
   await closeApp(device1, device2, device3);
 }
@@ -249,26 +251,29 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   await device.clickOnElement("Send message button");
   // Enable disappearing messages
   await device.clickOnElement("More options");
+  await sleepFor(500);
   await device.clickOnElement("Disappearing messages");
   // Check default timer is set
-  const defaultTime = await device.waitForTextElementToBePresent(
-    "accessibility id",
-    "One day"
-  );
-  const attr = await device.getAttribute("value", defaultTime.ELEMENT);
-  if (attr === "selected") {
-    console.log("Great success - default time is correct");
-  } else {
-    throw new Error("Dammit - default time was not correct");
-  }
-  await device.clickOnElement("Ten seconds");
+  await sleepFor(1000);
+  await device.waitForTextElementToBePresent("accessibility id", "1 day");
+  await device.radioButtonSelected("1 day");
+  await device.clickOnElement("10 seconds");
+  await device.clickOnElement("Set button");
+  await device.navigateBack(platform);
+  await sleepFor(1000);
   await device.findConfigurationMessage(
-    `You have set messages to disappear ten seconds after they have been sent`
+    `You have set messages to disappear 10 seconds after they have been sent`
   );
   await device.sendMessage(testMessage);
   await sleepFor(10000);
-  await device.hasTextElementBeenDeleted("Message Body", testMessage);
+  await device.hasElementBeenDeletedNew(
+    "accessibility id",
+    "Message body",
+    undefined,
+    testMessage
+  );
   // Great success
+  await closeApp(device);
 }
 
 describe("Disappearing messages", () => {

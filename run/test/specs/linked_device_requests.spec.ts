@@ -136,7 +136,7 @@ async function blockedRequestLinked(platform: SupportedPlatformsType) {
   );
   // Need to wait to see if message gets through
   await sleepFor(5000);
-  await device2.hasTextElementBeenDeleted("Message Body", blockedMessage);
+  await device2.hasTextElementBeenDeleted("Message body", blockedMessage);
   // Close app
   await closeApp(device1, device2, device3);
 }

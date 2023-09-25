@@ -1,5 +1,5 @@
 import { W3CCapabilities } from "appium/build/lib/appium";
-import { isArray, isEmpty } from "lodash";
+import { isArray, isEmpty, max } from "lodash";
 import { AppiumNextElementType } from "../../appium_next";
 import { sleepFor } from "../test/specs/utils";
 import { SupportedPlatformsType } from "../test/specs/utils/open_app";
@@ -21,6 +21,7 @@ export type ActionSequence = {
 type Action = Coordinates & { type: "pointer"; duration?: number };
 
 type SharedDeviceInterface = {
+  getPageSource: () => Promise<string>;
   back: () => Promise<void>;
   click: (elementId: string) => Promise<void>;
   doubleClick: (elementId: string) => Promise<void>;
@@ -90,7 +91,6 @@ type IOSDeviceInterface = {
 
 type AndroidDeviceInterface = {
   touchLongClick: (id: string) => Promise<void>;
-  getPageSource: () => Promise<string>;
 } & SharedDeviceInterface;
 
 export class DeviceWrapper implements SharedDeviceInterface {
@@ -261,7 +261,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async getPageSource(): Promise<string> {
-    return this.toAndroid().getPageSource();
+    return this.toShared().getPageSource();
   }
 
   /* === all the device-specifc function ===  */
@@ -381,7 +381,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     try {
       const el = await this.waitForTextElementToBePresent(
         "accessibility id",
-        "Message Body",
+        "Message body",
         textToLookFor
       );
       await this.longClick(el, 1000);
@@ -624,18 +624,15 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async findConfigurationMessage(messageText: string, maxWait?: number) {
-    await this.waitForTextElementToBePresent(
+    const el = await this.waitForTextElementToBePresent(
       "accessibility id",
-      "Configuration message",
+      "Control message",
       undefined,
       maxWait
     );
-    const configMessage = await this.waitForTextElementToBePresent(
-      "accessibility id",
-      "Configuration message",
-      messageText,
-      maxWait
-    );
+    const ele = await this.getTextFromElement(el);
+    const configMessage = await ele.includes(messageText);
+    // console.log(configMessage, "config message");
     if (!configMessage) {
       throw new Error(`Couldnt find configMessage`);
     }
@@ -647,11 +644,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
   ): Promise<AppiumNextElementType> {
     await this.waitForTextElementToBePresent(
       "accessibility id",
-      "Message Body",
+      "Message body",
       textToLookFor
     );
     const message = await this.findMatchingTextAndAccessibilityId(
-      "Message Body",
+      "Message body",
       textToLookFor
     );
     return message;
@@ -705,7 +702,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   public async hasElementBeenDeletedNew(
     strategy: Strategy,
     selector: string,
-    maxWait: number = 30000,
+    maxWait: number = 5000,
     text?: string
   ) {
     const start = Date.now();
@@ -715,7 +712,9 @@ export class DeviceWrapper implements SharedDeviceInterface {
         try {
           element = await this.waitForTextElementToBePresent(
             strategy,
-            selector
+            selector,
+            undefined,
+            100
           );
           await sleepFor(100);
           console.log(`Element has been found, waiting for deletion`);
@@ -728,7 +727,8 @@ export class DeviceWrapper implements SharedDeviceInterface {
           element = await this.waitForTextElementToBePresent(
             strategy,
             selector,
-            text
+            text,
+            100
           );
           await sleepFor(100);
           console.log(`Text element has been found, waiting for deletion`);
@@ -770,41 +770,6 @@ export class DeviceWrapper implements SharedDeviceInterface {
     console.log(accessibilityId, ": ", text, "is not visible, congratulations");
   }
   // WAIT FOR FUNCTIONS
-
-  // public async waitForElementToBePresent(
-  //   strategy: Strategy,
-  //   selector: string,
-  //   maxWait?: number
-  // ): Promise<AppiumNextElementType> {
-  //   const maxWaitMSec = maxWait || 6000;
-  //   let currentWait = 0;
-  //   const waitPerLoop = 100;
-  //   let el: AppiumNextElementType | null = null;
-
-  //   while (el === null) {
-  //     try {
-  //       console.log(
-  //         `Waiting for '${strategy}' and '${selector}' to be present`
-  //       );
-  //       el = await this.findElement(strategy, selector);
-  //     } catch (e: any) {
-  //       console.warn("waitForElementToBePresent failed with", e.message);
-  //     }
-  //     if (!el) {
-  //       await sleepFor(waitPerLoop);
-  //     }
-  //     currentWait += waitPerLoop;
-
-  //     if (currentWait >= maxWaitMSec) {
-  //       // console.log("Waited for too long");
-  //       throw new Error(
-  //         `waited for too long looking for ${strategy}: '${selector}'`
-  //       );
-  //     }
-  //   }
-  //   console.log(`${strategy}: '${selector}' has been found`);
-  //   return el;
-  // }
 
   public async waitForTextElementToBePresent(
     strategy: Strategy,
@@ -851,22 +816,22 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return el;
   }
 
-  public async waitForElementToBePresentNew(
-    strategy: Strategy,
-    selector: string,
-    text?: string,
-    maxWait?: number
-  ): Promise<AppiumNextElementType> {
-    let el: null | AppiumNextElementType = null;
-    const maxWaitMSec: number = maxWait || 15000;
-    const start = Date.now();
-    while (el === null) {
-      // el = !text
-      //   ? this.findElement(strategy, selector)
-      //   : this.findText(strategy, selector, text);
-    }
-    return el;
-  }
+  // public async waitForElementToBePresentNew(
+  //   strategy: Strategy,
+  //   selector: string,
+  //   text?: string,
+  //   maxWait?: number
+  // ): Promise<AppiumNextElementType> {
+  //   let el: null | AppiumNextElementType = null;
+  //   const maxWaitMSec: number = maxWait || 15000;
+  //   const start = Date.now();
+  //   while (el === null) {
+  //     // el = !text
+  //     //   ? this.findElement(strategy, selector)
+  //     //   : this.findText(strategy, selector, text);
+  //   }
+  //   return el;
+  // }
   // UTILITY FUNCTIONS
 
   public async sendMessage(message: string) {
@@ -930,7 +895,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     // wait for message to be received before moving on
     await this.waitForTextElementToBePresent(
       "accessibility id",
-      "Message Body",
+      "Message body",
       message
     );
     console.log(
@@ -973,12 +938,43 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return this.toShared().getAttribute(attribute, elementId);
   }
 
+  public async radioButtonSelected(name: string) {
+    try {
+      const radioButton = await this.findElementByXpath(
+        `//*[./*[@name='${name}']]/*[2]`
+      );
+
+      const attr = await this.getAttribute("value", radioButton.ELEMENT);
+      if (attr === "selected") {
+        console.log("Great success - default time is correct");
+      } else {
+        throw new Error("Dammit - default time was not correct");
+      }
+    } catch (e) {
+      console.log(`Couldn't find radioButton ${name}`);
+    }
+  }
+
   public async sendImageIos(message: string) {
     const ronSwansonBirthday = "196705060700.00";
     await this.clickOnElement("Attachments button");
-    await sleepFor(100);
-    await this.clickOnXAndYCoordinates(34, 498);
-    await this.clickOnElement("Allow Access to All Photos");
+    await sleepFor(1000);
+    await this.clickOnXAndYCoordinates(38, 767);
+    const permissions = await this.doesElementExist(
+      "accessibility id",
+      "Allow Access to All Photos",
+      1000
+    );
+    if (permissions) {
+      try {
+        await this.clickOnElement(`Allow Access to All Photos`);
+      } catch (e) {
+        console.log("No permissions dialog");
+      }
+    } else {
+      console.log("No permissions dialog");
+    }
+    // await this.clickOnElement("Allow Access to All Photos");
     const testImage = await this.doesElementExist(
       "accessibility id",
       `1967-05-05 21:00:00 +0000`,

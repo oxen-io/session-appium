@@ -1,5 +1,6 @@
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { ConversationType, DMTimeOption } from "../../../types/testing";
+import { sleepFor } from "./sleep_for";
 
 type DisappearOpts1o1 = [
   "1o1",
@@ -21,6 +22,7 @@ export const setDisappearingMessage = async (
 ) => {
   const enforcedType: ConversationType = conversationType;
   await device.clickOnElement("More options");
+  await sleepFor(500);
   await device.clickOnElement("Disappearing messages");
   if (enforcedType === "1o1") {
     await device.clickOnElement(timerType);

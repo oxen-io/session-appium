@@ -137,7 +137,7 @@ async function blockRequest(platform: SupportedPlatformsType) {
   );
   // Need to wait to see if message gets through
   await sleepFor(1000);
-  await device2.hasTextElementBeenDeleted("Message Body", blockedMessage);
+  await device2.hasTextElementBeenDeleted("Message body", blockedMessage);
   // Check blocked contacts section for user A
   await device2.clickOnElement("User settings");
   await device2.clickOnElement("Conversations");

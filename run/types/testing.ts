@@ -16,11 +16,11 @@ export type Strategy = "accessibility id" | "xpath" | "id" | "class name";
 export type ConversationType = "1o1" | "Group" | "Community" | "Note to Self";
 
 export type DMTimeOption =
-  | "Ten seconds"
-  | "Twelve hours"
-  | "One day"
-  | "One week"
-  | "Two weeks";
+  | "10 seconds"
+  | "12 hours"
+  | "1 Day"
+  | "1 week"
+  | "2 weeks";
 
 export type AccessibilityId =
   | "Create session ID"
@@ -71,17 +71,17 @@ export type AccessibilityId =
   | "Disappearing messages"
   | "Disappear after read option"
   | "Disappear after send option"
-  | "Ten seconds"
-  | "Twelve hours"
-  | "One day"
-  | "One week"
-  | "Two weeks"
+  | "10 seconds"
+  | "12 hours"
+  | "1 Day"
+  | "1 week"
+  | "2 weeks"
   | "Set button"
   | "Disable disappearing messages"
   | "Disappearing messages time picker"
   | "Time selector"
   | "Message input box"
-  | "Message Body"
+  | "Message body"
   | "Group name"
   | "Accept name change"
   | "Edit group"
@@ -154,4 +154,5 @@ export type AccessibilityId =
   | "Image picker"
   | "Upload"
   | "Save button"
-  | "Scroll button";
+  | "Scroll button"
+  | "Add";

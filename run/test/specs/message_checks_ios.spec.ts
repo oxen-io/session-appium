@@ -236,7 +236,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
       true
     );
     await sleepFor(2000);
-
+    await device1.clickOnElement("Add");
     await device1.clickOnElement(`1988-09-08 21:00:00 +0000`);
   }
   // Send with captions
