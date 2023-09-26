@@ -55,10 +55,11 @@ async function blockUserInConversationOptions(
   // On ios, you need to navigate back to conversation screen to confirm block
   await runOnlyOnIOS(platform, () => device1.clickOnElement("Back"));
   // Look for alert at top of screen (Bob is blocked. Unblock them?)
-  await device1.waitForElementToBePresent({
+  await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Blocked banner",
   });
+
   console.warn("User has been blocked");
   // Click on alert to unblock
   await device1.clickOnElement("Blocked banner");
@@ -74,7 +75,7 @@ async function blockUserInConversationOptions(
   // Check in device 1 for message
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: hasUserBeenUnblockedMessage,
   });
 
@@ -192,7 +193,7 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   await device.clickOnElementById(
     "network.loki.messenger:id/crop_image_menu_crop"
   );
-  const el = await device.waitForElementToBePresent({
+  const el = await device.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "User settings",
   });
@@ -255,9 +256,10 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
   await sleepFor(100);
   await device.clickOnElement(`Photo, May 01, 1998, 7:00 AM`);
   await device.clickOnElement("Done");
-  await device.clickOnElement("Save");
+
+  await device.clickOnElement("Upload");
   // Take screenshot
-  const el = await device.waitForElementToBePresent({
+  const el = await device.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Profile picture",
   });
@@ -296,7 +298,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // CLick out of pop up
   await device1.clickOnElement("Message user");
   // Check name at top of conversation is nickname
-  const headerElement = await device1.waitForElementToBePresent({
+  const headerElement = await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Username",
   });
@@ -318,7 +320,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   await device1.back();
   // Enter conversation to verify change
   await device1.selectByText("Conversation list item", nickName);
-  const changedElement = await device1.waitForElementToBePresent({
+  const changedElement = await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Username",
   });
@@ -330,10 +332,11 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Verify name change in list
   // Save text of conversation list item?
   await device1.selectByText("Conversation list item", userB.userName);
-  const revertedHeader = await device1.waitForElementToBePresent({
+  const revertedHeader = await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Username",
   });
+
   await device1.getTextFromElement(revertedHeader);
   // if (originalUsername === userB.userName) {
   //   console.log("Nickname changed back to original username");
@@ -433,12 +436,12 @@ async function readStatus(platform: SupportedPlatformsType) {
   });
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: testMessage,
   });
   await device2.clickOnElementByText({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: testMessage,
   });
   // Check read status on device 1
@@ -450,7 +453,7 @@ async function readStatus(platform: SupportedPlatformsType) {
     })
   );
   await runOnlyOnIOS(platform, () =>
-    device1.waitForElementToBePresent({
+    device1.waitForTextElementToBePresent({
       strategy: "accessibility id",
       selector: "Message sent status: Read",
     })
@@ -484,5 +487,4 @@ describe("User actions", () => {
   iosIt("Read status", readStatus);
 });
 
-// Check read receipts working
 // Typing indicators working

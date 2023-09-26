@@ -108,10 +108,12 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
   // Check message came through on linked device(3)
   // Enter conversation with user B on device 3
   // Need to wait for notifications to disappear
-  await device3.waitForElementToBePresent({
+
+  await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Conversation list item",
   });
+
   await device3.selectByText("Conversation list item", userB.userName);
   // Find message
   await device3.findMessageWithBody(sentMessage);
@@ -128,7 +130,7 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
   // await waitForLoadingAnimation(device1);
 
   // Check linked device for deleted message
-  await device1.hasTextElementBeenDeleted("Message Body", sentMessage);
+  await device1.hasTextElementBeenDeleted("Message body", sentMessage);
   // Close app
   await closeApp(device1, device2, device3);
 }
@@ -146,7 +148,7 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
   // Check message came through on linked device(3)
   // Enter conversation with user B on device 3
   // Need to wait for notifications to disappear
-  await device3.waitForElementToBePresent({
+  await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Conversation list item",
   });
@@ -162,12 +164,12 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
 
   // await waitForLoadingAnimation(device1);
 
-  await device2.waitForElementToBePresent({
+  await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Deleted message",
   });
   // Check linked device for deleted message
-  await device3.hasTextElementBeenDeleted("Message Body", sentMessage);
+  await device3.hasTextElementBeenDeleted("Message body", sentMessage);
   // Close app
   await closeApp(device1, device2, device3);
 }
@@ -220,7 +222,7 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
   // Check on device 1 if user A receives message
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: sentMessage,
   });
 
@@ -278,23 +280,24 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   // Wait for change
   // Verify change
   // Take screenshot
-  const el = await device1.waitForElementToBePresent({
+  const el = await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Profile picture",
   });
   await sleepFor(5000);
+
   const base64 = await device1.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
   console.log("RGB Value of pixel is:", pixelColor);
   if (pixelColor === "0000ff") {
     console.log("Colour is correct");
   } else {
-    throw new Error("Colour isn't 0000ff, it is: " + pixelColor);
+    throw new Error("Colour isn't 04cbfe, it is: " + pixelColor);
   }
   console.log("Now checking avatar on linked device");
   // Check avatar on device 2
   await device2.clickOnElement("User settings");
-  const el2 = await device2.waitForElementToBePresent({
+  const el2 = await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Profile picture",
   });
@@ -360,7 +363,7 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   // Wait for change
   // Verify change
   // Take screenshot
-  const el = await device1.waitForElementToBePresent({
+  const el = await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "User settings",
   });
@@ -376,7 +379,7 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   console.log("Now checking avatar on linked device");
   // Check avatar on device 2
   await device2.clickOnElement("User settings");
-  const el2 = await device2.waitForElementToBePresent({
+  const el2 = await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "User settings",
   });
