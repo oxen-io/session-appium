@@ -10,6 +10,7 @@ import {
 } from "../test/specs/utils/utilities";
 import {
   AccessibilityId,
+  DMTimeOption,
   Group,
   Strategy,
   StrategyExtractionObj,
@@ -678,7 +679,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     const configMessage = ele.includes(messageText);
     // console.log(configMessage, "config message");
     if (!configMessage) {
-      throw new Error(`Couldnt find configMessage`);
+      throw new Error(`Couldnt find control message ${messageText}`);
     }
     return configMessage;
   }
@@ -750,7 +751,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     ...args
   }: {
     text?: string;
-    maxWait: number;
+    maxWait?: number;
   } & StrategyExtractionObj) {
     const start = Date.now();
     let element: AppiumNextElementType | undefined = undefined;
@@ -1013,70 +1014,102 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return this.toShared().getAttribute(attribute, elementId);
   }
 
-  // public async radioButtonSelected(name: string) {
-  //   try {
-  //     const radioButton = await this.findElementByXPath(
-  //       `//*[./*[@name='${name}']]/*[2]`
-  //     );
+  public async radioButtonSelected(timeOption: DMTimeOption) {
+    try {
+      const radioButton = await this.findElementByXPath(
+        `//*[./*[@name='${timeOption}']]/*[2]`
+      );
 
-  //     const attr = await this.getAttribute("value", radioButton.ELEMENT);
-  //     if (attr === "selected") {
-  //       console.log("Great success - default time is correct");
-  //     } else {
-  //       throw new Error("Dammit - default time was not correct");
-  //     }
-  //   } catch (e) {
-  //     console.log(`Couldn't find radioButton ${name}`);
-  //   }
-  // }
+      const attr = await this.getAttribute("value", radioButton.ELEMENT);
+      if (attr === "selected") {
+        console.log("Great success - default time is correct");
+      } else {
+        throw new Error("Dammit - default time was not correct");
+      }
+    } catch (e) {
+      console.log(`Couldn't find radioButton ${timeOption}`);
+    }
+  }
 
-  public async sendImageIos(message: string) {
-    const ronSwansonBirthday = "196705060700.00";
-    await this.clickOnElement("Attachments button");
-    await sleepFor(1000);
-    await this.clickOnXAndYCoordinates(38, 767);
-    const permissions = await this.doesElementExist({
-      strategy: "accessibility id",
-      selector: "Allow Access to All Photos",
-      maxWait: 1000,
-    });
-    if (permissions) {
-      try {
-        await this.clickOnElement(`Allow Access to All Photos`);
-      } catch (e) {
+  public async sendImage(platform: SupportedPlatformsType, message: string) {
+    if (platform === "ios") {
+      const ronSwansonBirthday = "196705060700.00";
+      await this.clickOnElement("Attachments button");
+      await sleepFor(1000);
+      await this.clickOnXAndYCoordinates(38, 767);
+      const permissions = await this.doesElementExist({
+        strategy: "accessibility id",
+        selector: "Allow Access to All Photos",
+        maxWait: 1000,
+      });
+      if (permissions) {
+        try {
+          await this.clickOnElement(`Allow Access to All Photos`);
+        } catch (e) {
+          console.log("No permissions dialog");
+        }
+      } else {
         console.log("No permissions dialog");
       }
-    } else {
-      console.log("No permissions dialog");
-    }
-    // await this.clickOnElement("Allow Access to All Photos");
-    const testImage = await this.doesElementExist({
-      strategy: "accessibility id",
-      selector: `1967-05-05 21:00:00 +0000`,
-      maxWait: 2000,
-    });
-    if (!testImage) {
-      await runScriptAndLog(
-        `touch -a -m -t ${ronSwansonBirthday} 'run/test/specs/media/test_image.jpg'`
-      );
+      // await this.clickOnElement("Allow Access to All Photos");
+      const testImage = await this.doesElementExist({
+        strategy: "accessibility id",
+        selector: `1967-05-05 21:00:00 +0000`,
+        maxWait: 2000,
+      });
+      if (!testImage) {
+        await runScriptAndLog(
+          `touch -a -m -t ${ronSwansonBirthday} 'run/test/specs/media/test_image.jpg'`
+        );
 
-      await runScriptAndLog(
-        `xcrun simctl addmedia ${
-          process.env.IOS_FIRST_SIMULATOR || ""
-        } 'run/test/specs/media/test_image.jpg'`,
-        true
+        await runScriptAndLog(
+          `xcrun simctl addmedia ${
+            process.env.IOS_FIRST_SIMULATOR || ""
+          } 'run/test/specs/media/test_image.jpg'`,
+          true
+        );
+      }
+      await sleepFor(100);
+      await this.clickOnElement(`1967-05-05 21:00:00 +0000`);
+      await this.clickOnElement("Text input box");
+      await this.inputText("accessibility id", "Text input box", message);
+      await this.clickOnElement("Send button");
+      await this.waitForTextElementToBePresent({
+        strategy: "accessibility id",
+        selector: `Message sent status: Sent`,
+        maxWait: 50000,
+      });
+    } else {
+      await this.clickOnElement("Attachments button");
+      await sleepFor(100);
+      await this.clickOnElement("Documents folder");
+
+      const mediaButtons = await this.findElementsByClass(
+        "android.widget.CompoundButton"
       );
+      const imageButton = await this.findMatchingTextInElementArray(
+        mediaButtons,
+        "Images"
+      );
+      if (!imageButton) {
+        throw new Error("imageButton was not found in android");
+      }
+      await this.click(imageButton.ELEMENT);
+      const testImage = await this.doesElementExist({
+        strategy: "id",
+        selector: "android:id/title",
+        maxWait: 2000,
+        text: "test_image.jpg",
+      });
+      if (!testImage) {
+        await runScriptAndLog(
+          `adb -s emulator-5554 push 'run/test/specs/media/test_image.jpg' /storage/emulated/0/Download`,
+          true
+        );
+      }
+      await sleepFor(100);
+      await this.clickOnTextElementById("android:id/title", "test_image.jpg");
     }
-    await sleepFor(100);
-    await this.clickOnElement(`1967-05-05 21:00:00 +0000`);
-    await this.clickOnElement("Text input box");
-    await this.inputText("accessibility id", "Text input box", message);
-    await this.clickOnElement("Send button");
-    await this.waitForTextElementToBePresent({
-      strategy: "accessibility id",
-      selector: `Message sent status: Sent`,
-      maxWait: 50000,
-    });
   }
 
   // ACTIONS

@@ -34,12 +34,10 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   // Phone icon should appear now that conversation has been approved
   await device1.clickOnElement("Call");
   // Enabled voice calls in privacy settings
-  await device1.waitForTextElementToBePresent({
-    strategy: "id",
-    selector: "android:id/button1",
+  await device1.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: "Settings",
   });
-
-  await device1.clickOnElementById("android:id/button1");
   // Scroll to bottom of page to voice and video calls
   await sleepFor(1000);
   await device1.scrollDown();
@@ -67,12 +65,10 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   // Enable voice calls on device 2 for User B
   await device2.clickOnElement("Call");
   // Enabled voice calls in privacy settings
-  await device2.waitForTextElementToBePresent({
-    strategy: "id",
-    selector: "android:id/button1",
+  await device2.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: "Settings",
   });
-
-  await device2.clickOnElementById("android:id/button1");
   // Scroll to bottom of page to voice and video calls
   await sleepFor(1000);
   await device2.scrollDown();
@@ -99,7 +95,9 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   // Make call on device 1 (userA)
   await device1.clickOnElement("Call");
   // Answer call on device 2
-  await device2.clickOnElement("Answer call");
+  await device2.clickOnElementById(
+    "network.loki.messenger:id/acceptCallButton"
+  );
   // Wait 5 seconds
   await sleepFor(5000);
   // Hang up

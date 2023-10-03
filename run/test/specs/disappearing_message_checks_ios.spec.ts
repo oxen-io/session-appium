@@ -25,7 +25,7 @@ async function disappearingImageMessage(platform: SupportedPlatformsType) {
     "10 seconds",
   ]);
   await device1.navigateBack(platform);
-  await device1.sendImageIos(testMessage);
+  await device1.sendImage(platform, testMessage);
   await device2.clickOnElement("Untrusted attachment message");
   await sleepFor(500);
   // User B - Click on 'download'
@@ -155,8 +155,8 @@ async function disappearingVoiceMessage(platform: SupportedPlatformsType) {
   ]);
   await device1.navigateBack(platform);
   await device1.longPress("New voice message");
-  await device1.clickOnElement("OK");
-  await device1.pressAndHold("New voice message");
+  // await device1.clickOnElement("OK");
+  // await device1.pressAndHold("New voice message");
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Voice message",

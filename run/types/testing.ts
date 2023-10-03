@@ -37,7 +37,7 @@ export type StrategyExtractionObj =
     };
 
 export type XPath =
-  // | `//*[./*[@name='${name}']]/*[2]`
+  | `//*[./*[@name='${DMTimeOption}']]/*[2]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.FrameLayout[2]/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout[5]/android.widget.RelativeLayout/android.widget.TextView[2]`
   | `(//XCUIElementTypeImage[@name="gif cell"])[1]`
   | `//XCUIElementTypeStaticText[@name="Videos"]`
@@ -70,7 +70,10 @@ export type AccessibilityId =
   | "New conversation button"
   | "New direct message"
   | "Join Community"
+  | "Join community"
+  | "Join community button"
   | "Enter Community URL"
+  | "Community input"
   | "Join"
   | "Conversations"
   | "Create group"
@@ -78,6 +81,7 @@ export type AccessibilityId =
   | "Contact"
   | "Contact mentions"
   | "Empty state label"
+  | "Empty list"
   | "Link a device"
   | "Link Device"
   | "Enter your recovery phrase"
@@ -184,4 +188,5 @@ export type AccessibilityId =
   | "Save"
   | "Scroll button"
   | "Add"
-  | "Community invitation";
+  | "Community invitation"
+  | "Link preview";

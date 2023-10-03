@@ -43,7 +43,7 @@ export const createGroup = async (
   await runOnlyOnIOS(platform, () =>
     device1.waitForTextElementToBePresent({
       strategy: "accessibility id",
-      selector: "Empty state label",
+      selector: "Empty list",
     })
   );
   // await runOnlyOnIOS(platform, () =>

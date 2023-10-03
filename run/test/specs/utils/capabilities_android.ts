@@ -4,7 +4,8 @@ import { isNil, isString } from "lodash";
 import { getAndroidBinariesRoot } from "./binaries";
 import { CapabilitiesIndexType } from "./capabilities_ios";
 
-const androidAppFullPath = `/Users/emilyburton/Desktop/session-1.17.1-universal.apk`;
+// const androidAppFullPath = `/Users/emilyburton/Desktop/session-1.17.1-universal.apk`;
+const androidAppFullPath = `/Users/emilyburton/Documents/session-android/app/build/outputs/apk/play/debug/session-1.17.1-universal.apk`;
 
 const sharedCapabilities: AppiumW3CCapabilities = {
   "appium:app": androidAppFullPath,

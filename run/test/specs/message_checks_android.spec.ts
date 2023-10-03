@@ -1,5 +1,5 @@
 import { androidIt } from "../../types/sessionIt";
-import { sleepFor } from "./utils";
+import { clickOnXAndYCoordinates, sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 
@@ -19,44 +19,15 @@ async function sendImage(platform: SupportedPlatformsType) {
   ]);
   const replyMessage = `Replying to image from ${userA.userName}`;
   await newContact(platform, device1, userA, device2, userB);
-  await device1.clickOnElement("Attachments button");
-  await sleepFor(100);
-  await device1.clickOnElement("Documents folder");
-
-  const mediaButtons = await device1.findElementsByClass(
-    "android.widget.CompoundButton"
-  );
-  const imageButton = await device1.findMatchingTextInElementArray(
-    mediaButtons,
-    "Images"
-  );
-  if (!imageButton) {
-    throw new Error("imageButton was not found in android");
-  }
-  await device1.click(imageButton.ELEMENT);
-  const testImage = await device1.doesElementExist({
-    strategy: "id",
-    selector: "android:id/title",
-    maxWait: 2000,
-    text: "test_image.jpg",
-  });
-  if (!testImage) {
-    await runScriptAndLog(
-      `adb -s emulator-5554 push 'run/test/specs/media/test_image.jpg' /storage/emulated/0/Download`,
-      true
-    );
-  }
-  await sleepFor(100);
-  await device1.clickOnTextElementById("android:id/title", "test_image.jpg");
-
+  await device1.sendImage(platform, "Sending image");
   await device2.clickOnElement("Untrusted attachment message");
   await sleepFor(500);
   // User B - Click on 'download'
   await device2.clickOnElement("Download media");
-
   // Reply to message
-
-  await device2.longPress("Media message");
+  // Wait for image to load (unclickable if not loaded correctly)
+  await sleepFor(2000);
+  await device2.pressAndHold("Media message");
   await device2.clickOnElement("Reply to message");
   await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({
@@ -311,14 +282,12 @@ async function sendLink(platform: SupportedPlatformsType) {
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
   ]);
+  const testLink = `https://nerdlegame.com/`;
+  const linkDescription = `Nerdle - the daily numbers game`;
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // Send a link
-  await device1.inputText(
-    "accessibility id",
-    "Message input box",
-    `https://nerdlegame.com/`
-  );
+  await device1.inputText("accessibility id", "Message input box", testLink);
   // Accept dialog for link preview
   await device1.clickOnElement("Enable");
   // No preview on first send
@@ -326,23 +295,56 @@ async function sendLink(platform: SupportedPlatformsType) {
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message sent status: Sent",
-    maxWait: 20000,
+    maxWait: 25000,
   });
-  // Send again for image
-  await device1.inputText(
-    "accessibility id",
-    "Message input box",
-    `https://nerdlegame.com/`
-  );
-  await sleepFor(100);
-  await device1.clickOnElement("Send message button");
-  // Make sure link works (dialog pop ups saying are you sure?)
-
-  // Make sure image preview is available in device 2
   await device2.waitForTextElementToBePresent({
+    strategy: "id",
+    selector: "network.loki.messenger:id/linkPreviewView",
+  });
+  await closeApp(device1, device2);
+}
+
+async function sendCommunityInviteMessage(platform: SupportedPlatformsType) {
+  const { device1, device2 } = await openAppTwoDevices(platform);
+  const communityLink = `https://chat.lokinet.dev/testing-all-the-things?public_key=1d7e7f92b1ed3643855c98ecac02fc7274033a3467653f047d6e433540c03f17`;
+  const communityName = "Testing All The Things!";
+  // Create two users
+  const [userA, userB] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+  ]);
+  // Create contact
+  await newContact(platform, device1, userA, device2, userB);
+  // Join community
+
+  await sleepFor(100);
+  await device1.navigateBack(platform);
+  await device1.clickOnElement("New conversation button");
+  await device1.clickOnElement("Join community");
+  await device1.inputText("accessibility id", "Community input", communityLink);
+  await clickOnXAndYCoordinates(device1, 587, 1066);
+  await device1.clickOnElement("Join community button");
+  // Wait for community to load
+  await sleepFor(1000);
+  // Add user B to community
+  await device1.clickOnElement("More options");
+  await device1.clickOnElementAll({
+    strategy: "id",
+    selector: "network.loki.messenger:id/title",
+    text: "Add members",
+  });
+  await device1.clickOnElementByText({
     strategy: "accessibility id",
-    selector: "Message body",
-    text: `https://nerdlegame.com/`,
+    selector: "Contact",
+    text: userB.userName,
+  });
+  await device1.clickOnElement("Done");
+  // Check device 2 for invitation from user A
+  await device2.waitForTextElementToBePresent({
+    strategy: "id",
+    selector: "network.loki.messenger:id/openGroupTitleTextView",
+    text: communityName,
+    maxWait: 10000,
   });
   await closeApp(device1, device2);
 }
@@ -438,13 +440,14 @@ async function checkPerformance(platform: SupportedPlatformsType) {
 }
 
 describe("Message checks android", () => {
-  androidIt("Send image and reply test", sendImage);
-  androidIt("Send video and reply test", sendVideo);
-  androidIt("Send voice message test", sendVoiceMessage);
-  androidIt("Send document and reply test", sendDocument);
-  androidIt("Send link test", sendLink);
-  androidIt("Send GIF and reply test", sendGif);
-  androidIt("Send long text and reply test", sendLongMessage);
+  androidIt("Send image", sendImage);
+  androidIt("Send video", sendVideo);
+  androidIt("Send voice message", sendVoiceMessage);
+  androidIt("Send document", sendDocument);
+  androidIt("Send link", sendLink);
+  androidIt("Send GIF", sendGif);
+  androidIt("Send long text", sendLongMessage);
+  androidIt("Send community invitation message", sendCommunityInviteMessage);
   androidIt("Unsend message", unsendMessage);
   androidIt("Delete message", deleteMessage);
   androidIt("Check performance", checkPerformance);
