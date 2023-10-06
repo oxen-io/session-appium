@@ -190,4 +190,5 @@ export type AccessibilityId =
   | "Scroll button"
   | "Add"
   | "Community invitation"
-  | "Link preview";
+  | "Link preview"
+  | "covid";

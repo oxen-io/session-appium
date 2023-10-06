@@ -21,6 +21,7 @@ async function sendImage(platform: SupportedPlatformsType) {
   await newContact(platform, device1, userA, device2, userB);
   await device1.sendImage(platform, "Sending image");
   await device2.clickOnElement("Untrusted attachment message");
+
   await sleepFor(500);
   // User B - Click on 'download'
   await device2.clickOnElement("Download media");
@@ -28,6 +29,7 @@ async function sendImage(platform: SupportedPlatformsType) {
   // Wait for image to load (unclickable if not loaded correctly)
   await sleepFor(2000);
   await device2.pressAndHold("Media message");
+
   await device2.clickOnElement("Reply to message");
   await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({
@@ -276,13 +278,12 @@ async function sendLongMessage(platform: SupportedPlatformsType) {
 
 async function sendLink(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-
+  const testLink = `https://nerdlegame.com/`;
   // Create two users
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
   ]);
-  const testLink = `https://nerdlegame.com/`;
   const linkDescription = `Nerdle - the daily numbers game`;
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
@@ -369,7 +370,7 @@ async function unsendMessage(platform: SupportedPlatformsType) {
     selector: "Message body",
     text: sentMessage,
   });
-  console.log("Doing a long click on" + `${sentMessage}`);
+  // console.log("Doing a long click on" + `${sentMessage}`);
   // Select and long press on message to delete it
   await device1.longPressMessage(sentMessage);
   // Select Delete icon
@@ -410,9 +411,9 @@ async function deleteMessage(platform: SupportedPlatformsType) {
   await device1.longPressMessage(sentMessage);
   // Select Delete icon
   await device1.clickOnElement("Delete message");
-  // Select 'Delete for me and User B'
+  // Select 'Delete for just me'
   await device1.clickOnElement("Delete just for me");
-  // Look in User B's chat for alert 'This message has been deleted?'
+
   await sleepFor(1000);
   await device1.hasTextElementBeenDeleted("Message body", sentMessage);
 
