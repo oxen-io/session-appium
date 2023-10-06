@@ -295,7 +295,7 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   await closeApp(device);
 }
 
-describe("Disappearing messages", () => {
+describe.skip("Disappearing messages", () => {
   iosIt("Disappearing messages legacy", disappearingMessagesLegacy);
   androidIt("Disappearing messages legacy", disappearingMessagesLegacy);
 

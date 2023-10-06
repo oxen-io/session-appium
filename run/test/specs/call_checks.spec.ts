@@ -1,11 +1,11 @@
 import { androidIt, iosIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
+import { runOnlyOnAndroid, sleepFor } from "./utils/index";
 import {
-  clickOnXAndYCoordinates,
-  runOnlyOnAndroid,
-  sleepFor,
-} from "./utils/index";
-import { openAppTwoDevices, SupportedPlatformsType } from "./utils/open_app";
+  SupportedPlatformsType,
+  closeApp,
+  openAppTwoDevices,
+} from "./utils/open_app";
 
 async function voiceCallAndroid(platform: SupportedPlatformsType) {
   // Open app
@@ -105,6 +105,8 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   // Check for config message 'Called User B' on device 1
   await device1.findConfigurationMessage(`Called ${userB.userName}`);
   await device2.findConfigurationMessage(`${userA.userName} called you`);
+  // Excellent
+  await closeApp(device1, device2);
 }
 
 async function voiceCallIos(platform: SupportedPlatformsType) {
@@ -180,6 +182,8 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
     selector: "Control message",
     text: `${userA.userName} called you`,
   });
+  // Excellent
+  await closeApp(device1, device2);
 }
 
 describe("Voice calls ", () => {

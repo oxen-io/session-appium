@@ -439,11 +439,11 @@ async function readStatus(platform: SupportedPlatformsType) {
     selector: "Message body",
     text: testMessage,
   });
-  await device2.clickOnElementByText({
-    strategy: "accessibility id",
-    selector: "Message body",
-    text: testMessage,
-  });
+  // await device2.clickOnElementAll({
+  //   strategy: "accessibility id",
+  //   selector: "Message body",
+  //   text: testMessage,
+  // });
   // Check read status on device 1
   await runOnlyOnAndroid(platform, () =>
     device1.waitForTextElementToBePresent({

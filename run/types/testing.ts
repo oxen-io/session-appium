@@ -122,6 +122,7 @@ export type AccessibilityId =
   | "Add Members"
   | "Done"
   | "Control message"
+  | "Configuration message"
   | "Mentions list"
   | "Send message button"
   | "Mentions list"

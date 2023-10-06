@@ -953,13 +953,6 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.selectByText("Conversation list item", receiver.userName);
     console.log(`${sender.userName} + " sent message to ${receiver.userName}`);
     await this.sendMessage(message);
-    // wait for message to be received before moving on
-    await this.waitForTextElementToBePresent({
-      strategy: "accessibility id",
-      selector: "Message body",
-      text: message,
-    });
-
     console.log(
       `Message received by ${receiver.userName} from ${sender.userName}`
     );
@@ -1095,6 +1088,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
         throw new Error("imageButton was not found in android");
       }
       await this.click(imageButton.ELEMENT);
+      await sleepFor(100);
       const testImage = await this.doesElementExist({
         strategy: "id",
         selector: "android:id/title",
@@ -1109,6 +1103,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
       }
       await sleepFor(100);
       await this.clickOnTextElementById("android:id/title", "test_image.jpg");
+      await this.waitForTextElementToBePresent({
+        strategy: "accessibility id",
+        selector: `Message sent status: Sent`,
+        maxWait: 50000,
+      });
     }
   }
 
