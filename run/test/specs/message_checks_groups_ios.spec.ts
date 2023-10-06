@@ -76,12 +76,12 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
   await sleepFor(1000);
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: testMessage,
   });
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: testMessage,
   });
   // Close server and devices
@@ -170,12 +170,12 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Send button");
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: testMessage,
   });
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: testMessage,
   });
   await sleepFor(3000);
@@ -184,12 +184,12 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
   await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: replyMessage,
   });
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: replyMessage,
   });
   // Close server and devices
@@ -223,15 +223,15 @@ async function sendVoiceMessageGroup(platform: SupportedPlatformsType) {
   await device1.clickOnElement("OK");
   await device1.pressAndHold("New voice message");
 
-  await device1.waitForElementToBePresent({
+  await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Voice message",
   });
-  await device2.waitForElementToBePresent({
+  await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Voice message",
   });
-  await device3.waitForElementToBePresent({
+  await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Voice message",
   });
@@ -241,12 +241,12 @@ async function sendVoiceMessageGroup(platform: SupportedPlatformsType) {
   await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: replyMessage,
   });
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: replyMessage,
   });
   // Close server and devices
@@ -314,12 +314,12 @@ async function sendGifGroup(platform: SupportedPlatformsType) {
   await sleepFor(500);
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: testMessage,
   });
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: testMessage,
   });
   await device2.longPressMessage(testMessage);
@@ -328,12 +328,12 @@ async function sendGifGroup(platform: SupportedPlatformsType) {
   await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: replyMessage,
   });
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: replyMessage,
   });
   await closeApp(device1, device2, device3);
@@ -366,23 +366,23 @@ async function sendLongMessageGroup(platform: SupportedPlatformsType) {
   await device1.sendMessage(longText);
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: longText,
   });
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: longText,
   });
   const replyMessage = await device2.replyToMessage(userA, longText);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: replyMessage,
   });
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: replyMessage,
   });
   // Close app
@@ -412,7 +412,7 @@ async function sendLinkGroup(platform: SupportedPlatformsType) {
     testGroupName
   );
   await device1.inputText("accessibility id", "Message input box", testLink);
-  await device1.waitForElementToBePresent({
+  await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message sent status: Sent",
     maxWait: 20000,
@@ -427,23 +427,23 @@ async function sendLinkGroup(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Send message button");
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: testLink,
   });
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: testLink,
   });
   const replyMessage = await device2.replyToMessage(userA, testLink);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: replyMessage,
   });
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: replyMessage,
   });
   await closeApp(device1, device2, device3);
@@ -476,12 +476,12 @@ async function deleteMessageGroup(platform: SupportedPlatformsType) {
   // await sleepFor(1000);
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: sentMessage,
   });
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: sentMessage,
   });
   // Select and long press on message to delete it
