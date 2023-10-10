@@ -29,7 +29,7 @@ async function acceptRequest(platform: SupportedPlatformsType) {
   // Verify config message for Alice 'Your message request has been accepted'
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Configuration message",
+    selector: "Control message",
     text: "Your message request has been accepted.",
   });
   await device2.navigateBack(platform);
@@ -71,11 +71,10 @@ async function declineRequest(platform: SupportedPlatformsType) {
   await sleepFor(100);
   await device2.navigateBack(platform);
   // Look for new conversation button to make sure it all worked
-  await device2.waitForElementToBePresent({
+  await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "New conversation button",
   });
-
   // Close app
   await closeApp(device1, device2);
 }
@@ -100,7 +99,7 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
   // Check config
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Configuration message",
+    selector: "Control message",
     text: "Your message request has been accepted.",
   });
   // Close app
@@ -131,19 +130,28 @@ async function blockRequest(platform: SupportedPlatformsType) {
   const blockedMessage = `${userA.userName} to ${userB.userName} - shouldn't get through`;
   await device1.sendMessage(blockedMessage);
   await device2.navigateBack(platform);
-  await device2.waitForElementToBePresent({
+  await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "New conversation button",
   });
+
   // Need to wait to see if message gets through
   await sleepFor(1000);
-  await device2.hasTextElementBeenDeleted("Message Body", blockedMessage);
+  await device2.hasTextElementBeenDeleted("Message body", blockedMessage);
   // Check blocked contacts section for user A
   await device2.clickOnElement("User settings");
   await device2.clickOnElement("Conversations");
   await runOnlyOnAndroid(platform, () =>
     device2.clickOnElement("Blocked contacts")
   );
+  await runOnlyOnIOS(platform, () =>
+    device2.clickOnElement("Blocked Contacts")
+  );
+  await device2.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Contact",
+    text: userA.userName,
+  });
   await runOnlyOnIOS(platform, () =>
     device2.clickOnElement("Blocked Contacts")
   );
@@ -197,12 +205,10 @@ async function clearAllRequests(platform: SupportedPlatformsType) {
     device2.clickOnTextElementById("android:id/button1", "YES")
   );
   await runOnlyOnIOS(platform, () => device2.clickOnElement("Clear"));
-
-  await device2.waitForElementToBePresent({
+  await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "No pending message requests",
   });
-
   await closeApp(device1, device2);
 }
 

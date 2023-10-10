@@ -13,9 +13,14 @@ export type Group = {
 
 export type Strategy = "accessibility id" | "xpath" | "id" | "class name";
 
-// export type StrategyExtraction =
-//   | [Extract<Strategy, "xpath" | "id" | "class name">, string]
-//   | [Extract<Strategy, "accessibility id">, AccessibilityId];
+export type ConversationType = "1o1" | "Group" | "Community" | "Note to Self";
+
+export type DMTimeOption =
+  | "10 seconds"
+  | "12 hours"
+  | "1 day"
+  | "1 week"
+  | "2 weeks";
 
 export type StrategyExtractionObj =
   | {
@@ -32,6 +37,7 @@ export type StrategyExtractionObj =
     };
 
 export type XPath =
+  | `//*[./*[@name='${DMTimeOption}']]/*[2]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.FrameLayout[2]/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout[5]/android.widget.RelativeLayout/android.widget.TextView[2]`
   | `(//XCUIElementTypeImage[@name="gif cell"])[1]`
   | `//XCUIElementTypeStaticText[@name="Videos"]`
@@ -63,12 +69,19 @@ export type AccessibilityId =
   | "No pending message requests"
   | "New conversation button"
   | "New direct message"
+  | "Join Community"
+  | "Join community"
+  | "Join community button"
+  | "Enter Community URL"
+  | "Community input"
+  | "Join"
   | "Conversations"
   | "Create group"
   | "Group name input"
   | "Contact"
   | "Contact mentions"
   | "Empty state label"
+  | "Empty list"
   | "Link a device"
   | "Link Device"
   | "Enter your recovery phrase"
@@ -77,15 +90,25 @@ export type AccessibilityId =
   | "Call"
   | "Answer call"
   | "Allow voice and video calls"
-  | "End call button"
+  | "End call"
   | "Close button"
   | "Enable"
   | "More options"
   | "Disappearing Messages"
+  | "Disappearing messages"
+  | "Disappear after read option"
+  | "Disappear after send option"
+  | "10 seconds"
+  | "12 hours"
+  | "1 day"
+  | "1 week"
+  | "2 weeks"
+  | "Set button"
+  | "Disable disappearing messages"
   | "Disappearing messages time picker"
   | "Time selector"
   | "Message input box"
-  | "Message Body"
+  | "Message body"
   | "Group name"
   | "Accept name change"
   | "Edit group"
@@ -96,7 +119,9 @@ export type AccessibilityId =
   | "Apply"
   | "Conversation list item"
   | "Add members"
+  | "Add Members"
   | "Done"
+  | "Control message"
   | "Configuration message"
   | "Mentions list"
   | "Send message button"
@@ -161,4 +186,9 @@ export type AccessibilityId =
   | "Save button"
   | "Yes"
   | "No"
-  | "Save";
+  | "Save"
+  | "Scroll button"
+  | "Add"
+  | "Community invitation"
+  | "Link preview"
+  | "covid";

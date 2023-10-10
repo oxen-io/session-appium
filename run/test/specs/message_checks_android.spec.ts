@@ -1,5 +1,5 @@
 import { androidIt } from "../../types/sessionIt";
-import { sleepFor } from "./utils";
+import { clickOnXAndYCoordinates, sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 
@@ -19,51 +19,25 @@ async function sendImage(platform: SupportedPlatformsType) {
   ]);
   const replyMessage = `Replying to image from ${userA.userName}`;
   await newContact(platform, device1, userA, device2, userB);
-  await device1.clickOnElement("Attachments button");
-  await sleepFor(100);
-  await device1.clickOnElement("Documents folder");
-
-  const mediaButtons = await device1.findElementsByClass(
-    "android.widget.CompoundButton"
-  );
-  const imageButton = await device1.findMatchingTextInElementArray(
-    mediaButtons,
-    "Images"
-  );
-  if (!imageButton) {
-    throw new Error("imageButton was not found in android");
-  }
-  await device1.click(imageButton.ELEMENT);
-  const testImage = await device1.doesElementExist({
-    strategy: "id",
-    selector: "android:id/title",
-    maxWait: 2000,
-    text: "test_image.jpg",
-  });
-  if (!testImage) {
-    await runScriptAndLog(
-      `adb -s emulator-5554 push 'run/test/specs/media/test_image.jpg' /storage/emulated/0/Download`,
-      true
-    );
-  }
-  await sleepFor(100);
-  await device1.clickOnTextElementById("android:id/title", "test_image.jpg");
-
+  await device1.sendImage(platform, "Sending image");
   await device2.clickOnElement("Untrusted attachment message");
+
   await sleepFor(500);
   // User B - Click on 'download'
   await device2.clickOnElement("Download media");
-
   // Reply to message
+  // Wait for image to load (unclickable if not loaded correctly)
+  await sleepFor(2000);
+  await device2.pressAndHold("Media message");
 
-  await device2.longPress("Media message");
   await device2.clickOnElement("Reply to message");
   await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: replyMessage,
   });
+
   // Close app and server
   await closeApp(device1, device2);
 }
@@ -117,7 +91,7 @@ async function sendDocument(platform: SupportedPlatformsType) {
   await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: replyMessage,
   });
   // Close app and server
@@ -166,7 +140,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
       true
     );
   }
-  await sleepFor(100);
+  await sleepFor(1000);
   await device1.clickOnTextElementById("android:id/title", "test_video.mp4");
   // User B - Click on untrusted attachment message
   await device2.clickOnElement("Untrusted attachment message", 10000);
@@ -174,7 +148,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
   // User B - Click on 'download'
   await device2.clickOnElement("Download media");
   // Reply to message
-  await device2.waitForElementToBePresent({
+  await device2.waitForTextElementToBePresent({
     strategy: "id",
     selector: "network.loki.messenger:id/play_overlay",
   });
@@ -184,9 +158,10 @@ async function sendVideo(platform: SupportedPlatformsType) {
   await sleepFor(2000);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: replyMessage,
   });
+
   // Close app and server
   await closeApp(device1, device2);
 }
@@ -208,7 +183,7 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
     `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.Button[1]`
   );
   await device1.pressAndHold("New voice message");
-  // await device1.waitForElementToBePresent("Voice message");
+  // await device1.waitForTextElementToBePresent("Voice message");
   await device2.clickOnElement("Untrusted attachment message");
   await sleepFor(200);
   await device2.clickOnElement("Download media");
@@ -218,10 +193,9 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
   await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: replyMessage,
   });
-
   await closeApp(device1, device2);
 }
 
@@ -267,9 +241,10 @@ async function sendGif(platform: SupportedPlatformsType) {
   await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: replyMessage,
   });
+
   // Close app
   await closeApp(device1, device2);
 }
@@ -303,7 +278,37 @@ async function sendLongMessage(platform: SupportedPlatformsType) {
 
 async function sendLink(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
+  const testLink = `https://nerdlegame.com/`;
+  // Create two users
+  const [userA, userB] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+  ]);
+  const linkDescription = `Nerdle - the daily numbers game`;
+  // Create contact
+  await newContact(platform, device1, userA, device2, userB);
+  // Send a link
+  await device1.inputText("accessibility id", "Message input box", testLink);
+  // Accept dialog for link preview
+  await device1.clickOnElement("Enable");
+  // No preview on first send
+  await device1.clickOnElement("Send message button");
+  await device1.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Message sent status: Sent",
+    maxWait: 25000,
+  });
+  await device2.waitForTextElementToBePresent({
+    strategy: "id",
+    selector: "network.loki.messenger:id/linkPreviewView",
+  });
+  await closeApp(device1, device2);
+}
 
+async function sendCommunityInviteMessage(platform: SupportedPlatformsType) {
+  const { device1, device2 } = await openAppTwoDevices(platform);
+  const communityLink = `https://chat.lokinet.dev/testing-all-the-things?public_key=1d7e7f92b1ed3643855c98ecac02fc7274033a3467653f047d6e433540c03f17`;
+  const communityName = "Testing All The Things!";
   // Create two users
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -311,36 +316,36 @@ async function sendLink(platform: SupportedPlatformsType) {
   ]);
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
-  // Send a link
-  await device1.inputText(
-    "accessibility id",
-    "Message input box",
-    `https://nerdlegame.com/`
-  );
-  // Accept dialog for link preview
-  await device1.clickOnElement("Enable");
-  // No preview on first send
-  await device1.clickOnElement("Send message button");
-  await device1.waitForElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message sent status: Sent",
-    maxWait: 20000,
-  });
-  // Send again for image
-  await device1.inputText(
-    "accessibility id",
-    "Message input box",
-    `https://nerdlegame.com/`
-  );
-  await sleepFor(100);
-  await device1.clickOnElement("Send message button");
-  // Make sure link works (dialog pop ups saying are you sure?)
+  // Join community
 
-  // Make sure image preview is available in device 2
-  await device2.waitForTextElementToBePresent({
+  await sleepFor(100);
+  await device1.navigateBack(platform);
+  await device1.clickOnElement("New conversation button");
+  await device1.clickOnElement("Join community");
+  await device1.inputText("accessibility id", "Community input", communityLink);
+  await clickOnXAndYCoordinates(device1, 587, 1066);
+  await device1.clickOnElement("Join community button");
+  // Wait for community to load
+  await sleepFor(1000);
+  // Add user B to community
+  await device1.clickOnElement("More options");
+  await device1.clickOnElementAll({
+    strategy: "id",
+    selector: "network.loki.messenger:id/title",
+    text: "Add members",
+  });
+  await device1.clickOnElementByText({
     strategy: "accessibility id",
-    selector: "Message Body",
-    text: `https://nerdlegame.com/`,
+    selector: "Contact",
+    text: userB.userName,
+  });
+  await device1.clickOnElement("Done");
+  // Check device 2 for invitation from user A
+  await device2.waitForTextElementToBePresent({
+    strategy: "id",
+    selector: "network.loki.messenger:id/openGroupTitleTextView",
+    text: communityName,
+    maxWait: 10000,
   });
   await closeApp(device1, device2);
 }
@@ -362,10 +367,10 @@ async function unsendMessage(platform: SupportedPlatformsType) {
   // await sleepFor(1000);
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: sentMessage,
   });
-  console.log("Doing a long click on" + `${sentMessage}`);
+  // console.log("Doing a long click on" + `${sentMessage}`);
   // Select and long press on message to delete it
   await device1.longPressMessage(sentMessage);
   // Select Delete icon
@@ -373,7 +378,7 @@ async function unsendMessage(platform: SupportedPlatformsType) {
   // Select 'Delete for me and User B'
   await device1.clickOnElement("Delete for everyone");
   // Look in User B's chat for alert 'This message has been deleted?'
-  await device2.waitForElementToBePresent({
+  await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Deleted message",
   });
@@ -399,18 +404,18 @@ async function deleteMessage(platform: SupportedPlatformsType) {
   // await sleepFor(1000);
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Message Body",
+    selector: "Message body",
     text: sentMessage,
   });
   // Select and long press on message to delete it
   await device1.longPressMessage(sentMessage);
   // Select Delete icon
   await device1.clickOnElement("Delete message");
-  // Select 'Delete for me and User B'
+  // Select 'Delete for just me'
   await device1.clickOnElement("Delete just for me");
-  // Look in User B's chat for alert 'This message has been deleted?'
+
   await sleepFor(1000);
-  await device1.hasTextElementBeenDeleted("Message Body", sentMessage);
+  await device1.hasTextElementBeenDeleted("Message body", sentMessage);
 
   // Excellent
   await closeApp(device1, device2);
@@ -443,11 +448,10 @@ describe("Message checks android", () => {
   androidIt("Send link", sendLink);
   androidIt("Send GIF", sendGif);
   androidIt("Send long text", sendLongMessage);
+  androidIt("Send community invitation message", sendCommunityInviteMessage);
   androidIt("Unsend message", unsendMessage);
   androidIt("Delete message", deleteMessage);
   androidIt("Check performance", checkPerformance);
 });
 
-// Link preview without image
-// Link preview with image
 // Media saved notification
