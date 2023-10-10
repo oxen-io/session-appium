@@ -120,8 +120,7 @@ async function startAndroidEmulator(emulatorName: string) {
 
 async function isEmulatorRunning(emulatorName: string) {
   const failedWith = await runScriptAndLog(
-    `${getAdbFullPath()} -s ${emulatorName} get-state;`,
-    true
+    `${getAdbFullPath()} -s ${emulatorName} get-state;`
   );
 
   return (

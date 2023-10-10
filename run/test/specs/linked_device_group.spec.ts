@@ -74,7 +74,7 @@ async function groupCreationandNameChangeLinkedDevice(
   // Config message on ios is "Title is now blah"
   await runOnlyOnIOS(platform, () =>
     device1.findMatchingTextAndAccessibilityId(
-      "Configuration message",
+      "Control message",
       "Title is now " + `'${newGroupName}'.`
     )
   );
@@ -82,7 +82,7 @@ async function groupCreationandNameChangeLinkedDevice(
   await sleepFor(2000);
   await runOnlyOnAndroid(platform, () =>
     device1.findMatchingTextAndAccessibilityId(
-      "Configuration message",
+      "Control message",
       "You renamed the group to " + `${newGroupName}`
     )
   );
@@ -95,14 +95,14 @@ async function groupCreationandNameChangeLinkedDevice(
   // Check config message in linked device aswell
   await runOnlyOnIOS(platform, () =>
     device2.findMatchingTextAndAccessibilityId(
-      "Configuration message",
+      "Control message",
       "Title is now " + `'${newGroupName}'.`
     )
   );
   // Config on Android is "You renamed the group to blah"
   await runOnlyOnAndroid(platform, () =>
     device2.findMatchingTextAndAccessibilityId(
-      "Configuration message",
+      "Control message",
       "You renamed the group to " + `${newGroupName}`
     )
   );
