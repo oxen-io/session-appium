@@ -11,7 +11,7 @@ import {
 } from "./utils/open_app";
 
 async function groupCreation(platform: SupportedPlatformsType) {
-  const testGroupName = "The Manhattan Crew";
+  const testGroupName = "The Manhattan Project";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([

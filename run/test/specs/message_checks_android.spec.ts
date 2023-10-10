@@ -140,7 +140,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
       true
     );
   }
-  await sleepFor(100);
+  await sleepFor(1000);
   await device1.clickOnTextElementById("android:id/title", "test_video.mp4");
   // User B - Click on untrusted attachment message
   await device2.clickOnElement("Untrusted attachment message", 10000);
@@ -454,6 +454,4 @@ describe("Message checks android", () => {
   androidIt("Check performance", checkPerformance);
 });
 
-// Link preview without image
-// Link preview with image
 // Media saved notification

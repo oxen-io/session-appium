@@ -30,37 +30,7 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
     testGroupName
   );
   const replyMessage = `Replying to image from ${userA.userName}`;
-  await device1.clickOnElement("Attachments button");
-  // Wait for page to load
-  await sleepFor(100);
-  await device1.clickOnElement("Documents folder");
-  // Sort files into categories (images)
-  const mediaButtons = await device1.findElementsByClass(
-    "android.widget.CompoundButton"
-  );
-  const imageButton = await device1.findMatchingTextInElementArray(
-    mediaButtons,
-    "Images"
-  );
-  if (!imageButton) {
-    throw new Error("imageButton was not found in android");
-  }
-  await device1.click(imageButton.ELEMENT);
-  const testImage = await device1.doesElementExist({
-    strategy: "id",
-    selector: "android:id/title",
-    maxWait: 2000,
-    text: "test_image.jpg",
-  });
-  if (!testImage) {
-    await runScriptAndLog(
-      `adb -s emulator-5554 push 'run/test/specs/media/test_image.jpg' /storage/emulated/0/Download`,
-      true
-    );
-  }
-  // Wait for image to appear on screen
-  await sleepFor(100);
-  await device1.clickOnTextElementById("android:id/title", "test_image.jpg");
+  await device1.sendImage(platform, "Testing image sending to groups");
   // Wait for image to appear in conversation screen
   await sleepFor(500);
   await device2.waitForTextElementToBePresent({
@@ -296,7 +266,7 @@ async function sendDocumentGroup(platform: SupportedPlatformsType) {
       true
     );
   }
-  await sleepFor(100);
+  await sleepFor(1000);
   await device1.clickOnTextElementById("android:id/title", "test_file.pdf");
   // Reply to message
   await sleepFor(1000);
@@ -443,81 +413,81 @@ async function sendGifGroup(platform: SupportedPlatformsType) {
 }
 /* COMMENTED OUT UNTIL BUG FOR SCROLL TO BOTTOM IS FIXED */
 
-// async function sendLongMessageGroup(platform: SupportedPlatformsType) {
-//   const testGroupName = "Message checks for groups";
-//   const { device1, device2, device3 } = await openAppThreeDevices(platform);
-//   // Create users A, B and C
-//   const [userA, userB, userC] = await Promise.all([
-//     newUser(device1, "Alice", platform),
-//     newUser(device2, "Bob", platform),
-//     newUser(device3, "Charlie", platform),
-//   ]);
-//   // Create contact between User A and User B
-//   await createGroup(
-//     platform,
-//     device1,
-//     userA,
-//     device2,
-//     userB,
-//     device3,
-//     userC,
-//     testGroupName
-//   );
-//   const longText =
-//     "Mauris sapien dui, sagittis et fringilla eget, tincidunt vel mauris. Mauris bibendum quis ipsum ac pulvinar. Integer semper elit vitae placerat efficitur. Quisque blandit scelerisque orci, a fringilla dui. In a sollicitudin tortor. Vivamus consequat sollicitudin felis, nec pretium dolor bibendum sit amet. Integer non congue risus, id imperdiet diam. Proin elementum enim at felis commodo semper. Pellentesque magna magna, laoreet nec hendrerit in, suscipit sit amet risus. Nulla et imperdiet massa. Donec commodo felis quis arcu dignissim lobortis. Praesent nec fringilla felis, ut pharetra sapien. Donec ac dignissim nisi, non lobortis justo. Nulla congue velit nec sodales bibendum. Nullam feugiat, mauris ac consequat posuere, eros sem dignissim nulla, ac convallis dolor sem rhoncus dolor. Cras ut luctus risus, quis viverra mauris.";
-//   // Sending a long text message
-//   const replyMessage = `${userA.userName} message reply`;
-//   await device1.inputText("accessibility id", "Message input box", longText);
-//   // Click send
-//   await device1.clickOnElement("Send message button");
-//   // await device1.clickOnElementAll({
-//   //   strategy: "id",
-//   //   selector: `network.loki.messenger:id/scrollToBottomButton`,
-//   // });
-//   await device1.waitForElementToBePresent({
-//     strategy: "accessibility id",
-//     selector: `Message sent status: Sent`,
-//     maxWait: 50000,
-//   });
+async function sendLongMessageGroup(platform: SupportedPlatformsType) {
+  const testGroupName = "Message checks for groups";
+  const { device1, device2, device3 } = await openAppThreeDevices(platform);
+  // Create users A, B and C
+  const [userA, userB, userC] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+    newUser(device3, "Charlie", platform),
+  ]);
+  // Create contact between User A and User B
+  await createGroup(
+    platform,
+    device1,
+    userA,
+    device2,
+    userB,
+    device3,
+    userC,
+    testGroupName
+  );
+  const longText =
+    "Mauris sapien dui, sagittis et fringilla eget, tincidunt vel mauris. Mauris bibendum quis ipsum ac pulvinar. Integer semper elit vitae placerat efficitur. Quisque blandit scelerisque orci, a fringilla dui. In a sollicitudin tortor. Vivamus consequat sollicitudin felis, nec pretium dolor bibendum sit amet. Integer non congue risus, id imperdiet diam. Proin elementum enim at felis commodo semper. Pellentesque magna magna, laoreet nec hendrerit in, suscipit sit amet risus. Nulla et imperdiet massa. Donec commodo felis quis arcu dignissim lobortis. Praesent nec fringilla felis, ut pharetra sapien. Donec ac dignissim nisi, non lobortis justo. Nulla congue velit nec sodales bibendum. Nullam feugiat, mauris ac consequat posuere, eros sem dignissim nulla, ac convallis dolor sem rhoncus dolor. Cras ut luctus risus, quis viverra mauris.";
+  // Sending a long text message
+  const replyMessage = `${userA.userName} message reply`;
+  await device1.inputText("accessibility id", "Message input box", longText);
+  // Click send
+  await device1.clickOnElement("Send message button");
+  await device1.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: `Message sent status: Sent`,
+    maxWait: 50000,
+  });
 
-//   await device2.waitForTextElementToBePresent({
-//     strategy: "accessibility id",
-//     selector: "Message body",
-//     text: longText,
-//   });
-//   await device3.waitForTextElementToBePresent({
-//     strategy: "accessibility id",
-//     selector: "Message body",
-//     text: longText,
-//   });
-//   await device1.clickOnElementAll({
-//     strategy: "id",
-//     selector: `network.loki.messenger:id/scrollToBottomButton`,
-//   });
-//   await device2.replyToMessage(userA, longText);
-//   await device1.clickOnElementAll({
-//     strategy: "id",
-//     selector: `network.loki.messenger:id/scrollToBottomButton`,
-//   });
-//   await device1.waitForTextElementToBePresent({
-//     strategy: "accessibility id",
-//     selector: "Message body",
-//     text: replyMessage,
-//   });
-//   // Waiting for scroll to bottom to appear/be active
-//   await sleepFor(100);
-//   await device3.clickOnElementAll({
-//     strategy: "id",
-//     selector: `network.loki.messenger:id/scrollToBottomButton`,
-//   });
-//   await device3.waitForTextElementToBePresent({
-//     strategy: "accessibility id",
-//     selector: "Message body",
-//     text: replyMessage,
-//   });
-//   // Close app
-//   await closeApp(device1, device2, device3);
-// }
+  await Promise.all([
+    device2.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Message body",
+      text: longText,
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Message body",
+      text: longText,
+    }),
+  ]);
+  await sleepFor(1000);
+  await device1.clickOnElementAll({
+    strategy: "id",
+    selector: `network.loki.messenger:id/scrollToBottomButton`,
+  });
+  await device2.replyToMessage(userA, longText);
+  await sleepFor(1000);
+  await device1.clickOnElementAll({
+    strategy: "id",
+    selector: `network.loki.messenger:id/scrollToBottomButton`,
+  });
+  await device1.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Message body",
+    text: replyMessage,
+  });
+  // Waiting for scroll to bottom to appear/be active
+  await sleepFor(1000);
+  await device3.clickOnElementAll({
+    strategy: "id",
+    selector: `network.loki.messenger:id/scrollToBottomButton`,
+  });
+  await device3.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Message body",
+    text: replyMessage,
+  });
+  // Close app
+  await closeApp(device1, device2, device3);
+}
 
 async function deleteMessageGroup(platform: SupportedPlatformsType) {
   const testGroupName = "Message checks for groups";
@@ -571,7 +541,6 @@ describe("Message checks android", () => {
   androidIt("Send document to group", sendDocumentGroup);
   androidIt("Send link to group", sendLinkGroup);
   androidIt("Send GIF to group", sendGifGroup);
-  // androidIt("Send long message to group", sendLongMessageGroup);
-  // androidIt("Unsend message in group", unsendMessageGroup);
+  androidIt("Send long message to group", sendLongMessageGroup);
   androidIt("Delete message in group", deleteMessageGroup);
 });
