@@ -25,7 +25,7 @@ async function disappearingImageMessage(platform: SupportedPlatformsType) {
     "10 seconds",
   ]);
   await device1.navigateBack(platform);
-  await device1.sendImage(platform, testMessage);
+  await device1.sendImage(testMessage);
   await device2.clickOnElement("Untrusted attachment message");
   await sleepFor(500);
   // User B - Click on 'download'

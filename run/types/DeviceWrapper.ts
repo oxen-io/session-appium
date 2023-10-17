@@ -475,7 +475,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async deleteText(accessibilityId: AccessibilityId) {
     const el = await this.findElementByAccessibilityId(accessibilityId);
-    await this.longClick(el, 500);
+    await this.longClick(el, 1000);
     if (this.isIOS()) {
       await this.clickOnElementByText({
         strategy: "id",
@@ -583,25 +583,25 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return selector;
   }
 
-  public async findText(
-    strategy: Strategy,
-    selector: string,
-    text: string
-  ): Promise<AppiumNextElementType> {
-    let el: null | AppiumNextElementType = null;
-    console.log(
-      `Waiting for accessibility ID '${selector}' to be present with ${text}`
-    );
-    while (el === null) {
-      try {
-        const els = await this.findElements(strategy, selector);
-        el = await this.findMatchingTextInElementArray(els, text);
-      } catch (e) {
-        console.log(`findText threw an error`);
-      }
-    }
-    return el;
-  }
+  // public async findText(
+  //   strategy: Strategy,
+  //   selector: string,
+  //   text: string
+  // ): Promise<AppiumNextElementType> {
+  //   let el: null | AppiumNextElementType = null;
+  //   console.log(
+  //     `Waiting for accessibility ID '${selector}' to be present with ${text}`
+  //   );
+  //   while (el === null) {
+  //     try {
+  //       const els = await this.findElements(strategy, selector);
+  //       el = await this.findMatchingTextInElementArray(els, text);
+  //     } catch (e) {
+  //       console.log(`findText threw an error`);
+  //     }
+  //   }
+  //   return el;
+  // }
 
   public async findMatchingTextAndAccessibilityId(
     accessibilityId: AccessibilityId,
@@ -863,23 +863,23 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return el;
   }
 
-  public async waitForLoadingAnimation() {
-    let loadingAnimation: AppiumNextElementType | null = null;
+  // public async waitForLoadingAnimation() {
+  //   let loadingAnimation: AppiumNextElementType | null = null;
 
-    do {
-      try {
-        loadingAnimation = await this.waitForTextElementToBePresent({
-          strategy: "id",
-          selector: "network.loki.messenger:id/thumbnail_load_indicator",
-        });
-        await sleepFor(100);
-        console.info("loading-animation was found, waiting for it to be gone");
-      } catch (e: any) {
-        console.log("Loading animation not found");
-      }
-    } while (loadingAnimation);
-    console.info("Loading animation has finished");
-  }
+  //   do {
+  //     try {
+  //       loadingAnimation = await this.waitForTextElementToBePresent({
+  //         strategy: "id",
+  //         selector: "network.loki.messenger:id/thumbnail_load_indicator",
+  //       });
+  //       await sleepFor(100);
+  //       console.info("loading-animation was found, waiting for it to be gone");
+  //     } catch (e: any) {
+  //       console.log("Loading animation not found");
+  //     }
+  //   } while (loadingAnimation);
+  //   console.info("Loading animation has finished");
+  // }
 
   // UTILITY FUNCTIONS
 
@@ -1007,7 +1007,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return this.toShared().getAttribute(attribute, elementId);
   }
 
-  public async radioButtonSelected(timeOption: DMTimeOption) {
+  public async disappearRadioButtonSelected(timeOption: DMTimeOption) {
     try {
       const radioButton = await this.findElementByXPath(
         `//*[./*[@name='${timeOption}']]/*[2]`
@@ -1024,8 +1024,8 @@ export class DeviceWrapper implements SharedDeviceInterface {
     }
   }
 
-  public async sendImage(platform: SupportedPlatformsType, message: string) {
-    if (platform === "ios") {
+  public async sendImage(message: string) {
+    if (this.isIOS()) {
       const ronSwansonBirthday = "196705060700.00";
       await this.clickOnElement("Attachments button");
       await sleepFor(1000);

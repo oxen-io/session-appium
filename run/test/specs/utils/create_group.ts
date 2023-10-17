@@ -4,16 +4,25 @@ import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from ".";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { SupportedPlatformsType } from "./open_app";
 
-export const createGroup = async (
-  platform: SupportedPlatformsType,
-  device1: DeviceWrapper,
-  userOne: User,
-  device2: DeviceWrapper,
-  userTwo: User,
-  device3: DeviceWrapper,
-  userThree: User,
-  userName: string
-): Promise<Group> => {
+export const createGroup = async ({
+  platform,
+  device1,
+  userOne,
+  device2,
+  userTwo,
+  device3,
+  userThree,
+  userName,
+}: {
+  platform: SupportedPlatformsType;
+  device1: DeviceWrapper;
+  userOne: User;
+  device2: DeviceWrapper;
+  userTwo: User;
+  device3: DeviceWrapper;
+  userThree: User;
+  userName: string;
+}): Promise<Group> => {
   const group: Group = { userName, userOne, userTwo, userThree };
 
   const userAMessage = `${userOne.userName} to ${userName}`;

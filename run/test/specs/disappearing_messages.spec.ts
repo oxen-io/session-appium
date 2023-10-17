@@ -90,7 +90,7 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
     selector: "1 day",
   });
 
-  await device1.radioButtonSelected("1 day");
+  await device1.disappearRadioButtonSelected("1 day");
   // Change timer to ten seconds (testing time)
   await device1.clickOnElement("10 seconds");
   // Click on set to save setting
@@ -142,7 +142,7 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
     strategy: "accessibility id",
     selector: "12 hours",
   });
-  await device1.radioButtonSelected("12 hours");
+  await device1.disappearRadioButtonSelected("12 hours");
   // Change timer to ten seconds (testing time)
   await device1.clickOnElement("10 seconds");
   // Click on set to save setting
@@ -193,16 +193,16 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
     newUser(device3, "Charlie", platform),
   ]);
   // Create contact between User A and User B
-  await createGroup(
+  await createGroup({
     platform,
     device1,
-    userA,
+    userOne: userA,
     device2,
-    userB,
+    userTwo: userB,
     device3,
-    userC,
-    testGroupName
-  );
+    userThree: userC,
+    userName: testGroupName,
+  });
   await device1.clickOnElement("More options");
   // Select disappearing messages option
   await device1.clickOnElement("Disappearing messages");
@@ -211,7 +211,7 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
     strategy: "accessibility id",
     selector: "1 day",
   });
-  await device1.radioButtonSelected("1 day");
+  await device1.disappearRadioButtonSelected("1 day");
   // Change time to testing time of 10 seconds
   await device1.clickOnElement("10 seconds");
   // Save setting
@@ -275,7 +275,7 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
     strategy: "accessibility id",
     selector: "1 day",
   });
-  await device.radioButtonSelected("1 day");
+  await device.disappearRadioButtonSelected("1 day");
   await device.clickOnElement("10 seconds");
   await device.clickOnElement("Set button");
   await device.navigateBack(platform);

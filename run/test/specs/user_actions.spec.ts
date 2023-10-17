@@ -146,7 +146,7 @@ async function changeUsername(platform: SupportedPlatformsType) {
 
 async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
-  const spongebobsBirthday = "199905020700.00";
+  const spongebobsBirthday = "199905010700.00";
   // Create new user
   await newUser(device, "Alice", platform);
   // Click on settings/avatar
@@ -167,9 +167,9 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   await device.waitForTextElementToBePresent({
     strategy: "id",
     selector: "android:id/text1",
-    text: "Files",
+    text: "Media",
   });
-  await device.clickOnTextElementById("android:id/text1", "Files");
+  await device.clickOnTextElementById("android:id/text1", "Media");
   // Select file
   await sleepFor(2000);
   const profilePicture = await device.doesElementExist({
@@ -189,6 +189,18 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
     );
   }
   await sleepFor(100);
+  await device.clickOnElement("More options");
+  await device.clickOnElementAll({
+    strategy: "id",
+    selector: "com.google.android.providers.media.module:id/title",
+    text: "Browse…",
+  });
+  await device.clickOnElement("Show roots");
+  await device.clickOnElementAll({
+    strategy: "id",
+    selector: "android:id/title",
+    text: "Downloads",
+  });
   await device.clickOnElement(`profile_picture.jpg, 27.75 kB, May 1, 1999`);
   await device.clickOnElementById(
     "network.loki.messenger:id/crop_image_menu_crop"
@@ -201,13 +213,11 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   const base64 = await device.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
   console.log("RGB Value of pixel is:", pixelColor);
-  if (pixelColor === "03cbfe") {
+  if (pixelColor === "cbfeff") {
     console.log("Colour is correct on device 1");
   } else {
-    console.log("Colour isn't 03cbfe, it is: ", pixelColor);
+    console.log("Colour isn't cbfeff, it is: ", pixelColor);
   }
-  // Check avatar on device 2
-
   await closeApp(device);
 }
 

@@ -66,11 +66,11 @@ async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
   const userA = await linkedDevice(device1, device2, "Alice", platform);
   // Change username on device 1
   await device1.clickOnElement("User settings");
-  // Select username
-  // await device1.clickOnElement("Username");
+  // await sleepFor(500);
+  await runOnlyOnIOS(platform, () => device1.longPress("Username"));
+  await runOnlyOnIOS(platform, () => device1.deleteText("Username"));
+  await device1.clickOnElement("Username");
   await sleepFor(100);
-  await device1.deleteText("Username");
-  await device1.deleteText("Username");
   await device1.inputText("accessibility id", "Username", newUsername);
   // Select apply
   await runOnlyOnAndroid(platform, () => device1.clickOnElement("Apply"));
@@ -292,7 +292,7 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   if (pixelColor === "0000ff") {
     console.log("Colour is correct");
   } else {
-    throw new Error("Colour isn't 04cbfe, it is: " + pixelColor);
+    throw new Error("Colour isn't 0000ff, it is: " + pixelColor);
   }
   console.log("Now checking avatar on linked device");
   // Check avatar on device 2
@@ -322,10 +322,8 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   await device1.clickOnElement("User settings");
   await sleepFor(500);
   await device1.clickOnElementAll({
-    strategy: "id",
-    selector: "android:id/button1",
-    text: "UPLOAD",
-    maxWait: 8000,
+    strategy: "accessibility id",
+    selector: "Upload",
   });
   await device1.clickOnElementById(
     "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
@@ -333,14 +331,14 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   await device1.waitForTextElementToBePresent({
     strategy: "id",
     selector: "android:id/text1",
-    text: "Files",
+    text: "Media",
   });
-  await device1.clickOnTextElementById("android:id/text1", "Files");
+  await device1.clickOnTextElementById("android:id/text1", "Media");
   // Check if permissions need to be enabled
   // Check if image is already on device
   const profilePicture = await device1.doesElementExist({
     strategy: "accessibility id",
-    selector: `profile_picture.jpg, 27.75 kB, May 1, 1999`,
+    selector: `profile_picture.jpg, 27.75 kB, May 2, 1999`,
     maxWait: 2000,
   });
   // If no image, push file to device
@@ -355,7 +353,19 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
     );
   }
   await sleepFor(100);
-  await device1.clickOnElement(`profile_picture.jpg, 27.75 kB, May 1, 1999`);
+  await device1.clickOnElement("More options");
+  await device1.clickOnElementAll({
+    strategy: "id",
+    selector: "com.google.android.providers.media.module:id/title",
+    text: "Browse…",
+  });
+  await device1.clickOnElement("Show roots");
+  await device1.clickOnElementAll({
+    strategy: "id",
+    selector: "android:id/title",
+    text: "Downloads",
+  });
+  await device1.clickOnElement(`profile_picture.jpg, 27.75 kB, May 2, 1999`);
   await device1.clickOnElementById(
     "network.loki.messenger:id/crop_image_menu_crop"
   );
@@ -367,14 +377,14 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
     strategy: "accessibility id",
     selector: "User settings",
   });
-  await sleepFor(3000);
+  await sleepFor(5000);
   const base64 = await device1.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
   console.log("RGB Value of pixel is:", pixelColor);
-  if (pixelColor === "03cbfe") {
+  if (pixelColor === "cbfeff") {
     console.log("Colour is correct on device 1");
   } else {
-    console.log("Colour isn't 03cbfe, it is: ", pixelColor);
+    console.log("Colour isn't cbfeff, it is: ", pixelColor);
   }
   console.log("Now checking avatar on linked device");
   // Check avatar on device 2
@@ -383,13 +393,13 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
     strategy: "accessibility id",
     selector: "User settings",
   });
-  await sleepFor(3000);
+  await sleepFor(5000);
   const base64A = await device2.getElementScreenshot(el2.ELEMENT);
   const pixelColorLinked = await parseDataImage(base64A);
-  if (pixelColorLinked === "03cbfe") {
+  if (pixelColorLinked === "cbfeff") {
     console.log("Colour is correct on linked device");
   } else {
-    console.log("Colour isn't 03cbfe, it is: ", pixelColorLinked);
+    console.log("Colour isn't cbfeff, it is: ", pixelColorLinked);
   }
   await closeApp(device1, device2);
 }

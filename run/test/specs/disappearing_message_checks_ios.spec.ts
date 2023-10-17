@@ -27,7 +27,7 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType) {
     "10 seconds",
   ]);
   await device1.navigateBack(platform);
-  await device1.sendImage(platform, testMessage);
+  await device1.sendImage(testMessage);
   await device2.clickOnElement("Untrusted attachment message");
   await sleepFor(500);
   // User B - Click on 'download'
@@ -432,16 +432,16 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
     newUser(device3, "Charlie", platform),
   ]);
-  await createGroup(
+  await createGroup({
     platform,
     device1,
-    userA,
+    userOne: userA,
     device2,
-    userB,
+    userTwo: userB,
     device3,
-    userC,
-    testGroupName
-  );
+    userThree: userC,
+    userName: testGroupName,
+  });
 
   await setDisappearingMessage(device1, [
     "1o1",
@@ -449,7 +449,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
     "10 seconds",
   ]);
   await device1.navigateBack(platform);
-  await device1.sendImage(platform, testMessage);
+  await device1.sendImage(testMessage);
   await Promise.all([
     device2.clickOnElement("Untrusted attachment message"),
     device3.clickOnElement("Untrusted attachment message"),

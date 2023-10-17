@@ -19,7 +19,7 @@ async function sendImage(platform: SupportedPlatformsType) {
   ]);
   const replyMessage = `Replying to image from ${userA.userName}`;
   await newContact(platform, device1, userA, device2, userB);
-  await device1.sendImage(platform, "Sending image");
+  await device1.sendImage("Sending image");
   await device2.clickOnElement("Untrusted attachment message");
 
   await sleepFor(500);
