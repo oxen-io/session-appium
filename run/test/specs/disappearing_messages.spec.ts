@@ -82,7 +82,16 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
   // Click conversation options menu (three dots)
   await device1.clickOnElement("More options");
   // Select disappearing messages option
-  await device1.clickOnElement("Disappearing messages");
+  await runOnlyOnIOS(platform, () =>
+    device1.clickOnElement("Disappearing messages")
+  );
+  await runOnlyOnAndroid(platform, () =>
+    device1.clickOnElementAll({
+      strategy: "id",
+      selector: "network.loki.messenger:id/title",
+      text: "Disappearing messages",
+    })
+  );
   await device1.clickOnElement("Disappear after send option");
   // Need to validate that default time is checked somehow
   await device1.waitForTextElementToBePresent({
@@ -135,7 +144,16 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
   // Click conversation options menu (three dots)
   await device1.clickOnElement("More options");
   // Select disappearing messages option
-  await device1.clickOnElement("Disappearing messages");
+  await runOnlyOnIOS(platform, () =>
+    device1.clickOnElement("Disappearing messages")
+  );
+  await runOnlyOnAndroid(platform, () =>
+    device1.clickOnElementAll({
+      strategy: "id",
+      selector: "network.loki.messenger:id/title",
+      text: "Disappearing messages",
+    })
+  );
   await device1.clickOnElement("Disappear after read option");
   // Need to validate that default time is checked somehow
   await device1.waitForTextElementToBePresent({
@@ -205,7 +223,16 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   });
   await device1.clickOnElement("More options");
   // Select disappearing messages option
-  await device1.clickOnElement("Disappearing messages");
+  await runOnlyOnIOS(platform, () =>
+    device1.clickOnElement("Disappearing messages")
+  );
+  await runOnlyOnAndroid(platform, () =>
+    device1.clickOnElementAll({
+      strategy: "id",
+      selector: "network.loki.messenger:id/title",
+      text: "Disappearing messages",
+    })
+  );
   // Check the default time is set to
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -268,7 +295,17 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   // Enable disappearing messages
   await device.clickOnElement("More options");
   await sleepFor(500);
-  await device.clickOnElement("Disappearing messages");
+  // Select disappearing messages option
+  await runOnlyOnIOS(platform, () =>
+    device.clickOnElement("Disappearing messages")
+  );
+  await runOnlyOnAndroid(platform, () =>
+    device.clickOnElementAll({
+      strategy: "id",
+      selector: "network.loki.messenger:id/title",
+      text: "Disappearing messages",
+    })
+  );
   // Check default timer is set
   await sleepFor(1000);
   await device.waitForTextElementToBePresent({
@@ -295,7 +332,7 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   await closeApp(device);
 }
 
-describe.skip("Disappearing messages", () => {
+describe("Disappearing messages", () => {
   iosIt("Disappearing messages legacy", disappearingMessagesLegacy);
   androidIt("Disappearing messages legacy", disappearingMessagesLegacy);
 

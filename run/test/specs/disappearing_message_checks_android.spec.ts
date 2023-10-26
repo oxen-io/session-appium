@@ -19,8 +19,8 @@ async function disappearingImageMessage(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(device1, [
-    "1o1",
+  await setDisappearingMessage(platform, device1, [
+    "1:1",
     "Disappear after send option",
     "10 seconds",
   ]);
@@ -57,8 +57,8 @@ async function disappearingVideoMessage(platform: SupportedPlatformsType) {
   ]);
   await newContact(platform, device1, userA, device2, userB);
 
-  await setDisappearingMessage(device1, [
-    "1o1",
+  await setDisappearingMessage(platform, device1, [
+    "1:1",
     "Disappear after send option",
     "10 seconds",
   ]);
@@ -116,8 +116,8 @@ async function disappearingVoiceMessage(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(device1, [
-    "1o1",
+  await setDisappearingMessage(platform, device1, [
+    "1:1",
     "Disappear after send option",
     "10 seconds",
   ]);
@@ -157,8 +157,8 @@ async function disappearingGifMessage(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(device1, [
-    "1o1",
+  await setDisappearingMessage(platform, device1, [
+    "1:1",
     "Disappear after send option",
     "10 seconds",
   ]);
@@ -208,8 +208,8 @@ async function disappearingLinkMessage(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(device1, [
-    "1o1",
+  await setDisappearingMessage(platform, device1, [
+    "1:1",
     "Disappear after send option",
     "10 seconds",
   ]);
@@ -261,8 +261,8 @@ async function disappearingCommunityInviteMessage(
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(device1, [
-    "1o1",
+  await setDisappearingMessage(platform, device1, [
+    "1:1",
     "Disappear after send option",
     "10 seconds",
   ]);
@@ -313,8 +313,8 @@ async function disappearingCallMessage(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(device1, [
-    "1o1",
+  await setDisappearingMessage(platform, device1, [
+    "1:1",
     "Disappear after send option",
     "10 seconds",
   ]);
