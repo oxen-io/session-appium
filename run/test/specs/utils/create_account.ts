@@ -25,7 +25,7 @@ export const newUser = async (
   const sessionID = await getSessionID(platform, device);
 
   console.log(`${userName}s sessionID found: "${sessionID}" "${platform}"`);
-
+  // TODO add 'allow notifications' function here for android API 34
   // Click continue on session Id creation
   await device.clickOnElement("Continue");
   // Input username
@@ -47,7 +47,6 @@ export const newUser = async (
       "Allow"
     )
   );
-  // iOS only
   // Click on 'continue' button to open recovery phrase modal
   await device.waitForTextElementToBePresent({
     strategy: "accessibility id",

@@ -21,13 +21,12 @@ async function sendImage(platform: SupportedPlatformsType) {
   await newContact(platform, device1, userA, device2, userB);
   await device1.sendImage("Sending image");
   await device2.clickOnElement("Untrusted attachment message");
-
   await sleepFor(500);
   // User B - Click on 'download'
   await device2.clickOnElement("Download media");
   // Reply to message
   // Wait for image to load (unclickable if not loaded correctly)
-  await sleepFor(2000);
+  await device2.waitForLoadingAnimation();
   await device2.pressAndHold("Media message");
 
   await device2.clickOnElement("Reply to message");

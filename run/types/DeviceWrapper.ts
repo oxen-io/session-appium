@@ -863,23 +863,23 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return el;
   }
 
-  // public async waitForLoadingAnimation() {
-  //   let loadingAnimation: AppiumNextElementType | null = null;
+  public async waitForLoadingAnimation() {
+    let loadingAnimation: AppiumNextElementType | null = null;
 
-  //   do {
-  //     try {
-  //       loadingAnimation = await this.waitForTextElementToBePresent({
-  //         strategy: "id",
-  //         selector: "network.loki.messenger:id/thumbnail_load_indicator",
-  //       });
-  //       await sleepFor(100);
-  //       console.info("loading-animation was found, waiting for it to be gone");
-  //     } catch (e: any) {
-  //       console.log("Loading animation not found");
-  //     }
-  //   } while (loadingAnimation);
-  //   console.info("Loading animation has finished");
-  // }
+    do {
+      try {
+        loadingAnimation = await this.waitForTextElementToBePresent({
+          strategy: "id",
+          selector: "network.loki.messenger:id/thumbnail_load_indicator",
+        });
+        await sleepFor(100);
+        console.info("loading-animation was found, waiting for it to be gone");
+      } catch (e: any) {
+        console.log("Loading animation not found");
+      }
+    } while (loadingAnimation);
+    console.info("Loading animation has finished");
+  }
 
   // UTILITY FUNCTIONS
 
