@@ -39,7 +39,6 @@ async function blockUserInConversationOptions(
   // Click on three dots (settings)
   await device1.clickOnElement("More options");
   // Select Block option
-
   await runOnlyOnIOS(platform, () => device1.clickOnElement("Block"));
   await sleepFor(1000);
   await runOnlyOnAndroid(platform, () =>
@@ -49,11 +48,9 @@ async function blockUserInConversationOptions(
   await device1.clickOnElement("Confirm block");
   // On ios there is an alert that confirms that the user has been blocked
   await sleepFor(1000);
-  // await runOnlyOnIOS(platform, () => clickOnXAndYCoordinates(device1));
   console.warn(`${userB.userName}` + " has been blocked");
-
   // On ios, you need to navigate back to conversation screen to confirm block
-  await runOnlyOnIOS(platform, () => device1.clickOnElement("Back"));
+  await runOnlyOnIOS(platform, () => device1.navigateBack(platform));
   // Look for alert at top of screen (Bob is blocked. Unblock them?)
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -151,31 +148,35 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   await newUser(device, "Alice", platform);
   // Click on settings/avatar
   await device.clickOnElement("User settings");
-  await sleepFor(100);
   // Click on Profile picture
   await device.clickOnElement("User settings");
   // Click on Photo library
-  await sleepFor(100);
   await device.clickOnElementAll({
     strategy: "accessibility id",
     selector: "Upload",
   });
-  await sleepFor(100);
   await device.clickOnElementById(
     "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
   );
-  await device.waitForTextElementToBePresent({
+  await device.clickOnElementAll({
     strategy: "id",
     selector: "android:id/text1",
-    text: "Files",
+    text: "Media",
   });
-  await device.clickOnTextElementById("android:id/text1", "Files");
+  await device.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: "More options",
+  });
+  await device.clickOnElementAll({
+    strategy: "id",
+    selector: "com.google.android.providers.media.module:id/title",
+    text: "Browse...",
+  });
   // Select file
-  await sleepFor(2000);
   const profilePicture = await device.doesElementExist({
     strategy: "accessibility id",
-    selector: `profile_picture.jpg, 27.75 kB, May 1, 1999`,
-    maxWait: 2000,
+    selector: `profile_picture.jpg, 27.75 kB, May 2, 1999`,
+    maxWait: 5000,
   });
   // If no image, push file to device
   if (!profilePicture) {
@@ -188,16 +189,20 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
       true
     );
   }
-  await sleepFor(100);
-  await device.clickOnElement(`profile_picture.jpg, 27.75 kB, May 1, 1999`);
+  await device.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: "profile_picture.jpg, 27.75 kB, May 2, 1999",
+  });
+  await device.clickOnElement(`profile_picture.jpg, 27.75 kB, May 2, 1999`);
   await device.clickOnElementById(
     "network.loki.messenger:id/crop_image_menu_crop"
   );
   const el = await device.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "User settings",
+    maxWait: 10000,
   });
-  await sleepFor(3000);
+
   const base64 = await device.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
   console.log("RGB Value of pixel is:", pixelColor);

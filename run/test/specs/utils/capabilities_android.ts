@@ -5,12 +5,13 @@ import { getAndroidBinariesRoot } from "./binaries";
 import { CapabilitiesIndexType } from "./capabilities_ios";
 
 // const androidAppFullPath = `/Users/emilyburton/Desktop/session-1.17.1-universal.apk`;
-const androidAppFullPath = `/Users/emilyburton/Documents/session-android/app/build/outputs/apk/play/debug/session-1.17.1-universal.apk`;
+// const androidAppFullPath = `/Users/emilyburton/Documents/session-android-andy/session-android-andy/app/build/outputs/apk/play/debug/session-1.17.4-universal.apk`;
+const androidAppFullPath = `/Users/emilyburton/Documents/session-android/app/build/outputs/apk/play/debug/session-1.17.4-universal.apk`;
 
 const sharedCapabilities: AppiumW3CCapabilities = {
   "appium:app": androidAppFullPath,
   "appium:platformName": "Android",
-  "appium:platformVersion": "12",
+  "appium:platformVersion": "14",
   "appium:appPackage": "network.loki.messenger",
   "appium:appWaitActivity":
     "org.thoughtcrime.securesms.onboarding.LandingActivity",

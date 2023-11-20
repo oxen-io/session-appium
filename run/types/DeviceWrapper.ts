@@ -1,7 +1,7 @@
 import { W3CCapabilities } from "appium/build/lib/appium";
 import { isArray, isEmpty, max } from "lodash";
 import { AppiumNextElementType } from "../../appium_next";
-import { sleepFor } from "../test/specs/utils";
+import { clickOnXAndYCoordinates, sleepFor } from "../test/specs/utils";
 import { SupportedPlatformsType } from "../test/specs/utils/open_app";
 import {
   isDeviceAndroid,
@@ -12,6 +12,7 @@ import {
   AccessibilityId,
   DMTimeOption,
   Group,
+  InteractionPoints,
   Strategy,
   StrategyExtractionObj,
   User,
@@ -346,10 +347,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.click(el.ELEMENT);
   }
 
-  public async clickOnElementXPath(xpath: XPath) {
+  public async clickOnElementXPath(xpath: XPath, maxWait?: number) {
     await this.waitForTextElementToBePresent({
       strategy: "xpath",
       selector: xpath,
+      maxWait: maxWait,
     });
     const el = await this.findElementByXPath(xpath);
 
@@ -833,7 +835,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       try {
         if (text) {
           console.log(
-            `Waiting for accessibility ID '${selector}' to be present with ${text}`
+            `Waiting for ${strategy}: '${selector}' to be present with ${text}`
           );
           const els = await this.findElements(strategy, selector);
           el = await this.findMatchingTextInElementArray(els, text);
@@ -950,7 +952,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
       text: receiver.userName,
     });
     await sleepFor(100);
-    await this.selectByText("Conversation list item", receiver.userName);
+    await this.clickOnElementAll({
+      strategy: "accessibility id",
+      selector: "Conversation list item",
+      text: receiver.userName,
+    });
     console.log(`${sender.userName} + " sent message to ${receiver.userName}`);
     await this.sendMessage(message);
     console.log(
@@ -1029,7 +1035,10 @@ export class DeviceWrapper implements SharedDeviceInterface {
       const ronSwansonBirthday = "196705060700.00";
       await this.clickOnElement("Attachments button");
       await sleepFor(1000);
-      await this.clickOnXAndYCoordinates(38, 767);
+      await clickOnXAndYCoordinates(
+        this.device,
+        InteractionPoints.ImagesFolderKeyboardOpen
+      );
       const permissions = await this.doesElementExist({
         strategy: "accessibility id",
         selector: "Allow Access to All Photos",
@@ -1076,18 +1085,20 @@ export class DeviceWrapper implements SharedDeviceInterface {
       await this.clickOnElement("Attachments button");
       await sleepFor(100);
       await this.clickOnElement("Documents folder");
-
-      const mediaButtons = await this.findElementsByClass(
-        "android.widget.CompoundButton"
-      );
-      const imageButton = await this.findMatchingTextInElementArray(
-        mediaButtons,
-        "Images"
-      );
-      if (!imageButton) {
-        throw new Error("imageButton was not found in android");
-      }
-      await this.click(imageButton.ELEMENT);
+      await this.clickOnElement("Show roots");
+      await sleepFor(100);
+      await this.clickOnTextElementById(`android:id/title`, "Downloads");
+      // const mediaButtons = await this.findElementsByClass(
+      //   "android.widget.CompoundButton"
+      // );
+      // const imageButton = await this.findMatchingTextInElementArray(
+      //   mediaButtons,
+      //   "Images"
+      // );
+      // if (!imageButton) {
+      //   throw new Error("imageButton was not found in android");
+      // }
+      // await this.click(imageButton.ELEMENT);
       await sleepFor(100);
       const testImage = await this.doesElementExist({
         strategy: "id",

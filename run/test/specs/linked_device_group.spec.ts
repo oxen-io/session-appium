@@ -91,19 +91,44 @@ async function groupCreationandNameChangeLinkedDevice(
   // Check linked device for name change (conversation header name)
   const groupName = await device2.grabTextFromAccessibilityId("Username");
   console.warn("Group name is now " + groupName);
-  await device2.findMatchingTextAndAccessibilityId("Username", newGroupName);
-  // Check config message in linked device aswell
+  await runOnlyOnIOS(platform, () =>
+    device2.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Username",
+      text: newGroupName,
+    })
+  );
+  await runOnlyOnAndroid(platform, () =>
+    device2.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Conversation header name",
+      text: newGroupName,
+    })
+  );
+  // Check control message in linked device: iOS
   await runOnlyOnIOS(platform, () =>
     device2.findMatchingTextAndAccessibilityId(
       "Control message",
       "Title is now " + `'${newGroupName}'.`
     )
   );
-  // Config on Android is "You renamed the group to blah"
+  // control on Linked device: Android is "You renamed the group to blah"
   await runOnlyOnAndroid(platform, () =>
     device2.findMatchingTextAndAccessibilityId(
       "Control message",
       "You renamed the group to " + `${newGroupName}`
+    )
+  );
+  await runOnlyOnAndroid(platform, () =>
+    device3.findMatchingTextAndAccessibilityId(
+      "Control message",
+      `${userA.userName}` + " renamed the group to: " + `${newGroupName}`
+    )
+  );
+  await runOnlyOnAndroid(platform, () =>
+    device4.findMatchingTextAndAccessibilityId(
+      "Control message",
+      `${userA.userName}` + " renamed the group to: " + `${newGroupName}`
     )
   );
   await closeApp(device1, device2, device3, device4);

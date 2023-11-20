@@ -1,4 +1,5 @@
 import { iosIt } from "../../types/sessionIt";
+import { InteractionPoints } from "../../types/testing";
 import { sleepFor, clickOnXAndYCoordinates } from "./utils";
 import { newUser } from "./utils/create_account";
 import { createGroup } from "./utils/create_group";
@@ -32,10 +33,10 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
     testGroupName
   );
   const testMessage = "Ron Swanson doesn't like birthdays";
-  const replyMessage = `Replying to image from ${userA.userName} in ${testGroupName}`;
+  // const replyMessage = `Replying to image from ${userA.userName} in ${testGroupName}`;
   await device1.clickOnElement("Attachments button");
   await sleepFor(100);
-  await clickOnXAndYCoordinates(device1, 34, 498);
+  await clickOnXAndYCoordinates(device1, InteractionPoints.ImagesFolder);
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
     selector: "Allow Access to All Photos",
@@ -73,11 +74,11 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Text input box");
   await device1.inputText("accessibility id", "Text input box", testMessage);
   await device1.clickOnElement("Send button");
-  await sleepFor(1000);
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",
     text: testMessage,
+    maxWait: 5000,
   });
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -114,7 +115,7 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to video from ${userA.userName} in ${testGroupName}`;
   await device1.clickOnElement("Attachments button");
   await sleepFor(100);
-  await clickOnXAndYCoordinates(device1, 34, 498);
+  await clickOnXAndYCoordinates(device1, InteractionPoints.ImagesFolder);
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
     selector: "Allow Access to All Photos",
@@ -160,9 +161,7 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
       } 'run/test/specs/media/test_video.mp4'`,
       true
     );
-    await sleepFor(2000);
-
-    await device1.clickOnElement(`1988-09-08 21:00:00 +0000`);
+    await device1.clickOnElement(`1988-09-08 21:00:00 +0000`, 5000);
   }
   // Send with attached message
   await device1.clickOnElement("Text input box");
@@ -178,7 +177,12 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
     selector: "Message body",
     text: testMessage,
   });
-  await sleepFor(3000);
+  await device2.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Message body",
+    text: testMessage,
+    maxWait: 5000,
+  });
   await device2.longPressMessage(testMessage);
   await device2.clickOnElement("Reply to message");
   await device2.sendMessage(replyMessage);
@@ -300,7 +304,7 @@ async function sendGifGroup(platform: SupportedPlatformsType) {
   );
   await device1.clickOnElement("Attachments button");
   // Select GIF tab
-  await clickOnXAndYCoordinates(device1, 36, 394);
+  await clickOnXAndYCoordinates(device1, InteractionPoints.GifButton);
   // Select gif
   await sleepFor(500);
   // Need to select Continue on GIF warning
@@ -391,7 +395,7 @@ async function sendLongMessageGroup(platform: SupportedPlatformsType) {
 
 async function sendLinkGroup(platform: SupportedPlatformsType) {
   const testGroupName = "Message checks for groups";
-  const testLink = `https://nerdlegame.com/`;
+  const testLink = `https://example.net/`;
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([

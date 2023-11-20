@@ -1,5 +1,5 @@
-import { androidIt, iosIt } from "../../types/sessionIt";
-import { clickOnXAndYCoordinates, sleepFor } from "./utils";
+import { androidIt } from "../../types/sessionIt";
+import { sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import {
@@ -201,7 +201,7 @@ async function disappearingGifMessage(platform: SupportedPlatformsType) {
 
 async function disappearingLinkMessage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const testLink = `https://nerdlegame.com/`;
+  const testLink = `https://example.net/`;
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),

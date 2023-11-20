@@ -22,8 +22,7 @@ export const linkedDevice = async (
   );
   await sleepFor(1000);
   // Continue with recovery phrase
-  await runOnlyOnAndroid(platform, () => device2.clickOnElement("Link Device"));
-  await runOnlyOnIOS(platform, () => device2.clickOnElement("Continue"));
+  await device2.clickOnElement("Continue");
   // Wait for any notifications to disappear
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -47,6 +46,12 @@ export const linkedDevice = async (
   await runOnlyOnIOS(platform, () => device2.clickOnElement("Don’t Allow"));
   await sleepFor(1000);
   await device2.hasElementBeenDeleted("accessibility id", "Continue");
+  await runOnlyOnAndroid(platform, () =>
+    device2.clickOnTextElementById(
+      `com.android.permissioncontroller:id/permission_allow_button`,
+      "Allow"
+    )
+  );
   // Check that button was clicked
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
