@@ -257,28 +257,28 @@ async function sendVoiceMessageGroup(platform: SupportedPlatformsType) {
   await closeApp(device1, device2, device3);
 }
 
-// async function sendDocGroup(platform: SupportedPlatformsType) {
-//   const testGroupName = "Message checks for groups";
-//   const { device1, device2, device3 } = await openAppThreeDevices(platform);
-//   // Create users A, B and C
-//   const [userA, userB, userC] = await Promise.all([
-//     newUser(device1, "Alice", platform),
-//     newUser(device2, "Bob", platform),
-//     newUser(device3, "Charlie", platform),
-//   ]);
+async function sendDocGroup(platform: SupportedPlatformsType) {
+  const testGroupName = "Message checks for groups";
+  const { device1, device2, device3 } = await openAppThreeDevices(platform);
+  // Create users A, B and C
+  const [userA, userB, userC] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+    newUser(device3, "Charlie", platform),
+  ]);
 
-//   // Create contact between User A and User B
-//   await createGroup(
-//     platform,
-//     device1,
-//     userA,
-//     device2,
-//     userB,
-//     device3,
-//     userC,
-//     testGroupName
-//   );
-// }
+  // Create contact between User A and User B
+  await createGroup(
+    platform,
+    device1,
+    userA,
+    device2,
+    userB,
+    device3,
+    userC,
+    testGroupName
+  );
+}
 
 async function sendGifGroup(platform: SupportedPlatformsType) {
   const testGroupName = "Message checks for groups";
@@ -503,7 +503,7 @@ describe("Message checks ios", () => {
   iosIt("Send image to group", sendImageGroup);
   iosIt("Send video to group", sendVideoGroup);
   iosIt("Send voice message to group", sendVoiceMessageGroup);
-  // iosIt("Send document to group", sendDocGroup);
+  iosIt("Send document to group", sendDocGroup);
   iosIt("Send GIF to group", sendGifGroup);
   iosIt("Send long text to group", sendLongMessageGroup);
   iosIt("Send link to group", sendLinkGroup);

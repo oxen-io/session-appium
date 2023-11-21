@@ -1078,7 +1078,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       await this.clickOnElement("Send button");
       await this.waitForTextElementToBePresent({
         strategy: "accessibility id",
-        selector: `Message sent status: Sent`,
+        selector: "Message sent status: Sent",
         maxWait: 50000,
       });
     } else {
