@@ -3,6 +3,7 @@ import { InteractionPoints } from "../../types/testing";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { clickOnXAndYCoordinates, sleepFor } from "./utils/index";
+import { joinCommunity } from "./utils/join_community";
 import {
   SupportedPlatformsType,
   closeApp,
@@ -320,7 +321,14 @@ async function sendGif(platform: SupportedPlatformsType) {
   // Click on attachments button
   await device1.clickOnElement("Attachments button");
   // Select GIF tab
-  await clickOnXAndYCoordinates(device1, InteractionPoints.GifButton);
+  console.log(
+    `InteractionPoints.GifButton: `,
+    InteractionPoints.GifButtonKeyboardOpen
+  );
+  await clickOnXAndYCoordinates(
+    device1,
+    InteractionPoints.GifButtonKeyboardOpen
+  );
   // Select gif
   await sleepFor(500);
   // Need to select Continue on GIF warning
@@ -438,17 +446,7 @@ async function sendCommunityInvitation(platform: SupportedPlatformsType) {
   // Join community on device 1
   // Click on plus button
   await device1.navigateBack(platform);
-  await device1.clickOnElement("New conversation button");
-  await device1.clickOnElement("Join Community");
-  await device1.inputText(
-    "accessibility id",
-    "Enter Community URL",
-    communityLink
-  );
-  await device1.clickOnElement("Join");
-  // Wait for community to load
-  await sleepFor(1000);
-
+  await joinCommunity(platform, device1, communityLink, communityName);
   await device1.clickOnElement("More options");
   await device1.clickOnElement("Add Members");
   await device1.clickOnElementByText({
@@ -456,13 +454,7 @@ async function sendCommunityInvitation(platform: SupportedPlatformsType) {
     selector: "Contact",
     text: userB.userName,
   });
-  await device1.clickOnElement("Done");
-  // Check device 2 for invitation from user A
-  // await device2.clickOnElementByText(
-  //   "accessibility id",
-  //   "Conversation list item",
-  //   userA.userName
-  // );
+  await device1.clickOnElement("Invite");
   await device2.clickOnElementByText({
     strategy: "accessibility id",
     selector: "Community invitation",
@@ -590,7 +582,7 @@ describe("Message checks ios", () => {
   iosIt("Send GIF", sendGif);
   iosIt("Send long text", sendLongMessage);
   iosIt("Send link", sendLink);
-  iosIt("Send community invitation test", sendCommunityInvitation);
+  iosIt("Send community invitation message", sendCommunityInvitation);
   iosIt("Unsend message", unsendMessage);
   iosIt("Delete message", deleteMessage);
   iosIt("Check performance", checkPerformance);

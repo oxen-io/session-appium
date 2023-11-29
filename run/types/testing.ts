@@ -208,4 +208,5 @@ export type AccessibilityId =
   | "Link preview"
   | "covid"
   | "Show roots"
-  | "Conversation header name";
+  | "Conversation header name"
+  | "Invite";
