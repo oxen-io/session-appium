@@ -1,6 +1,5 @@
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { SupportedPlatformsType } from "./open_app";
-import { sleepFor } from "./sleep_for";
 
 export const joinCommunity = async (
   platform: SupportedPlatformsType,
@@ -9,8 +8,8 @@ export const joinCommunity = async (
   communityName: string
 ) => {
   await device.clickOnElement("New conversation button");
-  await device.clickOnElement("Join Community");
   if (platform === "ios") {
+    await device.clickOnElement("Join Community");
     await device.inputText(
       "accessibility id",
       "Enter Community URL",
@@ -18,17 +17,23 @@ export const joinCommunity = async (
     );
     await device.clickOnElement("Join");
     // Wait for community to load
+    await device.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Conversation header name",
+      text: communityName,
+    });
   } else {
+    await device.clickOnElement("Join community");
     await device.inputText(
       "accessibility id",
       "Community input",
       communityLink
     );
     await device.clickOnElement("Join community button");
+    await device.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Username",
+      text: communityName,
+    });
   }
-  await device.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Conversation header name",
-    text: communityName,
-  });
 };

@@ -23,7 +23,6 @@ export type Coordinates = {
   x: number;
   y: number;
 };
-
 export type ActionSequence = {
   actions: string;
 };
@@ -486,24 +485,9 @@ export class DeviceWrapper implements SharedDeviceInterface {
       });
     }
     await this.clear(el.ELEMENT);
-
     console.warn(`Text has been cleared ` + accessibilityId);
     return;
   }
-  // public async deleteTextIos(accessibilityId: AccessibilityId) {
-  //   const el = await this.findElementByAccessibilityId(accessibilityId);
-  //   await this.longClick(el, 200);
-  //   await this.clickOnElementByText({
-  //     strategy: "id",
-  //     selector: "Select All",
-  //     text: "Select All",
-  //   });
-
-  //   await this.clear(el.ELEMENT);
-
-  //   console.warn(`Text has been cleared ` + accessibilityId);
-  //   return;
-  // }
 
   // ELEMENT LOCATORS
 

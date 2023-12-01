@@ -289,7 +289,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   const nickName = "New nickname";
   await newContact(platform, device1, userA, device2, userB);
   // Go back to conversation list
-  await device1.clickOnElement("Navigate up");
+  await device1.navigateBack(platform);
   // Select conversation in list with Bob
   await device1.longPressConversation(userB.userName);
   // Select 'Details' option
@@ -311,7 +311,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Send a message so nickname is updated in conversation list
   await device1.sendMessage("Howdy");
   // Navigate out of conversation
-  await device1.clickOnElement("Navigate up");
+  await device1.navigateBack(platform);
   // Change nickname back to original username
   // Long press on contact conversation
   await device1.longPressConversation(nickName);
@@ -324,7 +324,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Click out of pop up
   await device1.back();
   // Enter conversation to verify change
-  await device1.selectByText("Conversation list item", nickName);
+  await device1.selectByText("Conversation list item", userB.userName);
   const changedElement = await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Username",
@@ -333,21 +333,16 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Send message to change in conversation list
   await device1.sendMessage("Howdy");
   // Navigate back to list
-  await device1.clickOnElement("Navigate up");
+  await device1.navigateBack(platform);
   // Verify name change in list
   // Save text of conversation list item?
   await device1.selectByText("Conversation list item", userB.userName);
-  const revertedHeader = await device1.waitForTextElementToBePresent({
+  await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Username",
+    text: userB.userName,
   });
 
-  await device1.getTextFromElement(revertedHeader);
-  // if (originalUsername === userB.userName) {
-  //   console.log("Nickname changed back to original username");
-  // } else {
-  //   console.log("Nickname doesn't match original username");
-  // }
   // Close app
   await closeApp(device1, device2);
 }
@@ -364,7 +359,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   await device1.clickOnElement("More options");
   // Click on username to set nickname
   await device1.clickOnElement("Username");
-  await sleepFor(1000);
+  await sleepFor(500);
   await device1.clickOnElement("Username");
   await device1.deleteText("Username");
   // Type in nickname
@@ -372,11 +367,16 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   // Click apply/done
   await device1.clickOnElement("Done");
   // Check it's changed in heading also
-  await device1.clickOnElement("Back");
-  const newNickname = await device1.grabTextFromAccessibilityId("Username");
-  await device1.findMatchingTextAndAccessibilityId("Username", newNickname);
+  await device1.navigateBack(platform);
+  const newNickname = await device1.grabTextFromAccessibilityId(
+    "Conversation header name"
+  );
+  await device1.findMatchingTextAndAccessibilityId(
+    "Conversation header name",
+    newNickname
+  );
   // Check in conversation list also
-  await device1.clickOnElement("Back");
+  await device1.navigateBack(platform);
   // Save text of conversation list item?
   await sleepFor(1000);
   await device1.findMatchingTextAndAccessibilityId(
@@ -390,19 +390,20 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   // Click on edit
   await device1.clickOnElement("Username");
   // Empty username input
-  await device1.deleteText("Nickname");
-  await device1.clickOnElement("Done");
+  await device1.deleteText("Username");
+  await device1.inputText("accessibility id", "Username", " ");
+  await await device1.clickOnElement("Done");
   // Check in conversation header
-  await device1.clickOnElement("Back");
-  await sleepFor(1000);
+  await device1.navigateBack(platform);
+  await sleepFor(500);
   const revertedNickname = await device1.grabTextFromAccessibilityId(
-    "Username"
+    "Conversation header name"
   );
   console.warn(`revertedNickname:` + revertedNickname);
   if (revertedNickname !== userB.userName) {
     throw new Error(`revertedNickname doesn't match Bob's username`);
   }
-  await device1.clickOnElement("Back");
+  await device1.navigateBack(platform);
   // Check in conversation list aswell
   await device1.findMatchingTextAndAccessibilityId(
     "Conversation list item",
