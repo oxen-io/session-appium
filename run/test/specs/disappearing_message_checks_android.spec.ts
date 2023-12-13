@@ -2,6 +2,7 @@ import { androidIt } from "../../types/sessionIt";
 import { sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
+import { joinCommunity } from "./utils/join_community";
 import {
   SupportedPlatformsType,
   closeApp,
@@ -267,13 +268,7 @@ async function disappearingCommunityInviteMessage(
     "10 seconds",
   ]);
   await device1.navigateBack(platform);
-  await device1.clickOnElement("New conversation button");
-  await device1.clickOnElement("Join community");
-  await device1.inputText("accessibility id", "Community input", communityLink);
-  await device1.clickOnElement("Join community button");
-  // Wait for community to load
-  await sleepFor(1000);
-
+  await joinCommunity(platform, device1, communityLink, communityName);
   await device1.clickOnElement("More options");
   await device1.clickOnElement("Add Members");
   await device1.clickOnElementByText({

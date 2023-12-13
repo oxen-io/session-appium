@@ -1,5 +1,5 @@
 import { androidIt } from "../../types/sessionIt";
-import { clickOnXAndYCoordinates, sleepFor } from "./utils";
+import { sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { joinCommunity } from "./utils/join_community";
@@ -118,7 +118,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Documents folder");
   // Select video
   const mediaButtons = await device1.findElementsByClass(
-    "android.widget.CompoundButton"
+    "android.widget.Button"
   );
   const videosButton = await device1.findMatchingTextInElementArray(
     mediaButtons,
@@ -342,12 +342,6 @@ async function sendCommunityInviteMessage(platform: SupportedPlatformsType) {
   });
   await device1.clickOnElement("Done");
   // Check device 2 for invitation from user A
-  // await device2.waitForTextElementToBePresent({
-  //   strategy: "id",
-  //   selector: "network.loki.messenger:id/openGroupTitleTextView",
-  //   text: communityName,
-  //   maxWait: 10000,
-  // });
   await closeApp(device1, device2);
 }
 

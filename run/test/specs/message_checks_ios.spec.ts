@@ -2,7 +2,7 @@ import { iosIt } from "../../types/sessionIt";
 import { InteractionPoints } from "../../types/testing";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
-import { clickOnXAndYCoordinates, sleepFor } from "./utils/index";
+import { clickOnCoordinates, sleepFor } from "./utils/index";
 import { joinCommunity } from "./utils/join_community";
 import {
   SupportedPlatformsType,
@@ -25,7 +25,7 @@ async function sendImage(platform: SupportedPlatformsType) {
 
   await device1.clickOnElement("Attachments button");
   await sleepFor(100);
-  await clickOnXAndYCoordinates(
+  await clickOnCoordinates(
     device1,
     InteractionPoints.ImagesFolderKeyboardClosed
   );
@@ -112,7 +112,7 @@ async function sendImage(platform: SupportedPlatformsType) {
 
 //   await device1.clickOnElement("Attachments button");
 //   await sleepFor(100);
-//   await clickOnXAndYCoordinates(device1, 36, 447);
+//   await clickOnCoordinates(device1, 36, 447);
 
 //   const permissions = await device1.doesElementExist({
 //     strategy: "accessibility id",
@@ -193,7 +193,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
   // Select images button/tab
   await sleepFor(100);
   // Check if android or ios (android = documents folder/ ios = images folder)
-  await clickOnXAndYCoordinates(device1, InteractionPoints.ImagesFolder);
+  await clickOnCoordinates(device1, InteractionPoints.ImagesFolder);
   // Select 'continue' on alert
   // Need to put a video on device
   // Session would like to access your photos
@@ -325,10 +325,7 @@ async function sendGif(platform: SupportedPlatformsType) {
     `InteractionPoints.GifButton: `,
     InteractionPoints.GifButtonKeyboardOpen
   );
-  await clickOnXAndYCoordinates(
-    device1,
-    InteractionPoints.GifButtonKeyboardOpen
-  );
+  await clickOnCoordinates(device1, InteractionPoints.GifButtonKeyboardOpen);
   // Select gif
   await sleepFor(500);
   // Need to select Continue on GIF warning

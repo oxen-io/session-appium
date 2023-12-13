@@ -1,6 +1,6 @@
 import { iosIt } from "../../types/sessionIt";
 import { InteractionPoints } from "../../types/testing";
-import { clickOnXAndYCoordinates, sleepFor } from "./utils";
+import { clickOnCoordinates, sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { createGroup } from "./utils/create_group";
@@ -71,10 +71,7 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
   await sleepFor(100);
   // Check if android or ios (android = documents folder/ ios = images folder)
 
-  await clickOnXAndYCoordinates(
-    device1,
-    InteractionPoints.ImagesFolderKeyboardOpen
-  );
+  await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardOpen);
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
     selector: "Allow Access to All Photos",
@@ -198,10 +195,7 @@ async function disappearingGifMessage1o1(platform: SupportedPlatformsType) {
   // Click on attachments button
   await device1.clickOnElement("Attachments button");
   // Select GIF tab
-  await clickOnXAndYCoordinates(
-    device1,
-    InteractionPoints.GifButtonKeyboardClosed
-  );
+  await clickOnCoordinates(device1, InteractionPoints.GifButtonKeyboardClosed);
   // Select gif
   await sleepFor(500);
   // Need to select Continue on GIF warning
@@ -507,10 +501,7 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Attachments button");
   // Select images button/tab
   // Check if android or ios (android = documents folder/ ios = images folder)
-  await clickOnXAndYCoordinates(
-    device1,
-    InteractionPoints.ImagesFolderKeyboardOpen
-  );
+  await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardOpen);
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
     selector: "Allow Access to All Photos",
@@ -667,10 +658,7 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
   // Click on attachments button
   await device1.clickOnElement("Attachments button");
   // Select GIF tab
-  await clickOnXAndYCoordinates(
-    device1,
-    InteractionPoints.GifButtonKeyboardClosed
-  );
+  await clickOnCoordinates(device1, InteractionPoints.GifButtonKeyboardClosed);
   // Need to select Continue on GIF warning
   await device1.clickOnElement("Continue", 5000);
   await device1.clickOnElementXPath(

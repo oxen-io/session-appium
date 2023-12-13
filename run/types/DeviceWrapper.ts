@@ -1,7 +1,7 @@
 import { W3CCapabilities } from "appium/build/lib/appium";
-import { isArray, isEmpty, max } from "lodash";
+import { isArray, isEmpty } from "lodash";
 import { AppiumNextElementType } from "../../appium_next";
-import { clickOnXAndYCoordinates, sleepFor } from "../test/specs/utils";
+import { clickOnCoordinates, sleepFor } from "../test/specs/utils";
 import { SupportedPlatformsType } from "../test/specs/utils/open_app";
 import {
   isDeviceAndroid,
@@ -374,10 +374,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.click(el.ELEMENT);
   }
 
-  public async clickOnXAndYCoordinates(
-    xCoOrdinates: number,
-    yCoOrdinates: number
-  ) {
+  public async clickOnCoordinates(xCoOrdinates: number, yCoOrdinates: number) {
     await this.pressCoordinates(xCoOrdinates, yCoOrdinates);
     console.log(`Tapped coordinates ${xCoOrdinates}, ${yCoOrdinates}`);
   }
@@ -997,7 +994,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return this.toShared().getAttribute(attribute, elementId);
   }
 
-  public async radioButtonSelected(timeOption: DMTimeOption) {
+  public async disappearRadioButtonSelected(timeOption: DMTimeOption) {
     try {
       const radioButton = await this.findElementByXPath(
         `//*[./*[@name='${timeOption}']]/*[2]`
@@ -1019,7 +1016,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       const ronSwansonBirthday = "196705060700.00";
       await this.clickOnElement("Attachments button");
       await sleepFor(1000);
-      await clickOnXAndYCoordinates(
+      await clickOnCoordinates(
         this.device,
         InteractionPoints.ImagesFolderKeyboardOpen
       );
@@ -1072,17 +1069,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       await this.clickOnElement("Show roots");
       await sleepFor(100);
       await this.clickOnTextElementById(`android:id/title`, "Downloads");
-      // const mediaButtons = await this.findElementsByClass(
-      //   "android.widget.CompoundButton"
-      // );
-      // const imageButton = await this.findMatchingTextInElementArray(
-      //   mediaButtons,
-      //   "Images"
-      // );
-      // if (!imageButton) {
-      //   throw new Error("imageButton was not found in android");
-      // }
-      // await this.click(imageButton.ELEMENT);
+
       await sleepFor(100);
       const testImage = await this.doesElementExist({
         strategy: "id",

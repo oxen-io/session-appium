@@ -1,6 +1,6 @@
 import { iosIt } from "../../types/sessionIt";
 import { InteractionPoints } from "../../types/testing";
-import { sleepFor, clickOnXAndYCoordinates } from "./utils";
+import { sleepFor, clickOnCoordinates } from "./utils";
 import { newUser } from "./utils/create_account";
 import { createGroup } from "./utils/create_group";
 import {
@@ -35,8 +35,8 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
   const testMessage = "Ron Swanson doesn't like birthdays";
   // const replyMessage = `Replying to image from ${userA.userName} in ${testGroupName}`;
   await device1.clickOnElement("Attachments button");
-  await sleepFor(100);
-  await clickOnXAndYCoordinates(device1, InteractionPoints.ImagesFolder);
+  await sleepFor(500);
+  await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardOpen);
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
     selector: "Allow Access to All Photos",
@@ -115,7 +115,7 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to video from ${userA.userName} in ${testGroupName}`;
   await device1.clickOnElement("Attachments button");
   await sleepFor(100);
-  await clickOnXAndYCoordinates(device1, InteractionPoints.ImagesFolder);
+  await clickOnCoordinates(device1, InteractionPoints.ImagesFolder);
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
     selector: "Allow Access to All Photos",
@@ -304,7 +304,7 @@ async function sendGifGroup(platform: SupportedPlatformsType) {
   );
   await device1.clickOnElement("Attachments button");
   // Select GIF tab
-  await clickOnXAndYCoordinates(device1, InteractionPoints.GifButton);
+  await clickOnCoordinates(device1, InteractionPoints.GifButton);
   // Select gif
   await sleepFor(500);
   // Need to select Continue on GIF warning

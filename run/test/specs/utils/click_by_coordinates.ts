@@ -1,7 +1,7 @@
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { Coordinates } from "../../../types/testing";
 
-export const clickOnXAndYCoordinates = async (
+export const clickOnCoordinates = async (
   device: DeviceWrapper,
   coordinates: Coordinates
 ) => {
