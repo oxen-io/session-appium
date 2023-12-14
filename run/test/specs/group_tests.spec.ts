@@ -84,11 +84,9 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   await device1.clickOnElementById("network.loki.messenger:id/action_apply");
   // Check config message for changed name (different on ios and android)
   // Config on Android is "You renamed the group to blah"
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Control message",
-    text: "You renamed the group to " + `${newGroupName}`,
-  });
+  await device1.waitForControlMessageToBePresent(
+    "You renamed the group to " + `${newGroupName}`
+  );
 
   await closeApp(device1, device2, device3);
 }
@@ -150,11 +148,9 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   // If ios click back to match android (which goes back to conversation screen)
   // Check config message for changed name (different on ios and android)
   // Config message on ios is "Title is now blah"
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Control message",
-    text: "Title is now " + `'${newGroupName}'.`,
-  });
+  await device1.waitForControlMessageToBePresent(
+    "Title is now " + `'${newGroupName}'.`
+  );
   // Config on Android is "You renamed the group to blah"
 
   await closeApp(device1, device2, device3);
@@ -213,18 +209,14 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   );
   // Check config message
   await runOnlyOnIOS(platform, () =>
-    device1.waitForTextElementToBePresent({
-      strategy: "accessibility id",
-      selector: "Control message",
-      text: `${userD.userName}` + " joined the group.",
-    })
+    device1.waitForControlMessageToBePresent(
+      `${userD.userName}` + " joined the group."
+    )
   );
   await runOnlyOnAndroid(platform, () =>
-    device1.waitForTextElementToBePresent({
-      strategy: "accessibility id",
-      selector: "Control message",
-      text: `You added ${userD.userName} to the group.`,
-    })
+    device1.waitForControlMessageToBePresent(
+      `You added ${userD.userName} to the group.`
+    )
   );
   // Exit to conversation list
   await device4.navigateBack(platform);
@@ -232,11 +224,9 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   await device4.selectByText("Conversation list item", group.userName);
   // Check config
   await runOnlyOnIOS(platform, () =>
-    device4.waitForTextElementToBePresent({
-      strategy: "accessibility id",
-      selector: "Control message",
-      text: `${userD.userName}` + " joined the group.",
-    })
+    device4.waitForControlMessageToBePresent(
+      `${userD.userName}` + " joined the group."
+    )
   );
   await closeApp(device1, device2, device3, device4);
 }
@@ -384,9 +374,13 @@ async function leaveGroupIos(platform: SupportedPlatformsType) {
   await device3.clickOnElement("Leave");
   await device3.navigateBack(platform);
   // Check for control message
-  // await device3.findConfigurationMessage("You have left the group.");
-  await device2.findConfigurationMessage(`${userC.userName} left the group.`);
-  await device1.findConfigurationMessage(`${userC.userName} left the group.`);
+  // await device3.waitForControlMessageToBePresent("You have left the group.");
+  await device2.waitForControlMessageToBePresent(
+    `${userC.userName} left the group.`
+  );
+  await device1.waitForControlMessageToBePresent(
+    `${userC.userName} left the group.`
+  );
   await closeApp(device1, device2, device3);
 }
 
@@ -419,11 +413,11 @@ async function leaveGroupAndroid(platform: SupportedPlatformsType) {
   );
   await device3.clickOnElementById(`android:id/button1`);
   // Check for control message
-  // await device3.findConfigurationMessage("You have left the group.");
-  await device2.findConfigurationMessage(
+  // await device3.waitForControlMessageToBePresent("You have left the group.");
+  await device2.waitForControlMessageToBePresent(
     `${userC.userName} has left the group.`
   );
-  await device1.findConfigurationMessage(
+  await device1.waitForControlMessageToBePresent(
     `${userC.userName} has left the group.`
   );
   await closeApp(device1, device2, device3);

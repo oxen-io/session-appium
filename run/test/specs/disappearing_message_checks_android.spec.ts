@@ -391,8 +391,10 @@ async function disappearingCallMessage(platform: SupportedPlatformsType) {
   // Hang up
   await device1.clickOnElementById("network.loki.messenger:id/endCallButton");
   // Check for config message 'Called User B' on device 1
-  await device1.findConfigurationMessage(`Called ${userB.userName}`);
-  await device2.findConfigurationMessage(`${userA.userName} called you`);
+  await device1.waitForControlMessageToBePresent(`Called ${userB.userName}`);
+  await device2.waitForControlMessageToBePresent(
+    `${userA.userName} called you`
+  );
   // Wait 10 seconds for control message to be deleted
   await sleepFor(10000);
   await device1.hasElementBeenDeletedNew({

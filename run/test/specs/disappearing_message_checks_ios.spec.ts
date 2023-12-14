@@ -384,8 +384,12 @@ async function disappearingCallMessage1o1(platform: SupportedPlatformsType) {
   // Hang up
   await device1.clickOnElement("End call");
   // Check for config message 'Called User B' on device 1
-  await device1.findConfigurationMessage(`You called ${userB.userName}`);
-  await device1.findConfigurationMessage(`${userA.userName} called you`);
+  await device1.waitForControlMessageToBePresent(
+    `You called ${userB.userName}`
+  );
+  await device1.waitForControlMessageToBePresent(
+    `${userA.userName} called you`
+  );
   // Wait 10 seconds for control message to be deleted
   await sleepFor(10000);
   await device1.hasElementBeenDeletedNew({

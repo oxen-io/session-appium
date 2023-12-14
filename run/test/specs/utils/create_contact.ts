@@ -27,7 +27,7 @@ export const newContact = async (
   );
 
   // Verify config message states message request was accepted
-  await device1.findConfigurationMessage(
+  await device1.waitForControlMessageToBePresent(
     "Your message request has been accepted."
   );
 

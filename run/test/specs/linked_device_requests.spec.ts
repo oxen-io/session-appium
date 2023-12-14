@@ -34,11 +34,9 @@ async function acceptRequestLinked(platform: SupportedPlatformsType) {
   // Bob clicks accept button on device 2 (original device)
   await device2.clickOnElement("Accept message request");
   // Verify config message for Alice 'Your message request has been accepted'
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Control message",
-    text: "Your message request has been accepted.",
-  });
+  await device1.waitForControlMessageToBePresent(
+    "Your message request has been accepted."
+  );
 
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",

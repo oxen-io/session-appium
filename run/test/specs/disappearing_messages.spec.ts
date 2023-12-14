@@ -45,17 +45,13 @@ async function disappearingMessagesLegacy(platform: SupportedPlatformsType) {
   // Select OK
   // await device1.selectByText("Time selector", "OK");
   // Check config message for User A
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Control message",
-    text: "You set disappearing message time to 5 seconds",
-  });
+  await device1.waitForControlMessageToBePresent(
+    "You set disappearing message time to 5 seconds"
+  );
   // Check config message for User B
-  await device2.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Control message",
-    text: `${userA.userName} set disappearing message time to 5 seconds`,
-  });
+  await device2.waitForControlMessageToBePresent(
+    `${userA.userName} set disappearing message time to 5 seconds`
+  );
   // Send message
   const message = "Howdy testing disappearing messages";
   await device1.inputText("accessibility id", "Message input box", message);
@@ -96,13 +92,11 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
   // Click on set to save setting
   await device1.clickOnElement("Set button");
   await device1.navigateBack(platform);
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Control message",
-    text: `You have set messages to disappear 10 seconds after they have been sent`,
-  });
+  await device1.waitForControlMessageToBePresent(
+    `You have set messages to disappear 10 seconds after they have been sent`
+  );
   // Check control message is correct on device 2
-  await device2.findConfigurationMessage(
+  await device2.waitForControlMessageToBePresent(
     `${userA.userName} has set messages to disappear 10 seconds after they have been sent`
   );
   // Send message to verify that deletion is working
@@ -149,13 +143,11 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Set button");
   await device1.navigateBack(platform);
   await sleepFor(1000);
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Control message",
-    text: `You have set messages to disappear 10 seconds after they have been read`,
-  });
+  await device1.waitForControlMessageToBePresent(
+    `You have set messages to disappear 10 seconds after they have been read`
+  );
   // Check control message is correct on device 2
-  await device2.findConfigurationMessage(
+  await device2.waitForControlMessageToBePresent(
     `${userA.userName} has set messages to disappear 10 seconds after they have been read`
   );
 
@@ -219,15 +211,13 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   await device1.navigateBack(platform);
   // Check control message
   await Promise.all([
-    device1.waitForTextElementToBePresent({
-      strategy: "accessibility id",
-      selector: "Control message",
-      text: `You have set messages to disappear 10 seconds after they have been sent`,
-    }),
-    device2.findConfigurationMessage(
+    device1.waitForControlMessageToBePresent(
+      `You have set messages to disappear 10 seconds after they have been sent`
+    ),
+    device2.waitForControlMessageToBePresent(
       `${userA.userName} has set messages to disappear 10 seconds after they have been sent`
     ),
-    device3.findConfigurationMessage(
+    device3.waitForControlMessageToBePresent(
       `${userA.userName} has set messages to disappear 10 seconds after they have been sent`
     ),
   ]);
@@ -280,7 +270,7 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   await device.clickOnElement("Set button");
   await device.navigateBack(platform);
   await sleepFor(1000);
-  await device.findConfigurationMessage(
+  await device.waitForControlMessageToBePresent(
     `You have set messages to disappear 10 seconds after they have been sent`
   );
   await device.sendMessage(testMessage);

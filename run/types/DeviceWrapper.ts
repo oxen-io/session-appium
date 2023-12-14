@@ -651,22 +651,6 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return lastElement;
   }
 
-  public async findConfigurationMessage(messageText: string, maxWait?: number) {
-    const el = await this.waitForTextElementToBePresent({
-      strategy: "accessibility id",
-      selector: "Control message",
-      text: messageText,
-    });
-
-    const ele = await this.getTextFromElement(el);
-    const configMessage = ele.includes(messageText);
-    // console.log(configMessage, "config message");
-    if (!configMessage) {
-      throw new Error(`Couldnt find control message ${messageText}`);
-    }
-    return configMessage;
-  }
-
   public async findMessageWithBody(
     textToLookFor: string
   ): Promise<AppiumNextElementType> {
@@ -843,6 +827,40 @@ export class DeviceWrapper implements SharedDeviceInterface {
       }
     }
     console.log(`'${selector}' and '${text}' has been found`);
+    return el;
+  }
+
+  public async waitForControlMessageToBePresent(
+    text: string,
+    maxWait?: number
+  ): Promise<AppiumNextElementType> {
+    let el: null | AppiumNextElementType = null;
+    const maxWaitMSec: number = typeof maxWait === "number" ? maxWait : 15000;
+    let currentWait = 0;
+    const waitPerLoop = 100;
+    while (el === null) {
+      try {
+        console.log(`Waiting for control message to be present with ${text}`);
+        const els = await this.findElements(
+          "accessibility id",
+          "Control message"
+        );
+        el = await this.findMatchingTextInElementArray(els, text);
+      } catch (e: any) {
+        console.warn("waitForControlMessageToBePresent threw: ", e.message);
+      }
+      if (!el) {
+        await sleepFor(waitPerLoop);
+      }
+      currentWait += waitPerLoop;
+      if (currentWait >= maxWaitMSec) {
+        console.log("Waited too long");
+        throw new Error(
+          `Waited for too long looking for Control Message ${text}`
+        );
+      }
+    }
+    console.log(`Control Message ${text} has been found`);
     return el;
   }
 
