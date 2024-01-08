@@ -12,7 +12,7 @@ import { runScriptAndLog } from "./utils/utilities";
 
 async function sendImageGroup(platform: SupportedPlatformsType) {
   const testGroupName = "Message checks for groups";
-  const ronSwansonBirthday = "196705060700.00";
+  const testMessage = "Sending image to group";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
@@ -20,7 +20,6 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
     newUser(device3, "Charlie", platform),
   ]);
-
   // Create contact between User A and User B
   await createGroup(
     platform,
@@ -32,48 +31,7 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
-  const testMessage = "Ron Swanson doesn't like birthdays";
-  // const replyMessage = `Replying to image from ${userA.userName} in ${testGroupName}`;
-  await device1.clickOnElement("Attachments button");
-  await sleepFor(500);
-  await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardOpen);
-  const permissions = await device1.doesElementExist({
-    strategy: "accessibility id",
-    selector: "Allow Access to All Photos",
-    maxWait: 1000,
-  });
-  if (permissions) {
-    try {
-      await device1.clickOnElement(`Allow Access to All Photos`);
-      // Select video
-    } catch (e) {
-      console.log("No permissions dialog");
-    }
-  } else {
-    console.log("No permissions dialog");
-  }
-  const testImage = await device1.doesElementExist({
-    strategy: "accessibility id",
-    selector: `1967-05-05 21:00:00 +0000`,
-    maxWait: 2000,
-  });
-  if (!testImage) {
-    await runScriptAndLog(
-      `touch -a -m -t ${ronSwansonBirthday} 'run/test/specs/media/test_image.jpg'`
-    );
-
-    await runScriptAndLog(
-      `xcrun simctl addmedia ${
-        process.env.IOS_FIRST_SIMULATOR || ""
-      } 'run/test/specs/media/test_image.jpg'`,
-      true
-    );
-  }
-  await sleepFor(100);
-  await device1.clickOnElement(`1967-05-05 21:00:00 +0000`);
-  await device1.clickOnElement("Text input box");
-  await device1.inputText("accessibility id", "Text input box", testMessage);
-  await device1.clickOnElement("Send button");
+  await device1.sendImage(platform, testMessage);
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",

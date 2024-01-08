@@ -11,6 +11,7 @@ import { runScriptAndLog } from "./utils/utilities";
 
 async function sendImageGroup(platform: SupportedPlatformsType) {
   const testGroupName = "Message checks for groups";
+  const testMessage = "Testing image sending to groups";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
@@ -30,7 +31,7 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
     testGroupName
   );
   const replyMessage = `Replying to image from ${userA.userName}`;
-  await device1.sendImage(platform, "Testing image sending to groups");
+  await device1.sendImage(platform, testMessage);
   // Wait for image to appear in conversation screen
   await sleepFor(500);
   await device2.waitForTextElementToBePresent({
@@ -48,10 +49,6 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
   await device2.longPress("Media message");
   await device2.clickOnElement("Reply to message");
   await device2.sendMessage(replyMessage);
-  // await device1.clickOnElementAll({
-  //   strategy: "id",
-  //   selector: `network.loki.messenger:id/scrollToBottomButton`,
-  // });
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",

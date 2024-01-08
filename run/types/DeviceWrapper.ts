@@ -1033,7 +1033,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     if (platform === "ios") {
       const ronSwansonBirthday = "196705060700.00";
       await this.clickOnElement("Attachments button");
-      await sleepFor(1000);
+      await sleepFor(5000);
       await clickOnCoordinates(
         this.device,
         InteractionPoints.ImagesFolderKeyboardOpen
