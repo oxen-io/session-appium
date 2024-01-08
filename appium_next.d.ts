@@ -16,5 +16,7 @@ export type AppiumNextDeviceType = {
 };
 
 export type AppiumNextElementType = {
+  value(arg0: string): unknown;
+  isSelected(): unknown;
   ELEMENT: string;
 };

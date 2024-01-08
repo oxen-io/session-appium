@@ -1,4 +1,4 @@
-import { getSessionID, runOnlyOnAndroid, runOnlyOnIOS } from ".";
+import { getSessionID, runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from ".";
 import { SupportedPlatformsType } from "./open_app";
 import { User } from "../../../types/testing";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
@@ -10,13 +10,13 @@ export const newUser = async (
 ): Promise<User> => {
   // Click create session ID
   const createSessionId = "Create session ID";
-  await device.waitForElementToBePresent({
+  await device.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: createSessionId,
   });
   await device.clickOnElement(createSessionId);
   // Wait for animation to generate session id
-  await device.waitForElementToBePresent({
+  await device.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Session ID",
     maxWait: 8000,
@@ -40,9 +40,15 @@ export const newUser = async (
   await device.clickOnElement("Continue with settings");
   // Need to add Don't allow notifications dismiss here
   await runOnlyOnIOS(platform, () => device.clickOnElement("Don’t Allow"));
-  // iOS only
+  await sleepFor(1000);
+  await runOnlyOnAndroid(platform, () =>
+    device.clickOnTextElementById(
+      `com.android.permissioncontroller:id/permission_allow_button`,
+      "Allow"
+    )
+  );
   // Click on 'continue' button to open recovery phrase modal
-  await device.waitForElementToBePresent({
+  await device.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Continue",
   });

@@ -22,28 +22,14 @@ export const linkedDevice = async (
   );
   await sleepFor(1000);
   // Continue with recovery phrase
-  await runOnlyOnAndroid(platform, () => device2.clickOnElement("Link Device"));
-  await runOnlyOnIOS(platform, () => device2.clickOnElement("Continue"));
-
-  // TODO DELETE THIS AFTER ANDROID USER CONFIG ****************************
-  // if (!noDisplayName) {
-  //   await sleepFor(10000);
-  //   await device2.clickOnElementById(
-  //     "network.loki.messenger:id/snackbar_action"
-  //   );
-  //   await device2.inputText(
-  //     "accessibility id",
-  //     "Enter display name",
-  //     user.userName
-  //   );
-  //   await device2.clickOnElement("Continue");
-  // }
+  await device2.clickOnElement("Continue");
   // Wait for any notifications to disappear
-  await device2.waitForElementToBePresent({
+  await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message Notifications",
     maxWait: 20000,
   });
+
   // Wait for transitiion animation between the two pages
   await await sleepFor(250);
   // Click continue on message notification settings
@@ -60,8 +46,14 @@ export const linkedDevice = async (
   await runOnlyOnIOS(platform, () => device2.clickOnElement("Don’t Allow"));
   await sleepFor(1000);
   await device2.hasElementBeenDeleted("accessibility id", "Continue");
+  await runOnlyOnAndroid(platform, () =>
+    device2.clickOnTextElementById(
+      `com.android.permissioncontroller:id/permission_allow_button`,
+      "Allow"
+    )
+  );
   // Check that button was clicked
-  await device2.waitForElementToBePresent({
+  await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "New conversation button",
   });
