@@ -1,4 +1,4 @@
-import { W3CCapabilities } from "appium/build/lib/appium";
+import { W3CCapabilities } from "@wdio/types/build/Capabilities";
 import { isArray, isEmpty } from "lodash";
 import { AppiumNextElementType } from "../../appium_next";
 import { clickOnCoordinates, sleepFor } from "../test/specs/utils";
@@ -86,16 +86,18 @@ type SharedDeviceInterface = {
 
   // Session management
   createSession: (
-    caps: W3CCapabilities<any>
+    caps: W3CCapabilities
   ) => Promise<[string, Record<string, any>]>;
   deleteSession: (sessionId?: string) => Promise<void>;
 };
 
 type IOSDeviceInterface = {
-  mobileTouchAndHold: (opts: {
-    duration: number /* In seconds */;
-    elementId: string;
-  }) => Promise<void>;
+  mobileTouchAndHold: (
+    duration: number /* In seconds */,
+    x: any,
+    y: any,
+    elementId: string
+  ) => Promise<void>;
 } & SharedDeviceInterface;
 
 type AndroidDeviceInterface = {
@@ -260,7 +262,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   // Session management
   public async createSession(
-    caps: W3CCapabilities<any>
+    caps: W3CCapabilities
   ): Promise<[string, Record<string, any>]> {
     return this.toShared().createSession(caps);
   }
@@ -294,10 +296,13 @@ export class DeviceWrapper implements SharedDeviceInterface {
   public async longClick(element: AppiumNextElementType, durationMs: number) {
     if (this.isIOS()) {
       // iOS takes a number in seconds
-      return this.toIOS().mobileTouchAndHold({
-        elementId: element.ELEMENT,
-        duration: Math.floor(durationMs / 1000),
-      });
+      const duration = Math.floor(durationMs / 1000);
+      return this.toIOS().mobileTouchAndHold(
+        duration,
+        undefined,
+        undefined,
+        element.ELEMENT
+      );
     }
     return this.toAndroid().touchLongClick(element.ELEMENT);
   }

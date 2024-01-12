@@ -5,7 +5,7 @@
     "module": "commonjs",
     "removeComments": true,
     "noImplicitAny": true,
-    "skipLibCheck": true,
+    "skipLibCheck": false,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
 

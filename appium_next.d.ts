@@ -9,7 +9,7 @@ import { ExternalDriver } from "@appium/types/build/lib/driver";
 export interface MightBeUndefinedDeviceType extends ExternalDriver<any> {}
 
 export type AppiumNextDeviceType = {
-  pushFile(remotePath: string, payloadBase64: string): promise<void>;
+  pushFile(remotePath: string, payloadBase64: string): Promise<void>;
 
   // not sure at all
   touchMove(x: number, y: number): Promise<void>;

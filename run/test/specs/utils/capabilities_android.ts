@@ -1,5 +1,6 @@
 import { AppiumW3CCapabilities } from "@wdio/types/build/Capabilities";
-import { W3CCapabilities } from "appium/build/lib/appium";
+// import { W3CCapabilities } from "appium/build/lib/appium";
+import { W3CCapabilities } from "@wdio/types/build/Capabilities";
 import { isNil, isString } from "lodash";
 import { getAndroidBinariesRoot } from "./binaries";
 import { CapabilitiesIndexType } from "./capabilities_ios";
@@ -88,7 +89,7 @@ function getAllCaps() {
 export function getAndroidCapabilities(
   capabilitiesIndex: CapabilitiesIndexType
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): W3CCapabilities<any> {
+): W3CCapabilities {
   const allCaps = getAllCaps();
   if (capabilitiesIndex >= allCaps.length) {
     throw new Error(
