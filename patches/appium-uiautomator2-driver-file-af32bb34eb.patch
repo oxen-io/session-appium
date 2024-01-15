@@ -12,13 +12,13 @@ index e432a4f7fce958ab51f5b46bfab364928a8c972b..e0b61f0224b4bcbd69d86454485d5935
  }
  import './commands';
 diff --git a/lib/driver.ts b/lib/driver.ts
-index 930f80677480c67dd5fee1cb1b18661c5bb1089c..e90a6f18726f06cbd12a9090c241251025e94775 100644
+index 531e29905a84210c7d57f695f57b7951d8eeccfc..deaac8be636b7069160907f0089252ab1ff347b1 100644
 --- a/lib/driver.ts
 +++ b/lib/driver.ts
-@@ -873,7 +873,7 @@ class AndroidUiautomator2Driver
+@@ -874,7 +874,7 @@ class AndroidUiautomator2Driver
      return this.jwpProxyAvoid;
    }
-
+ 
 -  async updateSettings(settings: Uiautomator2Settings) {
 +  async updateSettings(settings: StringRecord) {
      await this.settings.update(settings);

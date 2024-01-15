@@ -2579,7 +2579,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"appium-uiautomator2-driver@file:../.appium/node_modules/appium-uiautomator2-driver::locator=root-workspace-0b6124%40workspace%3A.":
+"appium-uiautomator2-driver@file:../.appium/node_modules/appium-uiautomator2-driver#../.appium/node_modules/appium-uiautomator2-driver::hash=ed7690&locator=root-workspace-0b6124%40workspace%3A.":
   version: 2.42.1
   resolution: "appium-uiautomator2-driver@file:../.appium/node_modules/appium-uiautomator2-driver#../.appium/node_modules/appium-uiautomator2-driver::hash=ed7690&locator=root-workspace-0b6124%40workspace%3A."
   dependencies:
@@ -2600,6 +2600,30 @@ __metadata:
   peerDependencies:
     appium: ^2.4.1
   checksum: 1f1a34d7c80c7f43bdad9e690cb288095e48abdefc547c05cc8459d3995f3ff31ac471d98ae3d9c6a25a5e270d5d59a4365a79e2fd5fbacd3448afcee69650ca
+  languageName: node
+  linkType: hard
+
+"appium-uiautomator2-driver@patch:appium-uiautomator2-driver@file%3A../.appium/node_modules/appium-uiautomator2-driver%23../.appium/node_modules/appium-uiautomator2-driver%3A%3Ahash=ed7690&locator=root-workspace-0b6124%2540workspace%253A.#./patches/appium-uiautomator2-driver-file-af32bb34eb.patch::locator=root-workspace-0b6124%40workspace%3A.":
+  version: 2.42.1
+  resolution: "appium-uiautomator2-driver@patch:appium-uiautomator2-driver@file%3A../.appium/node_modules/appium-uiautomator2-driver%23../.appium/node_modules/appium-uiautomator2-driver%3A%3Ahash=ed7690&locator=root-workspace-0b6124%2540workspace%253A.#./patches/appium-uiautomator2-driver-file-af32bb34eb.patch::version=2.42.1&hash=409837&locator=root-workspace-0b6124%40workspace%3A."
+  dependencies:
+    appium-adb: "npm:^12.0.0"
+    appium-android-driver: "npm:^7.8.1"
+    appium-chromedriver: "npm:^5.6.28"
+    appium-uiautomator2-server: "npm:^6.0.3"
+    asyncbox: "npm:^3.0.0"
+    axios: "npm:^1.6.5"
+    bluebird: "npm:^3.5.1"
+    css-selector-parser: "npm:^3.0.0"
+    io.appium.settings: "npm:^5.7.2"
+    lodash: "npm:^4.17.4"
+    portscanner: "npm:^2.2.0"
+    source-map-support: "npm:^0.x"
+    teen_process: "npm:^2.0.0"
+    type-fest: "npm:^4.4.0"
+  peerDependencies:
+    appium: ^2.4.1
+  checksum: 7e22bcf0b222f2aa6cc559660162778c01ddbfa0143ae27a76d4dd5957d79149cccdad7938a81c8a656d7020f06c3a39a13491b2ad11a5b7629d7fce7e7cba18
   languageName: node
   linkType: hard
 
@@ -8333,7 +8357,7 @@ __metadata:
     "@typescript-eslint/parser": "npm:^5.59.5"
     "@wdio/types": "npm:^8.1.2"
     appium: "npm:^2.4.1"
-    appium-uiautomator2-driver: "file:../.appium/node_modules/appium-uiautomator2-driver"
+    appium-uiautomator2-driver: "patch:appium-uiautomator2-driver@file%3A../.appium/node_modules/appium-uiautomator2-driver%23../.appium/node_modules/appium-uiautomator2-driver%3A%3Ahash=ed7690&locator=root-workspace-0b6124%2540workspace%253A.#./patches/appium-uiautomator2-driver-file-af32bb34eb.patch"
     appium-xcuitest-driver: "file:../.appium/node_modules/appium-xcuitest-driver"
     ci: "npm:^2.2.0"
     eslint: "npm:^8.33.0"
