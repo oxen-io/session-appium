@@ -21,7 +21,7 @@ import { sleepFor } from "./sleep_for";
 import { compact } from "lodash";
 
 const APPIUM_PORT = 4728;
-export const APPIUM_IOS_PORT = 8100;
+export const APPIUM_IOS_PORT = 8110;
 
 export type SupportedPlatformsType = "android" | "ios";
 
