@@ -2450,7 +2450,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"appium-adb@npm:^11.0.1, appium-adb@npm:^11.1.0":
+"appium-adb@npm:^11.0.1":
   version: 11.1.0
   resolution: "appium-adb@npm:11.1.0"
   dependencies:
@@ -2469,13 +2469,32 @@ __metadata:
   languageName: node
   linkType: hard
 
+"appium-adb@npm:^12.0.0":
+  version: 12.0.0
+  resolution: "appium-adb@npm:12.0.0"
+  dependencies:
+    "@appium/support": "npm:^4.0.0"
+    "@devicefarmer/adbkit-apkreader": "npm:^3.2.4"
+    async-lock: "npm:^1.0.0"
+    asyncbox: "npm:^3.0.0"
+    bluebird: "npm:^3.4.7"
+    ini: "npm:^4.1.1"
+    lodash: "npm:^4.0.0"
+    lru-cache: "npm:^10.0.0"
+    semver: "npm:^7.0.0"
+    source-map-support: "npm:^0.x"
+    teen_process: "npm:^2.0.1"
+  checksum: 7ce4cb40eda6dff4bd9187fdf70c6fab974e1ccac4b268b26abcf03f64edeb9fd3ccce0e3bda9d105d77b23e1bf62b898f3be517c5648c8ffadbb1000a1df966
+  languageName: node
+  linkType: hard
+
 "appium-android-driver@npm:^7.7.0":
-  version: 7.8.0
-  resolution: "appium-android-driver@npm:7.8.0"
+  version: 7.8.1
+  resolution: "appium-android-driver@npm:7.8.1"
   dependencies:
     "@appium/support": "npm:^4.2.0"
     "@colors/colors": "npm:^1.6.0"
-    appium-adb: "npm:^11.1.0"
+    appium-adb: "npm:^12.0.0"
     appium-chromedriver: "npm:^5.5.1"
     asyncbox: "npm:^3.0.0"
     axios: "npm:^1.x"
@@ -2493,20 +2512,20 @@ __metadata:
     ws: "npm:^8.0.0"
   peerDependencies:
     appium: ^2.0.0-beta.40
-  checksum: fb42630fa7373b5ce1cab3b54718950f3aa43a5ed3ea3277a35a68ccd56b870104d6ac117fac26adcfdb48c48d8d1fc18b5c489e2a1dda9b589d9bb6ff57a939
+  checksum: a0c8713e2e1ef14b4871fdf1306b7cc4594a22516e50f05ae70f27ae75a4538ba3c089d734aed766a09d3b55fb5994c0b58ae7b9205e8f46570da49349b07bdd
   languageName: node
   linkType: hard
 
 "appium-chromedriver@npm:^5.5.1, appium-chromedriver@npm:^5.6.5":
-  version: 5.6.27
-  resolution: "appium-chromedriver@npm:5.6.27"
+  version: 5.6.28
+  resolution: "appium-chromedriver@npm:5.6.28"
   dependencies:
     "@appium/base-driver": "npm:^9.1.0"
     "@appium/support": "npm:^4.0.0"
     "@xmldom/xmldom": "npm:^0.x"
-    appium-adb: "npm:^11.0.1"
+    appium-adb: "npm:^12.0.0"
     asyncbox: "npm:^3.0.0"
-    axios: "npm:^1.x"
+    axios: "npm:^1.6.5"
     bluebird: "npm:^3.5.1"
     compare-versions: "npm:^6.0.0"
     fancy-log: "npm:^2.0.0"
@@ -2515,7 +2534,7 @@ __metadata:
     source-map-support: "npm:^0.x"
     teen_process: "npm:^2.0.0"
     xpath: "npm:^0.x"
-  checksum: 182d743d927d840395aa81a1c6152ce968234777bf915410963d12992a8f7ac30b0e12ea13bbf0f69ab428df2e9628f158eb3b6e2a1c35dee253a8ec5837c857
+  checksum: 27cac103136ab078126329e7d197429bdee04f345bb786d5546a652a4f14631f760d8955cd8bde8c050623e2e2dd631ceb1528ce6fa7d186014bb0f4f1aac529
   languageName: node
   linkType: hard
 
@@ -2983,7 +3002,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.4.0, axios@npm:^1.x":
+"axios@npm:^1.4.0, axios@npm:^1.6.5, axios@npm:^1.x":
   version: 1.6.5
   resolution: "axios@npm:1.6.5"
   dependencies:
@@ -4266,9 +4285,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.4.601":
-  version: 1.4.629
-  resolution: "electron-to-chromium@npm:1.4.629"
-  checksum: 415ca350c7379624a5a304bd5d3b1399cfe62ecae7d7106aa4ce698cb9094ebba03799a275576135a20b2c5ccc34d9afbf7096e4ddb3e933925704bf106d712b
+  version: 1.4.630
+  resolution: "electron-to-chromium@npm:1.4.630"
+  checksum: dbe3b3437b00f978aa261e1ee9c80eebaba70dea601866b0d64e36f7146328c79bce8416652e4713cfeb0e22428cc7ec1751881860ec892fa32ec8de015d1a9e
   languageName: node
   linkType: hard
 
@@ -4876,12 +4895,12 @@ __metadata:
   linkType: hard
 
 "follow-redirects@npm:^1.15.0, follow-redirects@npm:^1.15.4":
-  version: 1.15.4
-  resolution: "follow-redirects@npm:1.15.4"
+  version: 1.15.5
+  resolution: "follow-redirects@npm:1.15.5"
   peerDependenciesMeta:
     debug:
       optional: true
-  checksum: 5f37ed9170c9eb19448c5418fdb0f2b73f644b5364834e70791a76ecc7db215246f9773bbef4852cfae4067764ffc852e047f744b661b0211532155b73556a6a
+  checksum: 418d71688ceaf109dfd6f85f747a0c75de30afe43a294caa211def77f02ef19865b547dfb73fde82b751e1cc507c06c754120b848fe5a7400b0a669766df7615
   languageName: node
   linkType: hard
 
@@ -5366,7 +5385,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"has-property-descriptors@npm:^1.0.0":
+"has-property-descriptors@npm:^1.0.0, has-property-descriptors@npm:^1.0.1":
   version: 1.0.1
   resolution: "has-property-descriptors@npm:1.0.1"
   dependencies:
@@ -5629,8 +5648,8 @@ __metadata:
   linkType: hard
 
 "io.appium.settings@npm:^5.7.1":
-  version: 5.7.1
-  resolution: "io.appium.settings@npm:5.7.1"
+  version: 5.7.2
+  resolution: "io.appium.settings@npm:5.7.2"
   dependencies:
     asyncbox: "npm:^3.0.0"
     bluebird: "npm:^3.5.1"
@@ -5639,7 +5658,7 @@ __metadata:
     semver: "npm:^7.5.4"
     source-map-support: "npm:^0.x"
     teen_process: "npm:^2.0.0"
-  checksum: 1937bb4bb4b6f5e76849eca017709c48f125afb0393c25d7595eb2b70289bd8653d15c8f9a09cf8affd42171ac2d9cd1dba35f7828bac18dde2518008d213a47
+  checksum: 02359d867b5e27c3ac3e30672fb8909ef86431085f19603c0f540f47770da649ac0d8dfbdd5bff94fab3185c7062dac52863ed8081603260da6b01dc5e93319c
   languageName: node
   linkType: hard
 
@@ -8575,14 +8594,15 @@ __metadata:
   linkType: hard
 
 "set-function-length@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "set-function-length@npm:1.1.1"
+  version: 1.2.0
+  resolution: "set-function-length@npm:1.2.0"
   dependencies:
     define-data-property: "npm:^1.1.1"
-    get-intrinsic: "npm:^1.2.1"
+    function-bind: "npm:^1.1.2"
+    get-intrinsic: "npm:^1.2.2"
     gopd: "npm:^1.0.1"
-    has-property-descriptors: "npm:^1.0.0"
-  checksum: a29e255c116c29e3323b851c4f46c58c91be9bb8b065f191e2ea1807cb2c839df56e3175732a498e0c6d54626ba6b6fef896bf699feb7ab70c42dc47eb247c95
+    has-property-descriptors: "npm:^1.0.1"
+  checksum: b4fdf68bbfa9944284a9469c04e0d9cdb7924942fab75cd11fb61e8a7518f0d40bbbbc1b46871f648a93b97d170d8047fe3492cdadff066a8a8ae4ce68d0564a
   languageName: node
   linkType: hard
 
