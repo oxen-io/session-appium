@@ -25,6 +25,10 @@ export const APPIUM_IOS_PORT = 8110;
 
 export type SupportedPlatformsType = "android" | "ios";
 
+/* ******************Command to run Appium Server: *************************************
+./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --use-plugins=execute-driver --allow-cors
+*/
+
 const openAppOnPlatform = async (
   platform: SupportedPlatformsType,
   capabilitiesIndex: CapabilitiesIndexType

@@ -835,6 +835,8 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return el;
   }
 
+  DAS_YOU_CONTROL = `You have set your messages to disappear 10 seconds after they have been sent.`;
+
   public async waitForControlMessageToBePresent(
     text: string,
     maxWait?: number

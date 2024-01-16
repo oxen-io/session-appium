@@ -209,4 +209,5 @@ export type AccessibilityId =
   | "covid"
   | "Show roots"
   | "Conversation header name"
-  | "Invite";
+  | "Invite"
+  | "Follow Setting";
