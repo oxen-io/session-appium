@@ -14,22 +14,20 @@ type DisappearOptsGroup = [
   DMTimeOption
 ];
 
-
 type MergedOptions = DisappearOpts1o1 | DisappearOptsGroup;
 
-export function disappearingControlMessageText = async (setterUser: User, setterDevice: boolean, [conversationType, timerType, timerDuration]: MergedOptions,
-  ) => {
-    const enforcedType: ConversationType = conversationType;
-    if (enforcedType === '1o1' && timerType === 'Disappear after read option') {
-      switch(setterUser)
-      return `You have set messages to disappear ${timerDuration} after they have been sent`
-    }
-  }
+// export function disappearingControlMessageText = async (setterUser: User, setterDevice: boolean, [conversationType, timerType, timerDuration]: MergedOptions,
+//   ) => {
+//     const enforcedType: ConversationType = conversationType;
+//     if (enforcedType === '1o1' && timerType === 'Disappear after read option') {
+//       switch(setterUser)
+//       return `You have set messages to disappear ${timerDuration} after they have been sent`
+//     }
+//   }
 
 export const setDisappearingMessage = async (
   device: DeviceWrapper,
-  [conversationType, timerType, timerDuration]: MergedOptions,
-  setterUser: User
+  [conversationType, timerType, timerDuration]: MergedOptions
 ) => {
   const enforcedType: ConversationType = conversationType;
   await device.clickOnElement("More options");
