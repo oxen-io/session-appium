@@ -1,27 +1,20 @@
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
-import { ConversationType, DMTimeOption, User } from "../../../types/testing";
+import {
+  ConversationType,
+  DMTimeOption,
+  MergedOptions,
+  User,
+} from "../../../types/testing";
 import { sleepFor } from "./sleep_for";
 
-type DisappearOpts1o1 = [
-  "1o1",
-  "Disappear after read option" | "Disappear after send option",
-  DMTimeOption
-];
-
-type DisappearOptsGroup = [
-  "Group" | "Note to Self",
-  "Disappear after send option",
-  DMTimeOption
-];
-
-type MergedOptions = DisappearOpts1o1 | DisappearOptsGroup;
-
-// export function disappearingControlMessageText = async (setterUser: User, setterDevice: boolean, [conversationType, timerType, timerDuration]: MergedOptions,
+// export function disappearingControlMessageText = async (setterUser: User, you: boolean, [conversationType, timerType, timerDuration]: MergedOptions,
 //   ) => {
 //     const enforcedType: ConversationType = conversationType;
 //     if (enforcedType === '1o1' && timerType === 'Disappear after read option') {
-//       switch(setterUser)
-//       return `You have set messages to disappear ${timerDuration} after they have been sent`
+//       while(you)
+//         return `You have set messages to disappear ${timerDuration} after they have been read`
+//       }
+
 //     }
 //   }
 

@@ -34,6 +34,20 @@ export type DMTimeOption =
   | "1 week"
   | "2 weeks";
 
+export type DisappearOpts1o1 = [
+  "1o1",
+  "Disappear after read option" | "Disappear after send option",
+  DMTimeOption
+];
+
+export type DisappearOptsGroup = [
+  "Group" | "Note to Self",
+  "Disappear after send option",
+  DMTimeOption
+];
+
+export type MergedOptions = DisappearOpts1o1 | DisappearOptsGroup;
+
 export type StrategyExtractionObj =
   | {
       strategy: Extract<Strategy, "id" | "class name">;
