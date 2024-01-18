@@ -1094,7 +1094,6 @@ export class DeviceWrapper implements SharedDeviceInterface {
       await this.clickOnElement("Show roots");
       await sleepFor(100);
       await this.clickOnTextElementById(`android:id/title`, "Downloads");
-
       await sleepFor(100);
       const testImage = await this.doesElementExist({
         strategy: "id",

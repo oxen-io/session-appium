@@ -22,7 +22,7 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(device1, [
+  await setDisappearingMessage(platform, device1, [
     "1o1",
     "Disappear after send option",
     "10 seconds",
@@ -60,7 +60,7 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
   const testMessage = "Testing disappearing messages for videos";
   const bestDayOfYear = `198809090700.00`;
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(device1, [
+  await setDisappearingMessage(platform, device1, [
     "1o1",
     "Disappear after send option",
     "10 seconds",
@@ -148,7 +148,7 @@ async function disappearingVoiceMessage1o1(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(device1, [
+  await setDisappearingMessage(platform, device1, [
     "1o1",
     "Disappear after send option",
     "10 seconds",
@@ -186,7 +186,7 @@ async function disappearingGifMessage1o1(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(device1, [
+  await setDisappearingMessage(platform, device1, [
     "1o1",
     "Disappear after send option",
     "10 seconds",
@@ -239,7 +239,7 @@ async function disappearingLinkMessage(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(device1, [
+  await setDisappearingMessage(platform, device1, [
     "1o1",
     "Disappear after send option",
     "10 seconds",
@@ -295,7 +295,7 @@ async function disappearingCommunityInviteMessage1o1(
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(device1, [
+  await setDisappearingMessage(platform, device1, [
     "1o1",
     "Disappear after send option",
     "10 seconds",
@@ -349,7 +349,7 @@ async function disappearingCallMessage1o1(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(device1, [
+  await setDisappearingMessage(platform, device1, [
     "1o1",
     "Disappear after send option",
     "10 seconds",
@@ -443,7 +443,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
     testGroupName
   );
 
-  await setDisappearingMessage(device1, [
+  await setDisappearingMessage(platform, device1, [
     "Group",
     "Disappear after send option",
     "10 seconds",
@@ -496,7 +496,7 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
     testGroupName
   );
 
-  await setDisappearingMessage(device1, [
+  await setDisappearingMessage(platform, device1, [
     "Group",
     "Disappear after send option",
     "10 seconds",
@@ -601,7 +601,7 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
-  await setDisappearingMessage(device1, [
+  await setDisappearingMessage(platform, device1, [
     "Group",
     "Disappear after send option",
     "10 seconds",
@@ -653,7 +653,7 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
-  await setDisappearingMessage(device1, [
+  await setDisappearingMessage(platform, device1, [
     "Group",
     "Disappear after send option",
     "10 seconds",
@@ -715,7 +715,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
-  await setDisappearingMessage(device1, [
+  await setDisappearingMessage(platform, device1, [
     "Group",
     "Disappear after send option",
     "10 seconds",

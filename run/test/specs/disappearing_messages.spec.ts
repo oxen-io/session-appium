@@ -69,15 +69,22 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
   ]);
-  const DAS_USER_A_CONTROL = `${userA.userName} has set their messages to disappear 10 seconds after they have been sent.`;
-  const DAS_YOU_CONTROL = `You set your messages to disappear 10 seconds after they have been sent.`;
   const testMessage = "Checking disappear after send is working";
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // Click conversation options menu (three dots)
   await device1.clickOnElement("More options");
   // Select disappearing messages option
-  await device1.clickOnElement("Disappearing messages");
+  await runOnlyOnIOS(platform, () =>
+    device1.clickOnElement("Disappearing Messages")
+  );
+  await sleepFor(1000);
+  await runOnlyOnAndroid(platform, () =>
+    device1.clickOnTextElementById(
+      `network.loki.messenger:id/title`,
+      "Disappearing messages"
+    )
+  );
   await device1.clickOnElement("Disappear after send option");
   // Need to validate that default time is checked somehow
   await device1.waitForTextElementToBePresent({

@@ -224,4 +224,5 @@ export type AccessibilityId =
   | "Show roots"
   | "Conversation header name"
   | "Invite"
-  | "Follow Setting";
+  | "Follow Setting"
+  | "Set";
