@@ -43,7 +43,7 @@ async function disappearingMessagesLegacy(platform: SupportedPlatformsType) {
   await device1.navigateBack(platform);
   // Check control message for User A
   await device1.waitForControlMessageToBePresent(
-    "You set disappearing message time to 5 seconds"
+    `You set disappearing message time to 5 seconds`
   );
   // Check config message for User B
   await device2.waitForControlMessageToBePresent(
@@ -69,8 +69,6 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
   ]);
-  const DAS_USER_A_CONTROL = `${userA.userName} has set their messages to disappear 10 seconds after they have been sent.`;
-  const DAS_YOU_CONTROL = `You set your messages to disappear 10 seconds after they have been sent.`;
   const testMessage = "Checking disappear after send is working";
   // Create contact
   await newContact(platform, device1, userA, device2, userB);

@@ -10,6 +10,7 @@ import {
 } from "../test/specs/utils/utilities";
 import {
   AccessibilityId,
+  ControlMessage,
   DMTimeOption,
   Group,
   InteractionPoints,
@@ -838,7 +839,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   DAS_YOU_CONTROL = `You have set your messages to disappear 10 seconds after they have been sent.`;
 
   public async waitForControlMessageToBePresent(
-    text: string,
+    text: ControlMessage,
     maxWait?: number
   ): Promise<AppiumNextElementType> {
     let el: null | AppiumNextElementType = null;

@@ -62,6 +62,28 @@ export type StrategyExtractionObj =
       selector: XPath;
     };
 
+export type ControlMessage =
+  | `You set disappearing message time to 5 seconds`
+  | `${string} set disappearing message time to 5 seconds`
+  | `You have set messages to disappear 10 seconds after they have been sent`
+  | `${string} has set messages to disappear 10 seconds after they have been sent`
+  | `${string} has set their messages to disappear ${DMTimeOption} after they have been sent.`
+  | `${string} has set their messages to disappear ${DMTimeOption} after they have been read.`
+  | `You set your messages to disappear ${DMTimeOption} after they have been sent.`
+  | `You set your messages to disappear ${DMTimeOption} after they have been read.`
+  | "Your message request has been accepted."
+  | `${string} called you`
+  | `Called ${string}`
+  | `You called ${string}`
+  | "You created a new group."
+  | `${string} has left the group.`
+  | `${string} left the group.`
+  | `${string} renamed the group to: ${string}`
+  | `Title is now '${string}'.`
+  | `You renamed the group to ${string}`
+  | `${string} joined the group.`
+  | `You added ${string} to the group.`;
+
 export type XPath =
   | `//*[./*[@name='${DMTimeOption}']]/*[2]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.FrameLayout[2]/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout[5]/android.widget.RelativeLayout/android.widget.TextView[2]`

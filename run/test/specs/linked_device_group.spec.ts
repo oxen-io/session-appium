@@ -20,7 +20,7 @@ async function groupCreationandNameChangeLinkedDevice(
 
   const [userB, userC] = await Promise.all([
     newUser(device3, "Bob", platform),
-    newUser(device4, "Carl", platform),
+    newUser(device4, "Charlie", platform),
   ]);
   const testGroupName = "Linked device group";
   const newGroupName = "New group name";
@@ -73,15 +73,13 @@ async function groupCreationandNameChangeLinkedDevice(
   // Check config message for changed name (different on ios and android)
   // Config message on ios is "Title is now blah"
   await runOnlyOnIOS(platform, () =>
-    device1.waitForControlMessageToBePresent(
-      "Title is now " + `'${newGroupName}'.`
-    )
+    device1.waitForControlMessageToBePresent(`Title is now '${newGroupName}'.`)
   );
   // Config on Android is "You renamed the group to blah"
   await sleepFor(2000);
   await runOnlyOnAndroid(platform, () =>
     device1.waitForControlMessageToBePresent(
-      "You renamed the group to " + `${newGroupName}`
+      `You renamed the group to ${newGroupName}`
     )
   );
   // Wait 5 seconds for name to update
@@ -105,24 +103,22 @@ async function groupCreationandNameChangeLinkedDevice(
   );
   // Check control message in linked device: iOS
   await runOnlyOnIOS(platform, () =>
-    device2.waitForControlMessageToBePresent(
-      "Title is now " + `'${newGroupName}'.`
-    )
+    device2.waitForControlMessageToBePresent(`Title is now '${newGroupName}'.`)
   );
   // control on Linked device: Android is "You renamed the group to blah"
   await runOnlyOnAndroid(platform, () =>
     device2.waitForControlMessageToBePresent(
-      "You renamed the group to " + `${newGroupName}`
+      `${userA.userName} renamed the group to: ${newGroupName}`
     )
   );
   await runOnlyOnAndroid(platform, () =>
     device3.waitForControlMessageToBePresent(
-      `${userA.userName}` + " renamed the group to: " + `${newGroupName}`
+      `${userA.userName} renamed the group to: ${newGroupName}`
     )
   );
   await runOnlyOnAndroid(platform, () =>
     device4.waitForControlMessageToBePresent(
-      `${userA.userName}` + " renamed the group to: " + `${newGroupName}`
+      `${userA.userName} renamed the group to: ${newGroupName}`
     )
   );
   await closeApp(device1, device2, device3, device4);
