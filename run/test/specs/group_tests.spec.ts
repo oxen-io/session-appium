@@ -374,7 +374,6 @@ async function leaveGroupIos(platform: SupportedPlatformsType) {
   await device3.clickOnElement("Leave");
   await device3.navigateBack(platform);
   // Check for control message
-  // await device3.waitForControlMessageToBePresent("You have left the group.");
   await device2.waitForControlMessageToBePresent(
     `${userC.userName} left the group.`
   );
@@ -413,7 +412,6 @@ async function leaveGroupAndroid(platform: SupportedPlatformsType) {
   );
   await device3.clickOnElementById(`android:id/button1`);
   // Check for control message
-  // await device3.waitForControlMessageToBePresent("You have left the group.");
   await device2.waitForControlMessageToBePresent(
     `${userC.userName} has left the group.`
   );

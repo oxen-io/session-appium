@@ -27,8 +27,20 @@ async function sendImageCommunity(platform: SupportedPlatformsType) {
     joinCommunity(platform, device1, testCommunityLink, testCommunityName),
     joinCommunity(platform, device2, testCommunityLink, testCommunityName),
   ]);
-  await device1.sendImage(platform, testMessage);
+  await Promise.all([
+    device1.scrollToBottom(platform),
+    device2.scrollToBottom(platform),
+  ]);
+  await device1.sendImage(platform, testMessage, true);
+  await Promise.all([
+    device1.scrollToBottom(platform),
+    device2.scrollToBottom(platform),
+  ]);
   await device2.replyToMessage(userA, testMessage);
+  // await Promise.all([
+  //   device1.scrollToBottom(platform),
+  //   device2.scrollToBottom(platform),
+  // ]);
 
   closeApp(device1, device2);
 }

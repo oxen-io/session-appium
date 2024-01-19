@@ -1037,7 +1037,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
     }
   }
 
-  public async sendImage(platform: SupportedPlatformsType, message: string) {
+  public async sendImage(
+    platform: SupportedPlatformsType,
+    message?: string,
+    community?: boolean
+  ) {
     if (platform === "ios") {
       const ronSwansonBirthday = "196705060700.00";
       await this.clickOnElement("Attachments button");
@@ -1080,8 +1084,10 @@ export class DeviceWrapper implements SharedDeviceInterface {
       }
       await sleepFor(100);
       await this.clickOnElement(`1967-05-05 21:00:00 +0000`);
-      await this.clickOnElement("Text input box");
-      await this.inputText("accessibility id", "Text input box", message);
+      if (message) {
+        await this.clickOnElement("Text input box");
+        await this.inputText("accessibility id", "Text input box", message);
+      }
       await this.clickOnElement("Send button");
       await this.waitForTextElementToBePresent({
         strategy: "accessibility id",
@@ -1111,6 +1117,9 @@ export class DeviceWrapper implements SharedDeviceInterface {
       }
       await sleepFor(100);
       await this.clickOnTextElementById("android:id/title", "test_image.jpg");
+      if (community) {
+        await this.scrollToBottom(platform);
+      }
       await this.waitForTextElementToBePresent({
         strategy: "accessibility id",
         selector: `Message sent status: Sent`,
@@ -1165,6 +1174,20 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async scrollDown() {
     await this.scroll({ x: 760, y: 1500 }, { x: 760, y: 710 }, 100);
+  }
+
+  public async scrollToBottom(platform: SupportedPlatformsType) {
+    if (platform === "android") {
+      await this.clickOnElementAll({
+        strategy: "id",
+        selector: "network.loki.messenger:id/scrollToBottomButton",
+      });
+    } else {
+      await this.clickOnElementAll({
+        strategy: "accessibility id",
+        selector: "Scroll button",
+      });
+    }
   }
 
   public async navigateBack(platform: SupportedPlatformsType) {
