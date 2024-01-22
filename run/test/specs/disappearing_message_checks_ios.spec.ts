@@ -407,25 +407,12 @@ async function disappearingCallMessage1o1(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
-describe("Disappearing messages checks 1o1", () => {
-  iosIt("Disappearing messages image", disappearingImageMessage1o1);
-  iosIt("Disappearing messages video", disappearingVideoMessage1o1);
-  iosIt("Disappearing messages voice", disappearingVoiceMessage1o1);
-  iosIt("Disappearing messages gif", disappearingGifMessage1o1);
-  iosIt("Disappearing messages link", disappearingLinkMessage);
-  iosIt(
-    "Disappearing messages community invite",
-    disappearingCommunityInviteMessage1o1
-  );
-  iosIt("Disappearing messages call history", disappearingCallMessage1o1);
-});
-
 // GROUP DISAPPEARING MESSAGE CHECKS
 
 async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   const testMessage = "Testing disappearing messages for images";
-  const testGroupName = "Disappearing message group";
+  const testGroupName = "Test group";
   // Create user A and user B
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -477,7 +464,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
 async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
   const testMessage = "Testing disappearing messages for videos";
   const bestDayOfYear = `198809090700.00`;
-  const testGroupName = "Testing disappearing messages video";
+  const testGroupName = "Test group";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create user A and user B
   const [userA, userB, userC] = await Promise.all([
@@ -583,7 +570,7 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
 }
 
 async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
-  const testGroupName = "Testing disappearing messages voice message";
+  const testGroupName = "Testing disappearing messages";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create user A and user B
   const [userA, userB, userC] = await Promise.all([
@@ -635,7 +622,7 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
 
 async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
   const testMessage = "Testing disappearing messages for GIF's";
-  const testGroupName = "Testing disappearing messages GIF";
+  const testGroupName = "Test group";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create user A and user B
   const [userA, userB, userC] = await Promise.all([
@@ -697,7 +684,7 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
 
 async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  const testGroupName = "Testing group link previews for DMs";
+  const testGroupName = "Test group";
   const testLink = `https://example.net/`;
   // Create user A and user B
   const [userA, userB, userC] = await Promise.all([
@@ -758,6 +745,19 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   });
   await closeApp(device1, device2, device3);
 }
+
+describe("Disappearing messages checks 1o1", () => {
+  iosIt("Disappearing messages image", disappearingImageMessage1o1);
+  iosIt("Disappearing messages video", disappearingVideoMessage1o1);
+  iosIt("Disappearing messages voice", disappearingVoiceMessage1o1);
+  iosIt("Disappearing messages gif", disappearingGifMessage1o1);
+  iosIt("Disappearing messages link", disappearingLinkMessage);
+  iosIt(
+    "Disappearing messages community invite",
+    disappearingCommunityInviteMessage1o1
+  );
+  iosIt("Disappearing messages call history", disappearingCallMessage1o1);
+});
 
 describe("Disappearing messages checks groups", () => {
   iosIt("Disappearing messages image group", disappearingImageMessageGroup);

@@ -836,8 +836,6 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return el;
   }
 
-  DAS_YOU_CONTROL = `You have set your messages to disappear 10 seconds after they have been sent.`;
-
   public async waitForControlMessageToBePresent(
     text: ControlMessage,
     maxWait?: number
@@ -864,11 +862,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
       if (currentWait >= maxWaitMSec) {
         console.log("Waited too long");
         throw new Error(
-          `Waited for too long looking for Control Message ${text}`
+          `Waited for too long looking for Control message ${text}`
         );
       }
     }
-    console.log(`Control Message ${text} has been found`);
+    console.log(`Control message ${text} has been found`);
     return el;
   }
 

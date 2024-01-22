@@ -11,7 +11,7 @@ import {
 } from "./utils/open_app";
 
 async function groupCreation(platform: SupportedPlatformsType) {
-  const testGroupName = "The Manhattan Project";
+  const testGroupName = "Test group";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
@@ -35,7 +35,7 @@ async function groupCreation(platform: SupportedPlatformsType) {
 }
 
 async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
-  const testGroupName = "Group name";
+  const testGroupName = "Test group";
   const newGroupName = "Changed group name";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
@@ -92,7 +92,7 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
 }
 
 async function changeGroupNameIos(platform: SupportedPlatformsType) {
-  const testGroupName = "Group name";
+  const testGroupName = "Test group";
   const newGroupName = "Changed group name";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
@@ -237,7 +237,7 @@ async function mentionsForGroupsIos(platform: SupportedPlatformsType) {
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
-    newUser(device3, "Cat", platform),
+    newUser(device3, "Charlie", platform),
   ]);
   const testGroupName = "Mentions test group";
   // Create contact between User A and User B
@@ -348,7 +348,7 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
 }
 
 async function leaveGroupIos(platform: SupportedPlatformsType) {
-  const testGroupName = "Otter lovers";
+  const testGroupName = "Leave group";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
@@ -384,7 +384,7 @@ async function leaveGroupIos(platform: SupportedPlatformsType) {
 }
 
 async function leaveGroupAndroid(platform: SupportedPlatformsType) {
-  const testGroupName = "Otter lovers";
+  const testGroupName = "Leave group";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([

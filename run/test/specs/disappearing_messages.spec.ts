@@ -189,7 +189,7 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
 }
 
 async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
-  const testGroupName = "Disappear after sent test";
+  const testGroupName = "Disappear after send test";
   const testMessage = "Testing disappear after sent in groups";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C

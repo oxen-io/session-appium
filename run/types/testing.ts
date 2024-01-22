@@ -1,11 +1,24 @@
 export type User = {
-  userName: string;
+  userName: Username;
   sessionID: string;
   recoveryPhrase: string;
 };
 
+export type Username = "Alice" | "Bob" | "Charlie" | "Dracula";
+
+export type GroupName =
+  | "Test group"
+  | "Mentions test group"
+  | "Message checks for groups"
+  | "Leave group linked device"
+  | "Leave group"
+  | "Linked device group"
+  | "Testing disappearing messages"
+  | "Group to test adding contact"
+  | "Disappear after send test";
+
 export type Group = {
-  userName: string;
+  userName: GroupName;
   userOne: User;
   userTwo: User;
   userThree: User;
