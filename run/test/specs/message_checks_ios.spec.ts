@@ -191,19 +191,22 @@ async function sendVideo(platform: SupportedPlatformsType) {
   // Click on attachments button
   await device1.clickOnElement("Attachments button");
   // Select images button/tab
-  await sleepFor(100);
+  await sleepFor(1000);
   // Check if android or ios (android = documents folder/ ios = images folder)
-  await clickOnCoordinates(device1, InteractionPoints.ImagesFolder);
+  await clickOnCoordinates(
+    device1,
+    InteractionPoints.ImagesFolderKeyboardClosed
+  );
   // Select 'continue' on alert
   // Need to put a video on device
   // Session would like to access your photos
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
-    selector: "Allow Access to All Photos",
+    selector: "Allow Full Access",
     maxWait: 5000,
   });
   if (permissions) {
-    await device1.clickOnElement("Allow Access to All Photos");
+    await device1.clickOnElement("Allow Full Access");
   } else {
     console.log("No permissions");
   }

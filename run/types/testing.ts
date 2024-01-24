@@ -219,6 +219,7 @@ export type AccessibilityId =
   | "Document"
   | "All Photos"
   | "Allow Access to All Photos"
+  | "Allow Full Access"
   | "Photo, May 01, 1999, 7:00 AM"
   | "profile_picture.jpg, 27.75 kB, May 2, 1999"
   | "profile_picture.jpg, 27.75 kB, May 1, 1999"

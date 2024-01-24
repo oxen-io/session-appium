@@ -213,7 +213,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
             y: yCoOrdinates,
           },
           { type: "pointerDown", button: 0 },
-          { type: "pause", duration: 100 },
+          { type: "pause", duration: 200 },
 
           { type: "pointerUp", button: 0 },
         ],
@@ -416,7 +416,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
         text: textToLookFor,
       });
 
-      await this.longClick(el, 1000);
+      await this.longClick(el, 2000);
       console.log("LongClick successful");
       if (!el) {
         throw new Error(
