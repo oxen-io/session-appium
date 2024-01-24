@@ -11,7 +11,7 @@ import {
 } from "./utils/open_app";
 
 async function groupCreation(platform: SupportedPlatformsType) {
-  const testGroupName = "The Manhattan Project";
+  const testGroupName = "Test group";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
@@ -35,7 +35,7 @@ async function groupCreation(platform: SupportedPlatformsType) {
 }
 
 async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
-  const testGroupName = "Group name";
+  const testGroupName = "Test group";
   const newGroupName = "Changed group name";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
@@ -85,14 +85,14 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   // Check config message for changed name (different on ios and android)
   // Config on Android is "You renamed the group to blah"
   await device1.waitForControlMessageToBePresent(
-    "You renamed the group to " + `${newGroupName}`
+    `You renamed the group to ${newGroupName}`
   );
 
   await closeApp(device1, device2, device3);
 }
 
 async function changeGroupNameIos(platform: SupportedPlatformsType) {
-  const testGroupName = "Group name";
+  const testGroupName = "Test group";
   const newGroupName = "Changed group name";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
@@ -149,7 +149,7 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   // Check config message for changed name (different on ios and android)
   // Config message on ios is "Title is now blah"
   await device1.waitForControlMessageToBePresent(
-    "Title is now " + `'${newGroupName}'.`
+    `Title is now '${newGroupName}'.`
   );
   // Config on Android is "You renamed the group to blah"
 
@@ -210,7 +210,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   // Check config message
   await runOnlyOnIOS(platform, () =>
     device1.waitForControlMessageToBePresent(
-      `${userD.userName}` + " joined the group."
+      `${userD.userName} joined the group.`
     )
   );
   await runOnlyOnAndroid(platform, () =>
@@ -225,7 +225,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   // Check config
   await runOnlyOnIOS(platform, () =>
     device4.waitForControlMessageToBePresent(
-      `${userD.userName}` + " joined the group."
+      `${userD.userName} joined the group.`
     )
   );
   await closeApp(device1, device2, device3, device4);
@@ -237,7 +237,7 @@ async function mentionsForGroupsIos(platform: SupportedPlatformsType) {
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
-    newUser(device3, "Cat", platform),
+    newUser(device3, "Charlie", platform),
   ]);
   const testGroupName = "Mentions test group";
   // Create contact between User A and User B
@@ -348,7 +348,7 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
 }
 
 async function leaveGroupIos(platform: SupportedPlatformsType) {
-  const testGroupName = "Otter lovers";
+  const testGroupName = "Leave group";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
@@ -374,7 +374,6 @@ async function leaveGroupIos(platform: SupportedPlatformsType) {
   await device3.clickOnElement("Leave");
   await device3.navigateBack(platform);
   // Check for control message
-  // await device3.waitForControlMessageToBePresent("You have left the group.");
   await device2.waitForControlMessageToBePresent(
     `${userC.userName} left the group.`
   );
@@ -385,7 +384,7 @@ async function leaveGroupIos(platform: SupportedPlatformsType) {
 }
 
 async function leaveGroupAndroid(platform: SupportedPlatformsType) {
-  const testGroupName = "Otter lovers";
+  const testGroupName = "Leave group";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
@@ -413,7 +412,6 @@ async function leaveGroupAndroid(platform: SupportedPlatformsType) {
   );
   await device3.clickOnElementById(`android:id/button1`);
   // Check for control message
-  // await device3.waitForControlMessageToBePresent("You have left the group.");
   await device2.waitForControlMessageToBePresent(
     `${userC.userName} has left the group.`
   );

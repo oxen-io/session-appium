@@ -43,7 +43,7 @@ async function disappearingMessagesLegacy(platform: SupportedPlatformsType) {
   await device1.navigateBack(platform);
   // Check control message for User A
   await device1.waitForControlMessageToBePresent(
-    "You set disappearing message time to 5 seconds"
+    `You set disappearing message time to 5 seconds`
   );
   // Check config message for User B
   await device2.waitForControlMessageToBePresent(
@@ -198,7 +198,7 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
 }
 
 async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
-  const testGroupName = "Disappear after sent test";
+  const testGroupName = "Disappear after send test";
   const testMessage = "Testing disappear after sent in groups";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C

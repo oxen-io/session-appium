@@ -1,11 +1,24 @@
 export type User = {
-  userName: string;
+  userName: Username;
   sessionID: string;
   recoveryPhrase: string;
 };
 
+export type Username = "Alice" | "Bob" | "Charlie" | "Dracula";
+
+export type GroupName =
+  | "Test group"
+  | "Mentions test group"
+  | "Message checks for groups"
+  | "Leave group linked device"
+  | "Leave group"
+  | "Linked device group"
+  | "Testing disappearing messages"
+  | "Group to test adding contact"
+  | "Disappear after send test";
+
 export type Group = {
-  userName: string;
+  userName: GroupName;
   userOne: User;
   userTwo: User;
   userThree: User;
@@ -61,6 +74,28 @@ export type StrategyExtractionObj =
       strategy: Extract<Strategy, "xpath">;
       selector: XPath;
     };
+
+export type ControlMessage =
+  | `You set disappearing message time to 5 seconds`
+  | `${string} set disappearing message time to 5 seconds`
+  | `You have set messages to disappear 10 seconds after they have been sent`
+  | `${string} has set messages to disappear 10 seconds after they have been sent`
+  | `${string} has set their messages to disappear ${DMTimeOption} after they have been sent.`
+  | `${string} has set their messages to disappear ${DMTimeOption} after they have been read.`
+  | `You set your messages to disappear ${DMTimeOption} after they have been sent.`
+  | `You set your messages to disappear ${DMTimeOption} after they have been read.`
+  | "Your message request has been accepted."
+  | `${string} called you`
+  | `Called ${string}`
+  | `You called ${string}`
+  | "You created a new group."
+  | `${string} has left the group.`
+  | `${string} left the group.`
+  | `${string} renamed the group to: ${string}`
+  | `Title is now '${string}'.`
+  | `You renamed the group to ${string}`
+  | `${string} joined the group.`
+  | `You added ${string} to the group.`;
 
 export type XPath =
   | `//*[./*[@name='${DMTimeOption}']]/*[2]`
@@ -153,6 +188,7 @@ export type AccessibilityId =
   | "Mentions list"
   | "Send message button"
   | "Mentions list"
+  | "Message sent status"
   | "Message sent status: Sent"
   | "Message sent status: Read"
   | "Message sent status pending"

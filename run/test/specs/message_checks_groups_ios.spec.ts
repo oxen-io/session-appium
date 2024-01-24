@@ -73,7 +73,9 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to video from ${userA.userName} in ${testGroupName}`;
   await device1.clickOnElement("Attachments button");
   await sleepFor(100);
-  await clickOnCoordinates(device1, InteractionPoints.ImagesFolder);
+  // await clickOnCoordinates(device1, InteractionPoints.ImagesFolder);
+  await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardOpen);
+
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
     selector: "Allow Access to All Photos",

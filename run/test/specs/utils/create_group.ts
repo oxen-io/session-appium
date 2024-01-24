@@ -1,6 +1,6 @@
 import { runOnlyOnAndroid, runOnlyOnIOS } from ".";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
-import { Group, User } from "../../../types/testing";
+import { Group, GroupName, User } from "../../../types/testing";
 import { newContact } from "./create_contact";
 import { SupportedPlatformsType } from "./open_app";
 
@@ -12,7 +12,7 @@ export const createGroup = async (
   userTwo: User,
   device3: DeviceWrapper,
   userThree: User,
-  userName: string
+  userName: GroupName
 ): Promise<Group> => {
   const group: Group = { userName, userOne, userTwo, userThree };
 
