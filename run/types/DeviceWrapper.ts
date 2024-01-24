@@ -60,7 +60,7 @@ type SharedDeviceInterface = {
     duration?: number
   ) => Promise<void>;
   performActions: (actions: any) => Promise<any>;
-  performTouch: (actions: Action) => Promise<any>;
+  performTouch: (actions: Action[]) => Promise<any>;
   // touchAction: (actions: Action) => Promise<any>;
   tap: (
     xCoOrdinates: number,
@@ -228,12 +228,14 @@ export class DeviceWrapper implements SharedDeviceInterface {
     yCoOrdinates: number,
     duration?: number
   ): Promise<void> {
-    const actions: Action = {
+    const action: Action = {
       type: "pointer",
       x: xCoOrdinates,
       y: yCoOrdinates,
-      duration,
+      duration: duration,
     };
+
+    const actions = [action];
     await this.toShared().performTouch(actions);
   }
 
@@ -241,7 +243,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.toShared().performActions(actions);
   }
 
-  public async performTouch(actions: Action): Promise<any> {
+  public async performTouch(actions: Action[]): Promise<any> {
     return this.toShared().performTouch(actions);
   }
 

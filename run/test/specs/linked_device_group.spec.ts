@@ -68,15 +68,12 @@ async function groupCreationandNameChangeLinkedDevice(
       "APPLY"
     )
   );
-  // await device1.clickOnElement("Accept name change");
   // If ios click back to match android (which goes back to conversation screen)
   // Check config message for changed name (different on ios and android)
   // Config message on ios is "Title is now blah"
   await runOnlyOnIOS(platform, () =>
     device1.waitForControlMessageToBePresent(`Title is now '${newGroupName}'.`)
   );
-  // Config on Android is "You renamed the group to blah"
-  await sleepFor(2000);
   await runOnlyOnAndroid(platform, () =>
     device1.waitForControlMessageToBePresent(
       `You renamed the group to ${newGroupName}`
@@ -85,8 +82,6 @@ async function groupCreationandNameChangeLinkedDevice(
   // Wait 5 seconds for name to update
   await sleepFor(5000);
   // Check linked device for name change (conversation header name)
-  const groupName = await device2.grabTextFromAccessibilityId("Username");
-  console.warn("Group name is now " + groupName);
   await runOnlyOnIOS(platform, () =>
     device2.waitForTextElementToBePresent({
       strategy: "accessibility id",
@@ -101,26 +96,33 @@ async function groupCreationandNameChangeLinkedDevice(
       text: newGroupName,
     })
   );
-  // Check control message in linked device: iOS
-  await runOnlyOnIOS(platform, () =>
-    device2.waitForControlMessageToBePresent(`Title is now '${newGroupName}'.`)
-  );
+  if (platform === "ios") {
+    await Promise.all([
+      device2.waitForControlMessageToBePresent(
+        `Title is now '${newGroupName}'.`
+      ),
+      device3.waitForControlMessageToBePresent(
+        `Title is now '${newGroupName}'.`
+      ),
+      device4.waitForControlMessageToBePresent(
+        `Title is now '${newGroupName}'.`
+      ),
+    ]);
+  }
   // control on Linked device: Android is "You renamed the group to blah"
-  await runOnlyOnAndroid(platform, () =>
-    device2.waitForControlMessageToBePresent(
-      `${userA.userName} renamed the group to: ${newGroupName}`
-    )
-  );
-  await runOnlyOnAndroid(platform, () =>
-    device3.waitForControlMessageToBePresent(
-      `${userA.userName} renamed the group to: ${newGroupName}`
-    )
-  );
-  await runOnlyOnAndroid(platform, () =>
-    device4.waitForControlMessageToBePresent(
-      `${userA.userName} renamed the group to: ${newGroupName}`
-    )
-  );
+  if (platform === "android") {
+    await Promise.all([
+      device2.waitForControlMessageToBePresent(
+        `You renamed the group to ${newGroupName}`
+      ),
+      device3.waitForControlMessageToBePresent(
+        `${userA.userName} renamed the group to: ${newGroupName}`
+      ),
+      device4.waitForControlMessageToBePresent(
+        `${userA.userName} renamed the group to: ${newGroupName}`
+      ),
+    ]);
+  }
   await closeApp(device1, device2, device3, device4);
 }
 

@@ -75,7 +75,12 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
   // Click conversation options menu (three dots)
   await device1.clickOnElement("More options");
   // Select disappearing messages option
-  await device1.clickOnElement("Disappearing messages");
+  if (platform === "ios") {
+    await device1.clickOnElement("Disappearing messages");
+  }
+  if (platform === "android") {
+    await device1.clickOnElement("Disappearing messages");
+  }
   await device1.clickOnElement("Disappear after send option");
   // Need to validate that default time is checked somehow
   await device1.waitForTextElementToBePresent({

@@ -188,6 +188,7 @@ export type AccessibilityId =
   | "Mentions list"
   | "Send message button"
   | "Mentions list"
+  | "Message sent status"
   | "Message sent status: Sent"
   | "Message sent status: Read"
   | "Message sent status pending"

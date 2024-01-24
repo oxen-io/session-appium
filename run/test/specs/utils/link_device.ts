@@ -35,13 +35,6 @@ export const linkedDevice = async (
   await await sleepFor(250);
   // Click continue on message notification settings
   await device2.clickOnElement("Continue with settings");
-  // Dismiss notifications alert
-  // await device2.inputText(
-  //       "accessibility id",
-  //       "Enter display name",
-  //       user.userName
-  //     );
-  // await device2.clickOnElement("Continue")
   // Check for recovery phrase reminder
   await sleepFor(1000);
   await runOnlyOnIOS(platform, () => device2.clickOnElement("Don’t Allow"));
