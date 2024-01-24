@@ -30,13 +30,13 @@ export const setDisappearingMessage = async (
 
   await device.disappearRadioButtonSelected("1 day");
   await device.clickOnElement(timerDuration);
-  await device.clickOnElement("Set");
+  await device.clickOnElement("Set button");
   await sleepFor(1000);
   if (device2) {
-    if (platform === "ios") {
+    if (platform === "android") {
       await device2.clickOnElementAll({
         strategy: "accessibility id",
-        selector: "Follow Setting",
+        selector: "Follow setting",
       });
     } else {
       await device2.clickOnElementAll({
@@ -46,16 +46,15 @@ export const setDisappearingMessage = async (
       });
     }
     await sleepFor(500);
-    if (platform === "android") {
-      await device2.clickOnElementAll({
-        strategy: "accessibility id",
-        selector: "Set",
-      });
-    } else {
-      await device2.clickOnElementAll({
-        strategy: "accessibility id",
-        selector: "Set button",
-      });
-    }
+    // if (platform === "android") {
+    //   await device2.clickOnElementAll({
+    //     strategy: "accessibility id",
+    //     selector: "Set",
+    //   });
+    // } else {
+    await device2.clickOnElementAll({
+      strategy: "accessibility id",
+      selector: "Set button",
+    });
   }
 };

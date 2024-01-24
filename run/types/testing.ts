@@ -79,7 +79,6 @@ export type ControlMessage =
   | `You set disappearing message time to 5 seconds`
   | `${string} set disappearing message time to 5 seconds`
   | `You have set messages to disappear 10 seconds after they have been sent`
-  | `${string} has set messages to disappear 10 seconds after they have been sent`
   | `${string} has set their messages to disappear ${DMTimeOption} after they have been sent.`
   | `${string} has set their messages to disappear ${DMTimeOption} after they have been read.`
   | `You set your messages to disappear ${DMTimeOption} after they have been sent.`
@@ -260,5 +259,5 @@ export type AccessibilityId =
   | "Show roots"
   | "Conversation header name"
   | "Invite"
-  | "Follow Setting"
+  | "Follow setting"
   | "Set";
