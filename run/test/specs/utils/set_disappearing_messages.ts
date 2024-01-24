@@ -1,24 +1,7 @@
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
-import {
-  ConversationType,
-  DMTimeOption,
-  MergedOptions,
-  User,
-} from "../../../types/testing";
+import { ConversationType, MergedOptions } from "../../../types/testing";
 import { SupportedPlatformsType } from "./open_app";
-import { runOnlyOnIOS, runOnlyOnAndroid } from "./run_on";
 import { sleepFor } from "./sleep_for";
-
-// export function disappearingControlMessageText = async (setterUser: User, you: boolean, [conversationType, timerType, timerDuration]: MergedOptions,
-//   ) => {
-//     const enforcedType: ConversationType = conversationType;
-//     if (enforcedType === '1o1' && timerType === 'Disappear after read option') {
-//       while(you)
-//         return `You have set messages to disappear ${timerDuration} after they have been read`
-//       }
-
-//     }
-//   }
 
 export const setDisappearingMessage = async (
   platform: SupportedPlatformsType,
