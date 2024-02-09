@@ -323,7 +323,9 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await sleepFor(100);
 
     if (!el) {
-      throw new Error(`Tap: Couldnt find accessibilityId: ${accessibilityId}`);
+      throw new Error(
+        `Click: Couldnt find accessibilityId: ${accessibilityId}`
+      );
     }
     await this.click(el.ELEMENT);
   }
@@ -909,13 +911,17 @@ export class DeviceWrapper implements SharedDeviceInterface {
   public async waitForSentConfirmation() {
     let pendingStatus = await this.waitForTextElementToBePresent({
       strategy: "accessibility id",
-      selector: "Message sent status pending",
+      selector: "Message sent status: Sending",
     });
-    if (pendingStatus) {
+    let failedStatus = await this.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Message sent status: Failed to send",
+    });
+    if (pendingStatus || failedStatus) {
       await sleepFor(100);
       pendingStatus = await this.waitForTextElementToBePresent({
         strategy: "accessibility id",
-        selector: "Message sent status pending",
+        selector: "Message sent status: Sending",
       });
     }
   }

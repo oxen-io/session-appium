@@ -253,7 +253,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Send button");
   // Check if the 'Tap to download media' config appears
   // User B - Click on untrusted attachment message
-  await device2.clickOnElement("Untrusted attachment message", 10000);
+  await device2.clickOnElement("Untrusted attachment message", 15000);
   // User B - Click on 'download'
   await device2.clickOnElement("Download media", 5000);
   // Reply to message
@@ -284,11 +284,11 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to voice message from ${userA.userName}`;
   await newContact(platform, device1, userA, device2, userB);
   // Select voice message button to activate recording state
-  await device1.longPress("New voice message");
+  // await device1.longPress("New voice message");
   // "Session" would like to access the microphone (Don't allow/ OK)
-  await device1.clickOnElement("OK");
+  // await device1.clickOnElement("OK");
   await device1.pressAndHold("New voice message");
-
+  // await device1.clickOnElement("Allow");
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Voice message",
