@@ -15,7 +15,7 @@ export const newContact = async (
   // USER B WORKFLOW
   // Click on message request panel
   // Wait for push notification to disappear (otherwise appium can't find element)
-  await device2.clickOnElement("Message requests banner", 10000);
+  await device2.clickOnElement("Message requests banner", 15000);
   // Select message from User A
   await device2.clickOnElement("Message request");
   await runOnlyOnAndroid(platform, () =>
