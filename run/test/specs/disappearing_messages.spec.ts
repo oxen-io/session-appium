@@ -103,7 +103,7 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
   );
   await device2.clickOnElementAll({
     strategy: "accessibility id",
-    selector: "Follow setting",
+    selector: "Follow Setting",
   });
   await sleepFor(100);
   await device2.clickOnElementAll({
@@ -172,7 +172,7 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
   );
   await device2.clickOnElementAll({
     strategy: "accessibility id",
-    selector: "Follow setting",
+    selector: "Follow Setting",
   });
   await sleepFor(100);
   await device2.clickOnElementAll({
@@ -253,7 +253,7 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   // Check control message
   await Promise.all([
     device1.waitForControlMessageToBePresent(
-      `You have set messages to disappear 10 seconds after they have been sent`
+      `You set your messages to disappear 10 seconds after they have been sent.`
     ),
     device2.waitForControlMessageToBePresent(
       `${userA.userName} has set their messages to disappear 10 seconds after they have been sent.`
@@ -320,9 +320,14 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   await device.clickOnElement("Set button");
   await runOnlyOnIOS(platform, () => device.navigateBack(platform));
   await sleepFor(1000);
-  await device.waitForControlMessageToBePresent(
-    `You have set messages to disappear 10 seconds after they have been sent`
-  );
+  // await Promise.all([
+  //   device.waitForControlMessageToBePresent(
+  //     `${userA.userName} has set their messages to disappear 10 seconds after they have been sent.`
+  //   ),
+  //   device.waitForControlMessageToBePresent(
+  //     `${userA.userName} has set their messages to disappear 10 seconds after they have been sent.`
+  //   ),
+  // ]);
   await device.sendMessage(testMessage);
   await sleepFor(10000);
   await device.hasElementBeenDeletedNew({

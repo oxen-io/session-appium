@@ -23,7 +23,7 @@ async function disappearingImageMessage(platform: SupportedPlatformsType) {
   await setDisappearingMessage(
     platform,
     device1,
-    ["1o1", "Disappear after send option", "10 seconds"],
+    ["1:1", "Disappear after send option", "10 seconds"],
     device2
   );
   // await device1.navigateBack(platform);
@@ -62,7 +62,7 @@ async function disappearingVideoMessage(platform: SupportedPlatformsType) {
   await setDisappearingMessage(
     platform,
     device1,
-    ["1o1", "Disappear after send option", "10 seconds"],
+    ["1:1", "Disappear after send option", "10 seconds"],
     device2
   );
   // Click on attachments button
@@ -122,7 +122,7 @@ async function disappearingVoiceMessage(platform: SupportedPlatformsType) {
   await setDisappearingMessage(
     platform,
     device1,
-    ["1o1", "Disappear after send option", "10 seconds"],
+    ["1:1", "Disappear after send option", "10 seconds"],
     device2
   );
   await device1.longPress("New voice message");
@@ -164,7 +164,7 @@ async function disappearingGifMessage(platform: SupportedPlatformsType) {
   await setDisappearingMessage(
     platform,
     device1,
-    ["1o1", "Disappear after send option", "10 seconds"],
+    ["1:1", "Disappear after send option", "10 seconds"],
     device2
   );
   await device1.navigateBack(platform);
@@ -216,7 +216,7 @@ async function disappearingLinkMessage(platform: SupportedPlatformsType) {
   await setDisappearingMessage(
     platform,
     device1,
-    ["1o1", "Disappear after send option", "10 seconds"],
+    ["1:1", "Disappear after send option", "10 seconds"],
     device2
   );
   await device1.navigateBack(platform);
@@ -270,7 +270,7 @@ async function disappearingCommunityInviteMessage(
   await setDisappearingMessage(
     platform,
     device1,
-    ["1o1", "Disappear after send option", "10 seconds"],
+    ["1:1", "Disappear after send option", "10 seconds"],
     device2
   );
   await device1.navigateBack(platform);
@@ -317,7 +317,7 @@ async function disappearingCallMessage(platform: SupportedPlatformsType) {
   await setDisappearingMessage(
     platform,
     device1,
-    ["1o1", "Disappear after send option", "10 seconds"],
+    ["1:1", "Disappear after send option", "10 seconds"],
     device2
   );
   await device1.navigateBack(platform);

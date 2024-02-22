@@ -38,17 +38,18 @@ export const InteractionPoints: Record<string, Coordinates> = {
 
 export type Strategy = "accessibility id" | "xpath" | "id" | "class name";
 
-export type ConversationType = "1o1" | "Group" | "Community" | "Note to Self";
+export type ConversationType = "1:1" | "Group" | "Community" | "Note to Self";
 
 export type DMTimeOption =
   | "10 seconds"
+  | "30 seconds"
   | "12 hours"
   | "1 day"
   | "1 week"
   | "2 weeks";
 
 export type DisappearOpts1o1 = [
-  "1o1",
+  "1:1",
   "Disappear after read option" | "Disappear after send option",
   DMTimeOption
 ];
@@ -78,7 +79,6 @@ export type StrategyExtractionObj =
 export type ControlMessage =
   | `You set disappearing message time to 5 seconds`
   | `${string} set disappearing message time to 5 seconds`
-  | `You have set messages to disappear 10 seconds after they have been sent`
   | `${string} has set their messages to disappear ${DMTimeOption} after they have been sent.`
   | `${string} has set their messages to disappear ${DMTimeOption} after they have been read.`
   | `You set your messages to disappear ${DMTimeOption} after they have been sent.`
@@ -160,6 +160,7 @@ export type AccessibilityId =
   | "Disappear after read option"
   | "Disappear after send option"
   | "10 seconds"
+  | "30 seconds"
   | "12 hours"
   | "1 day"
   | "1 week"
@@ -222,7 +223,7 @@ export type AccessibilityId =
   | "profile_picture.jpg, 27.75 kB, May 2, 1999"
   | "profile_picture.jpg, 27.75 kB, May 1, 1999"
   | "Photo taken on May 2, 1999, 7:00:00 AM"
-  | "Photo, May 01, 1998, 7:00 AM"
+  | "Photo, 01 May 1998, 7:00 am"
   | "1967-05-05 21:00:00 +0000"
   | "1988-09-08 21:00:00 +0000"
   | "Attachments button"
@@ -260,4 +261,6 @@ export type AccessibilityId =
   | "Conversation header name"
   | "Invite"
   | "Follow setting"
-  | "Set";
+  | "Follow Setting"
+  | "Set"
+  | "Allow Full Access";

@@ -20,7 +20,7 @@ export const setDisappearingMessage = async (
       "Disappearing messages"
     );
   }
-  if (enforcedType === "1o1") {
+  if (enforcedType === "1:1") {
     await device.clickOnElement(timerType);
   }
   await device.waitForTextElementToBePresent({
@@ -46,12 +46,6 @@ export const setDisappearingMessage = async (
       });
     }
     await sleepFor(500);
-    // if (platform === "android") {
-    //   await device2.clickOnElementAll({
-    //     strategy: "accessibility id",
-    //     selector: "Set",
-    //   });
-    // } else {
     await device2.clickOnElementAll({
       strategy: "accessibility id",
       selector: "Set button",

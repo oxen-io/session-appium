@@ -229,19 +229,19 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
   await device.clickOnElement("Image picker");
   const permissions = await device.doesElementExist({
     strategy: "accessibility id",
-    selector: "Allow Access to All Photos",
+    selector: "Allow Full Access",
     maxWait: 1000,
   });
   if (permissions) {
     try {
-      await device.clickOnElement("Allow Access to All Photos");
+      await device.clickOnElement("Allow Full Access");
     } catch (e) {
       console.log("No permissions dialog");
     }
   }
   const profilePicture = await device.doesElementExist({
     strategy: "accessibility id",
-    selector: `Photo, May 01, 1998, 7:00 AM`,
+    selector: `Photo, 01 May 1998, 7:00 am`,
     maxWait: 2000,
   });
   if (!profilePicture) {
@@ -259,10 +259,10 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
   // Click on Profile picture
   // Click on Photo library
   await sleepFor(100);
-  await device.clickOnElement(`Photo, May 01, 1998, 7:00 AM`);
+  await device.clickOnElement(`Photo, 01 May 1998, 7:00 am`);
   await device.clickOnElement("Done");
 
-  await device.clickOnElement("Upload");
+  await device.clickOnElement("Save");
   // Take screenshot
   const el = await device.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -401,7 +401,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   );
   console.warn(`revertedNickname:` + revertedNickname);
   if (revertedNickname !== userB.userName) {
-    throw new Error(`revertedNickname doesn't match Bob's username`);
+    throw new Error(`revertedNickname doesn't match username`);
   }
   await device1.navigateBack(platform);
   // Check in conversation list aswell

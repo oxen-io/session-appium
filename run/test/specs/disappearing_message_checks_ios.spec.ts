@@ -23,7 +23,7 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType) {
   ]);
   await newContact(platform, device1, userA, device2, userB);
   await setDisappearingMessage(platform, device1, [
-    "1o1",
+    "1:1",
     "Disappear after send option",
     "10 seconds",
   ]);
@@ -61,7 +61,7 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
   const bestDayOfYear = `198809090700.00`;
   await newContact(platform, device1, userA, device2, userB);
   await setDisappearingMessage(platform, device1, [
-    "1o1",
+    "1:1",
     "Disappear after send option",
     "10 seconds",
   ]);
@@ -149,7 +149,7 @@ async function disappearingVoiceMessage1o1(platform: SupportedPlatformsType) {
   ]);
   await newContact(platform, device1, userA, device2, userB);
   await setDisappearingMessage(platform, device1, [
-    "1o1",
+    "1:1",
     "Disappear after send option",
     "10 seconds",
   ]);
@@ -187,7 +187,7 @@ async function disappearingGifMessage1o1(platform: SupportedPlatformsType) {
   ]);
   await newContact(platform, device1, userA, device2, userB);
   await setDisappearingMessage(platform, device1, [
-    "1o1",
+    "1:1",
     "Disappear after send option",
     "10 seconds",
   ]);
@@ -240,7 +240,7 @@ async function disappearingLinkMessage(platform: SupportedPlatformsType) {
   ]);
   await newContact(platform, device1, userA, device2, userB);
   await setDisappearingMessage(platform, device1, [
-    "1o1",
+    "1:1",
     "Disappear after send option",
     "10 seconds",
   ]);
@@ -296,7 +296,7 @@ async function disappearingCommunityInviteMessage1o1(
   ]);
   await newContact(platform, device1, userA, device2, userB);
   await setDisappearingMessage(platform, device1, [
-    "1o1",
+    "1:1",
     "Disappear after send option",
     "10 seconds",
   ]);
@@ -350,7 +350,7 @@ async function disappearingCallMessage1o1(platform: SupportedPlatformsType) {
   ]);
   await newContact(platform, device1, userA, device2, userB);
   await setDisappearingMessage(platform, device1, [
-    "1o1",
+    "1:1",
     "Disappear after send option",
     "10 seconds",
   ]);
