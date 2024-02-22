@@ -191,19 +191,22 @@ async function sendVideo(platform: SupportedPlatformsType) {
   // Click on attachments button
   await device1.clickOnElement("Attachments button");
   // Select images button/tab
-  await sleepFor(100);
+  await sleepFor(1000);
   // Check if android or ios (android = documents folder/ ios = images folder)
-  await clickOnCoordinates(device1, InteractionPoints.ImagesFolder);
+  await clickOnCoordinates(
+    device1,
+    InteractionPoints.ImagesFolderKeyboardClosed
+  );
   // Select 'continue' on alert
   // Need to put a video on device
   // Session would like to access your photos
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
-    selector: "Allow Access to All Photos",
+    selector: "Allow Full Access",
     maxWait: 5000,
   });
   if (permissions) {
-    await device1.clickOnElement("Allow Access to All Photos");
+    await device1.clickOnElement("Allow Full Access");
   } else {
     console.log("No permissions");
   }
@@ -250,7 +253,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Send button");
   // Check if the 'Tap to download media' config appears
   // User B - Click on untrusted attachment message
-  await device2.clickOnElement("Untrusted attachment message", 10000);
+  await device2.clickOnElement("Untrusted attachment message", 15000);
   // User B - Click on 'download'
   await device2.clickOnElement("Download media", 5000);
   // Reply to message
@@ -281,11 +284,11 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to voice message from ${userA.userName}`;
   await newContact(platform, device1, userA, device2, userB);
   // Select voice message button to activate recording state
-  await device1.longPress("New voice message");
+  // await device1.longPress("New voice message");
   // "Session" would like to access the microphone (Don't allow/ OK)
-  await device1.clickOnElement("OK");
+  // await device1.clickOnElement("OK");
   await device1.pressAndHold("New voice message");
-
+  // await device1.clickOnElement("Allow");
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Voice message",

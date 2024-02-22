@@ -8,6 +8,7 @@ export const clickOnCoordinates = async (
 ) => {
   const { x, y } = coordinates;
   sleepFor(1000);
-  await device.tap(x, y);
+  // await device.tap(x, y);
+  await device.pressCoordinates(x, y);
   console.log(`Tapped coordinates ${x}, ${y}`);
 };
