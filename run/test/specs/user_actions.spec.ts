@@ -140,7 +140,7 @@ async function changeUsername(platform: SupportedPlatformsType) {
 
   await closeApp(device);
 }
-
+// TO FIX (WRONG USER FLOW?)
 async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
   const spongebobsBirthday = "199905020700.00";
@@ -279,7 +279,7 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
   }
   await closeApp(device);
 }
-
+// TO FIX (WRONG ACCESSIBILITY ID ON CONVERSATION HEADER)
 async function setNicknameAndroid(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const [userA, userB] = await Promise.all([

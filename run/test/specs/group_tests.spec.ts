@@ -382,7 +382,7 @@ async function leaveGroupIos(platform: SupportedPlatformsType) {
   );
   await closeApp(device1, device2, device3);
 }
-
+// TO FIX (LEAVE GROUP CONFIRMATION ON DIALOG NOT WORKING)
 async function leaveGroupAndroid(platform: SupportedPlatformsType) {
   const testGroupName = "Leave group";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);

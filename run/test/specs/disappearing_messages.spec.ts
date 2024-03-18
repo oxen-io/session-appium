@@ -103,7 +103,7 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
   );
   await device2.clickOnElementAll({
     strategy: "accessibility id",
-    selector: "Follow Setting",
+    selector: "Follow setting",
   });
   await sleepFor(100);
   await device2.clickOnElementAll({
@@ -172,7 +172,7 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
   );
   await device2.clickOnElementAll({
     strategy: "accessibility id",
-    selector: "Follow Setting",
+    selector: "Follow setting",
   });
   await sleepFor(100);
   await device2.clickOnElementAll({
@@ -205,7 +205,7 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
   // Great success
   await closeApp(device1, device2);
 }
-
+// TO FIX CONTROL MESSAGE FOR `YOU HAVE SET...` WRONG
 async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   const testGroupName = "Disappear after send test";
   const testMessage = "Testing disappear after sent in groups";

@@ -83,6 +83,7 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   // Click enable on exposure IP address warning
   await device2.clickOnElement("Enable");
   // Navigate back to conversation
+  // TO FIX (SOMETHING WRONG WITH ANSWER CALL)
   await device2.waitForTextElementToBePresent({
     strategy: "id",
     selector:

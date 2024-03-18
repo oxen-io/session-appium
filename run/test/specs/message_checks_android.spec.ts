@@ -42,7 +42,7 @@ async function sendImage(platform: SupportedPlatformsType) {
   // Close app and server
   await closeApp(device1, device2);
 }
-
+// TO FIX (DOCUMENT BUTTON NOT FOUND)
 async function sendDocument(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
 
@@ -282,7 +282,7 @@ async function sendLongMessage(platform: SupportedPlatformsType) {
   // Close app
   await closeApp(device1, device2);
 }
-
+//  TO FIX  (NO LINK PREVIEW)
 async function sendLink(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const testLink = `https://example.net/`;

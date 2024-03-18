@@ -54,17 +54,10 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
     selector: "Message body",
     text: replyMessage,
   });
-  const scrollButton = await device3.doesElementExist({
+  await device3.clickOnElementAll({
     strategy: "id",
     selector: `network.loki.messenger:id/scrollToBottomButton`,
-    maxWait: 1000,
   });
-  if (scrollButton) {
-    await device3.clickOnElementAll({
-      strategy: "id",
-      selector: `network.loki.messenger:id/scrollToBottomButton`,
-    });
-  }
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",
@@ -74,7 +67,7 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
   // Close server and devices
   await closeApp(device1, device2, device3);
 }
-
+// TO FIX (VIDEO BUTTON NOT FOUNDÍ)
 async function sendVideoGroup(platform: SupportedPlatformsType) {
   // Test sending a video
   // open devices

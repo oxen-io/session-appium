@@ -33,18 +33,10 @@ export const setDisappearingMessage = async (
   await device.clickOnElement("Set button");
   await sleepFor(1000);
   if (device2) {
-    if (platform === "android") {
-      await device2.clickOnElementAll({
-        strategy: "accessibility id",
-        selector: "Follow setting",
-      });
-    } else {
-      await device2.clickOnElementAll({
-        strategy: "id",
-        selector: `network.loki.messenger:id/followSetting`,
-        text: "Follow Setting",
-      });
-    }
+    await device2.clickOnElementAll({
+      strategy: "accessibility id",
+      selector: "Follow setting",
+    });
     await sleepFor(500);
     await device2.clickOnElementAll({
       strategy: "accessibility id",

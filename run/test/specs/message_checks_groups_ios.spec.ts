@@ -13,6 +13,7 @@ import { runScriptAndLog } from "./utils/utilities";
 async function sendImageGroup(platform: SupportedPlatformsType) {
   const testGroupName = "Message checks for groups";
   const testMessage = "Sending image to group";
+  const ronSwansonBirthday = "196705060700.00";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
@@ -31,7 +32,57 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
-  await device1.sendImage(platform, testMessage);
+  // await device1.sendImage(platform, testMessage);
+  await device1.clickOnElement("Attachments button");
+  await sleepFor(5000);
+  await clickOnCoordinates(
+    device1,
+    InteractionPoints.ImagesFolderKeyboardClosed
+  );
+
+  const permissions = await device1.doesElementExist({
+    strategy: "accessibility id",
+    selector: "Allow Full Access",
+    maxWait: 1000,
+  });
+  if (permissions) {
+    try {
+      await device1.clickOnElement(`Allow Full Access`);
+      // Select video
+    } catch (e) {
+      console.log("No permissions dialog");
+    }
+  } else {
+    console.log("No permissions dialog");
+  }
+  const testImage = await device1.doesElementExist({
+    strategy: "accessibility id",
+    selector: `1967-05-05 21:00:00 +0000`,
+    maxWait: 2000,
+  });
+  if (!testImage) {
+    await runScriptAndLog(
+      `touch -a -m -t ${ronSwansonBirthday} 'run/test/specs/media/test_image.jpg'`
+    );
+
+    await runScriptAndLog(
+      `xcrun simctl addmedia ${
+        process.env.IOS_FIRST_SIMULATOR || ""
+      } 'run/test/specs/media/test_image.jpg'`,
+      true
+    );
+  }
+  await sleepFor(100);
+  await device1.clickOnElement(`1967-05-05 21:00:00 +0000`);
+  await device1.clickOnElement("Text input box");
+  await device1.inputText("accessibility id", "Text input box", testMessage);
+  await device1.clickOnElement("Send button");
+  await device1.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: `Message sent status: Sent`,
+    maxWait: 50000,
+  });
+
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",
@@ -73,16 +124,18 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to video from ${userA.userName} in ${testGroupName}`;
   await device1.clickOnElement("Attachments button");
   await sleepFor(100);
-  // await clickOnCoordinates(device1, InteractionPoints.ImagesFolder);
-  await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardOpen);
+  await clickOnCoordinates(
+    device1,
+    InteractionPoints.ImagesFolderKeyboardClosed
+  );
 
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
-    selector: "Allow Access to All Photos",
+    selector: "Allow Full Access",
     maxWait: 1000,
   });
   if (permissions) {
-    await device1.clickOnElement("Allow Access to All Photos");
+    await device1.clickOnElement("Allow Full Access");
   } else {
     console.log("No permissions");
   }
@@ -184,7 +237,7 @@ async function sendVoiceMessageGroup(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to voice message from ${userA.userName} in ${testGroupName}`;
   await device1.longPress("New voice message");
   // "Session" would like to access the microphone (Don't allow/ OK)
-  await device1.clickOnElement("OK");
+  await device1.clickOnElement("Allow");
   await device1.pressAndHold("New voice message");
 
   await device1.waitForTextElementToBePresent({
@@ -264,7 +317,7 @@ async function sendGifGroup(platform: SupportedPlatformsType) {
   );
   await device1.clickOnElement("Attachments button");
   // Select GIF tab
-  await clickOnCoordinates(device1, InteractionPoints.GifButton);
+  await clickOnCoordinates(device1, InteractionPoints.GifButtonKeyboardOpen);
   // Select gif
   await sleepFor(500);
   // Need to select Continue on GIF warning

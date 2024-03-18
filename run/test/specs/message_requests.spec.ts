@@ -182,7 +182,7 @@ async function deleteRequest(platform: SupportedPlatformsType) {
 
   await closeApp(device1, device2);
 }
-
+// TO FIX (CONFIRM DIALOG FOR CLEAR ALL NOT WORKING)
 async function clearAllRequests(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const [userA, userB] = await Promise.all([

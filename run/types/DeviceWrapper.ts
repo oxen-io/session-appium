@@ -1054,23 +1054,22 @@ export class DeviceWrapper implements SharedDeviceInterface {
       await sleepFor(5000);
       await clickOnCoordinates(
         this.device,
-        InteractionPoints.ImagesFolderKeyboardOpen
+        InteractionPoints.ImagesFolderKeyboardClosed
       );
       const permissions = await this.doesElementExist({
         strategy: "accessibility id",
-        selector: "Allow Access to All Photos",
+        selector: "Allow Full Access",
         maxWait: 1000,
       });
       if (permissions) {
         try {
-          await this.clickOnElement(`Allow Access to All Photos`);
+          await this.clickOnElement(`Allow Full Access`);
         } catch (e) {
           console.log("No permissions dialog");
         }
       } else {
         console.log("No permissions dialog");
       }
-      // await this.clickOnElement("Allow Access to All Photos");
       const testImage = await this.doesElementExist({
         strategy: "accessibility id",
         selector: `1967-05-05 21:00:00 +0000`,

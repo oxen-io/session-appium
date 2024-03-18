@@ -57,7 +57,7 @@ async function contactsSyncLinkedDevice(platform: SupportedPlatformsType) {
   );
   await closeApp(device1, device2, device3);
 }
-
+// TO FIX (USERNAME ISN'T CORRECT)
 async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
   // Open server and two devices
   const { device1, device2 } = await openAppTwoDevices(platform);
@@ -242,12 +242,12 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   // Check if permissions need to be enabled
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
-    selector: "Allow Access to All Photos",
+    selector: "Allow Full Access",
     maxWait: 1000,
   });
   if (permissions) {
     try {
-      await device1.clickOnElement("Allow Access to All Photos");
+      await device1.clickOnElement("Allow Full Access");
     } catch (e) {
       console.log("No permissions dialog");
     }
@@ -311,7 +311,7 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   }
   await closeApp(device1, device2);
 }
-
+// TO FIX (UPLOAD BUTTON WRONG)
 async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const spongebobsBirthday = "199905020700.00";

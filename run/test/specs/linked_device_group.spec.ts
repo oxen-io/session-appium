@@ -82,20 +82,11 @@ async function groupCreationandNameChangeLinkedDevice(
   // Wait 5 seconds for name to update
   await sleepFor(5000);
   // Check linked device for name change (conversation header name)
-  await runOnlyOnIOS(platform, () =>
-    device2.waitForTextElementToBePresent({
-      strategy: "accessibility id",
-      selector: "Username",
-      text: newGroupName,
-    })
-  );
-  await runOnlyOnAndroid(platform, () =>
-    device2.waitForTextElementToBePresent({
-      strategy: "accessibility id",
-      selector: "Conversation header name",
-      text: newGroupName,
-    })
-  );
+  await device2.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Conversation header name",
+    text: newGroupName,
+  });
   if (platform === "ios") {
     await Promise.all([
       device2.waitForControlMessageToBePresent(

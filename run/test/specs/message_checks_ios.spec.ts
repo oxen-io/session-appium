@@ -24,7 +24,7 @@ async function sendImage(platform: SupportedPlatformsType) {
   await newContact(platform, device1, userA, device2, userB);
 
   await device1.clickOnElement("Attachments button");
-  await sleepFor(100);
+  await sleepFor(5000);
   await clickOnCoordinates(
     device1,
     InteractionPoints.ImagesFolderKeyboardClosed
@@ -32,12 +32,12 @@ async function sendImage(platform: SupportedPlatformsType) {
 
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
-    selector: "Allow Access to All Photos",
+    selector: "Allow Full Access",
     maxWait: 1000,
   });
   if (permissions) {
     try {
-      await device1.clickOnElement(`Allow Access to All Photos`);
+      await device1.clickOnElement(`Allow Full Access`);
       // Select video
     } catch (e) {
       console.log("No permissions dialog");
@@ -116,12 +116,12 @@ async function sendImage(platform: SupportedPlatformsType) {
 
 //   const permissions = await device1.doesElementExist({
 //     strategy: "accessibility id",
-//     selector: "Allow Access to All Photos",
+//     selector: "Allow Full Access",
 //     maxWait: 1000,
 //   });
 //   if (permissions) {
 //     try {
-//       await device1.clickOnElement("Allow Access to All Photos");
+//       await device1.clickOnElement("Allow Full Access");
 //     } catch (e) {
 //       console.log("No permissions dialog");
 //     }

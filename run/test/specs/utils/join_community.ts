@@ -23,6 +23,7 @@ export const joinCommunity = async (
       text: communityName,
     });
   } else {
+    // TO FIX (ISSUE WITH ACCESS ID JOIN COMMUNITY?)
     await device.clickOnElement("Join community");
     await device.inputText(
       "accessibility id",

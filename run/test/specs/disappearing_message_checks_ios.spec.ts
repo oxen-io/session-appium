@@ -16,19 +16,70 @@ import { runScriptAndLog } from "./utils/utilities";
 async function disappearingImageMessage1o1(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const testMessage = "Testing disappearing messages for images";
+  const ronSwansonBirthday = "196705060700.00";
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(platform, device1, [
-    "1:1",
-    "Disappear after send option",
-    "10 seconds",
-  ]);
+  await setDisappearingMessage(
+    platform,
+    device1,
+    ["1:1", "Disappear after send option", "10 seconds"],
+    device2
+  );
   await device1.navigateBack(platform);
-  await device1.sendImage(platform, testMessage);
+  // await device1.sendImage(platform, testMessage);
+  await device1.clickOnElement("Attachments button");
+  await sleepFor(5000);
+  await clickOnCoordinates(
+    device1,
+    InteractionPoints.ImagesFolderKeyboardClosed
+  );
+
+  const permissions = await device1.doesElementExist({
+    strategy: "accessibility id",
+    selector: "Allow Full Access",
+    maxWait: 1000,
+  });
+  if (permissions) {
+    try {
+      await device1.clickOnElement(`Allow Full Access`);
+      // Select video
+    } catch (e) {
+      console.log("No permissions dialog");
+    }
+  } else {
+    console.log("No permissions dialog");
+  }
+  const testImage = await device1.doesElementExist({
+    strategy: "accessibility id",
+    selector: `1967-05-05 21:00:00 +0000`,
+    maxWait: 2000,
+  });
+  if (!testImage) {
+    await runScriptAndLog(
+      `touch -a -m -t ${ronSwansonBirthday} 'run/test/specs/media/test_image.jpg'`
+    );
+
+    await runScriptAndLog(
+      `xcrun simctl addmedia ${
+        process.env.IOS_FIRST_SIMULATOR || ""
+      } 'run/test/specs/media/test_image.jpg'`,
+      true
+    );
+  }
+  await sleepFor(100);
+  await device1.clickOnElement(`1967-05-05 21:00:00 +0000`);
+  await device1.clickOnElement("Text input box");
+  await device1.inputText("accessibility id", "Text input box", testMessage);
+  await device1.clickOnElement("Send button");
+  await device1.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: `Message sent status: Sent`,
+    maxWait: 50000,
+  });
   await device2.clickOnElement("Untrusted attachment message");
   // User B - Click on 'download'
   await device2.clickOnElement("Download media", 5000);
@@ -60,11 +111,12 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
   const testMessage = "Testing disappearing messages for videos";
   const bestDayOfYear = `198809090700.00`;
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(platform, device1, [
-    "1:1",
-    "Disappear after send option",
-    "10 seconds",
-  ]);
+  await setDisappearingMessage(
+    platform,
+    device1,
+    ["1:1", "Disappear after send option", "10 seconds"],
+    device2
+  );
   await device1.navigateBack(platform);
   await device1.clickOnElement("Attachments button");
   // Select images button/tab
@@ -74,11 +126,11 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
   await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardOpen);
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
-    selector: "Allow Access to All Photos",
+    selector: "Allow Full Access",
     maxWait: 5000,
   });
   if (permissions) {
-    await device1.clickOnElement("Allow Access to All Photos");
+    await device1.clickOnElement("Allow Full Access");
   } else {
     console.log("No permissions");
   }
@@ -148,11 +200,12 @@ async function disappearingVoiceMessage1o1(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(platform, device1, [
-    "1:1",
-    "Disappear after send option",
-    "10 seconds",
-  ]);
+  await setDisappearingMessage(
+    platform,
+    device1,
+    ["1:1", "Disappear after send option", "10 seconds"],
+    device2
+  );
   await device1.navigateBack(platform);
   await device1.longPress("New voice message");
   // await device1.clickOnElement("OK");
@@ -186,11 +239,12 @@ async function disappearingGifMessage1o1(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(platform, device1, [
-    "1:1",
-    "Disappear after send option",
-    "10 seconds",
-  ]);
+  await setDisappearingMessage(
+    platform,
+    device1,
+    ["1:1", "Disappear after send option", "10 seconds"],
+    device2
+  );
   await device1.navigateBack(platform);
   // Click on attachments button
   await device1.clickOnElement("Attachments button");
@@ -239,11 +293,12 @@ async function disappearingLinkMessage(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(platform, device1, [
-    "1:1",
-    "Disappear after send option",
-    "10 seconds",
-  ]);
+  await setDisappearingMessage(
+    platform,
+    device1,
+    ["1:1", "Disappear after send option", "10 seconds"],
+    device2
+  );
   await device1.navigateBack(platform);
   // Send a link
   await device1.inputText("accessibility id", "Message input box", testLink);
@@ -295,11 +350,12 @@ async function disappearingCommunityInviteMessage1o1(
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(platform, device1, [
-    "1:1",
-    "Disappear after send option",
-    "10 seconds",
-  ]);
+  await setDisappearingMessage(
+    platform,
+    device1,
+    ["1:1", "Disappear after send option", "10 seconds"],
+    device2
+  );
   await device1.navigateBack(platform);
   await device1.navigateBack(platform);
   await device1.clickOnElement("New conversation button");
@@ -349,11 +405,12 @@ async function disappearingCallMessage1o1(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(platform, device1, [
-    "1:1",
-    "Disappear after send option",
-    "10 seconds",
-  ]);
+  await setDisappearingMessage(
+    platform,
+    device1,
+    ["1:1", "Disappear after send option", "10 seconds"],
+    device2
+  );
   await device1.navigateBack(platform);
   await device1.clickOnElement("Call");
   // Enabled voice calls in privacy settings
@@ -413,6 +470,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   const testMessage = "Testing disappearing messages for images";
   const testGroupName = "Test group";
+  const ronSwansonBirthday = "196705060700.00";
   // Create user A and user B
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -436,7 +494,56 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
     "10 seconds",
   ]);
   await device1.navigateBack(platform);
-  await device1.sendImage(platform, testMessage);
+  // await device1.sendImage(platform, testMessage);
+  await device1.clickOnElement("Attachments button");
+  await sleepFor(5000);
+  await clickOnCoordinates(
+    device1,
+    InteractionPoints.ImagesFolderKeyboardClosed
+  );
+
+  const permissions = await device1.doesElementExist({
+    strategy: "accessibility id",
+    selector: "Allow Full Access",
+    maxWait: 1000,
+  });
+  if (permissions) {
+    try {
+      await device1.clickOnElement(`Allow Full Access`);
+      // Select video
+    } catch (e) {
+      console.log("No permissions dialog");
+    }
+  } else {
+    console.log("No permissions dialog");
+  }
+  const testImage = await device1.doesElementExist({
+    strategy: "accessibility id",
+    selector: `1967-05-05 21:00:00 +0000`,
+    maxWait: 2000,
+  });
+  if (!testImage) {
+    await runScriptAndLog(
+      `touch -a -m -t ${ronSwansonBirthday} 'run/test/specs/media/test_image.jpg'`
+    );
+
+    await runScriptAndLog(
+      `xcrun simctl addmedia ${
+        process.env.IOS_FIRST_SIMULATOR || ""
+      } 'run/test/specs/media/test_image.jpg'`,
+      true
+    );
+  }
+  await sleepFor(100);
+  await device1.clickOnElement(`1967-05-05 21:00:00 +0000`);
+  await device1.clickOnElement("Text input box");
+  await device1.inputText("accessibility id", "Text input box", testMessage);
+  await device1.clickOnElement("Send button");
+  await device1.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: `Message sent status: Sent`,
+    maxWait: 50000,
+  });
   await sleepFor(10000);
   await Promise.all([
     device1.hasElementBeenDeletedNew({
@@ -495,11 +602,11 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
   await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardOpen);
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
-    selector: "Allow Access to All Photos",
+    selector: "Allow Full Access",
     maxWait: 5000,
   });
   if (permissions) {
-    await device1.clickOnElement("Allow Access to All Photos");
+    await device1.clickOnElement("Allow Full Access");
   } else {
     console.log("No permissions");
   }
