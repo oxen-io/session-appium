@@ -1,4 +1,4 @@
-import { runOnlyOnAndroid } from ".";
+import { runOnlyOnAndroid, sleepFor } from ".";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { User } from "../../../types/testing";
 import { SupportedPlatformsType } from "./open_app";
@@ -15,7 +15,10 @@ export const newContact = async (
   // USER B WORKFLOW
   // Click on message request panel
   // Wait for push notification to disappear (otherwise appium can't find element)
-  await device2.clickOnElement("Message requests banner", 10000);
+
+  await retryRequest(device1, device2);
+  await sleepFor(100);
+  await device2.clickOnElement("Message requests banner");
   // Select message from User A
   await device2.clickOnElement("Message request");
   await runOnlyOnAndroid(platform, () =>
@@ -27,10 +30,31 @@ export const newContact = async (
   );
 
   // Verify config message states message request was accepted
-  await device1.findConfigurationMessage(
+  await device1.waitForControlMessageToBePresent(
     "Your message request has been accepted."
   );
 
   console.warn(`${user1.userName} and ${user2.userName} are now contacts`);
   return { user1, user2, device1, device2 };
+};
+
+export const retryRequest = async (
+  device1: DeviceWrapper,
+  device2: DeviceWrapper
+) => {
+  await device1.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Message sent status: Sent",
+  });
+  const banner = await device2.doesElementExist({
+    strategy: "accessibility id",
+    selector: "Message requests banner",
+    maxWait: 1000,
+  });
+  if (!banner) {
+    await device1.sendMessage("Retry");
+    console.log(`Retrying message request`);
+  } else {
+    console.log("Found message request banner: No need for retry");
+  }
 };

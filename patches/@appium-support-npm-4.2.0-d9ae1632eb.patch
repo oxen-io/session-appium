@@ -1,0 +1,13 @@
+diff --git a/build/lib/net.d.ts b/build/lib/net.d.ts
+index 9192f9ae8cecb097ef0e261cd40984e2ab362024..2aab097249e958e81733df1c5c9364e891721916 100644
+--- a/build/lib/net.d.ts
++++ b/build/lib/net.d.ts
+@@ -59,7 +59,7 @@ export type HttpUploadOptions = {
+     /**
+      * - The HTTP method used for file upload
+      */
+-    method?: axios.Method | undefined;
++    method?: import('axios').Method | undefined;
+     /**
+      * - The actual request timeout in milliseconds; defaults to {@linkcode DEFAULT_TIMEOUT_MS }
+      */
