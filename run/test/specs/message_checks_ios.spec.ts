@@ -99,79 +99,79 @@ async function sendImage(platform: SupportedPlatformsType) {
 
 // HAVING ISSUES WITH ADDING PDF, WILL COME BACK TO THIS LATER
 
-// async function sendDoc(platform: SupportedPlatformsType) {
-//   const { device1, device2 } = await openAppTwoDevices(platform);
-//   const [userA, userB] = await Promise.all([
-//     newUser(device1, "Alice", platform),
-//     newUser(device2, "Bob", platform),
-//   ]);
-//   const testMessage = "Testing-document-1";
-//   const replyMessage = `Replying to document from ${userA.userName}`;
-//   const spongebobsBirthday = "199905010700.00";
-//   await newContact(platform, device1, userA, device2, userB);
+async function sendDoc(platform: SupportedPlatformsType) {
+  const { device1, device2 } = await openAppTwoDevices(platform);
+  const [userA, userB] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+  ]);
+  const testMessage = "Testing-document-1";
+  const replyMessage = `Replying to document from ${userA.userName}`;
+  const spongebobsBirthday = "199905010700.00";
+  await newContact(platform, device1, userA, device2, userB);
 
-//   await device1.clickOnElement("Attachments button");
-//   await sleepFor(100);
-//   await clickOnCoordinates(device1, 36, 447);
+  await device1.clickOnElement("Attachments button");
+  await sleepFor(100);
+  await clickOnCoordinates(device1, InteractionPoints.DocumentKeyboardOpen);
 
-//   const permissions = await device1.doesElementExist({
-//     strategy: "accessibility id",
-//     selector: "Allow Full Access",
-//     maxWait: 1000,
-//   });
-//   if (permissions) {
-//     try {
-//       await device1.clickOnElement("Allow Full Access");
-//     } catch (e) {
-//       console.log("No permissions dialog");
-//     }
-//   }
-//   const testDocument = await device1.doesElementExist({
-//     strategy: "accessibility id",
-//     selector: "covid",
-//     text: undefined,
-//     maxWait: 1000,
-//   });
+  const permissions = await device1.doesElementExist({
+    strategy: "accessibility id",
+    selector: "Allow Full Access",
+    maxWait: 1000,
+  });
+  if (permissions) {
+    try {
+      await device1.clickOnElement("Allow Full Access");
+    } catch (e) {
+      console.log("No permissions dialog");
+    }
+  }
+  const testDocument = await device1.doesElementExist({
+    strategy: "accessibility id",
+    selector: "test_file, pdf",
+    text: undefined,
+    maxWait: 1000,
+  });
 
-//   if (!testDocument) {
-//     await runScriptAndLog(
-//       `touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/test_file.pdf'`
-//     );
+  if (!testDocument) {
+    await runScriptAndLog(
+      `touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/test_file.pdf'`
+    );
 
-//     await runScriptAndLog(
-//       `xcrun simctl addmedia ${process.env.IOS_FIRST_SIMULATOR} 'run/test/specs/media/test_file.pdf'`,
-//       true
-//     );
-//   }
-//   await sleepFor(100);
-//   await device1.clickOnElement("covid");
-//   await sleepFor(100);
-//   await device1.clickOnElement("Text input box");
-//   await device1.inputText("accessibility id", "Text input box", testMessage);
-//   await device1.clickOnElement("Send button");
-//   await device2.clickOnElement("Untrusted attachment message");
-//   await sleepFor(500);
-//   // User B - Click on 'download'
-//   await device2.clickOnElement("Download media");
+    await runScriptAndLog(
+      `xcrun simctl addmedia ${process.env.IOS_FIRST_SIMULATOR} 'run/test/specs/media/test_file.pdf'`,
+      true
+    );
+  }
+  await sleepFor(100);
+  await device1.clickOnElement("test_file, pdf");
+  await sleepFor(500);
+  await device1.clickOnElement("Text input box");
+  await device1.inputText("accessibility id", "Text input box", testMessage);
+  await device1.clickOnElement("Send button");
+  await device2.clickOnElement("Untrusted attachment message");
+  await sleepFor(500);
+  // User B - Click on 'download'
+  await device2.clickOnElement("Download media");
 
-//   // Reply to message
+  // Reply to message
 
-//   await device2.waitForTextElementToBePresent({
-//     strategy: "accessibility id",
-//     selector: "Message body",
-//     text: testMessage,
-//   });
-//   await device2.longPressMessage(testMessage);
-//   await device2.clickOnElement("Reply to message");
-//   await device2.sendMessage(replyMessage);
-//   await device1.waitForTextElementToBePresent({
-//     strategy: "accessibility id",
-//     selector: "Message body",
-//     text: replyMessage,
-//   });
-//   // Close app and server
-//   await closeApp(device1, device2);
-// }
+  await device2.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Message body",
+    text: testMessage,
+  });
+  await device2.longPressMessage(testMessage);
+  await device2.clickOnElement("Reply to message");
+  await device2.sendMessage(replyMessage);
+  await device1.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Message body",
+    text: replyMessage,
+  });
+  // Close app and server
+  await closeApp(device1, device2);
+}
 
 async function sendVideo(platform: SupportedPlatformsType) {
   // Test sending a video
@@ -289,6 +289,7 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
   // await device1.clickOnElement("OK");
   await device1.pressAndHold("New voice message");
   // await device1.clickOnElement("Allow");
+  await sleepFor(500);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Voice message",
@@ -297,6 +298,7 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
   await device2.clickOnElement("Untrusted attachment message");
   await sleepFor(200);
   await device2.clickOnElement("Download");
+  await sleepFor(500);
   await device2.longPress("Voice message");
   await device2.clickOnElement("Reply to message");
   await device2.sendMessage(replyMessage);
@@ -578,7 +580,7 @@ describe("Message checks ios", () => {
   iosIt("Send image", sendImage);
   iosIt("Send video", sendVideo);
   iosIt("Send voice message", sendVoiceMessage);
-  // iosIt("Send document", sendDoc);
+  iosIt("Send document", sendDoc);
   iosIt("Send GIF", sendGif);
   iosIt("Send long text", sendLongMessage);
   iosIt("Send link", sendLink);

@@ -216,6 +216,12 @@ const openiOSApp = async (
 }> => {
   console.warn("openiOSApp");
 
+  // Logging to check that app path is correct
+  console.log(
+    `iOS App Full Path: ${
+      getIosCapabilities(capabilitiesIndex)["alwaysMatch"]["appium:app"]
+    }`
+  );
   const opts: DriverOpts = {
     address: `http://localhost:${APPIUM_PORT}`,
   } as DriverOpts;

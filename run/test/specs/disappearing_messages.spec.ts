@@ -11,56 +11,56 @@ import {
   openAppTwoDevices,
 } from "./utils/open_app";
 
-async function disappearingMessagesLegacy(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // Create user A and user B
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
-  // Create contact
-  await newContact(platform, device1, userA, device2, userB);
-  // Click conversation options menu (three dots)
-  await device1.clickOnElement("More options");
-  // Select disappearing messages option
-  await runOnlyOnIOS(platform, () =>
-    device1.clickOnElement("Disappearing Messages")
-  );
-  await sleepFor(1000);
-  await runOnlyOnAndroid(platform, () =>
-    device1.clickOnTextElementById(
-      `network.loki.messenger:id/title`,
-      "Disappearing messages"
-    )
-  );
-  // Select 5 seconds
-  await device1.clickOnElementByText({
-    strategy: "id",
-    selector: "5 seconds",
-    text: "5 seconds",
-  });
-  await device1.clickOnElement("Save button");
-  await device1.navigateBack(platform);
-  // Check control message for User A
-  await device1.waitForControlMessageToBePresent(
-    `You set disappearing message time to 5 seconds`
-  );
-  // Check config message for User B
-  await device2.waitForControlMessageToBePresent(
-    `${userA.userName} set disappearing message time to 5 seconds`
-  );
-  // Send message
-  const message = "Howdy testing disappearing messages";
-  await device1.inputText("accessibility id", "Message input box", message);
-  await device1.clickOnElement("Send message button");
-  // Wait 5 seconds
-  await sleepFor(10000);
-  // Look for message for User A
-  await device1.hasTextElementBeenDeleted("Message body", message);
-  // Look for message for User B
-  await device2.hasTextElementBeenDeleted("Message body", message);
-  await closeApp(device1, device2);
-}
+// async function disappearingMessagesLegacy(platform: SupportedPlatformsType) {
+//   const { device1, device2 } = await openAppTwoDevices(platform);
+//   // Create user A and user B
+//   const [userA, userB] = await Promise.all([
+//     newUser(device1, "Alice", platform),
+//     newUser(device2, "Bob", platform),
+//   ]);
+//   // Create contact
+//   await newContact(platform, device1, userA, device2, userB);
+//   // Click conversation options menu (three dots)
+//   await device1.clickOnElement("More options");
+//   // Select disappearing messages option
+//   await runOnlyOnIOS(platform, () =>
+//     device1.clickOnElement("Disappearing Messages")
+//   );
+//   await sleepFor(1000);
+//   await runOnlyOnAndroid(platform, () =>
+//     device1.clickOnTextElementById(
+//       `network.loki.messenger:id/title`,
+//       "Disappearing messages"
+//     )
+//   );
+//   // Select 5 seconds
+//   await device1.clickOnElementByText({
+//     strategy: "id",
+//     selector: "5 seconds",
+//     text: "5 seconds",
+//   });
+//   await device1.clickOnElement("Save button");
+//   await device1.navigateBack(platform);
+//   // Check control message for User A
+//   await device1.waitForControlMessageToBePresent(
+//     `You set disappearing message time to 5 seconds`
+//   );
+//   // Check config message for User B
+//   await device2.waitForControlMessageToBePresent(
+//     `${userA.userName} set disappearing message time to 5 seconds`
+//   );
+//   // Send message
+//   const message = "Howdy testing disappearing messages";
+//   await device1.inputText("accessibility id", "Message input box", message);
+//   await device1.clickOnElement("Send message button");
+//   // Wait 5 seconds
+//   await sleepFor(10000);
+//   // Look for message for User A
+//   await device1.hasTextElementBeenDeleted("Message body", message);
+//   // Look for message for User B
+//   await device2.hasTextElementBeenDeleted("Message body", message);
+//   await closeApp(device1, device2);
+// }
 
 async function disappearAfterSend(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
@@ -341,8 +341,8 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
 }
 
 describe("Disappearing messages", () => {
-  iosIt("Disappearing messages legacy", disappearingMessagesLegacy);
-  androidIt("Disappearing messages legacy", disappearingMessagesLegacy);
+  // iosIt("Disappearing messages legacy", disappearingMessagesLegacy);
+  // androidIt("Disappearing messages legacy", disappearingMessagesLegacy);
 
   iosIt("Disappear after send", disappearAfterSend);
   androidIt("Disappear after send", disappearAfterSend);

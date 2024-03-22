@@ -30,6 +30,7 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType) {
     device2
   );
   await device1.navigateBack(platform);
+  await sleepFor(500);
   // await device1.sendImage(platform, testMessage);
   await device1.clickOnElement("Attachments button");
   await sleepFor(5000);
@@ -208,6 +209,9 @@ async function disappearingVoiceMessage1o1(platform: SupportedPlatformsType) {
   );
   await device1.navigateBack(platform);
   await device1.longPress("New voice message");
+  await device1.clickOnElement("Allow");
+  await sleepFor(500);
+  await device1.pressAndHold("New voice message");
   // await device1.clickOnElement("OK");
   // await device1.pressAndHold("New voice message");
   await device1.waitForTextElementToBePresent({

@@ -30,10 +30,11 @@ export type Coordinates = {
 };
 
 export const InteractionPoints: Record<string, Coordinates> = {
-  ImagesFolderKeyboardClosed: { x: 34, y: 498 },
-  ImagesFolderKeyboardOpen: { x: 34, y: 767 },
+  ImagesFolderKeyboardOpen: { x: 34, y: 498 },
+  ImagesFolderKeyboardClosed: { x: 34, y: 763 },
   GifButtonKeyboardOpen: { x: 34, y: 394 },
   GifButtonKeyboardClosed: { x: 34, y: 663 },
+  DocumentKeyboardOpen: { x: 34, y: 445 },
 };
 
 export type Strategy = "accessibility id" | "xpath" | "id" | "class name";
@@ -258,7 +259,7 @@ export type AccessibilityId =
   | "Add"
   | "Community invitation"
   | "Link preview"
-  | "covid"
+  | "test_file, pdf"
   | "Show roots"
   | "Conversation header name"
   | "Invite"
