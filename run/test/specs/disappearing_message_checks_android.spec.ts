@@ -1,7 +1,8 @@
-import { androidIt, iosIt } from "../../types/sessionIt";
-import { clickOnXAndYCoordinates, sleepFor } from "./utils";
+import { androidIt } from "../../types/sessionIt";
+import { sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
+import { joinCommunity } from "./utils/join_community";
 import {
   SupportedPlatformsType,
   closeApp,
@@ -19,12 +20,13 @@ async function disappearingImageMessage(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(device1, [
-    "1o1",
-    "Disappear after send option",
-    "10 seconds",
-  ]);
-  await device1.navigateBack(platform);
+  await setDisappearingMessage(
+    platform,
+    device1,
+    ["1:1", "Disappear after send option", "30 seconds"],
+    device2
+  );
+  // await device1.navigateBack(platform);
   await device1.sendImage(platform, testMessage);
   await device2.clickOnElement("Untrusted attachment message");
   await sleepFor(500);
@@ -57,11 +59,12 @@ async function disappearingVideoMessage(platform: SupportedPlatformsType) {
   ]);
   await newContact(platform, device1, userA, device2, userB);
 
-  await setDisappearingMessage(device1, [
-    "1o1",
-    "Disappear after send option",
-    "10 seconds",
-  ]);
+  await setDisappearingMessage(
+    platform,
+    device1,
+    ["1:1", "Disappear after send option", "30 seconds"],
+    device2
+  );
   // Click on attachments button
   await device1.clickOnElement("Attachments button");
   await sleepFor(100);
@@ -116,11 +119,12 @@ async function disappearingVoiceMessage(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(device1, [
-    "1o1",
-    "Disappear after send option",
-    "10 seconds",
-  ]);
+  await setDisappearingMessage(
+    platform,
+    device1,
+    ["1:1", "Disappear after send option", "30 seconds"],
+    device2
+  );
   await device1.longPress("New voice message");
   await device1.clickOnElement("Continue");
   await device1.clickOnElementXPath(
@@ -157,11 +161,12 @@ async function disappearingGifMessage(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(device1, [
-    "1o1",
-    "Disappear after send option",
-    "10 seconds",
-  ]);
+  await setDisappearingMessage(
+    platform,
+    device1,
+    ["1:1", "Disappear after send option", "30 seconds"],
+    device2
+  );
   await device1.navigateBack(platform);
   // Click on attachments button
   await device1.clickOnElement("Attachments button");
@@ -201,18 +206,19 @@ async function disappearingGifMessage(platform: SupportedPlatformsType) {
 
 async function disappearingLinkMessage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const testLink = `https://nerdlegame.com/`;
+  const testLink = `https://example.net/`;
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(device1, [
-    "1o1",
-    "Disappear after send option",
-    "10 seconds",
-  ]);
+  await setDisappearingMessage(
+    platform,
+    device1,
+    ["1:1", "Disappear after send option", "30 seconds"],
+    device2
+  );
   await device1.navigateBack(platform);
   // Send a link
   await device1.inputText("accessibility id", "Message input box", testLink);
@@ -261,19 +267,14 @@ async function disappearingCommunityInviteMessage(
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(device1, [
-    "1o1",
-    "Disappear after send option",
-    "10 seconds",
-  ]);
+  await setDisappearingMessage(
+    platform,
+    device1,
+    ["1:1", "Disappear after send option", "30 seconds"],
+    device2
+  );
   await device1.navigateBack(platform);
-  await device1.clickOnElement("New conversation button");
-  await device1.clickOnElement("Join community");
-  await device1.inputText("accessibility id", "Community input", communityLink);
-  await device1.clickOnElement("Join community button");
-  // Wait for community to load
-  await sleepFor(1000);
-
+  await joinCommunity(platform, device1, communityLink, communityName);
   await device1.clickOnElement("More options");
   await device1.clickOnElement("Add Members");
   await device1.clickOnElementByText({
@@ -313,11 +314,12 @@ async function disappearingCallMessage(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(device1, [
-    "1o1",
-    "Disappear after send option",
-    "10 seconds",
-  ]);
+  await setDisappearingMessage(
+    platform,
+    device1,
+    ["1:1", "Disappear after send option", "30 seconds"],
+    device2
+  );
   await device1.navigateBack(platform);
   await device1.clickOnElement("Call");
   // Enabled voice calls in privacy settings
@@ -396,8 +398,10 @@ async function disappearingCallMessage(platform: SupportedPlatformsType) {
   // Hang up
   await device1.clickOnElementById("network.loki.messenger:id/endCallButton");
   // Check for config message 'Called User B' on device 1
-  await device1.findConfigurationMessage(`Called ${userB.userName}`);
-  await device2.findConfigurationMessage(`${userA.userName} called you`);
+  await device1.waitForControlMessageToBePresent(`Called ${userB.userName}`);
+  await device2.waitForControlMessageToBePresent(
+    `${userA.userName} called you`
+  );
   // Wait 10 seconds for control message to be deleted
   await sleepFor(10000);
   await device1.hasElementBeenDeletedNew({
@@ -415,7 +419,7 @@ async function disappearingCallMessage(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
-describe.skip("Disappearing messages checks", () => {
+describe("Disappearing messages checks", () => {
   androidIt("Disappearing messages image", disappearingImageMessage);
   androidIt("Disappearing messages video", disappearingVideoMessage);
   androidIt("Disappearing messages voice", disappearingVoiceMessage);

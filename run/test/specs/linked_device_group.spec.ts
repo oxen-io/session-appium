@@ -20,7 +20,7 @@ async function groupCreationandNameChangeLinkedDevice(
 
   const [userB, userC] = await Promise.all([
     newUser(device3, "Bob", platform),
-    newUser(device4, "Carl", platform),
+    newUser(device4, "Charlie", platform),
   ]);
   const testGroupName = "Linked device group";
   const newGroupName = "New group name";
@@ -68,49 +68,57 @@ async function groupCreationandNameChangeLinkedDevice(
       "APPLY"
     )
   );
-  // await device1.clickOnElement("Accept name change");
   // If ios click back to match android (which goes back to conversation screen)
   // Check config message for changed name (different on ios and android)
   // Config message on ios is "Title is now blah"
   await runOnlyOnIOS(platform, () =>
-    device1.findMatchingTextAndAccessibilityId(
-      "Control message",
-      "Title is now " + `'${newGroupName}'.`
-    )
+    device1.waitForControlMessageToBePresent(`Title is now '${newGroupName}'.`)
   );
-  // Config on Android is "You renamed the group to blah"
-  await sleepFor(2000);
   await runOnlyOnAndroid(platform, () =>
-    device1.findMatchingTextAndAccessibilityId(
-      "Control message",
-      "You renamed the group to " + `${newGroupName}`
+    device1.waitForControlMessageToBePresent(
+      `You renamed the group to ${newGroupName}`
     )
   );
   // Wait 5 seconds for name to update
   await sleepFor(5000);
   // Check linked device for name change (conversation header name)
-  const groupName = await device2.grabTextFromAccessibilityId("Username");
-  console.warn("Group name is now " + groupName);
-  await device2.findMatchingTextAndAccessibilityId("Username", newGroupName);
-  // Check config message in linked device aswell
-  await runOnlyOnIOS(platform, () =>
-    device2.findMatchingTextAndAccessibilityId(
-      "Control message",
-      "Title is now " + `'${newGroupName}'.`
-    )
-  );
-  // Config on Android is "You renamed the group to blah"
-  await runOnlyOnAndroid(platform, () =>
-    device2.findMatchingTextAndAccessibilityId(
-      "Control message",
-      "You renamed the group to " + `${newGroupName}`
-    )
-  );
+  await device2.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Conversation header name",
+    text: newGroupName,
+  });
+  if (platform === "ios") {
+    await Promise.all([
+      device2.waitForControlMessageToBePresent(
+        `Title is now '${newGroupName}'.`
+      ),
+      device3.waitForControlMessageToBePresent(
+        `Title is now '${newGroupName}'.`
+      ),
+      device4.waitForControlMessageToBePresent(
+        `Title is now '${newGroupName}'.`
+      ),
+    ]);
+  }
+  // control on Linked device: Android is "You renamed the group to blah"
+  if (platform === "android") {
+    await Promise.all([
+      device2.waitForControlMessageToBePresent(
+        `You renamed the group to ${newGroupName}`
+      ),
+      device3.waitForControlMessageToBePresent(
+        `${userA.userName} renamed the group to: ${newGroupName}`
+      ),
+      device4.waitForControlMessageToBePresent(
+        `${userA.userName} renamed the group to: ${newGroupName}`
+      ),
+    ]);
+  }
   await closeApp(device1, device2, device3, device4);
 }
 
 async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
-  const testGroupName = "Otter lovers";
+  const testGroupName = "Leave group linked device";
   const { device1, device2, device3, device4 } = await openAppFourDevices(
     platform
   );
@@ -154,16 +162,24 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
     device4.hasTextElementBeenDeleted("Conversation list item", testGroupName)
   );
   await runOnlyOnIOS(platform, () =>
-    device2.findConfigurationMessage(`${userC.userName} left the group.`)
+    device2.waitForControlMessageToBePresent(
+      `${userC.userName} left the group.`
+    )
   );
   await runOnlyOnIOS(platform, () =>
-    device1.findConfigurationMessage(`${userC.userName} left the group.`)
+    device1.waitForControlMessageToBePresent(
+      `${userC.userName} left the group.`
+    )
   );
   await runOnlyOnAndroid(platform, () =>
-    device2.findConfigurationMessage(`${userC.userName} has left the group.`)
+    device2.waitForControlMessageToBePresent(
+      `${userC.userName} has left the group.`
+    )
   );
   await runOnlyOnAndroid(platform, () =>
-    device1.findConfigurationMessage(`${userC.userName} has left the group.`)
+    device1.waitForControlMessageToBePresent(
+      `${userC.userName} has left the group.`
+    )
   );
   await closeApp(device1, device2, device3, device4);
 }

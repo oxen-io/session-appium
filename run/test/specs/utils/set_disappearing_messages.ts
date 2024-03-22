@@ -1,33 +1,46 @@
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
-import { ConversationType, DMTimeOption } from "../../../types/testing";
+import { ConversationType, MergedOptions } from "../../../types/testing";
+import { SupportedPlatformsType } from "./open_app";
 import { sleepFor } from "./sleep_for";
 
-type DisappearOpts1o1 = [
-  "1o1",
-  "Disappear after read option" | "Disappear after send option",
-  DMTimeOption
-];
-
-type DisappearOptsGroup = [
-  "Group" | "Note to Self",
-  "Disappear after send option",
-  DMTimeOption
-];
-
-type MergedOptions = DisappearOpts1o1 | DisappearOptsGroup;
-
 export const setDisappearingMessage = async (
+  platform: SupportedPlatformsType,
   device: DeviceWrapper,
-  [conversationType, timerType, timerDuration]: MergedOptions
+  [conversationType, timerType, timerDuration]: MergedOptions,
+  device2?: DeviceWrapper
 ) => {
   const enforcedType: ConversationType = conversationType;
   await device.clickOnElement("More options");
   await sleepFor(500);
-  await device.clickOnElement("Disappearing messages");
-  if (enforcedType === "1o1") {
+  if (platform === "ios") {
+    device.clickOnElement("Disappearing Messages");
+  } else {
+    device.clickOnTextElementById(
+      `network.loki.messenger:id/title`,
+      "Disappearing messages"
+    );
+  }
+  if (enforcedType === "1:1") {
     await device.clickOnElement(timerType);
   }
+  await device.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "1 day",
+  });
 
+  await device.disappearRadioButtonSelected("1 day");
   await device.clickOnElement(timerDuration);
   await device.clickOnElement("Set button");
+  await sleepFor(1000);
+  if (device2) {
+    await device2.clickOnElementAll({
+      strategy: "accessibility id",
+      selector: "Follow setting",
+    });
+    await sleepFor(500);
+    await device2.clickOnElementAll({
+      strategy: "accessibility id",
+      selector: "Set button",
+    });
+  }
 };

@@ -4,7 +4,7 @@ declare module "png-js" {
     width: number;
     constructor(buffer: Buffer);
 
-    public decodePixels(callback: (decodedPx: Buffer) => void);
+    public decodePixels(callback: (decodedPx: Buffer) => void): void;
   }
 
   export = PNG;

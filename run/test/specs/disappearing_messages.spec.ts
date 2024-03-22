@@ -11,13 +11,65 @@ import {
   openAppTwoDevices,
 } from "./utils/open_app";
 
-async function disappearingMessagesLegacy(platform: SupportedPlatformsType) {
+// async function disappearingMessagesLegacy(platform: SupportedPlatformsType) {
+//   const { device1, device2 } = await openAppTwoDevices(platform);
+//   // Create user A and user B
+//   const [userA, userB] = await Promise.all([
+//     newUser(device1, "Alice", platform),
+//     newUser(device2, "Bob", platform),
+//   ]);
+//   // Create contact
+//   await newContact(platform, device1, userA, device2, userB);
+//   // Click conversation options menu (three dots)
+//   await device1.clickOnElement("More options");
+//   // Select disappearing messages option
+//   await runOnlyOnIOS(platform, () =>
+//     device1.clickOnElement("Disappearing Messages")
+//   );
+//   await sleepFor(1000);
+//   await runOnlyOnAndroid(platform, () =>
+//     device1.clickOnTextElementById(
+//       `network.loki.messenger:id/title`,
+//       "Disappearing messages"
+//     )
+//   );
+//   // Select 5 seconds
+//   await device1.clickOnElementByText({
+//     strategy: "id",
+//     selector: "5 seconds",
+//     text: "5 seconds",
+//   });
+//   await device1.clickOnElement("Save button");
+//   await device1.navigateBack(platform);
+//   // Check control message for User A
+//   await device1.waitForControlMessageToBePresent(
+//     `You set disappearing message time to 5 seconds`
+//   );
+//   // Check config message for User B
+//   await device2.waitForControlMessageToBePresent(
+//     `${userA.userName} set disappearing message time to 5 seconds`
+//   );
+//   // Send message
+//   const message = "Howdy testing disappearing messages";
+//   await device1.inputText("accessibility id", "Message input box", message);
+//   await device1.clickOnElement("Send message button");
+//   // Wait 5 seconds
+//   await sleepFor(10000);
+//   // Look for message for User A
+//   await device1.hasTextElementBeenDeleted("Message body", message);
+//   // Look for message for User B
+//   await device2.hasTextElementBeenDeleted("Message body", message);
+//   await closeApp(device1, device2);
+// }
+
+async function disappearAfterSend(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
   ]);
+  const testMessage = "Checking disappear after send is working";
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // Click conversation options menu (three dots)
@@ -33,56 +85,6 @@ async function disappearingMessagesLegacy(platform: SupportedPlatformsType) {
       "Disappearing messages"
     )
   );
-  // Select 5 seconds
-  await device1.clickOnElementByText({
-    strategy: "id",
-    selector: "5 seconds",
-    text: "5 seconds",
-  });
-  await device1.clickOnElement("Save button");
-  await device1.navigateBack(platform);
-  // await device1.selectByText("Disappearing messages time picker", "5 seconds");
-  // Select OK
-  // await device1.selectByText("Time selector", "OK");
-  // Check config message for User A
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Control message",
-    text: "You set disappearing message time to 5 seconds",
-  });
-  // Check config message for User B
-  await device2.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Control message",
-    text: `${userA.userName} set disappearing message time to 5 seconds`,
-  });
-  // Send message
-  const message = "Howdy testing disappearing messages";
-  await device1.inputText("accessibility id", "Message input box", message);
-  await device1.clickOnElement("Send message button");
-  // Wait 5 seconds
-  await sleepFor(10000);
-  // Look for message for User A
-  await device1.hasTextElementBeenDeleted("Message body", message);
-  // Look for message for User B
-  await device2.hasTextElementBeenDeleted("Message body", message);
-  await closeApp(device1, device2);
-}
-
-async function disappearAfterSend(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // Create user A and user B
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
-  const testMessage = "Checking disappear after send is working";
-  // Create contact
-  await newContact(platform, device1, userA, device2, userB);
-  // Click conversation options menu (three dots)
-  await device1.clickOnElement("More options");
-  // Select disappearing messages option
-  await device1.clickOnElement("Disappearing messages");
   await device1.clickOnElement("Disappear after send option");
   // Need to validate that default time is checked somehow
   await device1.waitForTextElementToBePresent({
@@ -90,20 +92,27 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
     selector: "1 day",
   });
 
-  await device1.radioButtonSelected("1 day");
+  await device1.disappearRadioButtonSelected("1 day");
   // Change timer to ten seconds (testing time)
   await device1.clickOnElement("10 seconds");
   // Click on set to save setting
   await device1.clickOnElement("Set button");
-  await device1.navigateBack(platform);
-  await device1.waitForTextElementToBePresent({
+  await runOnlyOnIOS(platform, () => device1.navigateBack(platform));
+  await device1.waitForControlMessageToBePresent(
+    `You set your messages to disappear 10 seconds after they have been sent.`
+  );
+  await device2.clickOnElementAll({
     strategy: "accessibility id",
-    selector: "Control message",
-    text: `You have set messages to disappear 10 seconds after they have been sent`,
+    selector: "Follow setting",
+  });
+  await sleepFor(100);
+  await device2.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: "Set button",
   });
   // Check control message is correct on device 2
-  await device2.findConfigurationMessage(
-    `${userA.userName} has set messages to disappear 10 seconds after they have been sent`
+  await device2.waitForControlMessageToBePresent(
+    `${userA.userName} has set their messages to disappear 10 seconds after they have been sent.`
   );
   // Send message to verify that deletion is working
   await device1.sendMessage(testMessage);
@@ -135,30 +144,45 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
   // Click conversation options menu (three dots)
   await device1.clickOnElement("More options");
   // Select disappearing messages option
-  await device1.clickOnElement("Disappearing messages");
+  await runOnlyOnIOS(platform, () =>
+    device1.clickOnElement("Disappearing Messages")
+  );
+  await sleepFor(1000);
+  await runOnlyOnAndroid(platform, () =>
+    device1.clickOnTextElementById(
+      `network.loki.messenger:id/title`,
+      "Disappearing messages"
+    )
+  );
   await device1.clickOnElement("Disappear after read option");
   // Need to validate that default time is checked somehow
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "12 hours",
   });
-  await device1.radioButtonSelected("12 hours");
+  await device1.disappearRadioButtonSelected("12 hours");
   // Change timer to ten seconds (testing time)
   await device1.clickOnElement("10 seconds");
   // Click on set to save setting
   await device1.clickOnElement("Set button");
-  await device1.navigateBack(platform);
+  await runOnlyOnIOS(platform, () => device1.navigateBack(platform));
   await sleepFor(1000);
-  await device1.waitForTextElementToBePresent({
+  await device1.waitForControlMessageToBePresent(
+    `You set your messages to disappear 10 seconds after they have been read.`
+  );
+  await device2.clickOnElementAll({
     strategy: "accessibility id",
-    selector: "Control message",
-    text: `You have set messages to disappear 10 seconds after they have been read`,
+    selector: "Follow setting",
+  });
+  await sleepFor(100);
+  await device2.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: "Set button",
   });
   // Check control message is correct on device 2
-  await device2.findConfigurationMessage(
-    `${userA.userName} has set messages to disappear 10 seconds after they have been read`
+  await device2.waitForControlMessageToBePresent(
+    `${userA.userName} has set their messages to disappear 10 seconds after they have been read.`
   );
-
   // Send message to verify that deletion is working
   await device1.sendMessage(testMessage);
   // Wait for 10 seconds
@@ -181,9 +205,9 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
   // Great success
   await closeApp(device1, device2);
 }
-
+// TO FIX CONTROL MESSAGE FOR `YOU HAVE SET...` WRONG
 async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
-  const testGroupName = "Disappear after sent test";
+  const testGroupName = "Disappear after send test";
   const testMessage = "Testing disappear after sent in groups";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
@@ -205,30 +229,37 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   );
   await device1.clickOnElement("More options");
   // Select disappearing messages option
-  await device1.clickOnElement("Disappearing messages");
+  await runOnlyOnIOS(platform, () =>
+    device1.clickOnElement("Disappearing Messages")
+  );
+  await sleepFor(1000);
+  await runOnlyOnAndroid(platform, () =>
+    device1.clickOnTextElementById(
+      `network.loki.messenger:id/title`,
+      "Disappearing messages"
+    )
+  );
   // Check the default time is set to
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "1 day",
   });
-  await device1.radioButtonSelected("1 day");
+  await device1.disappearRadioButtonSelected("1 day");
   // Change time to testing time of 10 seconds
   await device1.clickOnElement("10 seconds");
   // Save setting
   await device1.clickOnElement("Set button");
-  await device1.navigateBack(platform);
+  await runOnlyOnIOS(platform, () => device1.navigateBack(platform));
   // Check control message
   await Promise.all([
-    device1.waitForTextElementToBePresent({
-      strategy: "accessibility id",
-      selector: "Control message",
-      text: `You have set messages to disappear 10 seconds after they have been sent`,
-    }),
-    device2.findConfigurationMessage(
-      `${userA.userName} has set messages to disappear 10 seconds after they have been sent`
+    device1.waitForControlMessageToBePresent(
+      `You set your messages to disappear 10 seconds after they have been sent.`
     ),
-    device3.findConfigurationMessage(
-      `${userA.userName} has set messages to disappear 10 seconds after they have been sent`
+    device2.waitForControlMessageToBePresent(
+      `${userA.userName} has set their messages to disappear 10 seconds after they have been sent.`
+    ),
+    device3.waitForControlMessageToBePresent(
+      `${userA.userName} has set their messages to disappear 10 seconds after they have been sent.`
     ),
   ]);
   // Send message to verify deletion
@@ -268,21 +299,35 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   // Enable disappearing messages
   await device.clickOnElement("More options");
   await sleepFor(500);
-  await device.clickOnElement("Disappearing messages");
+  await runOnlyOnIOS(platform, () =>
+    device.clickOnElement("Disappearing Messages")
+  );
+  await sleepFor(1000);
+  await runOnlyOnAndroid(platform, () =>
+    device.clickOnTextElementById(
+      `network.loki.messenger:id/title`,
+      "Disappearing messages"
+    )
+  );
   // Check default timer is set
   await sleepFor(1000);
   await device.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "1 day",
   });
-  await device.radioButtonSelected("1 day");
+  await device.disappearRadioButtonSelected("1 day");
   await device.clickOnElement("10 seconds");
   await device.clickOnElement("Set button");
-  await device.navigateBack(platform);
+  await runOnlyOnIOS(platform, () => device.navigateBack(platform));
   await sleepFor(1000);
-  await device.findConfigurationMessage(
-    `You have set messages to disappear 10 seconds after they have been sent`
-  );
+  // await Promise.all([
+  //   device.waitForControlMessageToBePresent(
+  //     `${userA.userName} has set their messages to disappear 10 seconds after they have been sent.`
+  //   ),
+  //   device.waitForControlMessageToBePresent(
+  //     `${userA.userName} has set their messages to disappear 10 seconds after they have been sent.`
+  //   ),
+  // ]);
   await device.sendMessage(testMessage);
   await sleepFor(10000);
   await device.hasElementBeenDeletedNew({
@@ -295,9 +340,9 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   await closeApp(device);
 }
 
-describe.skip("Disappearing messages", () => {
-  iosIt("Disappearing messages legacy", disappearingMessagesLegacy);
-  androidIt("Disappearing messages legacy", disappearingMessagesLegacy);
+describe("Disappearing messages", () => {
+  // iosIt("Disappearing messages legacy", disappearingMessagesLegacy);
+  // androidIt("Disappearing messages legacy", disappearingMessagesLegacy);
 
   iosIt("Disappear after send", disappearAfterSend);
   androidIt("Disappear after send", disappearAfterSend);

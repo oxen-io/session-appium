@@ -1,7 +1,7 @@
-import { Group, User } from "../../../types/testing";
-import { newContact } from "./create_contact";
-import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from ".";
+import { runOnlyOnAndroid, runOnlyOnIOS } from ".";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
+import { Group, GroupName, User } from "../../../types/testing";
+import { newContact } from "./create_contact";
 import { SupportedPlatformsType } from "./open_app";
 
 export const createGroup = async (
@@ -12,7 +12,7 @@ export const createGroup = async (
   userTwo: User,
   device3: DeviceWrapper,
   userThree: User,
-  userName: string
+  userName: GroupName
 ): Promise<Group> => {
   const group: Group = { userName, userOne, userTwo, userThree };
 
@@ -38,16 +38,16 @@ export const createGroup = async (
   await device1.selectByText("Contact", userThree.userName);
   // Select tick
   await device1.clickOnElement("Create group");
-  await sleepFor(4000);
   // Check for empty state on ios
   await runOnlyOnIOS(platform, () =>
     device1.waitForTextElementToBePresent({
       strategy: "accessibility id",
       selector: "Empty list",
+      maxWait: 5000,
     })
   );
   await runOnlyOnAndroid(platform, () =>
-    device1.findConfigurationMessage("You created a new group.")
+    device1.waitForControlMessageToBePresent("You created a new group.", 5000)
   );
   // Send message from User A to group to verify all working
   await device1.sendMessage(userAMessage);

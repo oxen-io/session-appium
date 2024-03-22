@@ -27,11 +27,9 @@ async function acceptRequest(platform: SupportedPlatformsType) {
   // Bob clicks accept button
   await device2.clickOnElement("Accept message request");
   // Verify config message for Alice 'Your message request has been accepted'
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Control message",
-    text: "Your message request has been accepted.",
-  });
+  await device1.waitForControlMessageToBePresent(
+    "Your message request has been accepted."
+  );
   await device2.navigateBack(platform);
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -97,11 +95,9 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
   // Send message from Bob to Alice
   await device2.sendMessage(`${userB.userName} to ${userA.userName}`);
   // Check config
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Control message",
-    text: "Your message request has been accepted.",
-  });
+  await device1.waitForControlMessageToBePresent(
+    "Your message request has been accepted."
+  );
   // Close app
   await closeApp(device1, device2);
 }
@@ -186,7 +182,7 @@ async function deleteRequest(platform: SupportedPlatformsType) {
 
   await closeApp(device1, device2);
 }
-
+// TO FIX (CONFIRM DIALOG FOR CLEAR ALL NOT WORKING)
 async function clearAllRequests(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const [userA, userB] = await Promise.all([

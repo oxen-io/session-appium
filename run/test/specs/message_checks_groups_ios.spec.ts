@@ -1,5 +1,6 @@
 import { iosIt } from "../../types/sessionIt";
-import { sleepFor, clickOnXAndYCoordinates } from "./utils";
+import { InteractionPoints } from "../../types/testing";
+import { sleepFor, clickOnCoordinates } from "./utils";
 import { newUser } from "./utils/create_account";
 import { createGroup } from "./utils/create_group";
 import {
@@ -11,6 +12,7 @@ import { runScriptAndLog } from "./utils/utilities";
 
 async function sendImageGroup(platform: SupportedPlatformsType) {
   const testGroupName = "Message checks for groups";
+  const testMessage = "Sending image to group";
   const ronSwansonBirthday = "196705060700.00";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
@@ -19,7 +21,6 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
     newUser(device3, "Charlie", platform),
   ]);
-
   // Create contact between User A and User B
   await createGroup(
     platform,
@@ -31,19 +32,22 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
-  const testMessage = "Ron Swanson doesn't like birthdays";
-  const replyMessage = `Replying to image from ${userA.userName} in ${testGroupName}`;
+  // await device1.sendImage(platform, testMessage);
   await device1.clickOnElement("Attachments button");
-  await sleepFor(100);
-  await clickOnXAndYCoordinates(device1, 34, 498);
+  await sleepFor(5000);
+  await clickOnCoordinates(
+    device1,
+    InteractionPoints.ImagesFolderKeyboardClosed
+  );
+
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
-    selector: "Allow Access to All Photos",
+    selector: "Allow Full Access",
     maxWait: 1000,
   });
   if (permissions) {
     try {
-      await device1.clickOnElement(`Allow Access to All Photos`);
+      await device1.clickOnElement(`Allow Full Access`);
       // Select video
     } catch (e) {
       console.log("No permissions dialog");
@@ -73,11 +77,17 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Text input box");
   await device1.inputText("accessibility id", "Text input box", testMessage);
   await device1.clickOnElement("Send button");
-  await sleepFor(1000);
+  await device1.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: `Message sent status: Sent`,
+    maxWait: 50000,
+  });
+
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",
     text: testMessage,
+    maxWait: 5000,
   });
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -114,14 +124,18 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to video from ${userA.userName} in ${testGroupName}`;
   await device1.clickOnElement("Attachments button");
   await sleepFor(100);
-  await clickOnXAndYCoordinates(device1, 34, 498);
+  await clickOnCoordinates(
+    device1,
+    InteractionPoints.ImagesFolderKeyboardClosed
+  );
+
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
-    selector: "Allow Access to All Photos",
+    selector: "Allow Full Access",
     maxWait: 1000,
   });
   if (permissions) {
-    await device1.clickOnElement("Allow Access to All Photos");
+    await device1.clickOnElement("Allow Full Access");
   } else {
     console.log("No permissions");
   }
@@ -160,9 +174,7 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
       } 'run/test/specs/media/test_video.mp4'`,
       true
     );
-    await sleepFor(2000);
-
-    await device1.clickOnElement(`1988-09-08 21:00:00 +0000`);
+    await device1.clickOnElement(`1988-09-08 21:00:00 +0000`, 5000);
   }
   // Send with attached message
   await device1.clickOnElement("Text input box");
@@ -178,7 +190,12 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
     selector: "Message body",
     text: testMessage,
   });
-  await sleepFor(3000);
+  await device2.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Message body",
+    text: testMessage,
+    maxWait: 5000,
+  });
   await device2.longPressMessage(testMessage);
   await device2.clickOnElement("Reply to message");
   await device2.sendMessage(replyMessage);
@@ -220,7 +237,7 @@ async function sendVoiceMessageGroup(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to voice message from ${userA.userName} in ${testGroupName}`;
   await device1.longPress("New voice message");
   // "Session" would like to access the microphone (Don't allow/ OK)
-  await device1.clickOnElement("OK");
+  // await device1.clickOnElement("Allow");
   await device1.pressAndHold("New voice message");
 
   await device1.waitForTextElementToBePresent({
@@ -253,28 +270,28 @@ async function sendVoiceMessageGroup(platform: SupportedPlatformsType) {
   await closeApp(device1, device2, device3);
 }
 
-// async function sendDocGroup(platform: SupportedPlatformsType) {
-//   const testGroupName = "Message checks for groups";
-//   const { device1, device2, device3 } = await openAppThreeDevices(platform);
-//   // Create users A, B and C
-//   const [userA, userB, userC] = await Promise.all([
-//     newUser(device1, "Alice", platform),
-//     newUser(device2, "Bob", platform),
-//     newUser(device3, "Charlie", platform),
-//   ]);
+async function sendDocGroup(platform: SupportedPlatformsType) {
+  const testGroupName = "Message checks for groups";
+  const { device1, device2, device3 } = await openAppThreeDevices(platform);
+  // Create users A, B and C
+  const [userA, userB, userC] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+    newUser(device3, "Charlie", platform),
+  ]);
 
-//   // Create contact between User A and User B
-//   await createGroup(
-//     platform,
-//     device1,
-//     userA,
-//     device2,
-//     userB,
-//     device3,
-//     userC,
-//     testGroupName
-//   );
-// }
+  // Create contact between User A and User B
+  await createGroup(
+    platform,
+    device1,
+    userA,
+    device2,
+    userB,
+    device3,
+    userC,
+    testGroupName
+  );
+}
 
 async function sendGifGroup(platform: SupportedPlatformsType) {
   const testGroupName = "Message checks for groups";
@@ -300,7 +317,7 @@ async function sendGifGroup(platform: SupportedPlatformsType) {
   );
   await device1.clickOnElement("Attachments button");
   // Select GIF tab
-  await clickOnXAndYCoordinates(device1, 36, 394);
+  await clickOnCoordinates(device1, InteractionPoints.GifButtonKeyboardOpen);
   // Select gif
   await sleepFor(500);
   // Need to select Continue on GIF warning
@@ -391,7 +408,7 @@ async function sendLongMessageGroup(platform: SupportedPlatformsType) {
 
 async function sendLinkGroup(platform: SupportedPlatformsType) {
   const testGroupName = "Message checks for groups";
-  const testLink = `https://nerdlegame.com/`;
+  const testLink = `https://example.net/`;
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
@@ -499,7 +516,7 @@ describe("Message checks ios", () => {
   iosIt("Send image to group", sendImageGroup);
   iosIt("Send video to group", sendVideoGroup);
   iosIt("Send voice message to group", sendVoiceMessageGroup);
-  // iosIt("Send document to group", sendDocGroup);
+  iosIt("Send document to group", sendDocGroup);
   iosIt("Send GIF to group", sendGifGroup);
   iosIt("Send long text to group", sendLongMessageGroup);
   iosIt("Send link to group", sendLinkGroup);

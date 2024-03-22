@@ -28,7 +28,7 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
     `Reply-message-${userB.userName}-to-${userA.userName}`
   );
   // Verify config message states message request was accepted
-  await device1.findConfigurationMessage(
+  await device1.waitForControlMessageToBePresent(
     "Your message request has been accepted."
   );
   // Phone icon should appear now that conversation has been approved
@@ -83,6 +83,7 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   // Click enable on exposure IP address warning
   await device2.clickOnElement("Enable");
   // Navigate back to conversation
+  // TO FIX (SOMETHING WRONG WITH ANSWER CALL)
   await device2.waitForTextElementToBePresent({
     strategy: "id",
     selector:
@@ -103,8 +104,10 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   // Hang up
   await device1.clickOnElementById("network.loki.messenger:id/endCallButton");
   // Check for config message 'Called User B' on device 1
-  await device1.findConfigurationMessage(`Called ${userB.userName}`);
-  await device2.findConfigurationMessage(`${userA.userName} called you`);
+  await device1.waitForControlMessageToBePresent(`Called ${userB.userName}`);
+  await device2.waitForControlMessageToBePresent(
+    `${userA.userName} called you`
+  );
   // Excellent
   await closeApp(device1, device2);
 }
@@ -133,7 +136,7 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   );
 
   // Verify config message states message request was accepted
-  await device1.findConfigurationMessage(
+  await device1.waitForControlMessageToBePresent(
     "Your message request has been accepted."
   );
   // Phone icon should appear now that conversation has been approved
@@ -172,16 +175,12 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   // Hang up
   await device1.clickOnElement("End call");
   // Check for control messages on both devices
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Control message",
-    text: `You called ${userB.userName}`,
-  });
-  await device2.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Control message",
-    text: `${userA.userName} called you`,
-  });
+  await device1.waitForControlMessageToBePresent(
+    `You called ${userB.userName}`
+  );
+  await device2.waitForControlMessageToBePresent(
+    `${userA.userName} called you`
+  );
   // Excellent
   await closeApp(device1, device2);
 }

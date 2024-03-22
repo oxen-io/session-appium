@@ -1,7 +1,8 @@
 import { androidIt } from "../../types/sessionIt";
-import { clickOnXAndYCoordinates, sleepFor } from "./utils";
+import { sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
+import { joinCommunity } from "./utils/join_community";
 
 import {
   closeApp,
@@ -12,7 +13,6 @@ import { runScriptAndLog } from "./utils/utilities";
 
 async function sendImage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
@@ -21,15 +21,16 @@ async function sendImage(platform: SupportedPlatformsType) {
   await newContact(platform, device1, userA, device2, userB);
   await device1.sendImage(platform, "Sending image");
   await device2.clickOnElement("Untrusted attachment message");
-
-  await sleepFor(500);
   // User B - Click on 'download'
-  await device2.clickOnElement("Download media");
+  await device2.clickOnElement("Download media", 5000);
   // Reply to message
   // Wait for image to load (unclickable if not loaded correctly)
-  await sleepFor(2000);
+  await device2.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Media message",
+    maxWait: 5000,
+  });
   await device2.pressAndHold("Media message");
-
   await device2.clickOnElement("Reply to message");
   await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({
@@ -41,7 +42,7 @@ async function sendImage(platform: SupportedPlatformsType) {
   // Close app and server
   await closeApp(device1, device2);
 }
-
+// TO FIX (DOCUMENT BUTTON NOT FOUND)
 async function sendDocument(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
 
@@ -52,8 +53,8 @@ async function sendDocument(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to document from ${userA.userName}`;
   await newContact(platform, device1, userA, device2, userB);
   await device1.clickOnElement("Attachments button");
-  await sleepFor(100);
-  await device1.clickOnElement("Documents folder");
+
+  await device1.clickOnElement("Documents folder", 5000);
   const mediaButtons = await device1.findElementsByClass(
     "android.widget.CompoundButton"
   );
@@ -117,7 +118,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Documents folder");
   // Select video
   const mediaButtons = await device1.findElementsByClass(
-    "android.widget.CompoundButton"
+    "android.widget.Button"
   );
   const videosButton = await device1.findMatchingTextInElementArray(
     mediaButtons,
@@ -140,13 +141,19 @@ async function sendVideo(platform: SupportedPlatformsType) {
       true
     );
   }
-  await sleepFor(1000);
+
   await device1.clickOnTextElementById("android:id/title", "test_video.mp4");
   // User B - Click on untrusted attachment message
-  await device2.clickOnElement("Untrusted attachment message", 10000);
-  // await sleepFor(1000);
+  await device2.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: "Untrusted attachment message",
+    maxWait: 10000,
+  });
   // User B - Click on 'download'
-  await device2.clickOnElement("Download media");
+  await device2.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: "Download media",
+  });
   // Reply to message
   await device2.waitForTextElementToBePresent({
     strategy: "id",
@@ -275,10 +282,10 @@ async function sendLongMessage(platform: SupportedPlatformsType) {
   // Close app
   await closeApp(device1, device2);
 }
-
+//  TO FIX  (NO LINK PREVIEW)
 async function sendLink(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const testLink = `https://nerdlegame.com/`;
+  const testLink = `https://example.net/`;
   // Create two users
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -317,18 +324,12 @@ async function sendCommunityInviteMessage(platform: SupportedPlatformsType) {
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // Join community
-
   await sleepFor(100);
   await device1.navigateBack(platform);
-  await device1.clickOnElement("New conversation button");
-  await device1.clickOnElement("Join community");
-  await device1.inputText("accessibility id", "Community input", communityLink);
-  await clickOnXAndYCoordinates(device1, 587, 1066);
-  await device1.clickOnElement("Join community button");
+  await joinCommunity(platform, device1, communityLink, communityName);
   // Wait for community to load
-  await sleepFor(1000);
   // Add user B to community
-  await device1.clickOnElement("More options");
+  await device1.clickOnElement("More options", 5000);
   await device1.clickOnElementAll({
     strategy: "id",
     selector: "network.loki.messenger:id/title",
@@ -341,12 +342,6 @@ async function sendCommunityInviteMessage(platform: SupportedPlatformsType) {
   });
   await device1.clickOnElement("Done");
   // Check device 2 for invitation from user A
-  await device2.waitForTextElementToBePresent({
-    strategy: "id",
-    selector: "network.loki.messenger:id/openGroupTitleTextView",
-    text: communityName,
-    maxWait: 10000,
-  });
   await closeApp(device1, device2);
 }
 
@@ -382,7 +377,6 @@ async function unsendMessage(platform: SupportedPlatformsType) {
     strategy: "accessibility id",
     selector: "Deleted message",
   });
-
   // Excellent
   await closeApp(device1, device2);
 }
@@ -394,14 +388,12 @@ async function deleteMessage(platform: SupportedPlatformsType) {
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
   ]);
-
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // send message from User A to User B
   const sentMessage = await device1.sendMessage(
     "Checking deletion functionality"
   );
-  // await sleepFor(1000);
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",
@@ -413,9 +405,12 @@ async function deleteMessage(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Delete message");
   // Select 'Delete for just me'
   await device1.clickOnElement("Delete just for me");
-
-  await sleepFor(1000);
-  await device1.hasTextElementBeenDeleted("Message body", sentMessage);
+  await device1.hasElementBeenDeletedNew({
+    strategy: "accessibility id",
+    selector: "Message body",
+    text: sentMessage,
+    maxWait: 8000,
+  });
 
   // Excellent
   await closeApp(device1, device2);

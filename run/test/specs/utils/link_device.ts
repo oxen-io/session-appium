@@ -1,13 +1,14 @@
+import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from ".";
 import { newUser } from "./create_account";
 import { SupportedPlatformsType } from "./open_app";
-import { sleepFor, runOnlyOnIOS, runOnlyOnAndroid } from ".";
 
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
+import { Username } from "../../../types/testing";
 
 export const linkedDevice = async (
   device1: DeviceWrapper,
   device2: DeviceWrapper,
-  userName: string,
+  userName: Username,
   platform: SupportedPlatformsType
 ) => {
   const user = await newUser(device1, userName, platform);
@@ -22,8 +23,7 @@ export const linkedDevice = async (
   );
   await sleepFor(1000);
   // Continue with recovery phrase
-  await runOnlyOnAndroid(platform, () => device2.clickOnElement("Link Device"));
-  await runOnlyOnIOS(platform, () => device2.clickOnElement("Continue"));
+  await device2.clickOnElement("Continue");
   // Wait for any notifications to disappear
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -35,18 +35,17 @@ export const linkedDevice = async (
   await await sleepFor(250);
   // Click continue on message notification settings
   await device2.clickOnElement("Continue with settings");
-  // Dismiss notifications alert
-  // await device2.inputText(
-  //       "accessibility id",
-  //       "Enter display name",
-  //       user.userName
-  //     );
-  // await device2.clickOnElement("Continue")
   // Check for recovery phrase reminder
   await sleepFor(1000);
   await runOnlyOnIOS(platform, () => device2.clickOnElement("Don’t Allow"));
   await sleepFor(1000);
   await device2.hasElementBeenDeleted("accessibility id", "Continue");
+  await runOnlyOnAndroid(platform, () =>
+    device2.clickOnTextElementById(
+      `com.android.permissioncontroller:id/permission_allow_button`,
+      "Allow"
+    )
+  );
   // Check that button was clicked
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",

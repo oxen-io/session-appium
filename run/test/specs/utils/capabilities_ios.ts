@@ -1,15 +1,13 @@
 import { AppiumXCUITestCapabilities } from "@wdio/types/build/Capabilities";
-import { W3CCapabilities } from "appium/build/lib/appium";
-
-const iosAppFullPath = `/Users/emilyburton/Library/Developer/Xcode/DerivedData/Session-bkhewuibvlxdsxevpurvxorzvqpd/Build/Products/App Store Release-iphonesimulator/Session.app`;
-
-
+import { W3CCapabilities } from "@wdio/types/build/Capabilities";
+// const iosAppFullPath = `/Users/emilyburton/Library/Developer/Xcode/DerivedData/Session-bkhewuibvlxdsxevpurvxorzvqpd/Build/Products/App Store Release-iphonesimulator/Session.app`;
+const iosAppFullPath = `/Users/emilyburton/Downloads/session-ios-20240318T233647Z-028334a17-sim/Session.app`;
 
 const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   "appium:app": iosAppFullPath,
   "appium:platformName": "iOS",
-  "appium:platformVersion": "16.4",
-  "appium:deviceName": "iPhone 14 Pro Max",
+  "appium:platformVersion": "17.2",
+  "appium:deviceName": "iPhone 15 Pro Max",
   "appium:automationName": "XCUITest",
   "appium:bundleId": "com.loki-project.loki-messenger",
   "appium:newCommandTimeout": 300000,
@@ -89,7 +87,7 @@ const countOfIosCapabilities = 4;
 
 export function getIosCapabilities(
   capabilitiesIndex: CapabilitiesIndexType
-): W3CCapabilities<any> {
+): W3CCapabilities {
   if (capabilitiesIndex >= countOfIosCapabilities) {
     throw new Error(`Asked invalid ios cap index: ${capabilitiesIndex}`);
   }

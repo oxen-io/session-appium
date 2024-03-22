@@ -11,6 +11,7 @@ import { runScriptAndLog } from "./utils/utilities";
 
 async function sendImageGroup(platform: SupportedPlatformsType) {
   const testGroupName = "Message checks for groups";
+  const testMessage = "Testing image sending to groups";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
@@ -30,7 +31,7 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
     testGroupName
   );
   const replyMessage = `Replying to image from ${userA.userName}`;
-  await device1.sendImage(platform, "Testing image sending to groups");
+  await device1.sendImage(platform, testMessage);
   // Wait for image to appear in conversation screen
   await sleepFor(500);
   await device2.waitForTextElementToBePresent({
@@ -48,10 +49,6 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
   await device2.longPress("Media message");
   await device2.clickOnElement("Reply to message");
   await device2.sendMessage(replyMessage);
-  await device1.clickOnElementAll({
-    strategy: "id",
-    selector: `network.loki.messenger:id/scrollToBottomButton`,
-  });
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",
@@ -70,7 +67,7 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
   // Close server and devices
   await closeApp(device1, device2, device3);
 }
-
+// TO FIX (VIDEO BUTTON NOT FOUNDÍ)
 async function sendVideoGroup(platform: SupportedPlatformsType) {
   // Test sending a video
   // open devices
@@ -315,7 +312,7 @@ async function sendLinkGroup(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
-  const testLink = `https://nerdlegame.com/`;
+  const testLink = `https://example.net/`;
   // Send a link
   await device1.inputText("accessibility id", "Message input box", testLink);
   // Accept dialog for link preview
@@ -376,15 +373,16 @@ async function sendGifGroup(platform: SupportedPlatformsType) {
     selector: "Continue",
   });
   // Select gif
-  await sleepFor(3000);
-  await device1.clickOnElementXPath(
-    `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.ScrollView/androidx.viewpager.widget.ViewPager/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.FrameLayout[1]`
-  );
+  await device1.clickOnElementAll({
+    strategy: "xpath",
+    selector: `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.ScrollView/androidx.viewpager.widget.ViewPager/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.FrameLayout[1]`,
+    maxWait: 5000,
+  });
   // Reply to message
-  await sleepFor(5000);
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Media message",
+    maxWait: 10000,
   });
   await device2.longPress("Media message");
   // Check reply came through on device1
@@ -411,7 +409,6 @@ async function sendGifGroup(platform: SupportedPlatformsType) {
   // Close app
   await closeApp(device1, device2, device3);
 }
-/* COMMENTED OUT UNTIL BUG FOR SCROLL TO BOTTOM IS FIXED */
 
 async function sendLongMessageGroup(platform: SupportedPlatformsType) {
   const testGroupName = "Message checks for groups";
@@ -458,16 +455,17 @@ async function sendLongMessageGroup(platform: SupportedPlatformsType) {
       text: longText,
     }),
   ]);
-  await sleepFor(1000);
+
   await device1.clickOnElementAll({
     strategy: "id",
     selector: `network.loki.messenger:id/scrollToBottomButton`,
+    maxWait: 5000,
   });
   await device2.replyToMessage(userA, longText);
-  await sleepFor(1000);
   await device1.clickOnElementAll({
     strategy: "id",
     selector: `network.loki.messenger:id/scrollToBottomButton`,
+    maxWait: 5000,
   });
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -475,10 +473,10 @@ async function sendLongMessageGroup(platform: SupportedPlatformsType) {
     text: replyMessage,
   });
   // Waiting for scroll to bottom to appear/be active
-  await sleepFor(1000);
   await device3.clickOnElementAll({
     strategy: "id",
     selector: `network.loki.messenger:id/scrollToBottomButton`,
+    maxWait: 5000,
   });
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -528,8 +526,12 @@ async function deleteMessageGroup(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Delete message");
   // Select 'Delete for everyone'
   await device1.clickOnElement("Delete just for me");
-  await sleepFor(1000);
-  await device1.hasTextElementBeenDeleted("Message body", sentMessage);
+  await device1.hasElementBeenDeletedNew({
+    strategy: "accessibility id",
+    selector: "Message body",
+    text: sentMessage,
+    maxWait: 5000,
+  });
   // Excellent
   await closeApp(device1, device2, device3);
 }

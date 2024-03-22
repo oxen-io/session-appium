@@ -1,26 +1,67 @@
 export type User = {
-  userName: string;
+  userName: Username;
   sessionID: string;
   recoveryPhrase: string;
 };
 
+export type Username = "Alice" | "Bob" | "Charlie" | "Dracula";
+
+export type GroupName =
+  | "Test group"
+  | "Mentions test group"
+  | "Message checks for groups"
+  | "Leave group linked device"
+  | "Leave group"
+  | "Linked device group"
+  | "Testing disappearing messages"
+  | "Group to test adding contact"
+  | "Disappear after send test";
+
 export type Group = {
-  userName: string;
+  userName: GroupName;
   userOne: User;
   userTwo: User;
   userThree: User;
 };
 
+export type Coordinates = {
+  x: number;
+  y: number;
+};
+
+export const InteractionPoints: Record<string, Coordinates> = {
+  ImagesFolderKeyboardOpen: { x: 34, y: 498 },
+  ImagesFolderKeyboardClosed: { x: 34, y: 763 },
+  GifButtonKeyboardOpen: { x: 34, y: 394 },
+  GifButtonKeyboardClosed: { x: 34, y: 663 },
+  DocumentKeyboardOpen: { x: 34, y: 445 },
+};
+
 export type Strategy = "accessibility id" | "xpath" | "id" | "class name";
 
-export type ConversationType = "1o1" | "Group" | "Community" | "Note to Self";
+export type ConversationType = "1:1" | "Group" | "Community" | "Note to Self";
 
 export type DMTimeOption =
   | "10 seconds"
+  | "30 seconds"
   | "12 hours"
   | "1 day"
   | "1 week"
   | "2 weeks";
+
+export type DisappearOpts1o1 = [
+  "1:1",
+  "Disappear after read option" | "Disappear after send option",
+  DMTimeOption
+];
+
+export type DisappearOptsGroup = [
+  "Group" | "Note to Self",
+  "Disappear after send option",
+  DMTimeOption
+];
+
+export type MergedOptions = DisappearOpts1o1 | DisappearOptsGroup;
 
 export type StrategyExtractionObj =
   | {
@@ -35,6 +76,26 @@ export type StrategyExtractionObj =
       strategy: Extract<Strategy, "xpath">;
       selector: XPath;
     };
+
+export type ControlMessage =
+  | `You set disappearing message time to 5 seconds`
+  | `${string} set disappearing message time to 5 seconds`
+  | `${string} has set their messages to disappear ${DMTimeOption} after they have been sent.`
+  | `${string} has set their messages to disappear ${DMTimeOption} after they have been read.`
+  | `You set your messages to disappear ${DMTimeOption} after they have been sent.`
+  | `You set your messages to disappear ${DMTimeOption} after they have been read.`
+  | "Your message request has been accepted."
+  | `${string} called you`
+  | `Called ${string}`
+  | `You called ${string}`
+  | "You created a new group."
+  | `${string} has left the group.`
+  | `${string} left the group.`
+  | `${string} renamed the group to: ${string}`
+  | `Title is now '${string}'.`
+  | `You renamed the group to ${string}`
+  | `${string} joined the group.`
+  | `You added ${string} to the group.`;
 
 export type XPath =
   | `//*[./*[@name='${DMTimeOption}']]/*[2]`
@@ -55,6 +116,7 @@ export type AccessibilityId =
   | "Slow mode notifications option"
   | "Continue with settings"
   | "Don’t Allow"
+  | "Allow"
   | "Recovery Phrase"
   | "Navigate up"
   | "User settings"
@@ -99,6 +161,7 @@ export type AccessibilityId =
   | "Disappear after read option"
   | "Disappear after send option"
   | "10 seconds"
+  | "30 seconds"
   | "12 hours"
   | "1 day"
   | "1 week"
@@ -126,9 +189,11 @@ export type AccessibilityId =
   | "Mentions list"
   | "Send message button"
   | "Mentions list"
+  | "Message sent status"
   | "Message sent status: Sent"
   | "Message sent status: Read"
-  | "Message sent status pending"
+  | "Message sent status: Sending"
+  | "Message sent status: Failed to send"
   | "Leave group"
   | "Leave"
   | "Username"
@@ -156,9 +221,12 @@ export type AccessibilityId =
   | "Document"
   | "All Photos"
   | "Allow Access to All Photos"
+  | "Allow Full Access"
   | "Photo, May 01, 1999, 7:00 AM"
+  | "profile_picture.jpg, 27.75 kB, May 2, 1999"
   | "profile_picture.jpg, 27.75 kB, May 1, 1999"
-  | "Photo, May 01, 1998, 7:00 AM"
+  | "Photo taken on May 2, 1999, 7:00:00 AM"
+  | "Photo, 01 May 1998, 7:00 am"
   | "1967-05-05 21:00:00 +0000"
   | "1988-09-08 21:00:00 +0000"
   | "Attachments button"
@@ -191,4 +259,11 @@ export type AccessibilityId =
   | "Add"
   | "Community invitation"
   | "Link preview"
-  | "covid";
+  | "test_file, pdf"
+  | "Show roots"
+  | "Conversation header name"
+  | "Invite"
+  | "Follow setting"
+  | "Follow Setting"
+  | "Set"
+  | "Allow Full Access";

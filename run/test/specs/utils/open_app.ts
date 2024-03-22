@@ -21,9 +21,13 @@ import { sleepFor } from "./sleep_for";
 import { compact } from "lodash";
 
 const APPIUM_PORT = 4728;
-export const APPIUM_IOS_PORT = 8100;
+export const APPIUM_IOS_PORT = 8110;
 
 export type SupportedPlatformsType = "android" | "ios";
+
+/* ******************Command to run Appium Server: *************************************
+./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --use-plugins=execute-driver --allow-cors
+*/
 
 const openAppOnPlatform = async (
   platform: SupportedPlatformsType,
@@ -212,6 +216,12 @@ const openiOSApp = async (
 }> => {
   console.warn("openiOSApp");
 
+  // Logging to check that app path is correct
+  console.log(
+    `iOS App Full Path: ${
+      getIosCapabilities(capabilitiesIndex)["alwaysMatch"]["appium:app"]
+    }`
+  );
   const opts: DriverOpts = {
     address: `http://localhost:${APPIUM_PORT}`,
   } as DriverOpts;
