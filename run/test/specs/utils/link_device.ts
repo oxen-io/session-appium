@@ -14,14 +14,15 @@ export const linkedDevice = async (
   const user = await newUser(device1, userName, platform);
   // Log in with recovery seed on device 2
 
-  await device2.clickOnElement("Link a device");
+  await device2.clickOnElement("Restore your session button");
   // Enter recovery phrase into input box
   await device2.inputText(
     "accessibility id",
-    "Enter your recovery phrase",
+    "Recovery phrase input",
     user.recoveryPhrase
   );
-  await sleepFor(1000);
+  // Wait for continue button to become active
+  await sleepFor(500);
   // Continue with recovery phrase
   await device2.clickOnElement("Continue");
   // Wait for any notifications to disappear
@@ -34,18 +35,23 @@ export const linkedDevice = async (
   // Wait for transitiion animation between the two pages
   await await sleepFor(250);
   // Click continue on message notification settings
-  await device2.clickOnElement("Continue with settings");
-  // Check for recovery phrase reminder
+  await device2.clickOnElement("Continue");
+  // Wait for permissions modal to pop up
   await sleepFor(1000);
   await runOnlyOnIOS(platform, () => device2.clickOnElement("Don’t Allow"));
-  await sleepFor(1000);
-  await device2.hasElementBeenDeleted("accessibility id", "Continue");
-  await runOnlyOnAndroid(platform, () =>
-    device2.clickOnTextElementById(
-      `com.android.permissioncontroller:id/permission_allow_button`,
-      "Allow"
-    )
-  );
+  // Wait for loading animation searching for display name
+  await device1.waitForLoadingAnimation();
+  // If display name isn't found
+  const displayName = await device1.doesElementExist({
+    strategy: "accessibility id",
+    selector: "Enter display name",
+  });
+  if (displayName) {
+    await device1.inputText("accessibility id", "Enter display name", userName);
+    await device1.clickOnElement("Continue");
+  } else {
+    console.log(`Username found: ${userName}`);
+  }
   // Check that button was clicked
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",

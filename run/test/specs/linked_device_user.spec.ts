@@ -33,8 +33,8 @@ async function linkDevice(platform: SupportedPlatformsType) {
   });
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Session ID",
-    text: userA.sessionID,
+    selector: "Account ID",
+    text: userA.accountID,
   });
 
   await closeApp(device1, device2);
@@ -47,7 +47,7 @@ async function contactsSyncLinkedDevice(platform: SupportedPlatformsType) {
 
   const userB = await newUser(device3, "Bob", platform);
 
-  await newContact(platform, device1, userA, device3, userB);
+  await newContact(device1, userA, device3, userB);
   await runOnlyOnIOS(platform, () => device1.clickOnElement("Back"));
   await runOnlyOnAndroid(platform, () => device1.clickOnElement("Navigate up"));
   // Check that user synced on linked device
@@ -102,7 +102,7 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
 
   const userB = await newUser(device2, "Bob", platform);
 
-  await newContact(platform, device1, userA, device2, userB);
+  await newContact(device1, userA, device2, userB);
   // Send message from user a to user b
   const sentMessage = await device1.sendMessage("Howdy");
   // Check message came through on linked device(3)
@@ -142,7 +142,7 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
 
   const userB = await newUser(device2, "Bob", platform);
 
-  await newContact(platform, device1, userA, device2, userB);
+  await newContact(device1, userA, device2, userB);
   // Send message from user a to user b
   const sentMessage = await device1.sendMessage("Howdy");
   // Check message came through on linked device(3)
@@ -180,7 +180,7 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
   const userA = await linkedDevice(device1, device3, "Alice", platform);
   // Create contact to block
   const userB = await newUser(device2, "Bob", platform);
-  await newContact(platform, device1, userA, device2, userB);
+  await newContact(device1, userA, device2, userB);
   // Check that user synced on linked device
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",

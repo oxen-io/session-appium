@@ -179,7 +179,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   );
   const userD = await newUser(device4, "Dracula", platform);
   await device1.navigateBack(platform);
-  await newContact(platform, device1, userA, device4, userD);
+  await newContact(device1, userA, device4, userD);
   // Exit to conversation list
   await device1.navigateBack(platform);
   // Select group conversation in list

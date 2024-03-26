@@ -19,7 +19,7 @@ import {
 //     newUser(device2, "Bob", platform),
 //   ]);
 //   // Create contact
-//   await newContact(platform, device1, userA, device2, userB);
+//   await newContact(device1, userA, device2, userB);
 //   // Click conversation options menu (three dots)
 //   await device1.clickOnElement("More options");
 //   // Select disappearing messages option
@@ -71,7 +71,7 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
   ]);
   const testMessage = "Checking disappear after send is working";
   // Create contact
-  await newContact(platform, device1, userA, device2, userB);
+  await newContact(device1, userA, device2, userB);
   // Click conversation options menu (three dots)
   await device1.clickOnElement("More options");
   // Select disappearing messages option
@@ -140,7 +140,7 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
   ]);
   const testMessage = "Checking disappear after read is working";
   // Create contact
-  await newContact(platform, device1, userA, device2, userB);
+  await newContact(device1, userA, device2, userB);
   // Click conversation options menu (three dots)
   await device1.clickOnElement("More options");
   // Select disappearing messages option
@@ -286,7 +286,7 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   await device.inputText(
     "accessibility id",
     "Session id input box",
-    userA.sessionID
+    userA.accountID
   );
   await device.scrollDown();
   await device.clickOnElement("Next");

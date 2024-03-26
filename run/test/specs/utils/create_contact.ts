@@ -1,10 +1,8 @@
-import { runOnlyOnAndroid, sleepFor } from ".";
+import { sleepFor } from ".";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { User } from "../../../types/testing";
-import { SupportedPlatformsType } from "./open_app";
 
 export const newContact = async (
-  platform: SupportedPlatformsType,
   device1: DeviceWrapper,
   user1: User,
   device2: DeviceWrapper,
@@ -21,14 +19,10 @@ export const newContact = async (
   await device2.clickOnElement("Message requests banner");
   // Select message from User A
   await device2.clickOnElement("Message request");
-  await runOnlyOnAndroid(platform, () =>
-    device2.clickOnElement("Accept message request")
-  );
   // Type into message input box
   await device2.sendMessage(
     `Reply-message-${user2.userName}-to-${user1.userName}`
   );
-
   // Verify config message states message request was accepted
   await device1.waitForControlMessageToBePresent(
     "Your message request has been accepted."

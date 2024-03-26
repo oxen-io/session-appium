@@ -18,7 +18,7 @@ async function sendImageCommunity(platform: SupportedPlatformsType) {
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
   ]);
-  await newContact(platform, device1, userA, device2, userB);
+  await newContact(device1, userA, device2, userB);
   await Promise.all([
     device1.navigateBack(platform),
     device2.navigateBack(platform),

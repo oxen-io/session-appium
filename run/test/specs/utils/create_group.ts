@@ -18,9 +18,9 @@ export const createGroup = async (
 
   const userAMessage = `${userOne.userName} to ${userName}`;
   // Create contact between User A and User B
-  await newContact(platform, device1, userOne, device2, userTwo);
+  await newContact(device1, userOne, device2, userTwo);
   await device1.navigateBack(platform);
-  await newContact(platform, device1, userOne, device3, userThree);
+  await newContact(device1, userOne, device3, userThree);
   await device2.navigateBack(platform);
   // Create contact between User A and User C
   // Exit conversation back to list

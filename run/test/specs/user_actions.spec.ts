@@ -18,7 +18,7 @@ async function createContact(platform: SupportedPlatformsType) {
   const userA = await newUser(device1, "Alice", platform);
   const userB = await newUser(device2, "Bob", platform);
 
-  await newContact(platform, device1, userA, device2, userB);
+  await newContact(device1, userA, device2, userB);
   // Wait for tick
   await closeApp(device1, device2);
 }
@@ -34,7 +34,7 @@ async function blockUserInConversationOptions(
     newUser(device2, "Bob", platform),
   ]);
   // Create contact
-  await newContact(platform, device1, userA, device2, userB);
+  await newContact(device1, userA, device2, userB);
   // Block contact
   // Click on three dots (settings)
   await device1.clickOnElement("More options");
@@ -90,7 +90,7 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   // Create contact
-  await newContact(platform, device1, userA, device2, userB);
+  await newContact(device1, userA, device2, userB);
   // Navigate back to conversation list
   await runOnlyOnAndroid(platform, () => device1.clickOnElement("Navigate up"));
   await runOnlyOnIOS(platform, () => device1.clickOnElement("Back"));
@@ -287,7 +287,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   const nickName = "New nickname";
-  await newContact(platform, device1, userA, device2, userB);
+  await newContact(device1, userA, device2, userB);
   // Go back to conversation list
   await device1.navigateBack(platform);
   // Select conversation in list with Bob
@@ -354,7 +354,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
   ]);
-  await newContact(platform, device1, userA, device2, userB);
+  await newContact(device1, userA, device2, userB);
   // Click on settings/more info
   await device1.clickOnElement("More options");
   // Click on username to set nickname
@@ -420,7 +420,7 @@ async function readStatus(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   const testMessage = "Testing read status";
-  await newContact(platform, device1, userA, device2, userB);
+  await newContact(device1, userA, device2, userB);
   // Go to settings to turn on read status
   // Device 1
   await Promise.all([

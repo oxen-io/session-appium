@@ -707,7 +707,6 @@ export class DeviceWrapper implements SharedDeviceInterface {
       } catch (e: any) {
         // console.warn("doesElementExist failed with", e.message);
       }
-
       if (!element) {
         await sleepFor(waitPerLoop);
       }
@@ -880,11 +879,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
     do {
       try {
         loadingAnimation = await this.waitForTextElementToBePresent({
-          strategy: "id",
-          selector: "network.loki.messenger:id/thumbnail_load_indicator",
+          strategy: "accessibility id",
+          selector: "Loading animation",
         });
         await sleepFor(100);
-        console.info("loading-animation was found, waiting for it to be gone");
+        console.info("loadinganimation was found, waiting for it to be gone");
       } catch (e: any) {
         console.log("Loading animation not found");
       }
@@ -936,7 +935,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.inputText(
       "accessibility id",
       "Session id input box",
-      user.sessionID
+      user.accountID
     );
     // Click next
     await this.scrollDown();
