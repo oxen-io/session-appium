@@ -198,7 +198,7 @@ async function clearAllRequests(platform: SupportedPlatformsType) {
   await device2.clickOnElement("Clear all");
   await sleepFor(1000);
   await runOnlyOnAndroid(platform, () =>
-    device2.clickOnTextElementById("android:id/button1", "YES")
+    device2.clickOnElementAll({ strategy: "accessibility id", selector: "Yes" })
   );
   await runOnlyOnIOS(platform, () => device2.clickOnElement("Clear"));
   await device2.waitForTextElementToBePresent({
@@ -208,7 +208,7 @@ async function clearAllRequests(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
-describe("Message requests", () => {
+describe("Message requests all", () => {
   iosIt("Message requests accept", acceptRequest);
   androidIt("Message requests accept", acceptRequest);
 

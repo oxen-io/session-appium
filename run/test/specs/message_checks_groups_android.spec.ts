@@ -54,10 +54,6 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
     selector: "Message body",
     text: replyMessage,
   });
-  await device3.clickOnElementAll({
-    strategy: "id",
-    selector: `network.loki.messenger:id/scrollToBottomButton`,
-  });
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",
@@ -97,17 +93,11 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
   // Select images button/tab
   await device1.clickOnElement("Documents folder");
   // Select video
-  const mediaButtons = await device1.findElementsByClass(
-    "android.widget.CompoundButton"
-  );
-  const videosButton = await device1.findMatchingTextInElementArray(
-    mediaButtons,
-    "Videos"
-  );
-  if (!videosButton) {
-    throw new Error("videosButton was not found");
-  }
-  await device1.click(videosButton.ELEMENT);
+  await device1.clickOnElementAll({
+    strategy: "class name",
+    selector: "android.widget.Button",
+    text: "Videos",
+  });
   const testVideo = await device1.doesElementExist({
     strategy: "id",
     selector: "android:id/title",
@@ -124,33 +114,25 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
   await sleepFor(100);
   await device1.clickOnTextElementById("android:id/title", "test_video.mp4");
   // Reply to message
+  await device2.waitForLoadingAnimation();
   await device2.waitForTextElementToBePresent({
     strategy: "id",
     selector: "network.loki.messenger:id/play_overlay",
     maxWait: 8000,
   });
+  await device3.waitForLoadingAnimation();
   await device3.waitForTextElementToBePresent({
     strategy: "id",
     selector: "network.loki.messenger:id/play_overlay",
     maxWait: 8000,
   });
-
   await device2.longPress("Media message");
   await device2.clickOnElement("Reply to message");
   await device2.sendMessage(replyMessage);
-  await sleepFor(2000);
-  await device1.clickOnElementAll({
-    strategy: "id",
-    selector: `network.loki.messenger:id/scrollToBottomButton`,
-  });
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",
     text: replyMessage,
-  });
-  await device3.clickOnElementAll({
-    strategy: "id",
-    selector: `network.loki.messenger:id/scrollToBottomButton`,
   });
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -240,17 +222,17 @@ async function sendDocumentGroup(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Attachments button");
   await sleepFor(100);
   await device1.clickOnElement("Documents folder");
-  const mediaButtons = await device1.findElementsByClass(
-    "android.widget.CompoundButton"
-  );
-  const documentsButton = await device1.findMatchingTextInElementArray(
-    mediaButtons,
-    "Documents"
-  );
-  if (!documentsButton) {
-    throw new Error("documentsButton was not found");
-  }
-  await device1.click(documentsButton.ELEMENT);
+  await sleepFor(500);
+  await device1.waitForTextElementToBePresent({
+    strategy: "class name",
+    selector: "android.widget.Button",
+    text: "Documents",
+  });
+  await device1.clickOnElementAll({
+    strategy: "class name",
+    selector: "android.widget.Button",
+    text: "Documents",
+  });
   const testDocument = await device1.doesElementExist({
     strategy: "id",
     selector: "android:id/title",
@@ -388,18 +370,10 @@ async function sendGifGroup(platform: SupportedPlatformsType) {
   // Check reply came through on device1
   await device2.clickOnElement("Reply to message");
   await device2.sendMessage(replyMessage);
-  await device1.clickOnElementAll({
-    strategy: "id",
-    selector: `network.loki.messenger:id/scrollToBottomButton`,
-  });
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",
     text: replyMessage,
-  });
-  await device3.clickOnElementAll({
-    strategy: "id",
-    selector: `network.loki.messenger:id/scrollToBottomButton`,
   });
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -455,28 +429,11 @@ async function sendLongMessageGroup(platform: SupportedPlatformsType) {
       text: longText,
     }),
   ]);
-
-  await device1.clickOnElementAll({
-    strategy: "id",
-    selector: `network.loki.messenger:id/scrollToBottomButton`,
-    maxWait: 5000,
-  });
   await device2.replyToMessage(userA, longText);
-  await device1.clickOnElementAll({
-    strategy: "id",
-    selector: `network.loki.messenger:id/scrollToBottomButton`,
-    maxWait: 5000,
-  });
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",
     text: replyMessage,
-  });
-  // Waiting for scroll to bottom to appear/be active
-  await device3.clickOnElementAll({
-    strategy: "id",
-    selector: `network.loki.messenger:id/scrollToBottomButton`,
-    maxWait: 5000,
   });
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -536,7 +493,7 @@ async function deleteMessageGroup(platform: SupportedPlatformsType) {
   await closeApp(device1, device2, device3);
 }
 
-describe("Message checks android", () => {
+describe("Message checks for groups android", () => {
   androidIt("Send image to group", sendImageGroup);
   androidIt("Send video to group", sendVideoGroup);
   androidIt("Send voice message to group", sendVoiceMessageGroup);

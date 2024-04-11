@@ -246,26 +246,26 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   });
   await device1.disappearRadioButtonSelected("1 day");
   // Change time to testing time of 10 seconds
-  await device1.clickOnElement("10 seconds");
+  await device1.clickOnElement("30 seconds");
   // Save setting
   await device1.clickOnElement("Set button");
   await runOnlyOnIOS(platform, () => device1.navigateBack(platform));
   // Check control message
   await Promise.all([
     device1.waitForControlMessageToBePresent(
-      `You set your messages to disappear 10 seconds after they have been sent.`
+      `You have set messages to disappear 30 seconds after they have been sent`
     ),
     device2.waitForControlMessageToBePresent(
-      `${userA.userName} has set their messages to disappear 10 seconds after they have been sent.`
+      `${userA.userName} has set their messages to disappear 30 seconds after they have been sent.`
     ),
     device3.waitForControlMessageToBePresent(
-      `${userA.userName} has set their messages to disappear 10 seconds after they have been sent.`
+      `${userA.userName} has set their messages to disappear 30 seconds after they have been sent.`
     ),
   ]);
   // Send message to verify deletion
   await device1.sendMessage(testMessage);
   // Wait for ten seconds
-  await sleepFor(12000);
+  await sleepFor(30000);
   // Check for test messages (should be deleted)
   await Promise.all([
     device1.hasTextElementBeenDeleted("Message body", testMessage),

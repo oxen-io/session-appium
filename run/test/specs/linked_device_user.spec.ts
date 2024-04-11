@@ -67,7 +67,7 @@ async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
   // Change username on device 1
   await device1.clickOnElement("User settings");
   // Select username
-  // await device1.clickOnElement("Username");
+  await device1.clickOnElement("Username");
   await sleepFor(100);
   await device1.deleteText("Username");
   await device1.deleteText("Username");
@@ -322,25 +322,22 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   await device1.clickOnElement("User settings");
   await sleepFor(500);
   await device1.clickOnElementAll({
-    strategy: "id",
-    selector: "android:id/button1",
-    text: "UPLOAD",
-    maxWait: 8000,
+    strategy: "accessibility id",
+    selector: "Upload",
   });
   await device1.clickOnElementById(
     "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
   );
-  await device1.waitForTextElementToBePresent({
-    strategy: "id",
-    selector: "android:id/text1",
-    text: "Files",
+  await sleepFor(500);
+  await device1.clickOnElementAll({
+    strategy: "xpath",
+    selector: `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.TabHost/android.widget.LinearLayout/android.widget.FrameLayout/androidx.viewpager.widget.ViewPager/android.widget.RelativeLayout/android.widget.GridView/android.widget.LinearLayout/android.widget.LinearLayout[2]`,
   });
-  await device1.clickOnTextElementById("android:id/text1", "Files");
   // Check if permissions need to be enabled
   // Check if image is already on device
   const profilePicture = await device1.doesElementExist({
     strategy: "accessibility id",
-    selector: `profile_picture.jpg, 27.75 kB, May 1, 1999`,
+    selector: `profile_picture.jpg, 27.75 kB, May 2, 1999`,
     maxWait: 2000,
   });
   // If no image, push file to device
@@ -353,9 +350,17 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
       `adb -s emulator-5554 push 'run/test/specs/media/profile_picture.jpg' /storage/emulated/0/Download`,
       true
     );
+    await device1.clickOnElementAll({
+      strategy: "accessibility id",
+      selector: "More options",
+    });
+    await device1.clickOnElementAll({
+      strategy: "xpath",
+      selector: `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout`,
+    });
   }
   await sleepFor(100);
-  await device1.clickOnElement(`profile_picture.jpg, 27.75 kB, May 1, 1999`);
+  await device1.clickOnElement(`profile_picture.jpg, 27.75 kB, May 2, 1999`);
   await device1.clickOnElementById(
     "network.loki.messenger:id/crop_image_menu_crop"
   );

@@ -327,7 +327,17 @@ export class DeviceWrapper implements SharedDeviceInterface {
         `Click: Couldnt find accessibilityId: ${accessibilityId}`
       );
     }
-    await this.click(el.ELEMENT);
+    try {
+      await this.click(el.ELEMENT);
+    } catch (error: unknown) {
+      if (
+        error instanceof Error &&
+        error.name === "StaleElementReferenceError"
+      ) {
+        console.log("Element is stale, retrying click");
+        await this.click(el.ELEMENT);
+      }
+    }
   }
 
   public async clickOnElementAll(
@@ -341,7 +351,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       el = await this.waitForTextElementToBePresent(args);
     }
     await this.click(el.ELEMENT);
-    return;
+    return el;
   }
 
   public async clickOnElementByText(
@@ -436,7 +446,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       selector: "Conversation list item",
       text: userName,
     });
-    await this.longClick(el, 1000);
+    await this.longClick(el, 2000);
   }
 
   public async pressAndHold(accessibilityId: AccessibilityId) {
@@ -882,6 +892,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
         loadingAnimation = await this.waitForTextElementToBePresent({
           strategy: "id",
           selector: "network.loki.messenger:id/thumbnail_load_indicator",
+          maxWait: 1000,
         });
         await sleepFor(100);
         console.info("loading-animation was found, waiting for it to be gone");

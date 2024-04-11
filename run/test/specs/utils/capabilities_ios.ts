@@ -1,7 +1,7 @@
 import { AppiumXCUITestCapabilities } from "@wdio/types/build/Capabilities";
 import { W3CCapabilities } from "@wdio/types/build/Capabilities";
-// const iosAppFullPath = `/Users/emilyburton/Library/Developer/Xcode/DerivedData/Session-bkhewuibvlxdsxevpurvxorzvqpd/Build/Products/App Store Release-iphonesimulator/Session.app`;
-const iosAppFullPath = `/Users/emilyburton/Downloads/session-ios-20240318T233647Z-028334a17-sim/Session.app`;
+const iosAppFullPath = `/Users/emilyburton/Library/Developer/Xcode/DerivedData/Session-bkhewuibvlxdsxevpurvxorzvqpd/Build/Products/App Store Release-iphonesimulator/Session.app`;
+// const iosAppFullPath = `/Users/emilyburton/Desktop/Session.app`;
 
 const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   "appium:app": iosAppFullPath,
@@ -14,6 +14,7 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   "appium:useNewWDA": false,
   "appium:showXcodeLog": false,
   "appium:autoDismissAlerts": false,
+  "appium:reduceMotion": true,
   // "appium:isHeadless": true,
 } as AppiumXCUITestCapabilities;
 export type CapabilitiesIndexType = 0 | 1 | 2 | 3 | 4 | 5;

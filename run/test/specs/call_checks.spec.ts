@@ -164,16 +164,17 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   // Make call on device 1 (userA)
   await device1.clickOnElement("Call");
   // await device1.clickOnElement("OK");
+  await device1.clickOnElement("Allow");
   // Wait for call to come through
   await sleepFor(1000);
   // Answer call on device 2
-  await device2.clickOnElement("Answer call");
+  await device2.clickOnElement("AnswerCall");
   // Have to press answer twice, once in drop down and once in full screen
   await sleepFor(500);
-  await device2.clickOnElement("Answer call");
+  await device2.clickOnElement("AnswerCall");
   // Wait 10 seconds
   // Hang up
-  await device1.clickOnElement("End call");
+  await device1.clickOnElement("End call button");
   // Check for control messages on both devices
   await device1.waitForControlMessageToBePresent(
     `You called ${userB.userName}`

@@ -410,7 +410,10 @@ async function leaveGroupAndroid(platform: SupportedPlatformsType) {
     `network.loki.messenger:id/title`,
     "Leave group"
   );
-  await device3.clickOnElementById(`android:id/button1`);
+  await device3.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: "Yes",
+  });
   // Check for control message
   await device2.waitForControlMessageToBePresent(
     `${userC.userName} has left the group.`

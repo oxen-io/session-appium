@@ -55,17 +55,17 @@ async function sendDocument(platform: SupportedPlatformsType) {
   await device1.clickOnElement("Attachments button");
 
   await device1.clickOnElement("Documents folder", 5000);
-  const mediaButtons = await device1.findElementsByClass(
-    "android.widget.CompoundButton"
-  );
-  const documentsButton = await device1.findMatchingTextInElementArray(
-    mediaButtons,
-    "Documents"
-  );
-  if (!documentsButton) {
-    throw new Error("documentsButton was not found");
-  }
-  await device1.click(documentsButton.ELEMENT);
+  await sleepFor(500);
+  await device1.waitForTextElementToBePresent({
+    strategy: "class name",
+    selector: "android.widget.Button",
+    text: "Documents",
+  });
+  await device1.clickOnElementAll({
+    strategy: "class name",
+    selector: "android.widget.Button",
+    text: "Documents",
+  });
   const testDocument = await device1.doesElementExist({
     strategy: "id",
     selector: "android:id/title",
@@ -117,17 +117,11 @@ async function sendVideo(platform: SupportedPlatformsType) {
   // Select images button/tab
   await device1.clickOnElement("Documents folder");
   // Select video
-  const mediaButtons = await device1.findElementsByClass(
-    "android.widget.Button"
-  );
-  const videosButton = await device1.findMatchingTextInElementArray(
-    mediaButtons,
-    "Videos"
-  );
-  if (!videosButton) {
-    throw new Error("videosButton was not found");
-  }
-  await device1.click(videosButton.ELEMENT);
+  await device1.clickOnElementAll({
+    strategy: "class name",
+    selector: "android.widget.Button",
+    text: "Videos",
+  });
   const testVideo = await device1.doesElementExist({
     strategy: "id",
     selector: "android:id/title",
@@ -274,11 +268,11 @@ async function sendLongMessage(platform: SupportedPlatformsType) {
   // Reply to message (User B to User A)
   const sentMessage = await device2.replyToMessage(userA, longText);
   // Check reply came through on device1
-  await device1.clickOnElementAll({
-    strategy: "id",
-    selector: "network.loki.messenger:id/scrollToBottomButton",
+  await device1.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Message body",
+    text: sentMessage,
   });
-  await device1.findMessageWithBody(sentMessage);
   // Close app
   await closeApp(device1, device2);
 }
@@ -291,13 +285,16 @@ async function sendLink(platform: SupportedPlatformsType) {
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
   ]);
-  const linkDescription = `Nerdle - the daily numbers game`;
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // Send a link
   await device1.inputText("accessibility id", "Message input box", testLink);
   // Accept dialog for link preview
-  await device1.clickOnElement("Enable");
+  await device1.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: "Enable",
+  });
+  // await device1.clickOnElement("Enable");
   // No preview on first send
   await device1.clickOnElement("Send message button");
   await device1.waitForTextElementToBePresent({
@@ -425,14 +422,20 @@ async function checkPerformance(platform: SupportedPlatformsType) {
   ]);
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
-  const timesArray: Array<number> = [];
+  const timesArray1: Array<number> = [];
+  const timesArray2: Array<number> = [];
 
   let i;
   for (i = 1; i <= 10; i++) {
     const timeMs = await device1.measureSendingTime(i);
-    timesArray.push(timeMs);
+    timesArray1.push(timeMs);
   }
-  console.log(timesArray);
+  console.log(`Device 1:`, timesArray1);
+  for (i = 1; i <= 10; i++) {
+    const timeMs = await device2.measureSendingTime(i);
+    timesArray2.push(timeMs);
+  }
+  console.log(`Device 2:`, timesArray2);
 }
 
 describe("Message checks android", () => {

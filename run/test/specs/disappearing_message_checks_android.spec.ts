@@ -28,10 +28,54 @@ async function disappearingImageMessage(platform: SupportedPlatformsType) {
   );
   // await device1.navigateBack(platform);
   await device1.sendImage(platform, testMessage);
-  await device2.clickOnElement("Untrusted attachment message");
-  await sleepFor(500);
-  // User B - Click on 'download'
-  await device2.clickOnElement("Download media");
+  // Retry click on untrusted attachment message until media appears
+  // const start = Date.now();
+  // let tryNumber = 0;
+  // let downloadMediaPresent = false;
+  await device2.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: "Untrusted attachment message",
+  });
+  await device2.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: "Download media",
+  });
+  // do {
+  //   try {
+  //     await sleepFor(100);
+  //     // Attempt to click on "Untrusted attachment message"
+  //     await device2.clickOnElementAll({
+  //       strategy: "accessibility id",
+  //       selector: "Untrusted attachment message",
+  //     });
+
+  //     // Check if "Download media" is present
+  //     const downloadMediaElement = await device2.doesElementExist({
+  //       strategy: "accessibility id",
+  //       selector: "Download media",
+  //     });
+
+  //     // If "Download media" is present, break out of the loop
+  //     const downloadMediaPresent = Boolean(downloadMediaElement);
+  //     if (downloadMediaPresent) {
+  //       break;
+  //     }
+  //   } catch (e) {
+  //     console.log(`Attempt ${tryNumber}: ${e}`);
+  //   }
+  //   tryNumber++;
+  // } while (tryNumber < 10 && Date.now() - start < 10000);
+
+  // // If "Download media" is present, click on it
+  // if (downloadMediaPresent) {
+  //   await device2.clickOnElementAll({
+  //     strategy: "accessibility id",
+  //     selector: "Download media",
+  //   });
+  // } else {
+  //   console.log("Download media did not appear within the time limit.");
+  // }
+
   await sleepFor(10000);
   await Promise.all([
     device1.hasElementBeenDeletedNew({

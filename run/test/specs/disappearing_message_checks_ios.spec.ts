@@ -440,10 +440,10 @@ async function disappearingCallMessage1o1(platform: SupportedPlatformsType) {
   // Make call on device 1 (userA)
   await device1.clickOnElement("Call");
   // Answer call on device 2
-  await device2.clickOnElement("Answer call");
+  await device2.clickOnElement("AnswerCall");
   // Wait 10 seconds
   // Hang up
-  await device1.clickOnElement("End call");
+  await device1.clickOnElement("End call button");
   // Check for config message 'Called User B' on device 1
   await device1.waitForControlMessageToBePresent(
     `You called ${userB.userName}`

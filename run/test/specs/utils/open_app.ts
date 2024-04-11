@@ -185,6 +185,11 @@ const openAndroidApp = async (
   const driver = (androidDriver as any).AndroidUiautomator2Driver;
 
   // console.warn('installAppToDeviceName ', driver);
+  console.log(
+    `Android App Full Path: ${
+      getAndroidCapabilities(capabilitiesIndex)["alwaysMatch"]["appium:app"]
+    }`
+  );
 
   const opts: DriverOpts = {
     address: `http://localhost:${APPIUM_PORT}`,

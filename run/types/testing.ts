@@ -84,6 +84,7 @@ export type ControlMessage =
   | `${string} has set their messages to disappear ${DMTimeOption} after they have been read.`
   | `You set your messages to disappear ${DMTimeOption} after they have been sent.`
   | `You set your messages to disappear ${DMTimeOption} after they have been read.`
+  | `You have set messages to disappear ${DMTimeOption} after they have been sent`
   | "Your message request has been accepted."
   | `${string} called you`
   | `Called ${string}`
@@ -98,6 +99,8 @@ export type ControlMessage =
   | `You added ${string} to the group.`;
 
 export type XPath =
+  | `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout`
+  | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.TabHost/android.widget.LinearLayout/android.widget.FrameLayout/androidx.viewpager.widget.ViewPager/android.widget.RelativeLayout/android.widget.GridView/android.widget.LinearLayout/android.widget.LinearLayout[2]`
   | `//*[./*[@name='${DMTimeOption}']]/*[2]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.FrameLayout[2]/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout[5]/android.widget.RelativeLayout/android.widget.TextView[2]`
   | `(//XCUIElementTypeImage[@name="gif cell"])[1]`
@@ -113,6 +116,7 @@ export type AccessibilityId =
   | "Session id input box"
   | "Enter display name"
   | "Continue"
+  | "Download media"
   | "Slow mode notifications option"
   | "Continue with settings"
   | "Don’t Allow"
@@ -151,8 +155,9 @@ export type AccessibilityId =
   | "Settings"
   | "Call"
   | "Answer call"
+  | "AnswerCall"
   | "Allow voice and video calls"
-  | "End call"
+  | "End call button"
   | "Close button"
   | "Enable"
   | "More options"

@@ -35,7 +35,11 @@ async function groupCreationandNameChangeLinkedDevice(
     testGroupName
   );
   // Test that group has loaded on linked device
-  await device2.selectByText("Conversation list item", testGroupName);
+  await device2.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: "Conversation list item",
+    text: testGroupName,
+  });
   // Test group name change syncs
   // Change group name in device 1
   // Click on settings/more info

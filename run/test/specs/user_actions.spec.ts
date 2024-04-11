@@ -158,6 +158,7 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   await device.clickOnElementById(
     "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
   );
+  await sleepFor(500);
   await device.clickOnElementAll({
     strategy: "id",
     selector: "android:id/text1",
@@ -305,7 +306,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Check name at top of conversation is nickname
   const headerElement = await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Username",
+    selector: "Conversation header name",
   });
   await device1.getTextFromElement(headerElement);
   // Send a message so nickname is updated in conversation list
@@ -324,24 +325,31 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Click out of pop up
   await device1.back();
   // Enter conversation to verify change
-  await device1.selectByText("Conversation list item", userB.userName);
+  await device1.selectByText("Conversation list item", nickName);
   const changedElement = await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Username",
+    selector: "Conversation header name",
   });
-  await device1.getTextFromElement(changedElement);
+  const headerUsername = await device1.getTextFromElement(changedElement);
+  if (headerUsername === nickName) {
+    console.log("Nickname has been changed in header correctly");
+  }
   // Send message to change in conversation list
   await device1.sendMessage("Howdy");
   // Navigate back to list
   await device1.navigateBack(platform);
   // Verify name change in list
   // Save text of conversation list item?
-  await device1.selectByText("Conversation list item", userB.userName);
-  await device1.waitForTextElementToBePresent({
+  await device1.selectByText("Conversation list item", nickName);
+  const changedListName = await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Username",
-    text: userB.userName,
+    selector: "Conversation header name",
+    text: nickName,
   });
+  const listName = await device1.getTextFromElement(changedListName);
+  if (listName === nickName) {
+    console.log("Nickname has been changed in list correctly");
+  }
 
   // Close app
   await closeApp(device1, device2);
