@@ -69,19 +69,19 @@ export const installAppToDeviceName = async (
   await runScriptAndLog(
     `${adb} -s ${emulatorName} uninstall io.appium.uiautomator2.server.test`
   );
-  console.warn("we are at 1 and took ", Date.now() - start);
+  // console.warn("we are at 1 and took ", Date.now() - start);
   await runScriptAndLog(`${adb} -s ${emulatorName} uninstall io.appium.unlock`);
   await runScriptAndLog(
     `${adb} -s ${emulatorName} uninstall io.appium.settings`
   );
-  await sleepFor(100);
-  console.warn("we are at 2 and took ", Date.now() - start);
+  // await sleepFor(100);
+  // console.warn("we are at 2 and took ", Date.now() - start);
 
   await runScriptAndLog(
     `${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-debug-androidTest.apk`
   );
-  await sleepFor(100);
-  console.warn("we are at 3 and took ", Date.now() - start);
+  // await sleepFor(100);
+  // console.warn("we are at 3 and took ", Date.now() - start);
 
   await runScriptAndLog(
     `${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-v4.27.0.apk`
@@ -90,8 +90,8 @@ export const installAppToDeviceName = async (
   await runScriptAndLog(
     `${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/io.appium.settings/apks/settings_apk-debug.apk`
   );
-  await sleepFor(100);
-  console.warn("we are at 4 and took ", Date.now() - start);
+  // await sleepFor(100);
+  // console.warn("we are at 4 and took ", Date.now() - start);
 
   // runScriptAndLog(
   //   `${adb} -s ${emulatorName} shell am start io.appium.uiautomator2.server`
@@ -107,8 +107,8 @@ export const installAppToDeviceName = async (
     `${adb} -s ${emulatorName} install -g -t ${appFullPath}`
   );
 
-  await sleepFor(100);
-  console.warn("we are at 5 and took ", Date.now() - start);
+  // await sleepFor(100);
+  // console.warn("we are at 5 and took ", Date.now() - start);
 };
 
 export const isDeviceIOS = (device: DeviceWrapper) => {
