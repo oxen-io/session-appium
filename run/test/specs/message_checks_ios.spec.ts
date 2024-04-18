@@ -391,7 +391,7 @@ async function sendLongMessage(platform: SupportedPlatformsType) {
 
 async function sendLink(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const testLink = `https://example.net/`;
+  const testLink = `https://example.org/`;
   // Create two users
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),

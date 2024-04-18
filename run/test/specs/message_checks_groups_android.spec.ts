@@ -88,44 +88,24 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
   );
   const replyMessage = `Replying to video from ${userA.userName} in ${testGroupName}`;
   // Click on attachments button
-  await device1.clickOnElement("Attachments button");
-  await sleepFor(100);
-  // Select images button/tab
-  await device1.clickOnElement("Documents folder");
-  // Select video
-  await device1.clickOnElementAll({
-    strategy: "class name",
-    selector: "android.widget.Button",
-    text: "Videos",
-  });
-  const testVideo = await device1.doesElementExist({
-    strategy: "id",
-    selector: "android:id/title",
-    maxWait: 1000,
-    text: "test_video.mp4",
-  });
-  if (!testVideo) {
-    // Adds video to downloads folder if it isn't already there
-    await runScriptAndLog(
-      `adb -s emulator-5554 push 'run/test/specs/media/test_video.mp4' /storage/emulated/0/Download`,
-      true
-    );
-  }
-  await sleepFor(100);
-  await device1.clickOnTextElementById("android:id/title", "test_video.mp4");
+  await device1.sendVideo(platform);
   // Reply to message
-  await device2.waitForLoadingAnimation();
-  await device2.waitForTextElementToBePresent({
-    strategy: "id",
-    selector: "network.loki.messenger:id/play_overlay",
-    maxWait: 8000,
-  });
-  await device3.waitForLoadingAnimation();
-  await device3.waitForTextElementToBePresent({
-    strategy: "id",
-    selector: "network.loki.messenger:id/play_overlay",
-    maxWait: 8000,
-  });
+  await Promise.all([
+    device2.waitForLoadingAnimation(),
+    device2.waitForTextElementToBePresent({
+      strategy: "id",
+      selector: "network.loki.messenger:id/play_overlay",
+      maxWait: 8000,
+    }),
+  ]);
+  await Promise.all([
+    device3.waitForLoadingAnimation(),
+    device3.waitForTextElementToBePresent({
+      strategy: "id",
+      selector: "network.loki.messenger:id/play_overlay",
+      maxWait: 8000,
+    }),
+  ]);
   await device2.longPress("Media message");
   await device2.clickOnElement("Reply to message");
   await device2.sendMessage(replyMessage);
@@ -294,7 +274,7 @@ async function sendLinkGroup(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
-  const testLink = `https://example.net/`;
+  const testLink = `https://example.org/`;
   // Send a link
   await device1.inputText("accessibility id", "Message input box", testLink);
   // Accept dialog for link preview

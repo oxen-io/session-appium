@@ -199,3 +199,80 @@ describe("Linked device - group tests", () => {
 // Remove user
 //  Add user
 //  Disappearing messages
+
+// async function disappearingMessagesLinkedDevice(platform: SupportedPlatformsType) {
+//   const testGroupName = "Disappearing messages group";
+//   const { device1, device2, device3, device4 } = await openAppFourDevices(
+//     platform
+//   );
+//   const userA = await linkedDevice(device1, device2, "Alice", platform);
+//   const [userB, userC] = await Promise.all([
+//     newUser(device3, "Bob", platform),
+//     newUser(device4, "Charlie", platform),
+//   ]);
+//   await createGroup(
+//     platform,
+//     device1,
+//     userA,
+//     device3,
+//     userB,
+//     device4,
+//     userC,
+//     testGroupName
+//   );
+//   // Enable disappearing messages
+//   await device1.clickOnElement("More options");
+//   await runOnlyOnIOS(platform, () =>
+//     device1.clickOnElement("Disappearing messages")
+//   );
+//   await runOnlyOnAndroid(platform, () =>
+//     device1.clickOnTextElementById(
+//       `network.loki.messenger:id/title`,
+//       "Disappearing messages"
+//     )
+//   );
+//   await device1.clickOnElement("Enable");
+//   // Set disappearing messages timer
+//   await runOnlyOnIOS(platform, () =>
+//     device1.clickOnElement("Timer")
+//   );
+//   await runOnlyOnAndroid(platform, () =>
+//     device1.clickOnTextElementById(
+//       `network.loki.messenger:id/title`,
+//       "Timer"
+//     )
+//   );
+//   await device1.clickOnElement("5 seconds");
+//   // Send a message
+//   await device1.inputText("accessibility id", "Message input", "Hello");
+//   await device1.clickOnElement("Send");
+//   // Wait for the message to disappear
+//   await sleepFor(6000);
+//   // Check if the message is still visible on device2
+//   await device2.waitForTextElementToBePresent({
+//     strategy: "accessibility id",
+//     selector: "Message text",
+//     text: "Hello",
+//     shouldNotExist: true,
+//   });
+//   // Check if the message is still visible on device3
+//   await device3.waitForTextElementToBePresent({
+//     strategy: "accessibility id",
+//     selector: "Message text",
+//     text: "Hello",
+//     shouldNotExist: true,
+//   });
+//   // Check if the message is still visible on device4
+//   await device4.waitForTextElementToBePresent({
+//     strategy: "accessibility id",
+//     selector: "Message text",
+//     text: "Hello",
+//     shouldNotExist: true,
+//   });
+//   await closeApp(device1, device2, device3, device4);
+// }
+
+// describe("Linked device - disappearing messages tests", () => {
+//   iosIt("Disappearing messages syncs", disappearingMessagesLinkedDevice);
+//   androidIt("Disappearing messages syncs", disappearingMessagesLinkedDevice);
+// });

@@ -15,10 +15,11 @@ export const setDisappearingMessage = async (
   if (platform === "ios") {
     device.clickOnElement("Disappearing Messages");
   } else {
-    device.clickOnTextElementById(
-      `network.loki.messenger:id/title`,
-      "Disappearing messages"
-    );
+    device.clickOnElementAll({
+      strategy: "id",
+      selector: `network.loki.messenger:id/title`,
+      text: "Disappearing messages",
+    });
   }
   if (enforcedType === "1:1") {
     await device.clickOnElement(timerType);

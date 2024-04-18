@@ -46,10 +46,9 @@ export const retryRequest = async (
     strategy: "accessibility id",
     selector: "Message sent status: Sent",
   });
-  const banner = await device2.doesElementExist({
+  const banner = await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message requests banner",
-    maxWait: 1000,
   });
   if (!banner) {
     await device1.sendMessage("Retry");

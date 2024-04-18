@@ -334,7 +334,14 @@ export class DeviceWrapper implements SharedDeviceInterface {
         error instanceof Error &&
         error.name === "StaleElementReferenceError"
       ) {
-        console.log("Element is stale, retrying click");
+        console.log(
+          "Element is stale, refinding element and attempting second click"
+        );
+        await this.waitForTextElementToBePresent({
+          strategy: "accessibility id",
+          selector: accessibilityId,
+          maxWait: 500,
+        });
         await this.click(el.ELEMENT);
       }
     }
@@ -1135,6 +1142,49 @@ export class DeviceWrapper implements SharedDeviceInterface {
       if (community) {
         await this.scrollToBottom(platform);
       }
+      await this.waitForTextElementToBePresent({
+        strategy: "accessibility id",
+        selector: `Message sent status: Sent`,
+        maxWait: 50000,
+      });
+    }
+  }
+
+  public async sendVideo(platform: SupportedPlatformsType) {
+    if (platform === "android") {
+      // Click on attachments button
+      await this.clickOnElement("Attachments button");
+      await sleepFor(100);
+      // Select images button/tab
+      await this.clickOnElement("Documents folder");
+      await sleepFor(200);
+      // Select video
+      const mediaButtons = await this.findElementsByClass(
+        "android.widget.Button"
+      );
+      const videosButton = await this.findMatchingTextInElementArray(
+        mediaButtons,
+        "Videos"
+      );
+      if (!videosButton) {
+        throw new Error("videosButton was not found");
+      }
+      await this.click(videosButton.ELEMENT);
+      const testVideo = await this.doesElementExist({
+        strategy: "id",
+        selector: "android:id/title",
+        maxWait: 1000,
+        text: "test_video.mp4",
+      });
+      if (!testVideo) {
+        // Adds video to downloads folder if it isn't already there
+        await runScriptAndLog(
+          `adb -s emulator-5554 push 'run/test/specs/media/test_video.mp4' /storage/emulated/0/Download`,
+          true
+        );
+      }
+      await sleepFor(100);
+      await this.clickOnTextElementById("android:id/title", "test_video.mp4");
       await this.waitForTextElementToBePresent({
         strategy: "accessibility id",
         selector: `Message sent status: Sent`,

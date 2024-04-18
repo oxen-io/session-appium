@@ -40,42 +40,6 @@ async function disappearingImageMessage(platform: SupportedPlatformsType) {
     strategy: "accessibility id",
     selector: "Download media",
   });
-  // do {
-  //   try {
-  //     await sleepFor(100);
-  //     // Attempt to click on "Untrusted attachment message"
-  //     await device2.clickOnElementAll({
-  //       strategy: "accessibility id",
-  //       selector: "Untrusted attachment message",
-  //     });
-
-  //     // Check if "Download media" is present
-  //     const downloadMediaElement = await device2.doesElementExist({
-  //       strategy: "accessibility id",
-  //       selector: "Download media",
-  //     });
-
-  //     // If "Download media" is present, break out of the loop
-  //     const downloadMediaPresent = Boolean(downloadMediaElement);
-  //     if (downloadMediaPresent) {
-  //       break;
-  //     }
-  //   } catch (e) {
-  //     console.log(`Attempt ${tryNumber}: ${e}`);
-  //   }
-  //   tryNumber++;
-  // } while (tryNumber < 10 && Date.now() - start < 10000);
-
-  // // If "Download media" is present, click on it
-  // if (downloadMediaPresent) {
-  //   await device2.clickOnElementAll({
-  //     strategy: "accessibility id",
-  //     selector: "Download media",
-  //   });
-  // } else {
-  //   console.log("Download media did not appear within the time limit.");
-  // }
-
   await sleepFor(10000);
   await Promise.all([
     device1.hasElementBeenDeletedNew({
@@ -109,38 +73,10 @@ async function disappearingVideoMessage(platform: SupportedPlatformsType) {
     ["1:1", "Disappear after send option", "30 seconds"],
     device2
   );
-  // Click on attachments button
-  await device1.clickOnElement("Attachments button");
-  await sleepFor(100);
-  // Select images button/tab
-  await device1.clickOnElement("Documents folder");
-  // Select video
-  const mediaButtons = await device1.findElementsByClass(
-    "android.widget.CompoundButton"
-  );
-  const videosButton = await device1.findMatchingTextInElementArray(
-    mediaButtons,
-    "Videos"
-  );
-  if (!videosButton) {
-    throw new Error("videosButton was not found");
-  }
-  await device1.click(videosButton.ELEMENT);
-  const testVideo = await device1.doesElementExist({
-    strategy: "id",
-    selector: "android:id/title",
-    maxWait: 1000,
-    text: "test_video.mp4",
-  });
-  if (!testVideo) {
-    // Adds video to downloads folder if it isn't already there
-    await runScriptAndLog(
-      `adb -s emulator-5554 push 'run/test/specs/media/test_video.mp4' /storage/emulated/0/Download`,
-      true
-    );
-  }
-  await sleepFor(100);
-  await device1.clickOnTextElementById("android:id/title", "test_video.mp4");
+  await device1.sendVideo(platform);
+  await device2.clickOnElement("Untrusted attachment message");
+  await device2.clickOnElement("Download media");
+  // Wait for disappearing message timer to remove video
   await sleepFor(10000);
   await Promise.all([
     device1.hasElementBeenDeletedNew({
@@ -183,7 +119,7 @@ async function disappearingVoiceMessage(platform: SupportedPlatformsType) {
   });
   await device2.clickOnElement("Untrusted attachment message");
   await sleepFor(200);
-  await device2.clickOnElement("Download");
+  await device2.clickOnElement("Download media");
   await sleepFor(10000);
   await device1.hasElementBeenDeletedNew({
     strategy: "accessibility id",
@@ -250,7 +186,7 @@ async function disappearingGifMessage(platform: SupportedPlatformsType) {
 
 async function disappearingLinkMessage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const testLink = `https://example.net/`;
+  const testLink = `https://example.org/`;
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),

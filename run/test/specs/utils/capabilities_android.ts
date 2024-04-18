@@ -7,7 +7,7 @@ import { CapabilitiesIndexType } from "./capabilities_ios";
 // const androidAppFullPath = `/Users/emilyburton/Desktop/session-1.17.5-universal.apk`;
 // const androidAppFullPath = `/Users/emilyburton/Desktop/session-1.17.4-universal-flag-ON.apk`;
 // const androidAppFullPath = `/Users/emilyburton/Desktop/session-1.17.6-universal.apk`;
-const androidAppFullPath = `/Users/emilyburton/Documents/session-android/app/build/outputs/apk/play/debug/session-1.18.1-universal.apk`;
+const androidAppFullPath = `/Users/emilyburton/Documents/session-android/app/build/outputs/apk/play/debug/session-1.18.2-universal.apk`;
 
 const sharedCapabilities: AppiumCapabilities = {
   "appium:app": androidAppFullPath,

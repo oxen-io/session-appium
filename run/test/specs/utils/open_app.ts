@@ -238,29 +238,8 @@ const openiOSApp = async (
   const caps = getIosCapabilities(capabilitiesIndex);
   await wrappedDevice.createSession(caps);
 
-  // deny notification
-  // await wrappedDevice.clickOnElement("Don’t Allow");
-
   return { device: wrappedDevice };
 };
-
-// let adbAlreadyKilled = false;
-
-// async function killAdbIfNotAlreadyDone() {
-//   if (adbAlreadyKilled) {
-//     return;
-//   }
-//   return;
-
-//   // console.info("killing adb server");
-//   // adbAlreadyKilled = true;
-
-//   // await runScriptAndLog(`${getAdbFullPath()} kill-server`);
-//   // await sleepFor(2000);
-//   // await runScriptAndLog(`${getAdbFullPath()} start-server`);
-
-//   // await sleepFor(2000);
-// }
 
 export const closeApp = async (
   device1?: DeviceWrapper,

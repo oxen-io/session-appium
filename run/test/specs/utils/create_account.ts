@@ -42,10 +42,11 @@ export const newUser = async (
   await runOnlyOnIOS(platform, () => device.clickOnElement("Don’t Allow"));
   await sleepFor(1000);
   await runOnlyOnAndroid(platform, () =>
-    device.clickOnTextElementById(
-      `com.android.permissioncontroller:id/permission_allow_button`,
-      "Allow"
-    )
+    device.clickOnElementAll({
+      strategy: "id",
+      selector: `com.android.permissioncontroller:id/permission_allow_button`,
+      text: "Allow",
+    })
   );
   // Click on 'continue' button to open recovery phrase modal
   await device.waitForTextElementToBePresent({

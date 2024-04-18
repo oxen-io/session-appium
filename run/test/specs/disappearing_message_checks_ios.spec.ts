@@ -290,7 +290,7 @@ async function disappearingGifMessage1o1(platform: SupportedPlatformsType) {
 
 async function disappearingLinkMessage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const testLink = `https://example.net/`;
+  const testLink = `https://example.org/`;
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -796,7 +796,7 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
 async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   const testGroupName = "Test group";
-  const testLink = `https://example.net/`;
+  const testLink = `https://example.org/`;
   // Create user A and user B
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, "Alice", platform),

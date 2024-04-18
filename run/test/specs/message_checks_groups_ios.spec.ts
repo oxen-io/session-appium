@@ -408,7 +408,7 @@ async function sendLongMessageGroup(platform: SupportedPlatformsType) {
 
 async function sendLinkGroup(platform: SupportedPlatformsType) {
   const testGroupName = "Message checks for groups";
-  const testLink = `https://example.net/`;
+  const testLink = `https://example.org/`;
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
