@@ -279,7 +279,7 @@ async function sendLongMessage(platform: SupportedPlatformsType) {
 //  TO FIX  (NO LINK PREVIEW)
 async function sendLink(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const testLink = `https://example.org/`;
+  const testLink = `https://type-level-typescript.com/objects-and-records`;
   // Create two users
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),

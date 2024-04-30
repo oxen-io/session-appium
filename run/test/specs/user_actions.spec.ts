@@ -158,20 +158,21 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   await device.clickOnElementById(
     "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
   );
-  await sleepFor(500);
+  await sleepFor(1000);
   await device.clickOnElementAll({
     strategy: "id",
     selector: "android:id/text1",
     text: "Media",
   });
+  await sleepFor(500);
+  // TO FIX COULDNT FIND MORE OPTIONS
   await device.clickOnElementAll({
     strategy: "accessibility id",
     selector: "More options",
   });
   await device.clickOnElementAll({
-    strategy: "id",
-    selector: "com.google.android.providers.media.module:id/title",
-    text: "Browse...",
+    strategy: "xpath",
+    selector: `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout`,
   });
   // Select file
   const profilePicture = await device.doesElementExist({
@@ -194,7 +195,6 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
     strategy: "accessibility id",
     selector: "profile_picture.jpg, 27.75 kB, May 2, 1999",
   });
-  await device.clickOnElement(`profile_picture.jpg, 27.75 kB, May 2, 1999`);
   await device.clickOnElementById(
     "network.loki.messenger:id/crop_image_menu_crop"
   );

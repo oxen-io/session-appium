@@ -94,13 +94,23 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
 
   await device1.disappearRadioButtonSelected("1 day");
   // Change timer to ten seconds (testing time)
-  await device1.clickOnElement("10 seconds");
+  if (platform === "android") {
+    await device1.clickOnElement("30 seconds");
+  } else {
+    await device1.clickOnElement("10 seconds");
+  }
   // Click on set to save setting
   await device1.clickOnElement("Set button");
   await runOnlyOnIOS(platform, () => device1.navigateBack(platform));
-  await device1.waitForControlMessageToBePresent(
-    `You set your messages to disappear 10 seconds after they have been sent.`
-  );
+  if (platform === "android") {
+    await device1.waitForControlMessageToBePresent(
+      `You set your messages to disappear 30 seconds after they have been sent.`
+    );
+  } else {
+    await device1.waitForControlMessageToBePresent(
+      `You set your messages to disappear 10 seconds after they have been sent.`
+    );
+  }
   await device2.clickOnElementAll({
     strategy: "accessibility id",
     selector: "Follow setting",
@@ -111,9 +121,18 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
     selector: "Set button",
   });
   // Check control message is correct on device 2
-  await device2.waitForControlMessageToBePresent(
-    `${userA.userName} has set their messages to disappear 10 seconds after they have been sent.`
-  );
+  if (platform === "android") {
+    await device2.waitForControlMessageToBePresent(
+      `${userA.userName} has set messages to disappear 30 seconds after they have been sent`
+    );
+  } else {
+    await device2.waitForControlMessageToBePresent(
+      `${userA.userName} has set messages to disappear 10 seconds after they have been sent`
+    );
+  }
+  // await device2.waitForControlMessageToBePresent(
+  //   `${userA.userName} has set messages to disappear 10 seconds after they have been sent`
+  // );
   // Send message to verify that deletion is working
   await device1.sendMessage(testMessage);
   await device2.clickOnElementByText({
@@ -181,7 +200,7 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
   });
   // Check control message is correct on device 2
   await device2.waitForControlMessageToBePresent(
-    `${userA.userName} has set their messages to disappear 10 seconds after they have been read.`
+    `${userA.userName} has set messages to disappear 10 seconds after they have been read`
   );
   // Send message to verify that deletion is working
   await device1.sendMessage(testMessage);
@@ -256,10 +275,10 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
       `You have set messages to disappear 30 seconds after they have been sent`
     ),
     device2.waitForControlMessageToBePresent(
-      `${userA.userName} has set their messages to disappear 30 seconds after they have been sent.`
+      `${userA.userName} has set messages to disappear 30 seconds after they have been sent`
     ),
     device3.waitForControlMessageToBePresent(
-      `${userA.userName} has set their messages to disappear 30 seconds after they have been sent.`
+      `${userA.userName} has set messages to disappear 30 seconds after they have been sent`
     ),
   ]);
   // Send message to verify deletion
@@ -356,3 +375,5 @@ describe("Disappearing messages", () => {
   iosIt("Disappear after send note to self", disappearAfterSendNoteToSelf);
   androidIt("Disappear after send note to self", disappearAfterSendNoteToSelf);
 });
+
+// TO DO - ADD TEST TO TURN OFF DISAPPEARING MESSAGES

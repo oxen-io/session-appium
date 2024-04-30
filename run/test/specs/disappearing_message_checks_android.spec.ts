@@ -186,7 +186,7 @@ async function disappearingGifMessage(platform: SupportedPlatformsType) {
 
 async function disappearingLinkMessage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const testLink = `https://example.org/`;
+  const testLink = `https://type-level-typescript.com/objects-and-records`;
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -199,18 +199,18 @@ async function disappearingLinkMessage(platform: SupportedPlatformsType) {
     ["1:1", "Disappear after send option", "30 seconds"],
     device2
   );
-  await device1.navigateBack(platform);
+  // await device1.navigateBack(platform);
   // Send a link
   await device1.inputText("accessibility id", "Message input box", testLink);
+  // Accept dialog for link preview
+  await device1.clickOnElement("Enable");
+  // No preview on first send
+  await device1.clickOnElement("Send message button");
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message sent status: Sent",
     maxWait: 20000,
   });
-  // Accept dialog for link preview
-  await device1.clickOnElement("Enable");
-  // No preview on first send
-  await device1.clickOnElement("Send message button");
   // Send again for image
   await device1.inputText("accessibility id", "Message input box", testLink);
   await sleepFor(100);

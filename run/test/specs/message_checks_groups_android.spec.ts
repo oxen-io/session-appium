@@ -415,6 +415,7 @@ async function sendLongMessageGroup(platform: SupportedPlatformsType) {
     selector: "Message body",
     text: replyMessage,
   });
+  // TO FIX: REPLY NOT FOUND ANDROID
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",

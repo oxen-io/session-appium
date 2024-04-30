@@ -80,8 +80,12 @@ export type StrategyExtractionObj =
 export type ControlMessage =
   | `You set disappearing message time to 5 seconds`
   | `${string} set disappearing message time to 5 seconds`
-  | `${string} has set their messages to disappear ${DMTimeOption} after they have been sent.`
-  | `${string} has set their messages to disappear ${DMTimeOption} after they have been read.`
+  | `${string} has set messages to disappear ${DMTimeOption} after they have been sent.`
+  | `${string} has set messages to disappear ${DMTimeOption} after they have been sent`
+  | `${string} has set messages to disappear ${DMTimeOption} after they have been read`
+  | `${string} has set messages to disappear ${DMTimeOption} after they have been read.`
+  // | `${string} has set their messages to disappear ${DMTimeOption} after they have been read.`
+  // | `${string} has set their messages to disappear ${DMTimeOption} after they have been sent.`
   | `You set your messages to disappear ${DMTimeOption} after they have been sent.`
   | `You set your messages to disappear ${DMTimeOption} after they have been read.`
   | `You have set messages to disappear ${DMTimeOption} after they have been sent`
