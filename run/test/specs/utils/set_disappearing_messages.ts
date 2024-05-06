@@ -10,10 +10,10 @@ export const setDisappearingMessage = async (
   device2?: DeviceWrapper
 ) => {
   const enforcedType: ConversationType = conversationType;
-  await device.clickOnElement("More options");
+  await device.clickOnByAccessibilityID("More options");
   await sleepFor(500);
   if (platform === "ios") {
-    device.clickOnElement("Disappearing Messages");
+    device.clickOnByAccessibilityID("Disappearing Messages");
   } else {
     device.clickOnElementAll({
       strategy: "id",
@@ -22,7 +22,7 @@ export const setDisappearingMessage = async (
     });
   }
   if (enforcedType === "1:1") {
-    await device.clickOnElement(timerType);
+    await device.clickOnByAccessibilityID(timerType);
   }
   await device.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -30,8 +30,11 @@ export const setDisappearingMessage = async (
   });
 
   await device.disappearRadioButtonSelected("1 day");
-  await device.clickOnElement(timerDuration);
-  await device.clickOnElement("Set button");
+  await device.clickOnByAccessibilityID(timerDuration);
+  await device.clickOnByAccessibilityID("Set button");
+  if (platform === "ios") {
+    await device.navigateBack(platform);
+  }
   await sleepFor(1000);
   if (device2) {
     await device2.clickOnElementAll({

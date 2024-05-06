@@ -37,15 +37,15 @@ async function blockUserInConversationOptions(
   await newContact(platform, device1, userA, device2, userB);
   // Block contact
   // Click on three dots (settings)
-  await device1.clickOnElement("More options");
+  await device1.clickOnByAccessibilityID("More options");
   // Select Block option
-  await runOnlyOnIOS(platform, () => device1.clickOnElement("Block"));
+  await runOnlyOnIOS(platform, () => device1.clickOnByAccessibilityID("Block"));
   await sleepFor(1000);
   await runOnlyOnAndroid(platform, () =>
     device1.clickOnTextElementById(`network.loki.messenger:id/title`, "Block")
   );
   // Confirm block option
-  await device1.clickOnElement("Confirm block");
+  await device1.clickOnByAccessibilityID("Confirm block");
   // On ios there is an alert that confirms that the user has been blocked
   await sleepFor(1000);
   console.warn(`${userB.userName}` + " has been blocked");
@@ -59,9 +59,11 @@ async function blockUserInConversationOptions(
 
   console.warn("User has been blocked");
   // Click on alert to unblock
-  await device1.clickOnElement("Blocked banner");
+  await device1.clickOnByAccessibilityID("Blocked banner");
   // on ios there is a confirm unblock alert, need to click 'unblock'
-  await runOnlyOnIOS(platform, () => device1.clickOnElement("Unblock"));
+  await runOnlyOnIOS(platform, () =>
+    device1.clickOnByAccessibilityID("Unblock")
+  );
   console.warn("User has been unblocked");
   // Look for alert (shouldn't be there)
   await device1.hasElementBeenDeleted("accessibility id", "Blocked banner");
@@ -92,8 +94,10 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // Navigate back to conversation list
-  await runOnlyOnAndroid(platform, () => device1.clickOnElement("Navigate up"));
-  await runOnlyOnIOS(platform, () => device1.clickOnElement("Back"));
+  await runOnlyOnAndroid(platform, () =>
+    device1.clickOnByAccessibilityID("Navigate up")
+  );
+  await runOnlyOnIOS(platform, () => device1.clickOnByAccessibilityID("Back"));
   // on ios swipe left on conversation
   await runOnlyOnAndroid(platform, () =>
     device1.longPressConversation(userB.userName)
@@ -101,7 +105,7 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   await runOnlyOnIOS(platform, () =>
     device1.swipeLeft("Conversation list item", userB.userName)
   );
-  await device1.clickOnElement("Block");
+  await device1.clickOnByAccessibilityID("Block");
   await closeApp(device1, device2);
 }
 
@@ -111,9 +115,9 @@ async function changeUsername(platform: SupportedPlatformsType) {
   const userA = await newUser(device, "Alice", platform);
   const newUsername = "Alice in chains";
   // click on settings/profile avatar
-  await device.clickOnElement("User settings");
+  await device.clickOnByAccessibilityID("User settings");
   // select username
-  await device.clickOnElement("Username");
+  await device.clickOnByAccessibilityID("Username");
   // type in new username
   await sleepFor(1000);
   await device.deleteText("Username");
@@ -134,8 +138,10 @@ async function changeUsername(platform: SupportedPlatformsType) {
     );
   }
   // select tick
-  await runOnlyOnAndroid(platform, () => device.clickOnElement("Apply"));
-  await runOnlyOnIOS(platform, () => device.clickOnElement("Done"));
+  await runOnlyOnAndroid(platform, () =>
+    device.clickOnByAccessibilityID("Apply")
+  );
+  await runOnlyOnIOS(platform, () => device.clickOnByAccessibilityID("Done"));
   // verify new username
 
   await closeApp(device);
@@ -147,9 +153,9 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   // Create new user
   await newUser(device, "Alice", platform);
   // Click on settings/avatar
-  await device.clickOnElement("User settings");
+  await device.clickOnByAccessibilityID("User settings");
   // Click on Profile picture
-  await device.clickOnElement("User settings");
+  await device.clickOnByAccessibilityID("User settings");
   // Click on Photo library
   await device.clickOnElementAll({
     strategy: "accessibility id",
@@ -223,11 +229,11 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
   // Create new user
   await newUser(device, "Alice", platform);
   // Click on settings/avatar
-  await device.clickOnElement("User settings");
+  await device.clickOnByAccessibilityID("User settings");
   await sleepFor(100);
-  await device.clickOnElement("Profile picture");
-  // await device.clickOnElement("Photo library");
-  await device.clickOnElement("Image picker");
+  await device.clickOnByAccessibilityID("Profile picture");
+  // await device.clickOnByAccessibilityID("Photo library");
+  await device.clickOnByAccessibilityID("Image picker");
   const permissions = await device.doesElementExist({
     strategy: "accessibility id",
     selector: "Allow Full Access",
@@ -235,7 +241,7 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
   });
   if (permissions) {
     try {
-      await device.clickOnElement("Allow Full Access");
+      await device.clickOnByAccessibilityID("Allow Full Access");
     } catch (e) {
       console.log("No permissions dialog");
     }
@@ -260,10 +266,10 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
   // Click on Profile picture
   // Click on Photo library
   await sleepFor(100);
-  await device.clickOnElement(`Photo, 01 May 1998, 7:00 am`);
-  await device.clickOnElement("Done");
+  await device.clickOnByAccessibilityID(`Photo, 01 May 1998, 7:00 am`);
+  await device.clickOnByAccessibilityID("Done");
 
-  await device.clickOnElement("Save");
+  await device.clickOnByAccessibilityID("Save");
   // Take screenshot
   const el = await device.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -294,15 +300,15 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Select conversation in list with Bob
   await device1.longPressConversation(userB.userName);
   // Select 'Details' option
-  await device1.clickOnElement("Details");
+  await device1.clickOnByAccessibilityID("Details");
   // Select username to edit
-  await device1.clickOnElement("Edit user nickname");
+  await device1.clickOnByAccessibilityID("Edit user nickname");
   // Type in nickname
   await device1.inputText("accessibility id", "Username", nickName);
   // Click on tick button
-  await device1.clickOnElement("Apply");
+  await device1.clickOnByAccessibilityID("Apply");
   // CLick out of pop up
-  await device1.clickOnElement("Message user");
+  await device1.clickOnByAccessibilityID("Message user");
   // Check name at top of conversation is nickname
   const headerElement = await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -317,11 +323,11 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Long press on contact conversation
   await device1.longPressConversation(nickName);
   // Select details
-  await device1.clickOnElement("Details");
+  await device1.clickOnByAccessibilityID("Details");
   // Click on username to edit
-  await device1.clickOnElement("Edit user nickname");
+  await device1.clickOnByAccessibilityID("Edit user nickname");
   // Click apply without entering new nickname
-  await device1.clickOnElement("Apply");
+  await device1.clickOnByAccessibilityID("Apply");
   // Click out of pop up
   await device1.back();
   // Enter conversation to verify change
@@ -364,16 +370,16 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   ]);
   await newContact(platform, device1, userA, device2, userB);
   // Click on settings/more info
-  await device1.clickOnElement("More options");
+  await device1.clickOnByAccessibilityID("More options");
   // Click on username to set nickname
-  await device1.clickOnElement("Username");
+  await device1.clickOnByAccessibilityID("Username");
   await sleepFor(500);
-  await device1.clickOnElement("Username");
+  await device1.clickOnByAccessibilityID("Username");
   await device1.deleteText("Username");
   // Type in nickname
   await device1.inputText("accessibility id", "Username", nickName);
   // Click apply/done
-  await device1.clickOnElement("Done");
+  await device1.clickOnByAccessibilityID("Done");
   // Check it's changed in heading also
   await device1.navigateBack(platform);
   const newNickname = await device1.grabTextFromAccessibilityId(
@@ -394,13 +400,13 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   // Set nickname back to original username
   await device1.selectByText("Conversation list item", nickName);
   // Click on settings/more info
-  await device1.clickOnElement("More options");
+  await device1.clickOnByAccessibilityID("More options");
   // Click on edit
-  await device1.clickOnElement("Username");
+  await device1.clickOnByAccessibilityID("Username");
   // Empty username input
   await device1.deleteText("Username");
   await device1.inputText("accessibility id", "Username", " ");
-  await await device1.clickOnElement("Done");
+  await await device1.clickOnByAccessibilityID("Done");
   // Check in conversation header
   await device1.navigateBack(platform);
   await sleepFor(500);

@@ -12,7 +12,7 @@ import {
 async function tinyTest(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
   await newUser(device, "Alice", platform);
-  await device.clickOnElement("User settings");
+  await device.clickOnByAccessibilityID("User settings");
   await device.clickOnElementById(`Appearance`);
   // const button = await device.waitForTextElementToBePresent(
   //   "id",

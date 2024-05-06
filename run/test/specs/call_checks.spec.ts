@@ -19,10 +19,10 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   // Look for phone icon (shouldnt be there)
   await device1.hasElementBeenDeleted("accessibility id", "Call");
   // Create contact
-  await device2.clickOnElement("Message requests banner");
+  await device2.clickOnByAccessibilityID("Message requests banner");
   // Select message from User A
-  await device2.clickOnElement("Message request");
-  await device2.clickOnElement("Accept message request");
+  await device2.clickOnByAccessibilityID("Message request");
+  await device2.clickOnByAccessibilityID("Accept message request");
   // Type into message input box
   await device2.sendMessage(
     `Reply-message-${userB.userName}-to-${userA.userName}`
@@ -32,7 +32,7 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
     "Your message request has been accepted."
   );
   // Phone icon should appear now that conversation has been approved
-  await device1.clickOnElement("Call");
+  await device1.clickOnByAccessibilityID("Call");
   // Enabled voice calls in privacy settings
   await device1.clickOnElementAll({
     strategy: "accessibility id",
@@ -50,7 +50,7 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   await device1.click(voicePermissions.ELEMENT);
   // Toggle voice settings on
   // Click enable on exposure IP address warning
-  await device1.clickOnElement("Enable");
+  await device1.clickOnByAccessibilityID("Enable");
   // Navigate back to conversation
   await device1.waitForTextElementToBePresent({
     strategy: "id",
@@ -61,9 +61,9 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
     "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
   );
 
-  await device1.clickOnElement("Navigate up");
+  await device1.clickOnByAccessibilityID("Navigate up");
   // Enable voice calls on device 2 for User B
-  await device2.clickOnElement("Call");
+  await device2.clickOnByAccessibilityID("Call");
   // Enabled voice calls in privacy settings
   await device2.clickOnElementAll({
     strategy: "accessibility id",
@@ -81,7 +81,7 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   await device2.click(voicePermissions2.ELEMENT);
   // Toggle voice settings on
   // Click enable on exposure IP address warning
-  await device2.clickOnElement("Enable");
+  await device2.clickOnByAccessibilityID("Enable");
   // Navigate back to conversation
   // TO FIX (SOMETHING WRONG WITH ANSWER CALL)
   await device2.waitForTextElementToBePresent({
@@ -92,9 +92,9 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   await device2.clickOnElementById(
     "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
   );
-  await device2.clickOnElement("Navigate up");
+  await device2.clickOnByAccessibilityID("Navigate up");
   // Make call on device 1 (userA)
-  await device1.clickOnElement("Call");
+  await device1.clickOnByAccessibilityID("Call");
   // Answer call on device 2
   await device2.clickOnElementById(
     "network.loki.messenger:id/acceptCallButton"
@@ -124,11 +124,11 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   // Look for phone icon (shouldnt be there)
   await device1.hasElementBeenDeleted("accessibility id", "Call");
   // Create contact
-  await device2.clickOnElement("Message requests banner");
+  await device2.clickOnByAccessibilityID("Message requests banner");
   // Select message from User A
-  await device2.clickOnElement("Message request");
+  await device2.clickOnByAccessibilityID("Message request");
   await runOnlyOnAndroid(platform, () =>
-    device2.clickOnElement("Accept message request")
+    device2.clickOnByAccessibilityID("Accept message request")
   );
   // Type into message input box
   await device2.sendMessage(
@@ -140,41 +140,41 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
     "Your message request has been accepted."
   );
   // Phone icon should appear now that conversation has been approved
-  await device1.clickOnElement("Call");
+  await device1.clickOnByAccessibilityID("Call");
   // Enabled voice calls in privacy settings
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Settings",
   });
-  await device1.clickOnElement("Settings");
+  await device1.clickOnByAccessibilityID("Settings");
   // Scroll to bottom of page to voice and video calls
   // Toggle voice settings on
   // Click enable on exposure IP address warning
-  await device1.clickOnElement("Allow voice and video calls");
-  await device1.clickOnElement("Continue");
+  await device1.clickOnByAccessibilityID("Allow voice and video calls");
+  await device1.clickOnByAccessibilityID("Continue");
   // Navigate back to conversation
-  await device1.clickOnElement("Close button");
+  await device1.clickOnByAccessibilityID("Close button");
   // Enable voice calls on device 2 for User B
-  await device2.clickOnElement("Call");
-  await device2.clickOnElement("Settings");
+  await device2.clickOnByAccessibilityID("Call");
+  await device2.clickOnByAccessibilityID("Settings");
   await device2.scrollDown();
-  await device2.clickOnElement("Allow voice and video calls");
-  await device2.clickOnElement("Enable");
-  await device2.clickOnElement("Close button");
+  await device2.clickOnByAccessibilityID("Allow voice and video calls");
+  await device2.clickOnByAccessibilityID("Enable");
+  await device2.clickOnByAccessibilityID("Close button");
   // Make call on device 1 (userA)
-  await device1.clickOnElement("Call");
-  // await device1.clickOnElement("OK");
-  await device1.clickOnElement("Allow");
+  await device1.clickOnByAccessibilityID("Call");
+  // await device1.clickOnByAccessibilityID("OK");
+  await device1.clickOnByAccessibilityID("Allow");
   // Wait for call to come through
   await sleepFor(1000);
   // Answer call on device 2
-  await device2.clickOnElement("AnswerCall");
+  await device2.clickOnByAccessibilityID("AnswerCall");
   // Have to press answer twice, once in drop down and once in full screen
   await sleepFor(500);
-  await device2.clickOnElement("AnswerCall");
+  await device2.clickOnByAccessibilityID("AnswerCall");
   // Wait 10 seconds
   // Hang up
-  await device1.clickOnElement("End call button");
+  await device1.clickOnByAccessibilityID("End call button");
   // Check for control messages on both devices
   await device1.waitForControlMessageToBePresent(
     `You called ${userB.userName}`

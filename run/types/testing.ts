@@ -41,9 +41,12 @@ export type Strategy = "accessibility id" | "xpath" | "id" | "class name";
 
 export type ConversationType = "1:1" | "Group" | "Community" | "Note to Self";
 
+export type DisappearModes = "read" | "send";
+export type DisappearActions = "read" | "sent";
 export type DMTimeOption =
   | "10 seconds"
   | "30 seconds"
+  | "1 minute"
   | "12 hours"
   | "1 day"
   | "1 week"
@@ -51,13 +54,16 @@ export type DMTimeOption =
 
 export type DisappearOpts1o1 = [
   "1:1",
-  "Disappear after read option" | "Disappear after send option",
+  (
+    | `Disappear after ${DisappearModes} option`
+    | `Disappear after ${DisappearModes} option`
+  ),
   DMTimeOption
 ];
 
 export type DisappearOptsGroup = [
   "Group" | "Note to Self",
-  "Disappear after send option",
+  `Disappear after ${DisappearModes} option`,
   DMTimeOption
 ];
 
@@ -77,18 +83,13 @@ export type StrategyExtractionObj =
       selector: XPath;
     };
 
-export type ControlMessage =
+export type DisappearingControlMessage =
   | `You set disappearing message time to 5 seconds`
   | `${string} set disappearing message time to 5 seconds`
-  | `${string} has set messages to disappear ${DMTimeOption} after they have been sent.`
-  | `${string} has set messages to disappear ${DMTimeOption} after they have been sent`
-  | `${string} has set messages to disappear ${DMTimeOption} after they have been read`
-  | `${string} has set messages to disappear ${DMTimeOption} after they have been read.`
-  // | `${string} has set their messages to disappear ${DMTimeOption} after they have been read.`
-  // | `${string} has set their messages to disappear ${DMTimeOption} after they have been sent.`
-  | `You set your messages to disappear ${DMTimeOption} after they have been sent.`
-  | `You set your messages to disappear ${DMTimeOption} after they have been read.`
-  | `You have set messages to disappear ${DMTimeOption} after they have been sent`
+  | `${string} has set messages to disappear ${DMTimeOption} after they have been ${DisappearActions}.`
+  | `You set messages to disappear ${DMTimeOption} after they have been ${DisappearActions}.`;
+
+export type ControlMessage =
   | "Your message request has been accepted."
   | `${string} called you`
   | `Called ${string}`
@@ -171,6 +172,7 @@ export type AccessibilityId =
   | "Disappear after send option"
   | "10 seconds"
   | "30 seconds"
+  | "1 minute"
   | "12 hours"
   | "1 day"
   | "1 week"

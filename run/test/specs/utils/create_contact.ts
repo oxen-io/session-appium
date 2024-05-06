@@ -18,11 +18,11 @@ export const newContact = async (
 
   await retryRequest(device1, device2);
   await sleepFor(100);
-  await device2.clickOnElement("Message requests banner");
+  await device2.clickOnByAccessibilityID("Message requests banner");
   // Select message from User A
-  await device2.clickOnElement("Message request");
+  await device2.clickOnByAccessibilityID("Message request");
   await runOnlyOnAndroid(platform, () =>
-    device2.clickOnElement("Accept message request")
+    device2.clickOnByAccessibilityID("Accept message request")
   );
   // Type into message input box
   await device2.sendMessage(

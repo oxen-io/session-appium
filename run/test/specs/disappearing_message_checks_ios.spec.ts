@@ -32,7 +32,7 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType) {
   await device1.navigateBack(platform);
   await sleepFor(500);
   // await device1.sendImage(platform, testMessage);
-  await device1.clickOnElement("Attachments button");
+  await device1.clickOnByAccessibilityID("Attachments button");
   await sleepFor(5000);
   await clickOnCoordinates(
     device1,
@@ -46,7 +46,7 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType) {
   });
   if (permissions) {
     try {
-      await device1.clickOnElement(`Allow Full Access`);
+      await device1.clickOnByAccessibilityID(`Allow Full Access`);
       // Select video
     } catch (e) {
       console.log("No permissions dialog");
@@ -72,18 +72,18 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType) {
     );
   }
   await sleepFor(100);
-  await device1.clickOnElement(`1967-05-05 21:00:00 +0000`);
-  await device1.clickOnElement("Text input box");
+  await device1.clickOnByAccessibilityID(`1967-05-05 21:00:00 +0000`);
+  await device1.clickOnByAccessibilityID("Text input box");
   await device1.inputText("accessibility id", "Text input box", testMessage);
-  await device1.clickOnElement("Send button");
+  await device1.clickOnByAccessibilityID("Send button");
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: `Message sent status: Sent`,
     maxWait: 50000,
   });
-  await device2.clickOnElement("Untrusted attachment message");
+  await device2.clickOnByAccessibilityID("Untrusted attachment message");
   // User B - Click on 'download'
-  await device2.clickOnElement("Download media", 5000);
+  await device2.clickOnByAccessibilityID("Download media", 5000);
   await sleepFor(10000);
   await Promise.all([
     device1.hasElementBeenDeletedNew({
@@ -119,7 +119,7 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
     device2
   );
   await device1.navigateBack(platform);
-  await device1.clickOnElement("Attachments button");
+  await device1.clickOnByAccessibilityID("Attachments button");
   // Select images button/tab
   await sleepFor(100);
   // Check if android or ios (android = documents folder/ ios = images folder)
@@ -131,7 +131,7 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
     maxWait: 5000,
   });
   if (permissions) {
-    await device1.clickOnElement("Allow Full Access");
+    await device1.clickOnByAccessibilityID("Allow Full Access");
   } else {
     console.log("No permissions");
   }
@@ -141,12 +141,12 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
     maxWait: 1000,
   });
   if (settingsPermissions) {
-    await device1.clickOnElement("Photos");
-    await device1.clickOnElement("All Photos");
+    await device1.clickOnByAccessibilityID("Photos");
+    await device1.clickOnByAccessibilityID("All Photos");
   } else {
     console.log("No settings permission dialog");
   }
-  await device1.clickOnElement("Recents");
+  await device1.clickOnByAccessibilityID("Recents");
   // Select video
   const videoFolder = await device1.doesElementExist({
     strategy: "xpath",
@@ -155,8 +155,8 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
   });
   if (videoFolder) {
     console.log("Videos folder found");
-    await device1.clickOnElement("Videos");
-    await device1.clickOnElement(`1988-09-08 21:00:00 +0000`);
+    await device1.clickOnByAccessibilityID("Videos");
+    await device1.clickOnByAccessibilityID(`1988-09-08 21:00:00 +0000`);
   } else {
     console.log("Videos folder NOT found");
     await runScriptAndLog(
@@ -169,12 +169,12 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
       } 'run/test/specs/media/test_video.mp4'`,
       true
     );
-    await device1.clickOnElement(`1988-09-08 21:00:00 +0000`, 5000);
+    await device1.clickOnByAccessibilityID(`1988-09-08 21:00:00 +0000`, 5000);
   }
   // Send with captions
-  await device1.clickOnElement("Text input box");
+  await device1.clickOnByAccessibilityID("Text input box");
   await device1.inputText("accessibility id", "Text input box", testMessage);
-  await device1.clickOnElement("Send button");
+  await device1.clickOnByAccessibilityID("Send button");
   await sleepFor(10000);
   await Promise.all([
     device1.hasElementBeenDeletedNew({
@@ -209,17 +209,17 @@ async function disappearingVoiceMessage1o1(platform: SupportedPlatformsType) {
   );
   await device1.navigateBack(platform);
   await device1.longPress("New voice message");
-  await device1.clickOnElement("Allow");
+  await device1.clickOnByAccessibilityID("Allow");
   await sleepFor(500);
   await device1.pressAndHold("New voice message");
-  // await device1.clickOnElement("OK");
+  // await device1.clickOnByAccessibilityID("OK");
   // await device1.pressAndHold("New voice message");
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Voice message",
   });
-  await device2.clickOnElement("Untrusted attachment message", 5000);
-  await device2.clickOnElement("Download", 5000);
+  await device2.clickOnByAccessibilityID("Untrusted attachment message", 5000);
+  await device2.clickOnByAccessibilityID("Download", 5000);
   await sleepFor(10000);
   await device1.hasElementBeenDeletedNew({
     strategy: "accessibility id",
@@ -251,25 +251,25 @@ async function disappearingGifMessage1o1(platform: SupportedPlatformsType) {
   );
   await device1.navigateBack(platform);
   // Click on attachments button
-  await device1.clickOnElement("Attachments button");
+  await device1.clickOnByAccessibilityID("Attachments button");
   // Select GIF tab
   await clickOnCoordinates(device1, InteractionPoints.GifButtonKeyboardClosed);
   // Select gif
   await sleepFor(500);
   // Need to select Continue on GIF warning
-  await device1.clickOnElement("Continue");
+  await device1.clickOnByAccessibilityID("Continue");
   await device1.clickOnElementXPath(
     `(//XCUIElementTypeImage[@name="gif cell"])[1]`
   );
-  await device1.clickOnElement("Text input box");
+  await device1.clickOnByAccessibilityID("Text input box");
   await device1.inputText("accessibility id", "Text input box", testMessage);
-  await device1.clickOnElement("Send button");
+  await device1.clickOnByAccessibilityID("Send button");
   // Check if the 'Tap to download media' config appears
   // Click on config
-  await device2.clickOnElement("Untrusted attachment message");
+  await device2.clickOnByAccessibilityID("Untrusted attachment message");
   await sleepFor(100);
   // Click on 'download'
-  await device2.clickOnElement("Download media");
+  await device2.clickOnByAccessibilityID("Download media");
   // Wait for 10 seconds
   await sleepFor(10000);
   // Check if GIF has been deleted on both devices
@@ -312,13 +312,13 @@ async function disappearingLinkMessage(platform: SupportedPlatformsType) {
     maxWait: 20000,
   });
   // Accept dialog for link preview
-  await device1.clickOnElement("Enable");
+  await device1.clickOnByAccessibilityID("Enable");
   // No preview on first send
-  await device1.clickOnElement("Send message button");
+  await device1.clickOnByAccessibilityID("Send message button");
   // Send again for image
   await device1.inputText("accessibility id", "Message input box", testLink);
   await sleepFor(100);
-  await device1.clickOnElement("Send message button");
+  await device1.clickOnByAccessibilityID("Send message button");
   // Make sure image preview is available in device 2
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -362,22 +362,22 @@ async function disappearingCommunityInviteMessage1o1(
   );
   await device1.navigateBack(platform);
   await device1.navigateBack(platform);
-  await device1.clickOnElement("New conversation button");
-  await device1.clickOnElement("Join Community");
+  await device1.clickOnByAccessibilityID("New conversation button");
+  await device1.clickOnByAccessibilityID("Join Community");
   await device1.inputText(
     "accessibility id",
     "Enter Community URL",
     communityLink
   );
-  await device1.clickOnElement("Join");
-  await device1.clickOnElement("More options", 10000);
-  await device1.clickOnElement("Add Members");
+  await device1.clickOnByAccessibilityID("Join");
+  await device1.clickOnByAccessibilityID("More options", 10000);
+  await device1.clickOnByAccessibilityID("Add Members");
   await device1.clickOnElementByText({
     strategy: "accessibility id",
     selector: "Contact",
     text: userB.userName,
   });
-  await device1.clickOnElement("Done");
+  await device1.clickOnByAccessibilityID("Done");
   // Check device 2 for invitation from user A
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -416,34 +416,34 @@ async function disappearingCallMessage1o1(platform: SupportedPlatformsType) {
     device2
   );
   await device1.navigateBack(platform);
-  await device1.clickOnElement("Call");
+  await device1.clickOnByAccessibilityID("Call");
   // Enabled voice calls in privacy settings
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Settings",
   });
-  await device1.clickOnElement("Settings");
+  await device1.clickOnByAccessibilityID("Settings");
   // Scroll to bottom of page to voice and video calls
   // Toggle voice settings on
   // Click enable on exposure IP address warning
-  await device1.clickOnElement("Allow voice and video calls");
-  await device1.clickOnElement("Continue");
+  await device1.clickOnByAccessibilityID("Allow voice and video calls");
+  await device1.clickOnByAccessibilityID("Continue");
   // Navigate back to conversation
-  await device1.clickOnElement("Close button");
+  await device1.clickOnByAccessibilityID("Close button");
   // Enable voice calls on device 2 for User B
-  await device2.clickOnElement("Call");
-  await device2.clickOnElement("Settings");
+  await device2.clickOnByAccessibilityID("Call");
+  await device2.clickOnByAccessibilityID("Settings");
   await device2.scrollDown();
-  await device2.clickOnElement("Allow voice and video calls");
-  await device2.clickOnElement("Enable");
-  await device2.clickOnElement("Close button");
+  await device2.clickOnByAccessibilityID("Allow voice and video calls");
+  await device2.clickOnByAccessibilityID("Enable");
+  await device2.clickOnByAccessibilityID("Close button");
   // Make call on device 1 (userA)
-  await device1.clickOnElement("Call");
+  await device1.clickOnByAccessibilityID("Call");
   // Answer call on device 2
-  await device2.clickOnElement("AnswerCall");
+  await device2.clickOnByAccessibilityID("AnswerCall");
   // Wait 10 seconds
   // Hang up
-  await device1.clickOnElement("End call button");
+  await device1.clickOnByAccessibilityID("End call button");
   // Check for config message 'Called User B' on device 1
   await device1.waitForControlMessageToBePresent(
     `You called ${userB.userName}`
@@ -499,7 +499,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   ]);
   await device1.navigateBack(platform);
   // await device1.sendImage(platform, testMessage);
-  await device1.clickOnElement("Attachments button");
+  await device1.clickOnByAccessibilityID("Attachments button");
   await sleepFor(5000);
   await clickOnCoordinates(
     device1,
@@ -513,7 +513,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   });
   if (permissions) {
     try {
-      await device1.clickOnElement(`Allow Full Access`);
+      await device1.clickOnByAccessibilityID(`Allow Full Access`);
       // Select video
     } catch (e) {
       console.log("No permissions dialog");
@@ -539,10 +539,10 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
     );
   }
   await sleepFor(100);
-  await device1.clickOnElement(`1967-05-05 21:00:00 +0000`);
-  await device1.clickOnElement("Text input box");
+  await device1.clickOnByAccessibilityID(`1967-05-05 21:00:00 +0000`);
+  await device1.clickOnByAccessibilityID("Text input box");
   await device1.inputText("accessibility id", "Text input box", testMessage);
-  await device1.clickOnElement("Send button");
+  await device1.clickOnByAccessibilityID("Send button");
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: `Message sent status: Sent`,
@@ -600,7 +600,7 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
     "10 seconds",
   ]);
   await device1.navigateBack(platform);
-  await device1.clickOnElement("Attachments button");
+  await device1.clickOnByAccessibilityID("Attachments button");
   // Select images button/tab
   // Check if android or ios (android = documents folder/ ios = images folder)
   await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardOpen);
@@ -610,7 +610,7 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
     maxWait: 5000,
   });
   if (permissions) {
-    await device1.clickOnElement("Allow Full Access");
+    await device1.clickOnByAccessibilityID("Allow Full Access");
   } else {
     console.log("No permissions");
   }
@@ -620,12 +620,12 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
     maxWait: 1000,
   });
   if (settingsPermissions) {
-    await device1.clickOnElement("Photos");
-    await device1.clickOnElement("All Photos");
+    await device1.clickOnByAccessibilityID("Photos");
+    await device1.clickOnByAccessibilityID("All Photos");
   } else {
     console.log("No settings permission dialog");
   }
-  await device1.clickOnElement("Recents");
+  await device1.clickOnByAccessibilityID("Recents");
   await sleepFor(2000);
   // Select video
   const videoFolder = await device1.doesElementExist({
@@ -635,8 +635,8 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
   });
   if (videoFolder) {
     console.log("Videos folder found");
-    await device1.clickOnElement("Videos");
-    await device1.clickOnElement(`1988-09-08 21:00:00 +0000`);
+    await device1.clickOnByAccessibilityID("Videos");
+    await device1.clickOnByAccessibilityID(`1988-09-08 21:00:00 +0000`);
   } else {
     console.log("Videos folder NOT found");
     await runScriptAndLog(
@@ -650,12 +650,12 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
       true
     );
     await sleepFor(2000);
-    await device1.clickOnElement(`1988-09-08 21:00:00 +0000`);
+    await device1.clickOnByAccessibilityID(`1988-09-08 21:00:00 +0000`);
   }
   // Send with captions
-  await device1.clickOnElement("Text input box");
+  await device1.clickOnByAccessibilityID("Text input box");
   await device1.inputText("accessibility id", "Text input box", testMessage);
-  await device1.clickOnElement("Send button");
+  await device1.clickOnByAccessibilityID("Send button");
   await sleepFor(10000);
   await Promise.all([
     device1.hasElementBeenDeletedNew({
@@ -706,7 +706,7 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
   ]);
   await device1.navigateBack(platform);
   await device1.longPress("New voice message");
-  // await device1.clickOnElement("OK");
+  // await device1.clickOnByAccessibilityID("OK");
   // await device1.pressAndHold("New voice message");
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -758,17 +758,17 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
   ]);
   await device1.navigateBack(platform);
   // Click on attachments button
-  await device1.clickOnElement("Attachments button");
+  await device1.clickOnByAccessibilityID("Attachments button");
   // Select GIF tab
   await clickOnCoordinates(device1, InteractionPoints.GifButtonKeyboardClosed);
   // Need to select Continue on GIF warning
-  await device1.clickOnElement("Continue", 5000);
+  await device1.clickOnByAccessibilityID("Continue", 5000);
   await device1.clickOnElementXPath(
     `(//XCUIElementTypeImage[@name="gif cell"])[1]`
   );
-  await device1.clickOnElement("Text input box");
+  await device1.clickOnByAccessibilityID("Text input box");
   await device1.inputText("accessibility id", "Text input box", testMessage);
-  await device1.clickOnElement("Send button");
+  await device1.clickOnByAccessibilityID("Send button");
   // Wait for 10 seconds
   await sleepFor(10000);
   // Check if GIF has been deleted on both devices
@@ -827,13 +827,13 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
     maxWait: 20000,
   });
   // Accept dialog for link preview
-  await device1.clickOnElement("Enable");
+  await device1.clickOnByAccessibilityID("Enable");
   // No preview on first send
-  await device1.clickOnElement("Send message button");
+  await device1.clickOnByAccessibilityID("Send message button");
   // Send again for image
   await device1.inputText("accessibility id", "Message input box", testLink);
   await sleepFor(100);
-  await device1.clickOnElement("Send message button");
+  await device1.clickOnByAccessibilityID("Send message button");
   // Make sure image preview is available in device 2
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",

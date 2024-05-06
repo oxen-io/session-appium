@@ -43,10 +43,12 @@ async function groupCreationandNameChangeLinkedDevice(
   // Test group name change syncs
   // Change group name in device 1
   // Click on settings/more info
-  await device1.clickOnElement("More options");
+  await device1.clickOnByAccessibilityID("More options");
   // Edit group
   await sleepFor(100);
-  await runOnlyOnIOS(platform, () => device1.clickOnElement("Edit group"));
+  await runOnlyOnIOS(platform, () =>
+    device1.clickOnByAccessibilityID("Edit group")
+  );
   await runOnlyOnAndroid(platform, () =>
     device1.clickOnTextElementById(
       `network.loki.messenger:id/title`,
@@ -54,7 +56,7 @@ async function groupCreationandNameChangeLinkedDevice(
     )
   );
   // click on group name to change it
-  await device1.clickOnElement("Group name");
+  await device1.clickOnByAccessibilityID("Group name");
   // Type in new name
   await runOnlyOnAndroid(platform, () =>
     device1.inputText("accessibility id", "Group name", newGroupName)
@@ -63,9 +65,11 @@ async function groupCreationandNameChangeLinkedDevice(
     device1.inputText("accessibility id", "Group name text field", newGroupName)
   );
   // Confirm change (tick on android/ first done on ios)
-  await device1.clickOnElement("Accept name change");
+  await device1.clickOnByAccessibilityID("Accept name change");
   // Apply changes (Apply on android/ second done on ios)
-  await runOnlyOnIOS(platform, () => device1.clickOnElement("Apply changes"));
+  await runOnlyOnIOS(platform, () =>
+    device1.clickOnByAccessibilityID("Apply changes")
+  );
   await runOnlyOnAndroid(platform, () =>
     device1.clickOnTextElementById(
       `network.loki.messenger:id/action_apply`,
@@ -145,7 +149,7 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
     testGroupName
   );
   await sleepFor(1000);
-  await device3.clickOnElement("More options");
+  await device3.clickOnByAccessibilityID("More options");
   await sleepFor(1000);
   await runOnlyOnAndroid(platform, () =>
     device3.clickOnTextElementById(
@@ -154,8 +158,10 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
     )
   );
 
-  await runOnlyOnIOS(platform, () => device3.clickOnElement("Leave group"));
-  await runOnlyOnIOS(platform, () => device3.clickOnElement("Leave"));
+  await runOnlyOnIOS(platform, () =>
+    device3.clickOnByAccessibilityID("Leave group")
+  );
+  await runOnlyOnIOS(platform, () => device3.clickOnByAccessibilityID("Leave"));
   await runOnlyOnAndroid(platform, () =>
     device3.clickOnElementAll({ strategy: "accessibility id", selector: "Yes" })
   );
@@ -221,9 +227,9 @@ describe("Linked device - group tests", () => {
 //     testGroupName
 //   );
 //   // Enable disappearing messages
-//   await device1.clickOnElement("More options");
+//   await device1.clickOnByAccessibilityID("More options");
 //   await runOnlyOnIOS(platform, () =>
-//     device1.clickOnElement("Disappearing messages")
+//     device1.clickOnByAccessibilityID("Disappearing messages")
 //   );
 //   await runOnlyOnAndroid(platform, () =>
 //     device1.clickOnTextElementById(
@@ -231,10 +237,10 @@ describe("Linked device - group tests", () => {
 //       "Disappearing messages"
 //     )
 //   );
-//   await device1.clickOnElement("Enable");
+//   await device1.clickOnByAccessibilityID("Enable");
 //   // Set disappearing messages timer
 //   await runOnlyOnIOS(platform, () =>
-//     device1.clickOnElement("Timer")
+//     device1.clickOnByAccessibilityID("Timer")
 //   );
 //   await runOnlyOnAndroid(platform, () =>
 //     device1.clickOnTextElementById(
@@ -242,10 +248,10 @@ describe("Linked device - group tests", () => {
 //       "Timer"
 //     )
 //   );
-//   await device1.clickOnElement("5 seconds");
+//   await device1.clickOnByAccessibilityID("5 seconds");
 //   // Send a message
 //   await device1.inputText("accessibility id", "Message input", "Hello");
-//   await device1.clickOnElement("Send");
+//   await device1.clickOnByAccessibilityID("Send");
 //   // Wait for the message to disappear
 //   await sleepFor(6000);
 //   // Check if the message is still visible on device2

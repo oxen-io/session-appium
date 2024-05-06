@@ -47,7 +47,7 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
   // Waiting for image to load
   await sleepFor(1000);
   await device2.longPress("Media message");
-  await device2.clickOnElement("Reply to message");
+  await device2.clickOnByAccessibilityID("Reply to message");
   await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -107,7 +107,7 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
     }),
   ]);
   await device2.longPress("Media message");
-  await device2.clickOnElement("Reply to message");
+  await device2.clickOnByAccessibilityID("Reply to message");
   await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -148,7 +148,7 @@ async function sendVoiceMessageGroup(platform: SupportedPlatformsType) {
   // Select voice message button to activate recording state
   await device1.longPress("New voice message");
 
-  await device1.clickOnElement("Continue");
+  await device1.clickOnByAccessibilityID("Continue");
   await device1.clickOnElementXPath(
     `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.Button[1]`
   );
@@ -162,7 +162,7 @@ async function sendVoiceMessageGroup(platform: SupportedPlatformsType) {
     selector: "Voice message",
   });
   await device2.longPress("Voice message");
-  await device2.clickOnElement("Reply to message");
+  await device2.clickOnByAccessibilityID("Reply to message");
   await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -199,9 +199,9 @@ async function sendDocumentGroup(platform: SupportedPlatformsType) {
     testGroupName
   );
   const replyMessage = `Replying to document from ${userA.userName} in ${testGroupName}`;
-  await device1.clickOnElement("Attachments button");
+  await device1.clickOnByAccessibilityID("Attachments button");
   await sleepFor(100);
-  await device1.clickOnElement("Documents folder");
+  await device1.clickOnByAccessibilityID("Documents folder");
   await sleepFor(500);
   await device1.waitForTextElementToBePresent({
     strategy: "class name",
@@ -238,7 +238,7 @@ async function sendDocumentGroup(platform: SupportedPlatformsType) {
     selector: "Document",
   });
   await device2.longPress("Document");
-  await device2.clickOnElement("Reply to message");
+  await device2.clickOnByAccessibilityID("Reply to message");
   await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -278,9 +278,9 @@ async function sendLinkGroup(platform: SupportedPlatformsType) {
   // Send a link
   await device1.inputText("accessibility id", "Message input box", testLink);
   // Accept dialog for link preview
-  await device1.clickOnElement("Enable");
+  await device1.clickOnByAccessibilityID("Enable");
   // No preview on first send
-  await device1.clickOnElement("Send message button");
+  await device1.clickOnByAccessibilityID("Send message button");
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message sent status: Sent",
@@ -327,9 +327,9 @@ async function sendGifGroup(platform: SupportedPlatformsType) {
   );
   const replyMessage = `Replying to GIF from ${userA.userName}`;
   // Click on attachments button
-  await device1.clickOnElement("Attachments button");
+  await device1.clickOnByAccessibilityID("Attachments button");
   // Select GIF tab
-  await device1.clickOnElement("GIF button");
+  await device1.clickOnByAccessibilityID("GIF button");
   await device1.clickOnElementAll({
     strategy: "accessibility id",
     selector: "Continue",
@@ -348,7 +348,7 @@ async function sendGifGroup(platform: SupportedPlatformsType) {
   });
   await device2.longPress("Media message");
   // Check reply came through on device1
-  await device2.clickOnElement("Reply to message");
+  await device2.clickOnByAccessibilityID("Reply to message");
   await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -390,7 +390,7 @@ async function sendLongMessageGroup(platform: SupportedPlatformsType) {
   const replyMessage = `${userA.userName} message reply`;
   await device1.inputText("accessibility id", "Message input box", longText);
   // Click send
-  await device1.clickOnElement("Send message button");
+  await device1.clickOnByAccessibilityID("Send message button");
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: `Message sent status: Sent`,
@@ -461,9 +461,9 @@ async function deleteMessageGroup(platform: SupportedPlatformsType) {
   // Select and long press on message to delete it
   await device1.longPressMessage(sentMessage);
   // Select Delete icon
-  await device1.clickOnElement("Delete message");
+  await device1.clickOnByAccessibilityID("Delete message");
   // Select 'Delete for everyone'
-  await device1.clickOnElement("Delete just for me");
+  await device1.clickOnByAccessibilityID("Delete just for me");
   await device1.hasElementBeenDeletedNew({
     strategy: "accessibility id",
     selector: "Message body",

@@ -12,6 +12,7 @@ import {
   AccessibilityId,
   ControlMessage,
   DMTimeOption,
+  DisappearingControlMessage,
   Group,
   InteractionPoints,
   Strategy,
@@ -310,7 +311,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return this.toAndroid().touchLongClick(element.ELEMENT);
   }
 
-  public async clickOnElement(
+  public async clickOnByAccessibilityID(
     accessibilityId: AccessibilityId,
     maxWait?: number
   ): Promise<void> {
@@ -891,6 +892,40 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return el;
   }
 
+  public async disappearingControlMessage(
+    text: DisappearingControlMessage,
+    maxWait?: number
+  ): Promise<AppiumNextElementType> {
+    let el: null | AppiumNextElementType = null;
+    const maxWaitMSec: number = typeof maxWait === "number" ? maxWait : 15000;
+    let currentWait = 0;
+    const waitPerLoop = 100;
+    while (el === null) {
+      try {
+        console.log(`Waiting for control message to be present with ${text}`);
+        const els = await this.findElements(
+          "accessibility id",
+          "Control message"
+        );
+        el = await this.findMatchingTextInElementArray(els, text);
+      } catch (e: any) {
+        console.warn("disappearingControlMessage threw: ", e.message);
+      }
+      if (!el) {
+        await sleepFor(waitPerLoop);
+      }
+      currentWait += waitPerLoop;
+      if (currentWait >= maxWaitMSec) {
+        console.log("Waited too long");
+        throw new Error(
+          `Waited for too long looking for Control message ${text}`
+        );
+      }
+    }
+    console.log(`Control message ${text} has been found`);
+    return el;
+  }
+
   public async waitForLoadingAnimation() {
     let loadingAnimation: AppiumNextElementType | null = null;
 
@@ -915,7 +950,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   public async sendMessage(message: string) {
     await this.inputText("accessibility id", "Message input box", message);
     // Click send
-    await this.clickOnElement("Send message button");
+    await this.clickOnByAccessibilityID("Send message button");
     // Wait for tick
     await this.waitForTextElementToBePresent({
       strategy: "accessibility id",
@@ -947,9 +982,9 @@ export class DeviceWrapper implements SharedDeviceInterface {
   public async sendNewMessage(user: User, message: string) {
     // Sender workflow
     // Click on plus button
-    await this.clickOnElement("New conversation button");
+    await this.clickOnByAccessibilityID("New conversation button");
     // Select direct message option
-    await this.clickOnElement("New direct message");
+    await this.clickOnByAccessibilityID("New direct message");
     // Enter User B's session ID into input box
     await this.inputText(
       "accessibility id",
@@ -958,12 +993,12 @@ export class DeviceWrapper implements SharedDeviceInterface {
     );
     // Click next
     await this.scrollDown();
-    await this.clickOnElement("Next");
+    await this.clickOnByAccessibilityID("Next");
     // Type message into message input box
 
     await this.inputText("accessibility id", "Message input box", message);
     // Click send
-    await this.clickOnElement("Send message button");
+    await this.clickOnByAccessibilityID("Send message button");
     // Wait for tick
 
     await this.waitForTextElementToBePresent({
@@ -1000,7 +1035,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     // Long press on imageSent element
     await this.longPressMessage(body);
     // Select 'Reply' option
-    await this.clickOnElement("Reply to message");
+    await this.clickOnByAccessibilityID("Reply to message");
     // Send message
     const sentMessage = await this.sendMessage(
       `${user.userName} message reply`
@@ -1068,7 +1103,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   ) {
     if (platform === "ios") {
       const ronSwansonBirthday = "196705060700.00";
-      await this.clickOnElement("Attachments button");
+      await this.clickOnByAccessibilityID("Attachments button");
       await sleepFor(5000);
       await clickOnCoordinates(
         this.device,
@@ -1081,7 +1116,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       });
       if (permissions) {
         try {
-          await this.clickOnElement(`Allow Full Access`);
+          await this.clickOnByAccessibilityID(`Allow Full Access`);
         } catch (e) {
           console.log("No permissions dialog");
         }
@@ -1106,22 +1141,22 @@ export class DeviceWrapper implements SharedDeviceInterface {
         );
       }
       await sleepFor(100);
-      await this.clickOnElement(`1967-05-05 21:00:00 +0000`);
+      await this.clickOnByAccessibilityID(`1967-05-05 21:00:00 +0000`);
       if (message) {
-        await this.clickOnElement("Text input box");
+        await this.clickOnByAccessibilityID("Text input box");
         await this.inputText("accessibility id", "Text input box", message);
       }
-      await this.clickOnElement("Send button");
+      await this.clickOnByAccessibilityID("Send button");
       await this.waitForTextElementToBePresent({
         strategy: "accessibility id",
         selector: "Message sent status: Sent",
         maxWait: 50000,
       });
     } else {
-      await this.clickOnElement("Attachments button");
+      await this.clickOnByAccessibilityID("Attachments button");
       await sleepFor(100);
-      await this.clickOnElement("Documents folder");
-      await this.clickOnElement("Show roots");
+      await this.clickOnByAccessibilityID("Documents folder");
+      await this.clickOnByAccessibilityID("Show roots");
       await sleepFor(100);
       await this.clickOnTextElementById(`android:id/title`, "Downloads");
       await sleepFor(100);
@@ -1153,10 +1188,10 @@ export class DeviceWrapper implements SharedDeviceInterface {
   public async sendVideo(platform: SupportedPlatformsType) {
     if (platform === "android") {
       // Click on attachments button
-      await this.clickOnElement("Attachments button");
+      await this.clickOnByAccessibilityID("Attachments button");
       await sleepFor(100);
       // Select images button/tab
-      await this.clickOnElement("Documents folder");
+      await this.clickOnByAccessibilityID("Documents folder");
       await sleepFor(200);
       // Select video
       const mediaButtons = await this.findElementsByClass(
@@ -1257,9 +1292,9 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async navigateBack(platform: SupportedPlatformsType) {
     if (platform === "ios") {
-      await this.clickOnElement("Back");
+      await this.clickOnByAccessibilityID("Back");
     } else {
-      await this.clickOnElement("Navigate up");
+      await this.clickOnByAccessibilityID("Navigate up");
     }
   }
 
@@ -1269,7 +1304,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     if (platform === "android") {
       await this.navigateBack(platform);
       await sleepFor(100);
-      await this.clickOnElement("User settings");
+      await this.clickOnByAccessibilityID("User settings");
       await sleepFor(500);
       await this.clickOnElementById(`network.loki.messenger:id/privacyButton`);
       await sleepFor(2000);
@@ -1284,7 +1319,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     } else {
       await this.navigateBack(platform);
       await sleepFor(100);
-      await this.clickOnElement("User settings");
+      await this.clickOnByAccessibilityID("User settings");
       await this.clickOnElementAll({ strategy: "id", selector: "Privacy" });
       await this.clickOnElementAll({
         strategy: "xpath",
@@ -1292,7 +1327,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       });
       await this.navigateBack(platform);
       await sleepFor(100);
-      await this.clickOnElement("Close button");
+      await this.clickOnByAccessibilityID("Close button");
     }
   }
 
