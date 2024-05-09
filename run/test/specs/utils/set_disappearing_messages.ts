@@ -2,7 +2,6 @@ import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { ConversationType, MergedOptions } from "../../../types/testing";
 import { SupportedPlatformsType } from "./open_app";
 import { sleepFor } from "./sleep_for";
-
 export const setDisappearingMessage = async (
   platform: SupportedPlatformsType,
   device: DeviceWrapper,

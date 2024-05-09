@@ -24,16 +24,16 @@ async function groupCreationandNameChangeLinkedDevice(
   ]);
   const testGroupName = "Linked device group";
   const newGroupName = "New group name";
-  await createGroup(
+  await createGroup({
     platform,
     device1,
-    userA,
+    userOne: userA,
+    device2,
+    userTwo: userB,
     device3,
-    userB,
-    device4,
-    userC,
-    testGroupName
-  );
+    userThree: userC,
+    userName: testGroupName,
+  });
   // Test that group has loaded on linked device
   await device2.clickOnElementAll({
     strategy: "accessibility id",
@@ -138,16 +138,16 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
   ]);
 
   // Create group with user A, user B and User C
-  await createGroup(
+  await createGroup({
     platform,
     device1,
-    userA,
+    userOne: userA,
     device2,
-    userB,
+    userTwo: userB,
     device3,
-    userC,
-    testGroupName
-  );
+    userThree: userC,
+    userName: testGroupName,
+  });
   await sleepFor(1000);
   await device3.clickOnByAccessibilityID("More options");
   await sleepFor(1000);

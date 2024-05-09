@@ -26,6 +26,7 @@ async function disappearingImageMessage(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
+
   await setDisappearingMessage(
     platform,
     device1,
@@ -50,6 +51,7 @@ async function disappearingImageMessage(platform: SupportedPlatformsType) {
     selector: "Download media",
   });
   await sleepFor(60000);
+
   await Promise.all([
     device1.hasElementBeenDeletedNew({
       strategy: "accessibility id",
@@ -77,11 +79,20 @@ async function disappearingVideoMessage(platform: SupportedPlatformsType) {
   const time: DMTimeOption = "1 minute";
   const mode: DisappearActions = "sent";
   await newContact(platform, device1, userA, device2, userB);
+
   await setDisappearingMessage(
     platform,
     device1,
     ["1:1", "Disappear after send option", "1 minute"],
     device2
+  // Click on attachments button
+  await device1.clickOnElement("Attachments button");
+  await sleepFor(100);
+  // Select images button/tab
+  await device1.clickOnElement("Documents folder");
+  // Select video
+  const mediaButtons = await device1.findElementsByClass(
+    "android.widget.CompoundButton"
   );
   await device2.disappearingControlMessage(
     `${userA.userName} has set messages to disappear ${time} after they have been ${mode}.`
@@ -281,12 +292,14 @@ async function disappearingCommunityInviteMessage(
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
+
   await setDisappearingMessage(
     platform,
     device1,
     ["1:1", "Disappear after send option", "30 seconds"],
     device2
   );
+
   await device1.navigateBack(platform);
   await joinCommunity(platform, device1, communityLink, communityName);
   await device1.clickOnByAccessibilityID("More options");
@@ -334,6 +347,7 @@ async function disappearingCallMessage(platform: SupportedPlatformsType) {
     ["1:1", "Disappear after send option", "30 seconds"],
     device2
   );
+
   await device1.navigateBack(platform);
   await device1.clickOnByAccessibilityID("Call");
   // Enabled voice calls in privacy settings

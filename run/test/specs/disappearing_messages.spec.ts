@@ -36,6 +36,7 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
     device1,
     ["1:1", `Disappear after ${mode} option`, time],
     device2
+
   );
   // Check control message is correct on device 2
   if (platform === "android") {
@@ -138,16 +139,16 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
     newUser(device3, "Charlie", platform),
   ]);
   // Create contact between User A and User B
-  await createGroup(
+  await createGroup({
     platform,
     device1,
-    userA,
+    userOne: userA,
     device2,
-    userB,
+    userTwo: userB,
     device3,
-    userC,
-    testGroupName
-  );
+    userThree: userC,
+    userName: testGroupName,
+  });
   await device1.clickOnByAccessibilityID("More options");
   // Select disappearing messages option
   await sleepFor(1000);
@@ -237,16 +238,17 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   await device.clickOnByAccessibilityID("Send message button");
   // Enable disappearing messages
   await device.clickOnByAccessibilityID("More options");
-  await sleepFor(500);
+  await sleepFor(1000);
   await runOnlyOnIOS(platform, () =>
     device.clickOnByAccessibilityID("Disappearing Messages")
   );
-  await sleepFor(1000);
+  // Select disappearing messages option
   await runOnlyOnAndroid(platform, () =>
-    device.clickOnTextElementById(
-      `network.loki.messenger:id/title`,
-      "Disappearing messages"
-    )
+    device.clickOnElementAll({
+      strategy: "id",
+      selector: "network.loki.messenger:id/title",
+      text: "Disappearing messages",
+    })
   );
   // Check default timer is set
   await sleepFor(1000);
@@ -258,6 +260,7 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   await device.clickOnByAccessibilityID("10 seconds");
   await device.clickOnByAccessibilityID("Set button");
   await runOnlyOnIOS(platform, () => device.navigateBack(platform));
+
   await sleepFor(1000);
   // await Promise.all([
   //   device.waitForControlMessageToBePresent(
@@ -282,7 +285,6 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
 describe("Disappearing messages", () => {
   // iosIt("Disappearing messages legacy", disappearingMessagesLegacy);
   // androidIt("Disappearing messages legacy", disappearingMessagesLegacy);
-
   iosIt("Disappear after send", disappearAfterSend);
   androidIt("Disappear after send", disappearAfterSend);
 

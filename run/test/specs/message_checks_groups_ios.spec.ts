@@ -22,21 +22,20 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
     newUser(device3, "Charlie", platform),
   ]);
   // Create contact between User A and User B
-  await createGroup(
+  await createGroup({
     platform,
     device1,
-    userA,
+    userOne: userA,
     device2,
-    userB,
+    userTwo: userB,
     device3,
-    userC,
-    testGroupName
-  );
+    userThree: userC,
+    userName: testGroupName,
+  });
   // await device1.sendImage(platform, testMessage);
   await device1.clickOnByAccessibilityID("Attachments button");
   await sleepFor(5000);
   await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardOpen);
-
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
     selector: "Allow Full Access",
@@ -106,16 +105,16 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
   ]);
 
   // Create contact between User A and User B
-  await createGroup(
+  await createGroup({
     platform,
     device1,
-    userA,
+    userOne: userA,
     device2,
-    userB,
+    userTwo: userB,
     device3,
-    userC,
-    testGroupName
-  );
+    userThree: userC,
+    userName: testGroupName,
+  });
   const bestDayOfYear = `198809090700.00`;
   const testMessage = "Testing-video-1";
   const replyMessage = `Replying to video from ${userA.userName} in ${testGroupName}`;
@@ -217,16 +216,16 @@ async function sendVoiceMessageGroup(platform: SupportedPlatformsType) {
   ]);
 
   // Create contact between User A and User B
-  await createGroup(
+  await createGroup({
     platform,
     device1,
-    userA,
+    userOne: userA,
     device2,
-    userB,
+    userTwo: userB,
     device3,
-    userC,
-    testGroupName
-  );
+    userThree: userC,
+    userName: testGroupName,
+  });
   const replyMessage = `Replying to voice message from ${userA.userName} in ${testGroupName}`;
   await device1.longPress("New voice message");
   // "Session" would like to access the microphone (Don't allow/ OK)
@@ -298,17 +297,17 @@ async function sendGifGroup(platform: SupportedPlatformsType) {
   const testMessage = "Testing-GIF-1";
   const replyMessage = `Replying to GIF from ${userA.userName}`;
   // Create contact between User A and User B
-  await createGroup(
+  await createGroup({
     platform,
     device1,
-    userA,
+    userOne: userA,
     device2,
-    userB,
+    userTwo: userB,
     device3,
-    userC,
-    testGroupName
-  );
-  await device1.clickOnByAccessibilityID("Attachments button");
+    userThree: userC,
+    userName: testGroupName,
+  });
+await device1.clickOnByAccessibilityID("Attachments button");
   // Select GIF tab
   await clickOnCoordinates(device1, InteractionPoints.GifButtonKeyboardOpen);
   // Select gif
@@ -363,16 +362,16 @@ async function sendLongMessageGroup(platform: SupportedPlatformsType) {
   ]);
 
   // Create contact between User A and User B
-  await createGroup(
+  await createGroup({
     platform,
     device1,
-    userA,
+    userOne: userA,
     device2,
-    userB,
+    userTwo: userB,
     device3,
-    userC,
-    testGroupName
-  );
+    userThree: userC,
+    userName: testGroupName,
+  });
   await device1.sendMessage(longText);
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -411,16 +410,16 @@ async function sendLinkGroup(platform: SupportedPlatformsType) {
   ]);
 
   // Create contact between User A and User B
-  await createGroup(
+  await createGroup({
     platform,
     device1,
-    userA,
+    userOne: userA,
     device2,
-    userB,
+    userTwo: userB,
     device3,
-    userC,
-    testGroupName
-  );
+    userThree: userC,
+    userName: testGroupName,
+  });
   await device1.inputText("accessibility id", "Message input box", testLink);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -470,16 +469,16 @@ async function deleteMessageGroup(platform: SupportedPlatformsType) {
   ]);
 
   // Create contact between User A and User B
-  await createGroup(
+  await createGroup({
     platform,
     device1,
-    userA,
+    userOne: userA,
     device2,
-    userB,
+    userTwo: userB,
     device3,
-    userC,
-    testGroupName
-  );
+    userThree: userC,
+    userName: testGroupName,
+  });
   const sentMessage = await device1.sendMessage(
     "Checking delete functionality"
   );

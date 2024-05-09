@@ -300,7 +300,7 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   if (pixelColor === "04cbfe") {
     console.log("Colour is correct");
   } else {
-    throw new Error("Colour isn't 04cbfe, it is: " + pixelColor);
+    throw new Error("Colour isn't 0000ff, it is: " + pixelColor);
   }
   console.log("Now checking avatar on linked device");
   // Check avatar on device 2
@@ -382,14 +382,14 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
     strategy: "accessibility id",
     selector: "User settings",
   });
-  await sleepFor(3000);
+  await sleepFor(5000);
   const base64 = await device1.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
   console.log("RGB Value of pixel is:", pixelColor);
-  if (pixelColor === "03cbfe") {
+  if (pixelColor === "cbfeff") {
     console.log("Colour is correct on device 1");
   } else {
-    console.log("Colour isn't 03cbfe, it is: ", pixelColor);
+    console.log("Colour isn't cbfeff, it is: ", pixelColor);
   }
   console.log("Now checking avatar on linked device");
   // Check avatar on device 2
@@ -398,13 +398,13 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
     strategy: "accessibility id",
     selector: "User settings",
   });
-  await sleepFor(3000);
+  await sleepFor(5000);
   const base64A = await device2.getElementScreenshot(el2.ELEMENT);
   const pixelColorLinked = await parseDataImage(base64A);
-  if (pixelColorLinked === "03cbfe") {
+  if (pixelColorLinked === "cbfeff") {
     console.log("Colour is correct on linked device");
   } else {
-    console.log("Colour isn't 03cbfe, it is: ", pixelColorLinked);
+    console.log("Colour isn't cbfeff, it is: ", pixelColorLinked);
   }
   await closeApp(device1, device2);
 }

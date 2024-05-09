@@ -20,16 +20,16 @@ async function groupCreation(platform: SupportedPlatformsType) {
     newUser(device3, "Charlie", platform),
   ]);
   // Create contact between User A and User B and User C
-  await createGroup(
+  await createGroup({
     platform,
     device1,
-    userA,
+    userOne: userA,
     device2,
-    userB,
+    userTwo: userB,
     device3,
-    userC,
-    testGroupName
-  );
+    userThree: userC,
+    userName: testGroupName,
+  });
   // Close server and devices
   await closeApp(device1, device2, device3);
 }
@@ -46,16 +46,16 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   ]);
   // Create group
 
-  await createGroup(
+  await createGroup({
     platform,
     device1,
-    userA,
+    userOne: userA,
     device2,
-    userB,
+    userTwo: userB,
     device3,
-    userC,
-    testGroupName
-  );
+    userThree: userC,
+    userName: testGroupName,
+  });
   // Now change the group name
 
   // Click on settings or three dots
@@ -103,16 +103,16 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   ]);
   // Create group
 
-  await createGroup(
+  await createGroup({
     platform,
     device1,
-    userA,
+    userOne: userA,
     device2,
-    userB,
+    userTwo: userB,
     device3,
-    userC,
-    testGroupName
-  );
+    userThree: userC,
+    userName: testGroupName,
+  });
   // Now change the group name
 
   // Click on settings or three dots
@@ -167,16 +167,16 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     newUser(device3, "Charlie", platform),
   ]);
   const testGroupName = "Group to test adding contact";
-  const group = await createGroup(
+  const group = await createGroup({
     platform,
     device1,
-    userA,
+    userOne: userA,
     device2,
-    userB,
+    userTwo: userB,
     device3,
-    userC,
-    testGroupName
-  );
+    userThree: userC,
+    userName: testGroupName,
+  });
   const userD = await newUser(device4, "Dracula", platform);
   await device1.navigateBack(platform);
   await newContact(platform, device1, userA, device4, userD);
@@ -243,47 +243,6 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   );
   await closeApp(device1, device2, device3, device4);
 }
-
-// async function mentionsForGroupsIos(platform: SupportedPlatformsType) {
-//   const { device1, device2, device3 } = await openAppThreeDevices(platform);
-//   // Create users A, B and C
-//   const [userA, userB, userC] = await Promise.all([
-//     newUser(device1, "Alice", platform),
-//     newUser(device2, "Bob", platform),
-//     newUser(device3, "Charlie", platform),
-//   ]);
-//   const testGroupName = "Mentions test group";
-//   // Create contact between User A and User B
-//   await createGroup(
-//     platform,
-//     device1,
-//     userA,
-//     device2,
-//     userB,
-//     device3,
-//     userC,
-//     testGroupName
-//   );
-//   await device1.inputText("accessibility id", "Message input box", "@");
-//   // Check that all users are showing in mentions box
-//   await device1.findElement("accessibility id", "Mentions list");
-//   // Select User B
-//   await device1.selectByText("Contact", userB.userName);
-//   await device1.clickOnByAccessibilityID("Send message button");
-//   // Check in user B's device if the format is correct
-//   await device2.findMessageWithBody("@You");
-//   await device2.inputText("accessibility id", "Message input box", "@");
-//   // Check that all users are showing in mentions box
-//   await device2.findElement("accessibility id", "Mentions list");
-//   // Select User C
-//   await device2.selectByText("Contact", userC.userName);
-//   await device2.clickOnByAccessibilityID("Send message button");
-//   // Check in User C's device if the format is correct
-//   await device3.findMessageWithBody("@You");
-//   // Close app
-//   await closeApp(device1, device2, device3);
-// }
-
 async function mentionsForGroups(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
@@ -294,16 +253,16 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
   ]);
   const testGroupName = "Mentions test group";
   // Create contact between User A and User B
-  await createGroup(
+  await createGroup({
     platform,
     device1,
-    userA,
+    userOne: userA,
     device2,
-    userB,
+    userTwo: userB,
     device3,
-    userC,
-    testGroupName
-  );
+    userThree: userC,
+    userName: testGroupName,
+  });
   await device1.inputText("accessibility id", "Message input box", "@");
   // Check that all users are showing in mentions box
   await device1.waitForTextElementToBePresent({
@@ -312,6 +271,7 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
   });
 
   // Select User B
+
   await device1.selectByText("Contact", userB.userName);
   await device1.clickOnByAccessibilityID("Send message button");
   await device1.waitForTextElementToBePresent({
@@ -329,7 +289,6 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
     strategy: "accessibility id",
     selector: "Mentions list",
   });
-
   // Select User B
   await device1.selectByText("Contact", userC.userName);
   await device1.clickOnByAccessibilityID("Send message button");
@@ -371,17 +330,17 @@ async function leaveGroupIos(platform: SupportedPlatformsType) {
   ]);
 
   // Create group with user A, user B and User C
-  await createGroup(
+  await createGroup({
     platform,
     device1,
-    userA,
+    userOne: userA,
     device2,
-    userB,
+    userTwo: userB,
     device3,
-    userC,
-    testGroupName
-  );
-  await device3.clickOnByAccessibilityID("More options");
+    userThree: userC,
+    userName: testGroupName,
+  });
+  await device3.clickOnElement("More options");
   await sleepFor(1000);
   await device3.clickOnByAccessibilityID("Leave group");
   await device3.clickOnByAccessibilityID("Leave");
@@ -407,17 +366,17 @@ async function leaveGroupAndroid(platform: SupportedPlatformsType) {
   ]);
 
   // Create group with user A, user B and User C
-  await createGroup(
+  await createGroup({
     platform,
     device1,
-    userA,
+    userOne: userA,
     device2,
-    userB,
+    userTwo: userB,
     device3,
-    userC,
-    testGroupName
-  );
-  await device3.clickOnByAccessibilityID("More options");
+    userThree: userC,
+    userName: testGroupName,
+  });
+  await device3.clickOnElement("More options");
   await sleepFor(1000);
   await device3.clickOnTextElementById(
     `network.loki.messenger:id/title`,

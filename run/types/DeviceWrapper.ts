@@ -501,7 +501,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async deleteText(accessibilityId: AccessibilityId) {
     const el = await this.findElementByAccessibilityId(accessibilityId);
-    await this.longClick(el, 500);
+    await this.longClick(el, 1000);
     if (this.isIOS()) {
       await this.clickOnElementByText({
         strategy: "id",
@@ -594,25 +594,25 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return selector;
   }
 
-  public async findText(
-    strategy: Strategy,
-    selector: string,
-    text: string
-  ): Promise<AppiumNextElementType> {
-    let el: null | AppiumNextElementType = null;
-    console.log(
-      `Waiting for accessibility ID '${selector}' to be present with ${text}`
-    );
-    while (el === null) {
-      try {
-        const els = await this.findElements(strategy, selector);
-        el = await this.findMatchingTextInElementArray(els, text);
-      } catch (e) {
-        console.log(`findText threw an error`);
-      }
-    }
-    return el;
-  }
+  // public async findText(
+  //   strategy: Strategy,
+  //   selector: string,
+  //   text: string
+  // ): Promise<AppiumNextElementType> {
+  //   let el: null | AppiumNextElementType = null;
+  //   console.log(
+  //     `Waiting for accessibility ID '${selector}' to be present with ${text}`
+  //   );
+  //   while (el === null) {
+  //     try {
+  //       const els = await this.findElements(strategy, selector);
+  //       el = await this.findMatchingTextInElementArray(els, text);
+  //     } catch (e) {
+  //       console.log(`findText threw an error`);
+  //     }
+  //   }
+  //   return el;
+  // }
 
   public async findMatchingTextAndAccessibilityId(
     accessibilityId: AccessibilityId,

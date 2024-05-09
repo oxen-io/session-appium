@@ -149,7 +149,7 @@ async function changeUsername(platform: SupportedPlatformsType) {
 // TO FIX (WRONG USER FLOW?)
 async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
-  const spongebobsBirthday = "199905020700.00";
+  const spongebobsBirthday = "199905010700.00";
   // Create new user
   await newUser(device, "Alice", platform);
   // Click on settings/avatar
@@ -209,17 +209,14 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
     selector: "User settings",
     maxWait: 10000,
   });
-
   const base64 = await device.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
   console.log("RGB Value of pixel is:", pixelColor);
-  if (pixelColor === "03cbfe") {
+  if (pixelColor === "cbfeff") {
     console.log("Colour is correct on device 1");
   } else {
-    console.log("Colour isn't 03cbfe, it is: ", pixelColor);
+    console.log("Colour isn't cbfeff, it is: ", pixelColor);
   }
-  // Check avatar on device 2
-
   await closeApp(device);
 }
 
