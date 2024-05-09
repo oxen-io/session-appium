@@ -36,7 +36,6 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
     device1,
     ["1:1", `Disappear after ${mode} option`, time],
     device2
-
   );
   // Check control message is correct on device 2
   if (platform === "android") {
@@ -139,16 +138,16 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
     newUser(device3, "Charlie", platform),
   ]);
   // Create contact between User A and User B
-  await createGroup({
+  await createGroup(
     platform,
     device1,
-    userOne: userA,
+    userA,
     device2,
-    userTwo: userB,
+    userB,
     device3,
-    userThree: userC,
-    userName: testGroupName,
-  });
+    userC,
+    testGroupName
+  );
   await device1.clickOnByAccessibilityID("More options");
   // Select disappearing messages option
   await sleepFor(1000);

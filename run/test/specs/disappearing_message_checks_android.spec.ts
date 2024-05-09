@@ -85,11 +85,12 @@ async function disappearingVideoMessage(platform: SupportedPlatformsType) {
     device1,
     ["1:1", "Disappear after send option", "1 minute"],
     device2
+  );
   // Click on attachments button
-  await device1.clickOnElement("Attachments button");
+  await device1.clickOnByAccessibilityID("Attachments button");
   await sleepFor(100);
   // Select images button/tab
-  await device1.clickOnElement("Documents folder");
+  await device1.clickOnByAccessibilityID("Documents folder");
   // Select video
   const mediaButtons = await device1.findElementsByClass(
     "android.widget.CompoundButton"

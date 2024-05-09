@@ -15,7 +15,9 @@ export type GroupName =
   | "Linked device group"
   | "Testing disappearing messages"
   | "Group to test adding contact"
-  | "Disappear after send test";
+  | "Disappear after send test"
+  | "Testing voice messages in groups for disappearing messages"
+  | "Disappear after sent test";
 
 export type Group = {
   userName: GroupName;
@@ -276,4 +278,3 @@ export type AccessibilityId =
   | "Follow Setting"
   | "Set"
   | "Allow Full Access";
-

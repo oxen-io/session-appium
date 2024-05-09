@@ -1,11 +1,6 @@
 import { iosIt } from "../../types/sessionIt";
-import { InteractionPoints } from "../../types/testing";
-import {
-  clickOnXAndYCoordinates,
-  runOnlyOnAndroid,
-  runOnlyOnIOS,
-  sleepFor,
-} from "./utils";
+import { GroupName, InteractionPoints } from "../../types/testing";
+import { clickOnCoordinates, sleepFor } from "./utils";
 
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
@@ -265,9 +260,10 @@ async function disappearingGifMessage1o1(platform: SupportedPlatformsType) {
   await sleepFor(500);
   // Need to select Continue on GIF warning
   await device1.clickOnByAccessibilityID("Continue");
-  await device1.clickOnElementXPath(
-    `(//XCUIElementTypeImage[@name="gif cell"])[1]`
-  );
+  await device1.clickOnElementAll({
+    strategy: "xpath",
+    selector: `(//XCUIElementTypeImage[@name="gif cell"])[1]`,
+  });
   await device1.clickOnByAccessibilityID("Text input box");
   await device1.inputText("accessibility id", "Text input box", testMessage);
   await device1.clickOnByAccessibilityID("Send button");
@@ -380,7 +376,7 @@ async function disappearingCommunityInviteMessage1o1(
   await device1.clickOnByAccessibilityID("Join");
   await device1.clickOnByAccessibilityID("More options", 10000);
   await device1.clickOnByAccessibilityID("Add Members");
-  await device1.clickOnElementByText({
+  await device1.clickOnElementAll({
     strategy: "accessibility id",
     selector: "Contact",
     text: userB.userName,
@@ -438,15 +434,15 @@ async function disappearingCallMessage1o1(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID("Continue");
   // Navigate back to conversation
   await sleepFor(500);
-  await device1.clickOnElement("Close button");
+  await device1.clickOnByAccessibilityID("Close button");
   // Enable voice calls on device 2 for User B
   await device2.clickOnByAccessibilityID("Call");
   await device2.clickOnByAccessibilityID("Settings");
   await device2.scrollDown();
-  await device2.clickOnElement("Allow voice and video calls");
-  await device2.clickOnElement("Enable");
+  await device2.clickOnByAccessibilityID("Allow voice and video calls");
+  await device2.clickOnByAccessibilityID("Enable");
   await sleepFor(500);
-  await device2.clickOnElement("Close button");
+  await device2.clickOnByAccessibilityID("Close button");
   // Make call on device 1 (userA)
   await device1.clickOnByAccessibilityID("Call");
   // Answer call on device 2
@@ -491,16 +487,16 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
     newUser(device3, "Charlie", platform),
   ]);
-  await createGroup({
+  await createGroup(
     platform,
     device1,
-    userOne: userA,
+    userA,
     device2,
-    userTwo: userB,
+    userB,
     device3,
-    userThree: userC,
-    userName: testGroupName,
-  });
+    userC,
+    testGroupName
+  );
 
   await setDisappearingMessage(platform, device1, [
     "Group",
@@ -593,16 +589,16 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
     newUser(device3, "Charlie", platform),
   ]);
-  await createGroup({
+  await createGroup(
     platform,
     device1,
-    userOne: userA,
+    userA,
     device2,
-    userTwo: userB,
+    userB,
     device3,
-    userThree: userC,
-    userName: testGroupName,
-  });
+    userC,
+    testGroupName
+  );
   await setDisappearingMessage(platform, device1, [
     "Group",
     "Disappear after send option",
@@ -691,7 +687,7 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
 
 async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  const testGroupName =
+  const testGroupName: GroupName =
     "Testing voice messages in groups for disappearing messages";
   // Create user A and user B
   const [userA, userB, userC] = await Promise.all([
@@ -699,16 +695,16 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
     newUser(device3, "Charlie", platform),
   ]);
-  await createGroup({
+  await createGroup(
     platform,
     device1,
-    userOne: userA,
+    userA,
     device2,
-    userTwo: userB,
+    userB,
     device3,
-    userThree: userC,
-    userName: testGroupName,
-  });
+    userC,
+    testGroupName
+  );
   await setDisappearingMessage(platform, device1, [
     "Group",
     "Disappear after send option",
@@ -753,16 +749,16 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
     newUser(device3, "Charlie", platform),
   ]);
-  await createGroup({
+  await createGroup(
     platform,
     device1,
-    userOne: userA,
+    userA,
     device2,
-    userTwo: userB,
+    userB,
     device3,
-    userThree: userC,
-    userName: testGroupName,
-  });
+    userC,
+    testGroupName
+  );
   await setDisappearingMessage(platform, device1, [
     "Group",
     "Disappear after send option",
@@ -775,12 +771,13 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
   await clickOnCoordinates(device1, InteractionPoints.GifButtonKeyboardClosed);
   // Need to select Continue on GIF warning
   await device1.clickOnByAccessibilityID("Continue", 5000);
-  await device1.clickOnElementXPath(
-    `(//XCUIElementTypeImage[@name="gif cell"])[1]`
-  );
+  await device1.clickOnElementAll({
+    strategy: "xpath",
+    selector: `(//XCUIElementTypeImage[@name="gif cell"])[1]`,
+  });
   await device1.clickOnByAccessibilityID("Text input box");
   await device1.inputText("accessibility id", "Text input box", testMessage);
-  await device1.clickOnElement("Send button");
+  await device1.clickOnByAccessibilityID("Send button");
   // Wait for 10 seconds
   await sleepFor(10000);
   // Check if GIF has been deleted on both devices
@@ -808,27 +805,25 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
 }
 
 async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
-
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   const testGroupName = "Test group";
-  const testLink = `https://example.org/`;
-
+  const testLink = `https://type-level-typescript.com/objects-and-records`;
   // Create user A and user B
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
     newUser(device3, "Charlie", platform),
   ]);
-  await createGroup({
+  await createGroup(
     platform,
     device1,
-    userOne: userA,
+    userA,
     device2,
-    userTwo: userB,
+    userB,
     device3,
-    userThree: userC,
-    userName: testGroupName,
-  });
+    userC,
+    testGroupName
+  );
   await setDisappearingMessage(platform, device1, [
     "Group",
     "Disappear after send option",
@@ -892,96 +887,10 @@ describe("Disappearing messages checks 1o1", () => {
   );
   iosIt("Disappearing messages call history", disappearingCallMessage1o1);
 });
-// async function disappearingGroupControlMessage(
-//   platform: SupportedPlatformsType
-// ) {
-//   // Create user A and user B
-//   const { device1, device2, device3 } = await openAppThreeDevices(platform);
-//   const communityLink = `https://chat.lokinet.dev/testing-all-the-things?public_key=1d7e7f92b1ed3643855c98ecac02fc7274033a3467653f047d6e433540c03f17`;
-//   const communityName = "Testing All The Things!";
-//   const testGroupName = "Disappear after sent test";
-//   // Create user A and user B
-//   const [userA, userB, userC] = await Promise.all([
-//     newUser(device1, "Alice", platform),
-//     newUser(device2, "Bob", platform),
-//     newUser(device3, "Charlie", platform),
-//   ]);
-//   await createGroup({
-//     platform,
-//     device1,
-//     userOne: userA,
-//     device2,
-//     userTwo: userB,
-//     device3,
-//     userThree: userC,
-//     userName: testGroupName,
-//   });
-//   await setDisappearingMessage(platform, device1, [
-//     "Group",
-//     "Disappear after send option",
-//     "10 seconds",
-//   ]);
-//   await device1.navigateBack(platform);
-//   await device1.navigateBack(platform);
-//   await device1.clickOnElement("New conversation button");
-//   await device1.clickOnElement("Join Community");
-//   await device1.inputText(
-//     "accessibility id",
-//     "Enter Community URL",
-//     communityLink
-//   );
-//   await device1.clickOnElement("Join");
-//   // Wait for community to load
-//   await sleepFor(1000);
-//   await device1.clickOnElement("More options");
-//   await device1.clickOnElement("Add Members");
-//   await device1.clickOnElementByText({
-//     strategy: "accessibility id",
-//     selector: "Contact",
-//     text: userB.userName,
-//   });
-//   await device1.clickOnElement("Done");
-//   // Check device 2 for invitation from user A
-//   await device2.waitForTextElementToBePresent({
-//     strategy: "accessibility id",
-//     selector: "Community invitation",
-//     text: communityName,
-//   });
-//   // Wait for 10 seconds for message to disappear
-//   await sleepFor(10000);
-//   await Promise.all([
-//     device2.hasElementBeenDeletedNew({
-//       strategy: "accessibility id",
-//       selector: "Message body",
-//       maxWait: 1000,
-//       text: communityName,
-//     }),
-//     device1.hasElementBeenDeletedNew({
-//       strategy: "accessibility id",
-//       selector: "Message body",
-//       maxWait: 1000,
-//       text: communityName,
-//     }),
-//     device3.hasElementBeenDeletedNew({
-//       strategy: "accessibility id",
-//       selector: "Message body",
-//       maxWait: 1000,
-//       text: communityName,
-//     }),
-//   ]);
-//   await closeApp(device1, device2, device3);
-// }
-
 describe("Disappearing messages checks groups", () => {
   iosIt("Disappearing messages image group", disappearingImageMessageGroup);
   iosIt("Disappearing messages video group", disappearingVideoMessageGroup);
   iosIt("Disappearing messages voice group", disappearingVoiceMessageGroup);
   iosIt("Disappearing messages gif group", disappearingGifMessageGroup);
   iosIt("Disappearing messages link group", disappearingLinkMessageGroup);
-
-
-  // iosIt(
-  //   "Disappearing messages group control messages",
-  //   disappearingGroupControlMessage
-  // );
 });

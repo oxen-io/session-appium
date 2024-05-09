@@ -20,16 +20,16 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
     newUser(device3, "Charlie", platform),
   ]);
   // Create contact between User A and User B
-  await createGroup({
+  await createGroup(
     platform,
     device1,
-    userOne: userA,
+    userA,
     device2,
-    userTwo: userB,
+    userB,
     device3,
-    userThree: userC,
-    userName: testGroupName,
-  });
+    userC,
+    testGroupName
+  );
   const replyMessage = `Replying to image from ${userA.userName}`;
   await device1.sendImage(platform, testMessage);
   // Wait for image to appear in conversation screen
@@ -76,16 +76,16 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
     newUser(device3, "Charlie", platform),
   ]);
   // Create contact between User A and User B
-  await createGroup({
+  await createGroup(
     platform,
     device1,
-    userOne: userA,
+    userA,
     device2,
-    userTwo: userB,
+    userB,
     device3,
-    userThree: userC,
-    userName: testGroupName,
-  });
+    userC,
+    testGroupName
+  );
   const replyMessage = `Replying to video from ${userA.userName} in ${testGroupName}`;
   // Click on attachments button
   await device1.sendVideo(platform);
@@ -134,16 +134,16 @@ async function sendVoiceMessageGroup(platform: SupportedPlatformsType) {
     newUser(device3, "Charlie", platform),
   ]);
   // Create contact between User A and User B
-  await createGroup({
+  await createGroup(
     platform,
     device1,
-    userOne: userA,
+    userA,
     device2,
-    userTwo: userB,
+    userB,
     device3,
-    userThree: userC,
-    userName: testGroupName,
-  });
+    userC,
+    testGroupName
+  );
   const replyMessage = `Replying to voice message from ${userA.userName} in ${testGroupName}`;
   // Select voice message button to activate recording state
   await device1.longPress("New voice message");
@@ -188,16 +188,16 @@ async function sendDocumentGroup(platform: SupportedPlatformsType) {
     newUser(device3, "Charlie", platform),
   ]);
   // Create contact between User A and User B
-  await createGroup({
+  await createGroup(
     platform,
     device1,
-    userOne: userA,
+    userA,
     device2,
-    userTwo: userB,
+    userB,
     device3,
-    userThree: userC,
-    userName: testGroupName,
-  });
+    userC,
+    testGroupName
+  );
   const replyMessage = `Replying to document from ${userA.userName} in ${testGroupName}`;
   await device1.clickOnByAccessibilityID("Attachments button");
   await sleepFor(100);
@@ -264,16 +264,16 @@ async function sendLinkGroup(platform: SupportedPlatformsType) {
     newUser(device3, "Charlie", platform),
   ]);
   // Create contact between User A and User B
-  await createGroup({
+  await createGroup(
     platform,
     device1,
-    userOne: userA,
+    userA,
     device2,
-    userTwo: userB,
+    userB,
     device3,
-    userThree: userC,
-    userName: testGroupName,
-  });
+    userC,
+    testGroupName
+  );
   const testLink = `https://example.org/`;
   // Send a link
   await device1.inputText("accessibility id", "Message input box", testLink);
@@ -315,16 +315,16 @@ async function sendGifGroup(platform: SupportedPlatformsType) {
     newUser(device3, "Charlie", platform),
   ]);
   // Create contact between User A and User B
-  await createGroup({
+  await createGroup(
     platform,
     device1,
-    userOne: userA,
+    userA,
     device2,
-    userTwo: userB,
+    userB,
     device3,
-    userThree: userC,
-    userName: testGroupName,
-  });
+    userC,
+    testGroupName
+  );
   const replyMessage = `Replying to GIF from ${userA.userName}`;
   // Click on attachments button
   await device1.clickOnByAccessibilityID("Attachments button");
@@ -374,16 +374,16 @@ async function sendLongMessageGroup(platform: SupportedPlatformsType) {
     newUser(device3, "Charlie", platform),
   ]);
   // Create contact between User A and User B
-  await createGroup({
+  await createGroup(
     platform,
     device1,
-    userOne: userA,
+    userA,
     device2,
-    userTwo: userB,
+    userB,
     device3,
-    userThree: userC,
-    userName: testGroupName,
-  });
+    userC,
+    testGroupName
+  );
   const longText =
     "Mauris sapien dui, sagittis et fringilla eget, tincidunt vel mauris. Mauris bibendum quis ipsum ac pulvinar. Integer semper elit vitae placerat efficitur. Quisque blandit scelerisque orci, a fringilla dui. In a sollicitudin tortor. Vivamus consequat sollicitudin felis, nec pretium dolor bibendum sit amet. Integer non congue risus, id imperdiet diam. Proin elementum enim at felis commodo semper. Pellentesque magna magna, laoreet nec hendrerit in, suscipit sit amet risus. Nulla et imperdiet massa. Donec commodo felis quis arcu dignissim lobortis. Praesent nec fringilla felis, ut pharetra sapien. Donec ac dignissim nisi, non lobortis justo. Nulla congue velit nec sodales bibendum. Nullam feugiat, mauris ac consequat posuere, eros sem dignissim nulla, ac convallis dolor sem rhoncus dolor. Cras ut luctus risus, quis viverra mauris.";
   // Sending a long text message
@@ -435,16 +435,16 @@ async function deleteMessageGroup(platform: SupportedPlatformsType) {
     newUser(device3, "Charlie", platform),
   ]);
   // Create contact between User A and User B
-  await createGroup({
+  await createGroup(
     platform,
     device1,
-    userOne: userA,
+    userA,
     device2,
-    userTwo: userB,
+    userB,
     device3,
-    userThree: userC,
-    userName: testGroupName,
-  });
+    userC,
+    testGroupName
+  );
   const sentMessage = await device1.sendMessage(
     "Checking unsend functionality"
   );
