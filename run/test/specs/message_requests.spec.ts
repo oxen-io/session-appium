@@ -21,11 +21,11 @@ async function acceptRequest(platform: SupportedPlatformsType) {
   // Wait for banner to appear
 
   // Bob clicks on message request banner
-  await device2.clickOnElement("Message requests banner");
+  await device2.clickOnByAccessibilityID("Message requests banner");
   // Bob clicks on request conversation item
-  await device2.clickOnElement("Message request");
+  await device2.clickOnByAccessibilityID("Message request");
   // Bob clicks accept button
-  await device2.clickOnElement("Accept message request");
+  await device2.clickOnByAccessibilityID("Accept message request");
   // Verify config message for Alice 'Your message request has been accepted'
   await device1.waitForControlMessageToBePresent(
     "Your message request has been accepted."
@@ -52,19 +52,21 @@ async function declineRequest(platform: SupportedPlatformsType) {
   await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
   // Wait for banner to appear
   // Bob clicks on message request banner
-  await device2.clickOnElement("Message requests banner");
+  await device2.clickOnByAccessibilityID("Message requests banner");
   // Bob clicks on request conversation item
-  await device2.clickOnElement("Message request");
+  await device2.clickOnByAccessibilityID("Message request");
   // Click on decline button
   await runOnlyOnIOS(platform, () =>
-    device2.clickOnElement("Delete message request")
+    device2.clickOnByAccessibilityID("Delete message request")
   );
   await runOnlyOnAndroid(platform, () =>
-    device2.clickOnElement("Decline message request")
+    device2.clickOnByAccessibilityID("Decline message request")
   );
   // Are you sure you want to delete message request only for ios
   await sleepFor(2000);
-  await runOnlyOnIOS(platform, () => device2.clickOnElement("Confirm delete"));
+  await runOnlyOnIOS(platform, () =>
+    device2.clickOnByAccessibilityID("Confirm delete")
+  );
   // Navigate back to home page
   await sleepFor(100);
   await device2.navigateBack(platform);
@@ -89,9 +91,9 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
   await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
   // Wait for banner to appear
   // Bob clicks on message request banner
-  await device2.clickOnElement("Message requests banner");
+  await device2.clickOnByAccessibilityID("Message requests banner");
   // Bob clicks on request conversation item
-  await device2.clickOnElement("Message request");
+  await device2.clickOnByAccessibilityID("Message request");
   // Send message from Bob to Alice
   await device2.sendMessage(`${userB.userName} to ${userA.userName}`);
   // Check config
@@ -112,16 +114,16 @@ async function blockRequest(platform: SupportedPlatformsType) {
   await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
   // Wait for banner to appear
   // Bob clicks on message request banner
-  await device2.clickOnElement("Message requests banner");
+  await device2.clickOnByAccessibilityID("Message requests banner");
   // Bob clicks on request conversation item
-  await device2.clickOnElement("Message request");
+  await device2.clickOnByAccessibilityID("Message request");
   // Bob clicks on block option
-  await device2.clickOnElement("Block message request");
+  await device2.clickOnByAccessibilityID("Block message request");
   // Confirm block on android
   await sleepFor(1000);
-  await runOnlyOnIOS(platform, () => device2.clickOnElement("Block"));
+  await runOnlyOnIOS(platform, () => device2.clickOnByAccessibilityID("Block"));
   await runOnlyOnAndroid(platform, () =>
-    device2.clickOnElement("Confirm block")
+    device2.clickOnByAccessibilityID("Confirm block")
   );
   const blockedMessage = `${userA.userName} to ${userB.userName} - shouldn't get through`;
   await device1.sendMessage(blockedMessage);
@@ -135,13 +137,13 @@ async function blockRequest(platform: SupportedPlatformsType) {
   await sleepFor(1000);
   await device2.hasTextElementBeenDeleted("Message body", blockedMessage);
   // Check blocked contacts section for user A
-  await device2.clickOnElement("User settings");
-  await device2.clickOnElement("Conversations");
+  await device2.clickOnByAccessibilityID("User settings");
+  await device2.clickOnByAccessibilityID("Conversations");
   await runOnlyOnAndroid(platform, () =>
-    device2.clickOnElement("Blocked contacts")
+    device2.clickOnByAccessibilityID("Blocked contacts")
   );
   await runOnlyOnIOS(platform, () =>
-    device2.clickOnElement("Blocked Contacts")
+    device2.clickOnByAccessibilityID("Blocked Contacts")
   );
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -149,7 +151,7 @@ async function blockRequest(platform: SupportedPlatformsType) {
     text: userA.userName,
   });
   await runOnlyOnIOS(platform, () =>
-    device2.clickOnElement("Blocked Contacts")
+    device2.clickOnByAccessibilityID("Blocked Contacts")
   );
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -171,13 +173,13 @@ async function deleteRequest(platform: SupportedPlatformsType) {
   await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
   // Wait for banner to appear
   // Bob clicks on message request banner
-  await device2.clickOnElement("Message requests banner");
+  await device2.clickOnByAccessibilityID("Message requests banner");
   // Swipe left on ios
   await device2.swipeLeftAny("Message request");
 
-  await device2.clickOnElement("Delete");
+  await device2.clickOnByAccessibilityID("Delete");
   await sleepFor(1000);
-  await device2.clickOnElement("Confirm delete");
+  await device2.clickOnByAccessibilityID("Confirm delete");
   await device2.findElement("accessibility id", "No pending message requests");
 
   await closeApp(device1, device2);
@@ -193,14 +195,14 @@ async function clearAllRequests(platform: SupportedPlatformsType) {
   await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
   // Wait for banner to appear
   // Bob clicks on message request banner
-  await device2.clickOnElement("Message requests banner");
+  await device2.clickOnByAccessibilityID("Message requests banner");
   // Select Clear All button
-  await device2.clickOnElement("Clear all");
+  await device2.clickOnByAccessibilityID("Clear all");
   await sleepFor(1000);
   await runOnlyOnAndroid(platform, () =>
-    device2.clickOnTextElementById("android:id/button1", "YES")
+    device2.clickOnElementAll({ strategy: "accessibility id", selector: "Yes" })
   );
-  await runOnlyOnIOS(platform, () => device2.clickOnElement("Clear"));
+  await runOnlyOnIOS(platform, () => device2.clickOnByAccessibilityID("Clear"));
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "No pending message requests",
@@ -208,7 +210,7 @@ async function clearAllRequests(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
-describe("Message requests", () => {
+describe("Message requests all", () => {
   iosIt("Message requests accept", acceptRequest);
   androidIt("Message requests accept", acceptRequest);
 

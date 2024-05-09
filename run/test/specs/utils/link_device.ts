@@ -14,7 +14,7 @@ export const linkedDevice = async (
   const user = await newUser(device1, userName, platform);
   // Log in with recovery seed on device 2
 
-  await device2.clickOnElement("Restore your session button");
+  await device2.clickOnByAccessibilityID("Restore your session button");
   // Enter recovery phrase into input box
   await device2.inputText(
     "accessibility id",
@@ -24,7 +24,7 @@ export const linkedDevice = async (
   // Wait for continue button to become active
   await sleepFor(500);
   // Continue with recovery phrase
-  await device2.clickOnElement("Continue");
+  await device2.clickOnByAccessibilityID("Continue");
   // Wait for any notifications to disappear
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -35,10 +35,12 @@ export const linkedDevice = async (
   // Wait for transitiion animation between the two pages
   await await sleepFor(250);
   // Click continue on message notification settings
-  await device2.clickOnElement("Continue");
+  await device2.clickOnByAccessibilityID("Continue");
   // Wait for permissions modal to pop up
   await sleepFor(1000);
-  await runOnlyOnIOS(platform, () => device2.clickOnElement("Don’t Allow"));
+  await runOnlyOnIOS(platform, () =>
+    device2.clickOnByAccessibilityID("Don’t Allow")
+  );
   // Wait for loading animation searching for display name
   await device1.waitForLoadingAnimation();
   // If display name isn't found
@@ -48,7 +50,7 @@ export const linkedDevice = async (
   });
   if (displayName) {
     await device1.inputText("accessibility id", "Enter display name", userName);
-    await device1.clickOnElement("Continue");
+    await device1.clickOnByAccessibilityID("Continue");
   } else {
     console.log(`Username found: ${userName}`);
   }

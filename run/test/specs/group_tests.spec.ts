@@ -59,7 +59,7 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   // Now change the group name
 
   // Click on settings or three dots
-  await device1.clickOnElement("More options");
+  await device1.clickOnByAccessibilityID("More options");
   // Click on Edit group option
   await sleepFor(1000);
   await device1.clickOnTextElementById(
@@ -68,19 +68,19 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   );
 
   // Click on current group name
-  await device1.clickOnElement("Group name");
+  await device1.clickOnByAccessibilityID("Group name");
   await device1.inputText("accessibility id", "Group name", "   ");
-  await device1.clickOnElement("Accept name change");
+  await device1.clickOnByAccessibilityID("Accept name change");
   // Alert should pop up 'Please enter group name', click ok
   // If ios click ok / If Android go to next step
 
   await device1.deleteText("Group name");
   // Enter new group name
-  await device1.clickOnElement("Group name");
+  await device1.clickOnByAccessibilityID("Group name");
 
   await device1.inputText("accessibility id", "Group name", newGroupName);
   // Click done/apply
-  await device1.clickOnElement("Accept name change");
+  await device1.clickOnByAccessibilityID("Accept name change");
   await device1.clickOnElementById("network.loki.messenger:id/action_apply");
   // Check config message for changed name (different on ios and android)
   // Config on Android is "You renamed the group to blah"
@@ -116,25 +116,25 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   // Now change the group name
 
   // Click on settings or three dots
-  await device1.clickOnElement("More options");
+  await device1.clickOnByAccessibilityID("More options");
   // Click on Edit group option
   await sleepFor(1000);
 
-  await device1.clickOnElement("Edit group");
+  await device1.clickOnByAccessibilityID("Edit group");
 
   // Click on current group name
-  await device1.clickOnElement("Group name");
+  await device1.clickOnByAccessibilityID("Group name");
   await device1.inputText("accessibility id", "Group name text field", "   ");
-  await device1.clickOnElement("Accept name change");
+  await device1.clickOnByAccessibilityID("Accept name change");
   // Alert should pop up 'Please enter group name', click ok
   // If ios click ok / If Android go to next step
 
-  await device1.clickOnElement("OK");
+  await device1.clickOnByAccessibilityID("OK");
   // Delete empty space
-  await device1.clickOnElement("Cancel");
+  await device1.clickOnByAccessibilityID("Cancel");
 
   // Enter new group name
-  await device1.clickOnElement("Group name");
+  await device1.clickOnByAccessibilityID("Group name");
 
   await device1.inputText(
     "accessibility id",
@@ -142,9 +142,9 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
     newGroupName
   );
   // Click done/apply
-  await device1.clickOnElement("Accept name change");
+  await device1.clickOnByAccessibilityID("Accept name change");
 
-  await device1.clickOnElement("Apply changes");
+  await device1.clickOnByAccessibilityID("Apply changes");
   // If ios click back to match android (which goes back to conversation screen)
   // Check config message for changed name (different on ios and android)
   // Config message on ios is "Title is now blah"
@@ -185,9 +185,11 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   // Select group conversation in list
   await device1.selectByText("Conversation list item", group.userName);
   // Click more options
-  await device1.clickOnElement("More options");
+  await device1.clickOnByAccessibilityID("More options");
   // Select edit group
-  await runOnlyOnIOS(platform, () => device1.clickOnElement("Edit group"));
+  await runOnlyOnIOS(platform, () =>
+    device1.clickOnByAccessibilityID("Edit group")
+  );
   await sleepFor(1000);
   await runOnlyOnAndroid(platform, () =>
     device1.clickOnTextElementById(
@@ -196,14 +198,25 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     )
   );
   // Add contact to group
-  await device1.clickOnElement("Add members");
+  await device1.clickOnByAccessibilityID("Add members");
   // Select new user
-  await device1.selectByText("Contact", userD.userName);
+  const addedContact = await device1.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: "Contact",
+    text: userD.userName,
+  });
+  if (!addedContact && platform === "android") {
+    await device1.navigateBack(platform);
+    await device1.clickOnByAccessibilityID("Add members");
+    await device1.selectByText("Contact", userD.userName);
+  }
   // Click done/apply
-  await device1.clickOnElement("Done");
+  await device1.clickOnByAccessibilityID("Done");
   // Click done/apply again
   await sleepFor(1000);
-  await runOnlyOnIOS(platform, () => device1.clickOnElement("Apply changes"));
+  await runOnlyOnIOS(platform, () =>
+    device1.clickOnByAccessibilityID("Apply changes")
+  );
   await runOnlyOnAndroid(platform, () =>
     device1.clickOnElementById("network.loki.messenger:id/action_apply")
   );
@@ -231,45 +244,45 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   await closeApp(device1, device2, device3, device4);
 }
 
-async function mentionsForGroupsIos(platform: SupportedPlatformsType) {
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  // Create users A, B and C
-  const [userA, userB, userC] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-    newUser(device3, "Charlie", platform),
-  ]);
-  const testGroupName = "Mentions test group";
-  // Create contact between User A and User B
-  await createGroup(
-    platform,
-    device1,
-    userA,
-    device2,
-    userB,
-    device3,
-    userC,
-    testGroupName
-  );
-  await device1.inputText("accessibility id", "Message input box", "@");
-  // Check that all users are showing in mentions box
-  await device1.findElement("accessibility id", "Mentions list");
-  // Select User B
-  await device1.selectByText("Contact", userB.userName);
-  await device1.clickOnElement("Send message button");
-  // Check in user B's device if the format is correct
-  await device2.findMessageWithBody("@You");
-  await device2.inputText("accessibility id", "Message input box", "@");
-  // Check that all users are showing in mentions box
-  await device2.findElement("accessibility id", "Mentions list");
-  // Select User C
-  await device2.selectByText("Contact", userC.userName);
-  await device2.clickOnElement("Send message button");
-  // Check in User C's device if the format is correct
-  await device3.findMessageWithBody("@You");
-  // Close app
-  await closeApp(device1, device2, device3);
-}
+// async function mentionsForGroupsIos(platform: SupportedPlatformsType) {
+//   const { device1, device2, device3 } = await openAppThreeDevices(platform);
+//   // Create users A, B and C
+//   const [userA, userB, userC] = await Promise.all([
+//     newUser(device1, "Alice", platform),
+//     newUser(device2, "Bob", platform),
+//     newUser(device3, "Charlie", platform),
+//   ]);
+//   const testGroupName = "Mentions test group";
+//   // Create contact between User A and User B
+//   await createGroup(
+//     platform,
+//     device1,
+//     userA,
+//     device2,
+//     userB,
+//     device3,
+//     userC,
+//     testGroupName
+//   );
+//   await device1.inputText("accessibility id", "Message input box", "@");
+//   // Check that all users are showing in mentions box
+//   await device1.findElement("accessibility id", "Mentions list");
+//   // Select User B
+//   await device1.selectByText("Contact", userB.userName);
+//   await device1.clickOnByAccessibilityID("Send message button");
+//   // Check in user B's device if the format is correct
+//   await device2.findMessageWithBody("@You");
+//   await device2.inputText("accessibility id", "Message input box", "@");
+//   // Check that all users are showing in mentions box
+//   await device2.findElement("accessibility id", "Mentions list");
+//   // Select User C
+//   await device2.selectByText("Contact", userC.userName);
+//   await device2.clickOnByAccessibilityID("Send message button");
+//   // Check in User C's device if the format is correct
+//   await device3.findMessageWithBody("@You");
+//   // Close app
+//   await closeApp(device1, device2, device3);
+// }
 
 async function mentionsForGroups(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
@@ -299,8 +312,8 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
   });
 
   // Select User B
-  await device1.selectByText("Contact mentions", userB.userName);
-  await device1.clickOnElement("Send message button");
+  await device1.selectByText("Contact", userB.userName);
+  await device1.clickOnByAccessibilityID("Send message button");
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: `Message sent status: Sent`,
@@ -318,8 +331,8 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
   });
 
   // Select User B
-  await device1.selectByText("Contact mentions", userC.userName);
-  await device1.clickOnElement("Send message button");
+  await device1.selectByText("Contact", userC.userName);
+  await device1.clickOnByAccessibilityID("Send message button");
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: `Message sent status: Sent`,
@@ -335,8 +348,8 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
     selector: "Mentions list",
   });
   // Select User A
-  await device3.selectByText("Contact mentions", userA.userName);
-  await device3.clickOnElement("Send message button");
+  await device3.selectByText("Contact", userA.userName);
+  await device3.clickOnByAccessibilityID("Send message button");
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: `Message sent status: Sent`,
@@ -368,10 +381,10 @@ async function leaveGroupIos(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
-  await device3.clickOnElement("More options");
+  await device3.clickOnByAccessibilityID("More options");
   await sleepFor(1000);
-  await device3.clickOnElement("Leave group");
-  await device3.clickOnElement("Leave");
+  await device3.clickOnByAccessibilityID("Leave group");
+  await device3.clickOnByAccessibilityID("Leave");
   await device3.navigateBack(platform);
   // Check for control message
   await device2.waitForControlMessageToBePresent(
@@ -404,13 +417,16 @@ async function leaveGroupAndroid(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
-  await device3.clickOnElement("More options");
+  await device3.clickOnByAccessibilityID("More options");
   await sleepFor(1000);
   await device3.clickOnTextElementById(
     `network.loki.messenger:id/title`,
     "Leave group"
   );
-  await device3.clickOnElementById(`android:id/button1`);
+  await device3.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: "Yes",
+  });
   // Check for control message
   await device2.waitForControlMessageToBePresent(
     `${userC.userName} has left the group.`

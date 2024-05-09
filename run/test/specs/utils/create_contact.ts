@@ -1,8 +1,10 @@
-import { sleepFor } from ".";
+import { runOnlyOnAndroid, sleepFor } from ".";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { User } from "../../../types/testing";
+import { SupportedPlatformsType } from "./open_app";
 
 export const newContact = async (
+  platform: SupportedPlatformsType,
   device1: DeviceWrapper,
   user1: User,
   device2: DeviceWrapper,
@@ -16,9 +18,12 @@ export const newContact = async (
 
   await retryRequest(device1, device2);
   await sleepFor(100);
-  await device2.clickOnElement("Message requests banner");
+  await device2.clickOnByAccessibilityID("Message requests banner");
   // Select message from User A
-  await device2.clickOnElement("Message request");
+  await device2.clickOnByAccessibilityID("Message request");
+  await runOnlyOnAndroid(platform, () =>
+    device2.clickOnByAccessibilityID("Accept message request")
+  );
   // Type into message input box
   await device2.sendMessage(
     `Reply-message-${user2.userName}-to-${user1.userName}`
@@ -40,10 +45,9 @@ export const retryRequest = async (
     strategy: "accessibility id",
     selector: "Message sent status: Sent",
   });
-  const banner = await device2.doesElementExist({
+  const banner = await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message requests banner",
-    maxWait: 1000,
   });
   if (!banner) {
     await device1.sendMessage("Retry");

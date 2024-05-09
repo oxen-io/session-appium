@@ -14,23 +14,22 @@ export const newUser = async (
     strategy: "accessibility id",
     selector: "Create account button",
   });
-  await device.clickOnElementAll({
-    strategy: "accessibility id",
-    selector: "Create account button",
-  });
-
   // console.log(`${userName}s sessionID found: "${sessionID}" "${platform}"`);
+  // Click continue on session Id creation
+  await device.clickOnByAccessibilityID("Continue");
   // Input username
   await device.inputText("accessibility id", "Enter display name", userName);
   // Click continue
-  await device.clickOnElement("Continue");
+  await device.clickOnByAccessibilityID("Continue");
   // Choose message notification options
   // Want to choose 'Slow Mode' so notifications don't interrupt test
-  await device.clickOnElement("Slow mode notifications button");
+  await device.clickOnByAccessibilityID("Slow mode notifications button");
   // Select Continue to save notification settings
-  await device.clickOnElement("Continue");
+  await device.clickOnByAccessibilityID("Continue");
   // Need to add Don't allow notifications dismiss here
-  await runOnlyOnIOS(platform, () => device.clickOnElement("Don’t Allow"));
+  await runOnlyOnIOS(platform, () =>
+    device.clickOnByAccessibilityID("Don’t Allow")
+  );
   await sleepFor(1000);
   // No pop up for notifications on android anymore
   // Click on 'continue' button to open recovery phrase modal
@@ -38,17 +37,17 @@ export const newUser = async (
     strategy: "accessibility id",
     selector: "Reveal recovery phrase button",
   });
-  await device.clickOnElement("Continue");
+  await device.clickOnByAccessibilityID("Continue");
   //Save recovery passwprd
-  await device.clickOnElement("Recovery password");
+  await device.clickOnByAccessibilityID("Recovery password");
   // Save recovery phrase as variable
   const recoveryPhrase = await device.grabTextFromAccessibilityId(
     "Recovery password"
   );
   console.log(`${userName}s recovery phrase is "${recoveryPhrase}"`);
   // Exit Modal
-  await device.clickOnElement("Navigate up");
-  await device.clickOnElement("User settings");
+  await device.clickOnByAccessibilityID("Navigate up");
+  await device.clickOnByAccessibilityID("User settings");
   const accountID = await device.grabTextFromAccessibilityId("Account ID");
 
   return { userName, accountID, recoveryPhrase };

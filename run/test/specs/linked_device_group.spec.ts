@@ -35,14 +35,20 @@ async function groupCreationandNameChangeLinkedDevice(
     testGroupName
   );
   // Test that group has loaded on linked device
-  await device2.selectByText("Conversation list item", testGroupName);
+  await device2.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: "Conversation list item",
+    text: testGroupName,
+  });
   // Test group name change syncs
   // Change group name in device 1
   // Click on settings/more info
-  await device1.clickOnElement("More options");
+  await device1.clickOnByAccessibilityID("More options");
   // Edit group
   await sleepFor(100);
-  await runOnlyOnIOS(platform, () => device1.clickOnElement("Edit group"));
+  await runOnlyOnIOS(platform, () =>
+    device1.clickOnByAccessibilityID("Edit group")
+  );
   await runOnlyOnAndroid(platform, () =>
     device1.clickOnTextElementById(
       `network.loki.messenger:id/title`,
@@ -50,7 +56,7 @@ async function groupCreationandNameChangeLinkedDevice(
     )
   );
   // click on group name to change it
-  await device1.clickOnElement("Group name");
+  await device1.clickOnByAccessibilityID("Group name");
   // Type in new name
   await runOnlyOnAndroid(platform, () =>
     device1.inputText("accessibility id", "Group name", newGroupName)
@@ -59,9 +65,11 @@ async function groupCreationandNameChangeLinkedDevice(
     device1.inputText("accessibility id", "Group name text field", newGroupName)
   );
   // Confirm change (tick on android/ first done on ios)
-  await device1.clickOnElement("Accept name change");
+  await device1.clickOnByAccessibilityID("Accept name change");
   // Apply changes (Apply on android/ second done on ios)
-  await runOnlyOnIOS(platform, () => device1.clickOnElement("Apply changes"));
+  await runOnlyOnIOS(platform, () =>
+    device1.clickOnByAccessibilityID("Apply changes")
+  );
   await runOnlyOnAndroid(platform, () =>
     device1.clickOnTextElementById(
       `network.loki.messenger:id/action_apply`,
@@ -141,7 +149,7 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
     testGroupName
   );
   await sleepFor(1000);
-  await device3.clickOnElement("More options");
+  await device3.clickOnByAccessibilityID("More options");
   await sleepFor(1000);
   await runOnlyOnAndroid(platform, () =>
     device3.clickOnTextElementById(
@@ -150,8 +158,10 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
     )
   );
 
-  await runOnlyOnIOS(platform, () => device3.clickOnElement("Leave group"));
-  await runOnlyOnIOS(platform, () => device3.clickOnElement("Leave"));
+  await runOnlyOnIOS(platform, () =>
+    device3.clickOnByAccessibilityID("Leave group")
+  );
+  await runOnlyOnIOS(platform, () => device3.clickOnByAccessibilityID("Leave"));
   await runOnlyOnAndroid(platform, () =>
     device3.clickOnElementAll({ strategy: "accessibility id", selector: "Yes" })
   );
@@ -195,3 +205,80 @@ describe("Linked device - group tests", () => {
 // Remove user
 //  Add user
 //  Disappearing messages
+
+// async function disappearingMessagesLinkedDevice(platform: SupportedPlatformsType) {
+//   const testGroupName = "Disappearing messages group";
+//   const { device1, device2, device3, device4 } = await openAppFourDevices(
+//     platform
+//   );
+//   const userA = await linkedDevice(device1, device2, "Alice", platform);
+//   const [userB, userC] = await Promise.all([
+//     newUser(device3, "Bob", platform),
+//     newUser(device4, "Charlie", platform),
+//   ]);
+//   await createGroup(
+//     platform,
+//     device1,
+//     userA,
+//     device3,
+//     userB,
+//     device4,
+//     userC,
+//     testGroupName
+//   );
+//   // Enable disappearing messages
+//   await device1.clickOnByAccessibilityID("More options");
+//   await runOnlyOnIOS(platform, () =>
+//     device1.clickOnByAccessibilityID("Disappearing messages")
+//   );
+//   await runOnlyOnAndroid(platform, () =>
+//     device1.clickOnTextElementById(
+//       `network.loki.messenger:id/title`,
+//       "Disappearing messages"
+//     )
+//   );
+//   await device1.clickOnByAccessibilityID("Enable");
+//   // Set disappearing messages timer
+//   await runOnlyOnIOS(platform, () =>
+//     device1.clickOnByAccessibilityID("Timer")
+//   );
+//   await runOnlyOnAndroid(platform, () =>
+//     device1.clickOnTextElementById(
+//       `network.loki.messenger:id/title`,
+//       "Timer"
+//     )
+//   );
+//   await device1.clickOnByAccessibilityID("5 seconds");
+//   // Send a message
+//   await device1.inputText("accessibility id", "Message input", "Hello");
+//   await device1.clickOnByAccessibilityID("Send");
+//   // Wait for the message to disappear
+//   await sleepFor(6000);
+//   // Check if the message is still visible on device2
+//   await device2.waitForTextElementToBePresent({
+//     strategy: "accessibility id",
+//     selector: "Message text",
+//     text: "Hello",
+//     shouldNotExist: true,
+//   });
+//   // Check if the message is still visible on device3
+//   await device3.waitForTextElementToBePresent({
+//     strategy: "accessibility id",
+//     selector: "Message text",
+//     text: "Hello",
+//     shouldNotExist: true,
+//   });
+//   // Check if the message is still visible on device4
+//   await device4.waitForTextElementToBePresent({
+//     strategy: "accessibility id",
+//     selector: "Message text",
+//     text: "Hello",
+//     shouldNotExist: true,
+//   });
+//   await closeApp(device1, device2, device3, device4);
+// }
+
+// describe("Linked device - disappearing messages tests", () => {
+//   iosIt("Disappearing messages syncs", disappearingMessagesLinkedDevice);
+//   androidIt("Disappearing messages syncs", disappearingMessagesLinkedDevice);
+// });

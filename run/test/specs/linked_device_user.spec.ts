@@ -23,7 +23,7 @@ async function linkDevice(platform: SupportedPlatformsType) {
     "Recovery phrase reminder"
   );
   // Verify username and session ID match
-  await device2.clickOnElement("User settings");
+  await device2.clickOnByAccessibilityID("User settings");
   // Check username
 
   await device2.waitForTextElementToBePresent({
@@ -47,9 +47,11 @@ async function contactsSyncLinkedDevice(platform: SupportedPlatformsType) {
 
   const userB = await newUser(device3, "Bob", platform);
 
-  await newContact(device1, userA, device3, userB);
-  await runOnlyOnIOS(platform, () => device1.clickOnElement("Back"));
-  await runOnlyOnAndroid(platform, () => device1.clickOnElement("Navigate up"));
+  await newContact(platform, device1, userA, device3, userB);
+  await runOnlyOnIOS(platform, () => device1.clickOnByAccessibilityID("Back"));
+  await runOnlyOnAndroid(platform, () =>
+    device1.clickOnByAccessibilityID("Navigate up")
+  );
   // Check that user synced on linked device
   await device2.findMatchingTextAndAccessibilityId(
     "Conversation list item",
@@ -65,22 +67,24 @@ async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
   // link device
   const userA = await linkedDevice(device1, device2, "Alice", platform);
   // Change username on device 1
-  await device1.clickOnElement("User settings");
+  await device1.clickOnByAccessibilityID("User settings");
   // Select username
-  // await device1.clickOnElement("Username");
+  await device1.clickOnByAccessibilityID("Username");
   await sleepFor(100);
-  await device1.deleteText("Username");
   await device1.deleteText("Username");
   await device1.inputText("accessibility id", "Username", newUsername);
   // Select apply
-  await runOnlyOnAndroid(platform, () => device1.clickOnElement("Apply"));
-  await runOnlyOnIOS(platform, () => device1.clickOnElement("Done"));
+  if (platform === "android") {
+    device1.clickOnByAccessibilityID("Apply");
+  } else {
+    device1.clickOnByAccessibilityID("Done");
+  }
   // Check on linked device if name has updated
-  await device2.clickOnElement("User settings");
+  await device2.clickOnByAccessibilityID("User settings");
   await runOnlyOnAndroid(platform, () => device2.navigateBack(platform));
   await sleepFor(1000);
   await runOnlyOnAndroid(platform, () =>
-    device2.clickOnElement("User settings")
+    device2.clickOnByAccessibilityID("User settings")
   );
   const changedUsername = await device2.grabTextFromAccessibilityId("Username");
   console.log("Username is now: ", changedUsername);
@@ -102,7 +106,7 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
 
   const userB = await newUser(device2, "Bob", platform);
 
-  await newContact(device1, userA, device2, userB);
+  await newContact(platform, device1, userA, device2, userB);
   // Send message from user a to user b
   const sentMessage = await device1.sendMessage("Howdy");
   // Check message came through on linked device(3)
@@ -120,12 +124,14 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
   // Select message on device 1, long press
   await device1.longPressMessage(sentMessage);
   // Select delete
-  await device1.clickOnElement("Delete message");
+  await device1.clickOnByAccessibilityID("Delete message");
   // Select delete for everyone
   await runOnlyOnAndroid(platform, () =>
-    device1.clickOnElement("Delete just for me")
+    device1.clickOnByAccessibilityID("Delete just for me")
   );
-  await runOnlyOnIOS(platform, () => device1.clickOnElement("Delete for me"));
+  await runOnlyOnIOS(platform, () =>
+    device1.clickOnByAccessibilityID("Delete for me")
+  );
 
   // await waitForLoadingAnimation(device1);
 
@@ -142,7 +148,7 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
 
   const userB = await newUser(device2, "Bob", platform);
 
-  await newContact(device1, userA, device2, userB);
+  await newContact(platform, device1, userA, device2, userB);
   // Send message from user a to user b
   const sentMessage = await device1.sendMessage("Howdy");
   // Check message came through on linked device(3)
@@ -158,9 +164,9 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
   // Select message on device 1, long press
   await device1.longPressMessage(sentMessage);
   // Select delete
-  await device1.clickOnElement("Delete message");
+  await device1.clickOnByAccessibilityID("Delete message");
   // Select delete for everyone
-  await device1.clickOnElement("Delete for everyone");
+  await device1.clickOnByAccessibilityID("Delete for everyone");
 
   // await waitForLoadingAnimation(device1);
 
@@ -180,7 +186,7 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
   const userA = await linkedDevice(device1, device3, "Alice", platform);
   // Create contact to block
   const userB = await newUser(device2, "Bob", platform);
-  await newContact(device1, userA, device2, userB);
+  await newContact(platform, device1, userA, device2, userB);
   // Check that user synced on linked device
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -188,15 +194,15 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
     text: userB.userName,
   });
   // Block user on device 1
-  await device1.clickOnElement("More options");
+  await device1.clickOnByAccessibilityID("More options");
   // Select block (menu option for android and toggle for ios)
   await sleepFor(100);
   await runOnlyOnAndroid(platform, () =>
     device1.clickOnTextElementById(`network.loki.messenger:id/title`, "Block")
   );
-  await runOnlyOnIOS(platform, () => device1.clickOnElement("Block"));
+  await runOnlyOnIOS(platform, () => device1.clickOnByAccessibilityID("Block"));
   // Confirm block
-  await device1.clickOnElement("Confirm block");
+  await device1.clickOnByAccessibilityID("Confirm block");
   await sleepFor(1000);
   console.log(`${userB.userName}` + " has been blocked");
   // On ios, you need to navigate back to conversation screen to confirm block
@@ -209,9 +215,11 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
   // Look for blocked banner
   // Unblock on device 3 and check if unblocked on device 1
 
-  await device3.clickOnElement("Blocked banner");
+  await device3.clickOnByAccessibilityID("Blocked banner");
   // On ios you need to click ok to confirm unblock
-  await runOnlyOnIOS(platform, () => device3.clickOnElement("Confirm block"));
+  await runOnlyOnIOS(platform, () =>
+    device3.clickOnByAccessibilityID("Confirm block")
+  );
   // check on device 1 if user B is unblocked
   // Need to wait for blocked banner to disappear (takes a minute)
   await sleepFor(8000);
@@ -235,10 +243,10 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   const spongebobsBirthday = "199805010700.00";
   await linkedDevice(device1, device2, "Alice", platform);
 
-  await device1.clickOnElement("User settings");
+  await device1.clickOnByAccessibilityID("User settings");
   await sleepFor(100);
-  await device1.clickOnElement("Profile picture");
-  await device1.clickOnElement("Image picker");
+  await device1.clickOnByAccessibilityID("Profile picture");
+  await device1.clickOnByAccessibilityID("Image picker");
   // Check if permissions need to be enabled
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
@@ -247,7 +255,7 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   });
   if (permissions) {
     try {
-      await device1.clickOnElement("Allow Full Access");
+      await device1.clickOnByAccessibilityID("Allow Full Access");
     } catch (e) {
       console.log("No permissions dialog");
     }
@@ -273,9 +281,9 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   }
   await sleepFor(100);
   // Select file
-  await device1.clickOnElement(`Photo, 01 May 1998, 7:00 am`);
-  await device1.clickOnElement("Done");
-  await device1.clickOnElement("Save");
+  await device1.clickOnByAccessibilityID(`Photo, 01 May 1998, 7:00 am`);
+  await device1.clickOnByAccessibilityID("Done");
+  await device1.clickOnByAccessibilityID("Save");
   await sleepFor(5000);
   // Wait for change
   // Verify change
@@ -296,7 +304,7 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   }
   console.log("Now checking avatar on linked device");
   // Check avatar on device 2
-  await device2.clickOnElement("User settings");
+  await device2.clickOnByAccessibilityID("User settings");
   const el2 = await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Profile picture",
@@ -317,30 +325,27 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   const spongebobsBirthday = "199905020700.00";
   await linkedDevice(device1, device2, "Alice", platform);
 
-  await device1.clickOnElement("User settings");
+  await device1.clickOnByAccessibilityID("User settings");
   await sleepFor(100);
-  await device1.clickOnElement("User settings");
+  await device1.clickOnByAccessibilityID("User settings");
   await sleepFor(500);
   await device1.clickOnElementAll({
-    strategy: "id",
-    selector: "android:id/button1",
-    text: "UPLOAD",
-    maxWait: 8000,
+    strategy: "accessibility id",
+    selector: "Upload",
   });
   await device1.clickOnElementById(
     "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
   );
-  await device1.waitForTextElementToBePresent({
-    strategy: "id",
-    selector: "android:id/text1",
-    text: "Files",
+  await sleepFor(500);
+  await device1.clickOnElementAll({
+    strategy: "xpath",
+    selector: `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.TabHost/android.widget.LinearLayout/android.widget.FrameLayout/androidx.viewpager.widget.ViewPager/android.widget.RelativeLayout/android.widget.GridView/android.widget.LinearLayout/android.widget.LinearLayout[2]`,
   });
-  await device1.clickOnTextElementById("android:id/text1", "Files");
   // Check if permissions need to be enabled
   // Check if image is already on device
   const profilePicture = await device1.doesElementExist({
     strategy: "accessibility id",
-    selector: `profile_picture.jpg, 27.75 kB, May 1, 1999`,
+    selector: `profile_picture.jpg, 27.75 kB, May 2, 1999`,
     maxWait: 2000,
   });
   // If no image, push file to device
@@ -353,9 +358,19 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
       `adb -s emulator-5554 push 'run/test/specs/media/profile_picture.jpg' /storage/emulated/0/Download`,
       true
     );
+    await device1.clickOnElementAll({
+      strategy: "accessibility id",
+      selector: "More options",
+    });
+    await device1.clickOnElementAll({
+      strategy: "xpath",
+      selector: `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout`,
+    });
   }
   await sleepFor(100);
-  await device1.clickOnElement(`profile_picture.jpg, 27.75 kB, May 1, 1999`);
+  await device1.clickOnByAccessibilityID(
+    `profile_picture.jpg, 27.75 kB, May 2, 1999`
+  );
   await device1.clickOnElementById(
     "network.loki.messenger:id/crop_image_menu_crop"
   );
@@ -378,7 +393,7 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   }
   console.log("Now checking avatar on linked device");
   // Check avatar on device 2
-  await device2.clickOnElement("User settings");
+  await device2.clickOnByAccessibilityID("User settings");
   const el2 = await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "User settings",

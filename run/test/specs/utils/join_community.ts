@@ -7,15 +7,15 @@ export const joinCommunity = async (
   communityLink: string,
   communityName: string
 ) => {
-  await device.clickOnElement("New conversation button");
+  await device.clickOnByAccessibilityID("New conversation button");
   if (platform === "ios") {
-    await device.clickOnElement("Join Community");
+    await device.clickOnByAccessibilityID("Join Community");
     await device.inputText(
       "accessibility id",
       "Enter Community URL",
       communityLink
     );
-    await device.clickOnElement("Join");
+    await device.clickOnByAccessibilityID("Join");
     // Wait for community to load
     await device.waitForTextElementToBePresent({
       strategy: "accessibility id",
@@ -24,13 +24,13 @@ export const joinCommunity = async (
     });
   } else {
     // TO FIX (ISSUE WITH ACCESS ID JOIN COMMUNITY?)
-    await device.clickOnElement("Join community");
+    await device.clickOnByAccessibilityID("Join community");
     await device.inputText(
       "accessibility id",
       "Community input",
       communityLink
     );
-    await device.clickOnElement("Join community button");
+    await device.clickOnByAccessibilityID("Join community button");
     await device.waitForTextElementToBePresent({
       strategy: "accessibility id",
       selector: "Username",

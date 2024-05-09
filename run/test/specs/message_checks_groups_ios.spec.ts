@@ -33,12 +33,9 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
     testGroupName
   );
   // await device1.sendImage(platform, testMessage);
-  await device1.clickOnElement("Attachments button");
+  await device1.clickOnByAccessibilityID("Attachments button");
   await sleepFor(5000);
-  await clickOnCoordinates(
-    device1,
-    InteractionPoints.ImagesFolderKeyboardClosed
-  );
+  await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardOpen);
 
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
@@ -47,7 +44,7 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
   });
   if (permissions) {
     try {
-      await device1.clickOnElement(`Allow Full Access`);
+      await device1.clickOnByAccessibilityID(`Allow Full Access`);
       // Select video
     } catch (e) {
       console.log("No permissions dialog");
@@ -73,10 +70,10 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
     );
   }
   await sleepFor(100);
-  await device1.clickOnElement(`1967-05-05 21:00:00 +0000`);
-  await device1.clickOnElement("Text input box");
+  await device1.clickOnByAccessibilityID(`1967-05-05 21:00:00 +0000`);
+  await device1.clickOnByAccessibilityID("Text input box");
   await device1.inputText("accessibility id", "Text input box", testMessage);
-  await device1.clickOnElement("Send button");
+  await device1.clickOnByAccessibilityID("Send button");
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: `Message sent status: Sent`,
@@ -122,20 +119,16 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
   const bestDayOfYear = `198809090700.00`;
   const testMessage = "Testing-video-1";
   const replyMessage = `Replying to video from ${userA.userName} in ${testGroupName}`;
-  await device1.clickOnElement("Attachments button");
+  await device1.clickOnByAccessibilityID("Attachments button");
   await sleepFor(100);
-  await clickOnCoordinates(
-    device1,
-    InteractionPoints.ImagesFolderKeyboardClosed
-  );
-
+  await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardOpen);
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
     selector: "Allow Full Access",
     maxWait: 1000,
   });
   if (permissions) {
-    await device1.clickOnElement("Allow Full Access");
+    await device1.clickOnByAccessibilityID("Allow Full Access");
   } else {
     console.log("No permissions");
   }
@@ -145,12 +138,12 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
     maxWait: 1000,
   });
   if (settingsPermissions) {
-    await device1.clickOnElement("Photos");
-    await device1.clickOnElement("All Photos");
+    await device1.clickOnByAccessibilityID("Photos");
+    await device1.clickOnByAccessibilityID("All Photos");
   } else {
     console.log("No settings permission dialog");
   }
-  await device1.clickOnElement("Recents");
+  await device1.clickOnByAccessibilityID("Recents");
   await sleepFor(2000);
   // Select video
   const videoFolder = await device1.doesElementExist({
@@ -160,8 +153,8 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
   });
   if (videoFolder) {
     console.log("Videos folder found");
-    await device1.clickOnElement("Videos");
-    await device1.clickOnElement(`1988-09-08 21:00:00 +0000`);
+    await device1.clickOnByAccessibilityID("Videos");
+    await device1.clickOnByAccessibilityID(`1988-09-08 21:00:00 +0000`);
   } else {
     console.log("Videos folder NOT found");
     await runScriptAndLog(
@@ -174,12 +167,12 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
       } 'run/test/specs/media/test_video.mp4'`,
       true
     );
-    await device1.clickOnElement(`1988-09-08 21:00:00 +0000`, 5000);
+    await device1.clickOnByAccessibilityID(`1988-09-08 21:00:00 +0000`, 5000);
   }
   // Send with attached message
-  await device1.clickOnElement("Text input box");
+  await device1.clickOnByAccessibilityID("Text input box");
   await device1.inputText("accessibility id", "Text input box", testMessage);
-  await device1.clickOnElement("Send button");
+  await device1.clickOnByAccessibilityID("Send button");
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",
@@ -197,7 +190,7 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
     maxWait: 5000,
   });
   await device2.longPressMessage(testMessage);
-  await device2.clickOnElement("Reply to message");
+  await device2.clickOnByAccessibilityID("Reply to message");
   await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -237,7 +230,7 @@ async function sendVoiceMessageGroup(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to voice message from ${userA.userName} in ${testGroupName}`;
   await device1.longPress("New voice message");
   // "Session" would like to access the microphone (Don't allow/ OK)
-  // await device1.clickOnElement("Allow");
+  // await device1.clickOnByAccessibilityID("Allow");
   await device1.pressAndHold("New voice message");
 
   await device1.waitForTextElementToBePresent({
@@ -254,7 +247,7 @@ async function sendVoiceMessageGroup(platform: SupportedPlatformsType) {
   });
 
   await device2.longPress("Voice message");
-  await device2.clickOnElement("Reply to message");
+  await device2.clickOnByAccessibilityID("Reply to message");
   await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -315,19 +308,19 @@ async function sendGifGroup(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
-  await device1.clickOnElement("Attachments button");
+  await device1.clickOnByAccessibilityID("Attachments button");
   // Select GIF tab
   await clickOnCoordinates(device1, InteractionPoints.GifButtonKeyboardOpen);
   // Select gif
   await sleepFor(500);
   // Need to select Continue on GIF warning
-  await device1.clickOnElement("Continue");
+  await device1.clickOnByAccessibilityID("Continue");
   await device1.clickOnElementXPath(
     `(//XCUIElementTypeImage[@name="gif cell"])[1]`
   );
-  await device1.clickOnElement("Text input box");
+  await device1.clickOnByAccessibilityID("Message input box");
   await device1.inputText("accessibility id", "Text input box", testMessage);
-  await device1.clickOnElement("Send button");
+  await device1.clickOnByAccessibilityID("Send button");
   await sleepFor(500);
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -341,7 +334,7 @@ async function sendGifGroup(platform: SupportedPlatformsType) {
   });
   await device2.longPressMessage(testMessage);
   // Check reply came through on device1
-  await device2.clickOnElement("Reply to message");
+  await device2.clickOnByAccessibilityID("Reply to message");
   await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -408,7 +401,7 @@ async function sendLongMessageGroup(platform: SupportedPlatformsType) {
 
 async function sendLinkGroup(platform: SupportedPlatformsType) {
   const testGroupName = "Message checks for groups";
-  const testLink = `https://example.net/`;
+  const testLink = `https://example.org/`;
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
@@ -435,13 +428,13 @@ async function sendLinkGroup(platform: SupportedPlatformsType) {
     maxWait: 20000,
   });
   // Accept dialog for link preview
-  await device1.clickOnElement("Enable");
+  await device1.clickOnByAccessibilityID("Enable");
   // No preview on first send
-  await device1.clickOnElement("Send message button");
+  await device1.clickOnByAccessibilityID("Send message button");
   // Send again for image
   await device1.inputText("accessibility id", "Message input box", testLink);
   await sleepFor(1000);
-  await device1.clickOnElement("Send message button");
+  await device1.clickOnByAccessibilityID("Send message button");
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",
@@ -504,9 +497,9 @@ async function deleteMessageGroup(platform: SupportedPlatformsType) {
   // Select and long press on message to delete it
   await device1.longPressMessage(sentMessage);
   // Select Delete icon
-  await device1.clickOnElement("Delete message");
+  await device1.clickOnByAccessibilityID("Delete message");
   // Select 'Delete for everyone'
-  await device1.clickOnElement("Delete for me");
+  await device1.clickOnByAccessibilityID("Delete for me");
   await device1.hasElementBeenDeleted("accessibility id", sentMessage);
   // Excellentgit
   await closeApp(device1, device2, device3);

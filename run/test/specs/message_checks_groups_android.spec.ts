@@ -47,16 +47,12 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
   // Waiting for image to load
   await sleepFor(1000);
   await device2.longPress("Media message");
-  await device2.clickOnElement("Reply to message");
+  await device2.clickOnByAccessibilityID("Reply to message");
   await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",
     text: replyMessage,
-  });
-  await device3.clickOnElementAll({
-    strategy: "id",
-    selector: `network.loki.messenger:id/scrollToBottomButton`,
   });
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -92,65 +88,31 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
   );
   const replyMessage = `Replying to video from ${userA.userName} in ${testGroupName}`;
   // Click on attachments button
-  await device1.clickOnElement("Attachments button");
-  await sleepFor(100);
-  // Select images button/tab
-  await device1.clickOnElement("Documents folder");
-  // Select video
-  const mediaButtons = await device1.findElementsByClass(
-    "android.widget.CompoundButton"
-  );
-  const videosButton = await device1.findMatchingTextInElementArray(
-    mediaButtons,
-    "Videos"
-  );
-  if (!videosButton) {
-    throw new Error("videosButton was not found");
-  }
-  await device1.click(videosButton.ELEMENT);
-  const testVideo = await device1.doesElementExist({
-    strategy: "id",
-    selector: "android:id/title",
-    maxWait: 1000,
-    text: "test_video.mp4",
-  });
-  if (!testVideo) {
-    // Adds video to downloads folder if it isn't already there
-    await runScriptAndLog(
-      `adb -s emulator-5554 push 'run/test/specs/media/test_video.mp4' /storage/emulated/0/Download`,
-      true
-    );
-  }
-  await sleepFor(100);
-  await device1.clickOnTextElementById("android:id/title", "test_video.mp4");
+  await device1.sendVideo(platform);
   // Reply to message
-  await device2.waitForTextElementToBePresent({
-    strategy: "id",
-    selector: "network.loki.messenger:id/play_overlay",
-    maxWait: 8000,
-  });
-  await device3.waitForTextElementToBePresent({
-    strategy: "id",
-    selector: "network.loki.messenger:id/play_overlay",
-    maxWait: 8000,
-  });
-
+  await Promise.all([
+    device2.waitForLoadingAnimation(),
+    device2.waitForTextElementToBePresent({
+      strategy: "id",
+      selector: "network.loki.messenger:id/play_overlay",
+      maxWait: 8000,
+    }),
+  ]);
+  await Promise.all([
+    device3.waitForLoadingAnimation(),
+    device3.waitForTextElementToBePresent({
+      strategy: "id",
+      selector: "network.loki.messenger:id/play_overlay",
+      maxWait: 8000,
+    }),
+  ]);
   await device2.longPress("Media message");
-  await device2.clickOnElement("Reply to message");
+  await device2.clickOnByAccessibilityID("Reply to message");
   await device2.sendMessage(replyMessage);
-  await sleepFor(2000);
-  await device1.clickOnElementAll({
-    strategy: "id",
-    selector: `network.loki.messenger:id/scrollToBottomButton`,
-  });
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",
     text: replyMessage,
-  });
-  await device3.clickOnElementAll({
-    strategy: "id",
-    selector: `network.loki.messenger:id/scrollToBottomButton`,
   });
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -186,7 +148,7 @@ async function sendVoiceMessageGroup(platform: SupportedPlatformsType) {
   // Select voice message button to activate recording state
   await device1.longPress("New voice message");
 
-  await device1.clickOnElement("Continue");
+  await device1.clickOnByAccessibilityID("Continue");
   await device1.clickOnElementXPath(
     `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.Button[1]`
   );
@@ -200,7 +162,7 @@ async function sendVoiceMessageGroup(platform: SupportedPlatformsType) {
     selector: "Voice message",
   });
   await device2.longPress("Voice message");
-  await device2.clickOnElement("Reply to message");
+  await device2.clickOnByAccessibilityID("Reply to message");
   await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -237,20 +199,20 @@ async function sendDocumentGroup(platform: SupportedPlatformsType) {
     testGroupName
   );
   const replyMessage = `Replying to document from ${userA.userName} in ${testGroupName}`;
-  await device1.clickOnElement("Attachments button");
+  await device1.clickOnByAccessibilityID("Attachments button");
   await sleepFor(100);
-  await device1.clickOnElement("Documents folder");
-  const mediaButtons = await device1.findElementsByClass(
-    "android.widget.CompoundButton"
-  );
-  const documentsButton = await device1.findMatchingTextInElementArray(
-    mediaButtons,
-    "Documents"
-  );
-  if (!documentsButton) {
-    throw new Error("documentsButton was not found");
-  }
-  await device1.click(documentsButton.ELEMENT);
+  await device1.clickOnByAccessibilityID("Documents folder");
+  await sleepFor(500);
+  await device1.waitForTextElementToBePresent({
+    strategy: "class name",
+    selector: "android.widget.Button",
+    text: "Documents",
+  });
+  await device1.clickOnElementAll({
+    strategy: "class name",
+    selector: "android.widget.Button",
+    text: "Documents",
+  });
   const testDocument = await device1.doesElementExist({
     strategy: "id",
     selector: "android:id/title",
@@ -276,7 +238,7 @@ async function sendDocumentGroup(platform: SupportedPlatformsType) {
     selector: "Document",
   });
   await device2.longPress("Document");
-  await device2.clickOnElement("Reply to message");
+  await device2.clickOnByAccessibilityID("Reply to message");
   await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -312,13 +274,13 @@ async function sendLinkGroup(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
-  const testLink = `https://example.net/`;
+  const testLink = `https://example.org/`;
   // Send a link
   await device1.inputText("accessibility id", "Message input box", testLink);
   // Accept dialog for link preview
-  await device1.clickOnElement("Enable");
+  await device1.clickOnByAccessibilityID("Enable");
   // No preview on first send
-  await device1.clickOnElement("Send message button");
+  await device1.clickOnByAccessibilityID("Send message button");
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message sent status: Sent",
@@ -365,9 +327,9 @@ async function sendGifGroup(platform: SupportedPlatformsType) {
   );
   const replyMessage = `Replying to GIF from ${userA.userName}`;
   // Click on attachments button
-  await device1.clickOnElement("Attachments button");
+  await device1.clickOnByAccessibilityID("Attachments button");
   // Select GIF tab
-  await device1.clickOnElement("GIF button");
+  await device1.clickOnByAccessibilityID("GIF button");
   await device1.clickOnElementAll({
     strategy: "accessibility id",
     selector: "Continue",
@@ -386,20 +348,12 @@ async function sendGifGroup(platform: SupportedPlatformsType) {
   });
   await device2.longPress("Media message");
   // Check reply came through on device1
-  await device2.clickOnElement("Reply to message");
+  await device2.clickOnByAccessibilityID("Reply to message");
   await device2.sendMessage(replyMessage);
-  await device1.clickOnElementAll({
-    strategy: "id",
-    selector: `network.loki.messenger:id/scrollToBottomButton`,
-  });
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",
     text: replyMessage,
-  });
-  await device3.clickOnElementAll({
-    strategy: "id",
-    selector: `network.loki.messenger:id/scrollToBottomButton`,
   });
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -436,7 +390,7 @@ async function sendLongMessageGroup(platform: SupportedPlatformsType) {
   const replyMessage = `${userA.userName} message reply`;
   await device1.inputText("accessibility id", "Message input box", longText);
   // Click send
-  await device1.clickOnElement("Send message button");
+  await device1.clickOnByAccessibilityID("Send message button");
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: `Message sent status: Sent`,
@@ -455,29 +409,13 @@ async function sendLongMessageGroup(platform: SupportedPlatformsType) {
       text: longText,
     }),
   ]);
-
-  await device1.clickOnElementAll({
-    strategy: "id",
-    selector: `network.loki.messenger:id/scrollToBottomButton`,
-    maxWait: 5000,
-  });
   await device2.replyToMessage(userA, longText);
-  await device1.clickOnElementAll({
-    strategy: "id",
-    selector: `network.loki.messenger:id/scrollToBottomButton`,
-    maxWait: 5000,
-  });
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",
     text: replyMessage,
   });
-  // Waiting for scroll to bottom to appear/be active
-  await device3.clickOnElementAll({
-    strategy: "id",
-    selector: `network.loki.messenger:id/scrollToBottomButton`,
-    maxWait: 5000,
-  });
+  // TO FIX: REPLY NOT FOUND ANDROID
   await device3.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",
@@ -523,9 +461,9 @@ async function deleteMessageGroup(platform: SupportedPlatformsType) {
   // Select and long press on message to delete it
   await device1.longPressMessage(sentMessage);
   // Select Delete icon
-  await device1.clickOnElement("Delete message");
+  await device1.clickOnByAccessibilityID("Delete message");
   // Select 'Delete for everyone'
-  await device1.clickOnElement("Delete just for me");
+  await device1.clickOnByAccessibilityID("Delete just for me");
   await device1.hasElementBeenDeletedNew({
     strategy: "accessibility id",
     selector: "Message body",
@@ -536,7 +474,7 @@ async function deleteMessageGroup(platform: SupportedPlatformsType) {
   await closeApp(device1, device2, device3);
 }
 
-describe("Message checks android", () => {
+describe("Message checks for groups android", () => {
   androidIt("Send image to group", sendImageGroup);
   androidIt("Send video to group", sendVideoGroup);
   androidIt("Send voice message to group", sendVoiceMessageGroup);

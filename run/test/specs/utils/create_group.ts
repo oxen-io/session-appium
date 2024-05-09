@@ -28,16 +28,16 @@ export const createGroup = async (
   // Exit conversation back to list
   await device3.navigateBack(platform);
   // Click plus button
-  await device1.clickOnElement("New conversation button");
+  await device1.clickOnByAccessibilityID("New conversation button");
   // Select Closed Group option
-  await device1.clickOnElement("Create group");
+  await device1.clickOnByAccessibilityID("Create group");
   // Type in group name
   await device1.inputText("accessibility id", "Group name input", userName);
   // Select User B and User C
   await device1.selectByText("Contact", userTwo.userName);
   await device1.selectByText("Contact", userThree.userName);
   // Select tick
-  await device1.clickOnElement("Create group");
+  await device1.clickOnByAccessibilityID("Create group");
   // Check for empty state on ios
   await runOnlyOnIOS(platform, () =>
     device1.waitForTextElementToBePresent({
