@@ -1,6 +1,5 @@
 import { AppiumCapabilities } from "@wdio/types/build/Capabilities";
 // import { W3CCapabilities } from "appium/build/lib/appium";
-import { W3CCapabilities } from "@wdio/types/build/Capabilities";
 import { isNil, isString } from "lodash";
 import { CapabilitiesIndexType } from "./capabilities_ios";
 

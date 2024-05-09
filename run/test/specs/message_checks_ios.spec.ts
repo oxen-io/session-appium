@@ -20,16 +20,10 @@ async function sendImage(platform: SupportedPlatformsType) {
   ]);
   const testMessage = "Ron Swanson doesn't like birthdays";
   const replyMessage = `Replying to image from ${userA.userName}`;
-
-<<<<<<< HEAD
-  await newContact(device1, userA, device2, userB);
-
-  await device1.clickOnElement("Attachments button");
-=======
   await newContact(platform, device1, userA, device2, userB);
   // await device1.sendImage(platform, testMessage);
   await device1.clickOnByAccessibilityID("Attachments button");
->>>>>>> dev
+
   await sleepFor(5000);
   await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardOpen);
   const permissions = await device1.doesElementExist({
@@ -110,7 +104,7 @@ async function sendDoc(platform: SupportedPlatformsType) {
   const testMessage = "Testing-document-1";
   const replyMessage = `Replying to document from ${userA.userName}`;
   const spongebobsBirthday = "199905010700.00";
-  await newContact(device1, userA, device2, userB);
+  await newContact(platform, device1, userA, device2, userB);
 
   await device1.clickOnByAccessibilityID("Attachments button");
   await sleepFor(100);
@@ -188,7 +182,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
   const testMessage = "Testing-video-1";
   const replyMessage = `Replying to video from ${userA.userName}`;
   // create contact
-  await newContact(device1, userA, device2, userB);
+  await newContact(platform, device1, userA, device2, userB);
   // Push image to device for selection
   // Click on attachments button
   await device1.clickOnByAccessibilityID("Attachments button");
@@ -280,7 +274,7 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   const replyMessage = `Replying to voice message from ${userA.userName}`;
-  await newContact(device1, userA, device2, userB);
+  await newContact(platform, device1, userA, device2, userB);
   // Select voice message button to activate recording state
   // await device1.longPress("New voice message");
   // "Session" would like to access the microphone (Don't allow/ OK)
@@ -321,7 +315,7 @@ async function sendGif(platform: SupportedPlatformsType) {
   const testMessage = "Testing-GIF-1";
   const replyMessage = `Replying to GIF from ${userA.userName}`;
   // create contact
-  await newContact(device1, userA, device2, userB);
+  await newContact(platform, device1, userA, device2, userB);
   // Click on attachments button
   await device1.clickOnByAccessibilityID("Attachments button");
   // Select GIF tab
@@ -377,7 +371,7 @@ async function sendLongMessage(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   // Create contact
-  await newContact(device1, userA, device2, userB);
+  await newContact(platform, device1, userA, device2, userB);
   // Send a long message from User A to User B
   await device1.sendMessage(longText);
   // Reply to message (User B to User A)
@@ -397,7 +391,7 @@ async function sendLink(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   // Create contact
-  await newContact(device1, userA, device2, userB);
+  await newContact(platform, device1, userA, device2, userB);
   // Send a link
 
   await device1.inputText("accessibility id", "Message input box", testLink);
@@ -443,7 +437,7 @@ async function sendCommunityInvitation(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   // Create contact
-  await newContact(device1, userA, device2, userB);
+  await newContact(platform, device1, userA, device2, userB);
   // Join community on device 1
   // Click on plus button
   await device1.navigateBack(platform);
@@ -493,7 +487,7 @@ async function unsendMessage(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   // Create contact
-  await newContact(device1, userA, device2, userB);
+  await newContact(platform, device1, userA, device2, userB);
   // send message from User A to User B
   const sentMessage = await device1.sendMessage(
     "Checking unsend functionality"
@@ -536,7 +530,7 @@ async function deleteMessage(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   // Create contact
-  await newContact(device1, userA, device2, userB);
+  await newContact(platform, device1, userA, device2, userB);
   // send message from User A to User B
   const sentMessage = await device1.sendMessage(
     "Checking delete functionality"
@@ -571,7 +565,7 @@ async function checkPerformance(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   // Create contact
-  await newContact(device1, userA, device2, userB);
+  await newContact(platform, device1, userA, device2, userB);
   const timesArray: Array<number> = [];
 
   let i;
