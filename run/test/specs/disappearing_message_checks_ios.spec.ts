@@ -29,7 +29,7 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType) {
     ["1:1", "Disappear after send option", "10 seconds"],
     device2
   );
-  await device1.navigateBack(platform);
+  // await device1.navigateBack(platform);
   await sleepFor(500);
   // await device1.sendImage(platform, testMessage);
   await device1.clickOnByAccessibilityID("Attachments button");
@@ -207,7 +207,7 @@ async function disappearingVoiceMessage1o1(platform: SupportedPlatformsType) {
     ["1:1", "Disappear after send option", "10 seconds"],
     device2
   );
-  await device1.navigateBack(platform);
+  // await device1.navigateBack(platform);
   await device1.longPress("New voice message");
   await device1.clickOnByAccessibilityID("Allow");
   await sleepFor(500);
@@ -249,7 +249,7 @@ async function disappearingGifMessage1o1(platform: SupportedPlatformsType) {
     ["1:1", "Disappear after send option", "10 seconds"],
     device2
   );
-  await device1.navigateBack(platform);
+  // await device1.navigateBack(platform);
   // Click on attachments button
   await device1.clickOnByAccessibilityID("Attachments button");
   // Select GIF tab
@@ -290,7 +290,7 @@ async function disappearingGifMessage1o1(platform: SupportedPlatformsType) {
 
 async function disappearingLinkMessage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const testLink = `https://example.org/`;
+  const testLink = `https://type-level-typescript.com/objects-and-records`;
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -303,7 +303,7 @@ async function disappearingLinkMessage(platform: SupportedPlatformsType) {
     ["1:1", "Disappear after send option", "10 seconds"],
     device2
   );
-  await device1.navigateBack(platform);
+  // await device1.navigateBack(platform);
   // Send a link
   await device1.inputText("accessibility id", "Message input box", testLink);
   await device1.waitForTextElementToBePresent({
@@ -360,8 +360,8 @@ async function disappearingCommunityInviteMessage1o1(
     ["1:1", "Disappear after send option", "10 seconds"],
     device2
   );
-  await device1.navigateBack(platform);
-  await device1.navigateBack(platform);
+  // await device1.navigateBack(platform);
+  // await device1.navigateBack(platform);
   await device1.clickOnByAccessibilityID("New conversation button");
   await device1.clickOnByAccessibilityID("Join Community");
   await device1.inputText(
@@ -415,7 +415,7 @@ async function disappearingCallMessage1o1(platform: SupportedPlatformsType) {
     ["1:1", "Disappear after send option", "10 seconds"],
     device2
   );
-  await device1.navigateBack(platform);
+  // await device1.navigateBack(platform);
   await device1.clickOnByAccessibilityID("Call");
   // Enabled voice calls in privacy settings
   await device1.waitForTextElementToBePresent({
@@ -440,7 +440,7 @@ async function disappearingCallMessage1o1(platform: SupportedPlatformsType) {
   // Make call on device 1 (userA)
   await device1.clickOnByAccessibilityID("Call");
   // Answer call on device 2
-  await device2.clickOnByAccessibilityID("AnswerCall");
+  await device2.clickOnByAccessibilityID("Answer call");
   // Wait 10 seconds
   // Hang up
   await device1.clickOnByAccessibilityID("End call button");
@@ -497,7 +497,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
     "Disappear after send option",
     "10 seconds",
   ]);
-  await device1.navigateBack(platform);
+  // await device1.navigateBack(platform);
   // await device1.sendImage(platform, testMessage);
   await device1.clickOnByAccessibilityID("Attachments button");
   await sleepFor(5000);
@@ -599,7 +599,7 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
     "Disappear after send option",
     "10 seconds",
   ]);
-  await device1.navigateBack(platform);
+  // await device1.navigateBack(platform);
   await device1.clickOnByAccessibilityID("Attachments button");
   // Select images button/tab
   // Check if android or ios (android = documents folder/ ios = images folder)
@@ -704,7 +704,7 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
     "Disappear after send option",
     "10 seconds",
   ]);
-  await device1.navigateBack(platform);
+  // await device1.navigateBack(platform);
   await device1.longPress("New voice message");
   // await device1.clickOnByAccessibilityID("OK");
   // await device1.pressAndHold("New voice message");
@@ -756,7 +756,7 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
     "Disappear after send option",
     "10 seconds",
   ]);
-  await device1.navigateBack(platform);
+  // await device1.navigateBack(platform);
   // Click on attachments button
   await device1.clickOnByAccessibilityID("Attachments button");
   // Select GIF tab
@@ -818,7 +818,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
     "Disappear after send option",
     "10 seconds",
   ]);
-  await device1.navigateBack(platform);
+  // await device1.navigateBack(platform);
   // Send a link
   await device1.inputText("accessibility id", "Message input box", testLink);
   await device1.waitForTextElementToBePresent({

@@ -1095,7 +1095,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       console.log(`Couldn't find radioButton ${timeOption}`);
     }
   }
-
+  // TODO FIX UP THIS FUNCTION
   public async sendImage(
     platform: SupportedPlatformsType,
     message?: string,
@@ -1107,7 +1107,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       await sleepFor(5000);
       await clickOnCoordinates(
         this.device,
-        InteractionPoints.ImagesFolderKeyboardClosed
+        InteractionPoints.ImagesFolderKeyboardOpen
       );
       const permissions = await this.doesElementExist({
         strategy: "accessibility id",

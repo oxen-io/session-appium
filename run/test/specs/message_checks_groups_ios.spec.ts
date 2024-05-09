@@ -35,10 +35,7 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
   // await device1.sendImage(platform, testMessage);
   await device1.clickOnByAccessibilityID("Attachments button");
   await sleepFor(5000);
-  await clickOnCoordinates(
-    device1,
-    InteractionPoints.ImagesFolderKeyboardClosed
-  );
+  await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardOpen);
 
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
@@ -124,11 +121,7 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to video from ${userA.userName} in ${testGroupName}`;
   await device1.clickOnByAccessibilityID("Attachments button");
   await sleepFor(100);
-  await clickOnCoordinates(
-    device1,
-    InteractionPoints.ImagesFolderKeyboardClosed
-  );
-
+  await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardOpen);
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
     selector: "Allow Full Access",
@@ -325,7 +318,7 @@ async function sendGifGroup(platform: SupportedPlatformsType) {
   await device1.clickOnElementXPath(
     `(//XCUIElementTypeImage[@name="gif cell"])[1]`
   );
-  await device1.clickOnByAccessibilityID("Text input box");
+  await device1.clickOnByAccessibilityID("Message input box");
   await device1.inputText("accessibility id", "Text input box", testMessage);
   await device1.clickOnByAccessibilityID("Send button");
   await sleepFor(500);

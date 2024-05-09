@@ -22,14 +22,10 @@ async function sendImage(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to image from ${userA.userName}`;
 
   await newContact(platform, device1, userA, device2, userB);
-
+  // await device1.sendImage(platform, testMessage);
   await device1.clickOnByAccessibilityID("Attachments button");
   await sleepFor(5000);
-  await clickOnCoordinates(
-    device1,
-    InteractionPoints.ImagesFolderKeyboardClosed
-  );
-
+  await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardOpen);
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
     selector: "Allow Full Access",
@@ -192,11 +188,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID("Attachments button");
   // Select images button/tab
   await sleepFor(1000);
-  // Check if android or ios (android = documents folder/ ios = images folder)
-  await clickOnCoordinates(
-    device1,
-    InteractionPoints.ImagesFolderKeyboardClosed
-  );
+  await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardOpen);
   // Select 'continue' on alert
   // Need to put a video on device
   // Session would like to access your photos
@@ -288,7 +280,8 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
   // "Session" would like to access the microphone (Don't allow/ OK)
   // await device1.clickOnByAccessibilityID("OK");
   await device1.pressAndHold("New voice message");
-  // await device1.clickOnByAccessibilityID("Allow");
+  await device1.clickOnByAccessibilityID("Allow");
+  await device1.pressAndHold("New voice message");
   await sleepFor(500);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -391,7 +384,7 @@ async function sendLongMessage(platform: SupportedPlatformsType) {
 
 async function sendLink(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const testLink = `https://example.org/`;
+  const testLink = `https://type-level-typescript.com/objects-and-records`;
   // Create two users
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -456,7 +449,8 @@ async function sendCommunityInvitation(platform: SupportedPlatformsType) {
     selector: "Contact",
     text: userB.userName,
   });
-  await device1.clickOnByAccessibilityID("Invite");
+  // await device1.clickOnByAccessibilityID("Invite");
+  await device1.clickOnByAccessibilityID("Done");
   await device2.clickOnElementByText({
     strategy: "accessibility id",
     selector: "Community invitation",
@@ -472,9 +466,14 @@ async function sendCommunityInvitation(platform: SupportedPlatformsType) {
   });
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Username",
+    selector: "Conversation header name",
     text: communityName,
   });
+  // await device2.waitForTextElementToBePresent({
+  //   strategy: "accessibility id",
+  //   selector: "Username",
+  //   text: communityName,
+  // });
 
   await closeApp(device1, device2);
 }

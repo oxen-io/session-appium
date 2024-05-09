@@ -154,7 +154,21 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID("Continue");
   // Navigate back to conversation
   await device1.clickOnByAccessibilityID("Close button");
+  await device1.clickOnByAccessibilityID("Call");
+  // Need to allow microphone access
+  await device1.clickOnByAccessibilityID("Allow");
+  // Call hasn't connected until microphone access is granted
+  // await device1.clickOnByAccessibilityID("Call");
+  // Missed call dialog should pop telling User B to enable calls
+  await device2.clickOnByAccessibilityID("OK");
   // Enable voice calls on device 2 for User B
+  // Need to navigate out of conversation for user to have full contact actions (calls icon, etc)
+  await device2.navigateBack(platform);
+  await device2.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: "Conversation list item",
+    text: userA.userName,
+  });
   await device2.clickOnByAccessibilityID("Call");
   await device2.clickOnByAccessibilityID("Settings");
   await device2.scrollDown();
@@ -165,13 +179,14 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID("Call");
   // await device1.clickOnByAccessibilityID("OK");
   await device1.clickOnByAccessibilityID("Allow");
+  await device1.clickOnByAccessibilityID("Call");
   // Wait for call to come through
-  await sleepFor(1000);
+  // await sleepFor(1000);
   // Answer call on device 2
-  await device2.clickOnByAccessibilityID("AnswerCall");
+  await device2.clickOnByAccessibilityID("Answer call");
   // Have to press answer twice, once in drop down and once in full screen
   await sleepFor(500);
-  await device2.clickOnByAccessibilityID("AnswerCall");
+  await device2.clickOnByAccessibilityID("Answer call");
   // Wait 10 seconds
   // Hang up
   await device1.clickOnByAccessibilityID("End call button");

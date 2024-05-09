@@ -119,9 +119,8 @@ async function changeUsername(platform: SupportedPlatformsType) {
   // select username
   await device.clickOnByAccessibilityID("Username");
   // type in new username
-  await sleepFor(1000);
-  await device.deleteText("Username");
   await sleepFor(100);
+  await device.deleteText("Username");
   await device.inputText("accessibility id", "Username", newUsername);
   const changedUsername = await device.grabTextFromAccessibilityId("Username");
   console.log("Changed username", changedUsername);
@@ -138,10 +137,11 @@ async function changeUsername(platform: SupportedPlatformsType) {
     );
   }
   // select tick
-  await runOnlyOnAndroid(platform, () =>
-    device.clickOnByAccessibilityID("Apply")
-  );
-  await runOnlyOnIOS(platform, () => device.clickOnByAccessibilityID("Done"));
+  if (platform === "android") {
+    device.clickOnByAccessibilityID("Apply");
+  } else {
+    device.clickOnByAccessibilityID("Done");
+  }
   // verify new username
 
   await closeApp(device);
@@ -409,7 +409,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   await await device1.clickOnByAccessibilityID("Done");
   // Check in conversation header
   await device1.navigateBack(platform);
-  await sleepFor(500);
+  // await sleepFor(500);
   const revertedNickname = await device1.grabTextFromAccessibilityId(
     "Conversation header name"
   );

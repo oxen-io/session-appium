@@ -128,7 +128,7 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
 async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   const testGroupName = "Disappear after send test";
   const testMessage = "Testing disappear after sent in groups";
-  const time: DMTimeOption = "10 seconds";
+  let time: DMTimeOption;
   const action: DisappearActions = "sent";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
@@ -166,7 +166,14 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   });
   await device1.disappearRadioButtonSelected("1 day");
   // Change time to testing time of 10 seconds
-  await device1.clickOnByAccessibilityID("30 seconds");
+
+  if (platform === "android") {
+    time = "30 seconds";
+    await device1.clickOnByAccessibilityID(time);
+  } else {
+    time = "10 seconds";
+    await device1.clickOnByAccessibilityID(time);
+  }
   // Save setting
   await device1.clickOnByAccessibilityID("Set button");
   await runOnlyOnIOS(platform, () => device1.navigateBack(platform));
@@ -184,6 +191,18 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   ]);
   // Send message to verify deletion
   await device1.sendMessage(testMessage);
+  await Promise.all([
+    device2.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Message body",
+      text: testMessage,
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Message body",
+      text: testMessage,
+    }),
+  ]);
   // Wait for ten seconds
   await sleepFor(10000);
   // Check for test messages (should be deleted)
