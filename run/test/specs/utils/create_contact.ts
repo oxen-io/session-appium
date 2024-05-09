@@ -28,7 +28,6 @@ export const newContact = async (
   await device2.sendMessage(
     `Reply-message-${user2.userName}-to-${user1.userName}`
   );
-
   // Verify config message states message request was accepted
   await device1.waitForControlMessageToBePresent(
     "Your message request has been accepted."
