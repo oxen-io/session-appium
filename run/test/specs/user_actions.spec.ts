@@ -3,9 +3,11 @@ import { parseDataImage } from "./utils/check_colour";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils/index";
+import { linkedDevice } from "./utils/link_device";
 import {
   closeApp,
   openAppOnPlatformSingleDevice,
+  openAppThreeDevices,
   openAppTwoDevices,
   SupportedPlatformsType,
 } from "./utils/open_app";
@@ -13,14 +15,19 @@ import { runScriptAndLog } from "./utils/utilities";
 
 async function createContact(platform: SupportedPlatformsType) {
   // first we want to install the app on each device with our custom call to run it
-  const { device1, device2 } = await openAppTwoDevices(platform);
+  const { device1, device2, device3 } = await openAppThreeDevices(platform);
 
-  const userA = await newUser(device1, "Alice", platform);
+  const userA = await linkedDevice(device1, device3, "Alice", platform);
   const userB = await newUser(device2, "Bob", platform);
 
   await newContact(platform, device1, userA, device2, userB);
+  await device3.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Conversation list item",
+    text: userB.userName,
+  });
   // Wait for tick
-  await closeApp(device1, device2);
+  await closeApp(device1, device2, device3);
 }
 async function blockUserInConversationOptions(
   platform: SupportedPlatformsType
@@ -135,6 +142,8 @@ async function changeUsername(platform: SupportedPlatformsType) {
       "Username is not picking up text but using access id text",
       changedUsername
     );
+  } else {
+    console.log("Username is not found`");
   }
   // select tick
   if (platform === "android") {

@@ -367,7 +367,7 @@ async function disappearingCommunityInviteMessage1o1(
   // await device1.navigateBack(platform);
   // await device1.navigateBack(platform);
   await device1.clickOnByAccessibilityID("New conversation button");
-  await device1.clickOnByAccessibilityID("Join Community");
+  await device1.clickOnByAccessibilityID("Join community option");
   await device1.inputText(
     "accessibility id",
     "Enter Community URL",

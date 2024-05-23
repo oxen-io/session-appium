@@ -581,7 +581,7 @@ describe("Message checks ios", () => {
   iosIt("Send video", sendVideo);
   iosIt("Send voice message", sendVoiceMessage);
   // iosIt("Send document", sendDoc);
-  iosIt("Send GIF", sendGif);
+  iosIt("Send gif", sendGif);
   iosIt("Send long text", sendLongMessage);
   iosIt("Send link", sendLink);
   iosIt("Send community invitation message", sendCommunityInvitation);

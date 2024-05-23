@@ -40,25 +40,6 @@ async function linkDevice(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
-async function contactsSyncLinkedDevice(platform: SupportedPlatformsType) {
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  // link device
-  const userA = await linkedDevice(device1, device2, "Alice", platform);
-
-  const userB = await newUser(device3, "Bob", platform);
-
-  await newContact(platform, device1, userA, device3, userB);
-  await runOnlyOnIOS(platform, () => device1.clickOnByAccessibilityID("Back"));
-  await runOnlyOnAndroid(platform, () =>
-    device1.clickOnByAccessibilityID("Navigate up")
-  );
-  // Check that user synced on linked device
-  await device2.findMatchingTextAndAccessibilityId(
-    "Conversation list item",
-    userB.userName
-  );
-  await closeApp(device1, device2, device3);
-}
 // TO FIX (USERNAME ISN'T CORRECT)
 async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
   // Open server and two devices
@@ -415,9 +396,6 @@ describe("Linked device - user tests", () => {
 
   iosIt("Profile picture syncs", avatarRestorediOS);
   androidIt("Profile picture syncs", avatarRestoredAndroid);
-
-  androidIt("Contact syncs", contactsSyncLinkedDevice);
-  iosIt("Contact syncs", contactsSyncLinkedDevice);
 
   androidIt("Changed username syncs", changeUsernameLinkedDevice);
   iosIt("Changed username syncs", changeUsernameLinkedDevice);

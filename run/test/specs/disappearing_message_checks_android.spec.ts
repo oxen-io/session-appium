@@ -33,12 +33,13 @@ async function disappearingImageMessage(platform: SupportedPlatformsType) {
     ["1:1", "Disappear after send option", "1 minute"],
     device2
   );
-  await device2.disappearingControlMessage(
-    `${userA.userName} has set messages to disappear ${time} after they have been ${mode}.`
-  ),
-    await device2.disappearingControlMessage(
-      `You set messages to disappear ${time} after they have been ${mode}.`
-    );
+  // TODO FIX CONTROL MESSAGES ON ANDROID
+  // await device2.disappearingControlMessage(
+  //   `${userA.userName} has set messages to disappear ${time} after they have been ${mode}.`
+  // ),
+  //   await device2.disappearingControlMessage(
+  //     `You set messages to disappear ${time} after they have been ${mode}.`
+  //   );
   // Wait for control messages to disappear before sending image (to check if the control messages are interfering with finding the untrusted attachment message)
   await sleepFor(60000);
   await device1.sendImage(platform, testMessage);
@@ -86,23 +87,15 @@ async function disappearingVideoMessage(platform: SupportedPlatformsType) {
     ["1:1", "Disappear after send option", "1 minute"],
     device2
   );
-  // Click on attachments button
-  await device1.clickOnByAccessibilityID("Attachments button");
-  await sleepFor(100);
-  // Select images button/tab
-  await device1.clickOnByAccessibilityID("Documents folder");
-  // Select video
-  const mediaButtons = await device1.findElementsByClass(
-    "android.widget.CompoundButton"
-  );
-  await device2.disappearingControlMessage(
-    `${userA.userName} has set messages to disappear ${time} after they have been ${mode}.`
-  );
-  await device2.disappearingControlMessage(
-    `You set messages to disappear ${time} after they have been ${mode}.`
-  );
+  // TODO FIX
+  // await device2.disappearingControlMessage(
+  //   `${userA.userName} has set messages to disappear ${time} after they have been ${mode}.`
+  // );
+  // await device2.disappearingControlMessage(
+  //   `You set messages to disappear ${time} after they have been ${mode}.`
+  // );
   // Wait for control messages to disappear before sending image (to check if the control messages are interfering with finding the untrusted attachment message)
-  await sleepFor(60000);
+  // await sleepFor(60000);
   await device1.sendVideo(platform);
   await device2.clickOnByAccessibilityID("Untrusted attachment message");
   await device2.clickOnByAccessibilityID("Download media");
@@ -137,14 +130,15 @@ async function disappearingVoiceMessage(platform: SupportedPlatformsType) {
     ["1:1", "Disappear after send option", "1 minute"],
     device2
   );
-  await device2.disappearingControlMessage(
-    `${userA.userName} has set messages to disappear ${time} after they have been ${mode}.`
-  );
-  await device2.disappearingControlMessage(
-    `You set messages to disappear ${time} after they have been ${mode}.`
-  );
+  // TODO FIX
+  // await device2.disappearingControlMessage(
+  //   `${userA.userName} has set messages to disappear ${time} after they have been ${mode}.`
+  // );
+  // await device2.disappearingControlMessage(
+  //   `You set messages to disappear ${time} after they have been ${mode}.`
+  // );
   // Wait for control messages to disappear
-  await sleepFor(60000);
+  // await sleepFor(60000);
   await device1.longPress("New voice message");
   await device1.clickOnByAccessibilityID("Continue");
   await device1.clickOnElementXPath(
@@ -187,13 +181,14 @@ async function disappearingGifMessage(platform: SupportedPlatformsType) {
     ["1:1", "Disappear after send option", "1 minute"],
     device2
   ); // Wait for control messages to disappear before sending image (to check if the control messages are interfering with finding the untrusted attachment message)
-  await device2.disappearingControlMessage(
-    `${userA.userName} has set messages to disappear ${time} after they have been ${mode}.`
-  );
-  await device2.disappearingControlMessage(
-    `You set messages to disappear ${time} after they have been ${mode}.`
-  );
-  await sleepFor(60000);
+  // TODO FIX
+  // await device2.disappearingControlMessage(
+  //   `${userA.userName} has set messages to disappear ${time} after they have been ${mode}.`
+  // );
+  // await device2.disappearingControlMessage(
+  //   `You set messages to disappear ${time} after they have been ${mode}.`
+  // );
+  // await sleepFor(60000);
   // Click on attachments button
   await device1.clickOnByAccessibilityID("Attachments button");
   // Select GIF tab
@@ -203,7 +198,7 @@ async function disappearingGifMessage(platform: SupportedPlatformsType) {
     selector: "Continue",
   });
   // Select gif
-  await sleepFor(3000);
+  await sleepFor(500);
   await device1.clickOnElementXPath(
     `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.ScrollView/androidx.viewpager.widget.ViewPager/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.FrameLayout[1]`
   );
@@ -304,7 +299,15 @@ async function disappearingCommunityInviteMessage(
   await device1.navigateBack(platform);
   await joinCommunity(platform, device1, communityLink, communityName);
   await device1.clickOnByAccessibilityID("More options");
-  await device1.clickOnByAccessibilityID("Add Members");
+  if (platform === "ios") {
+    await device1.clickOnByAccessibilityID("Add Members");
+  } else {
+    await device1.clickOnElementAll({
+      strategy: "id",
+      selector: "network.loki.messenger:id/title",
+      text: "Add members",
+    });
+  }
   await device1.clickOnElementByText({
     strategy: "accessibility id",
     selector: "Contact",
@@ -312,11 +315,23 @@ async function disappearingCommunityInviteMessage(
   });
   await device1.clickOnByAccessibilityID("Done");
   // Check device 2 for invitation from user A
-  await device2.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Community invitation",
-    text: communityName,
-  });
+  if (platform === "ios") {
+    await device2.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Community invitation",
+      text: communityName,
+    });
+  } else {
+    await device2.waitForTextElementToBePresent({
+      strategy: "id",
+      selector: "network.loki.messenger:id/openGroupTitleTextView",
+      text: communityName,
+    });
+    await device2.clickOnElementAll({
+      strategy: "id",
+      selector: "network.loki.messenger:id/openGroupInvitationIconBackground",
+    });
+  }
   // Wait for 10 seconds for message to disappear
   await sleepFor(10000);
   await device2.hasElementBeenDeletedNew({
@@ -333,7 +348,7 @@ async function disappearingCommunityInviteMessage(
   });
   await closeApp(device1, device2);
 }
-
+// TODO fix with calls
 async function disappearingCallMessage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and user B

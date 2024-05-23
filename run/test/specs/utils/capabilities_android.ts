@@ -4,8 +4,7 @@ import { W3CCapabilities } from "@wdio/types/build/Capabilities";
 import { isNil, isString } from "lodash";
 import { CapabilitiesIndexType } from "./capabilities_ios";
 
-
-const androidAppFullPath = `/Users/emilyburton/Downloads/session-1.18.2-universal.apk`;
+const androidAppFullPath = `/Users/emilyburton/Documents/session-android/app/build/outputs/apk/play/debug/session-1.18.2-universal.apk`;
 
 const sharedCapabilities: AppiumCapabilities = {
   "appium:app": androidAppFullPath,

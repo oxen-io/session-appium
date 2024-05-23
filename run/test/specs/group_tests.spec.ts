@@ -263,57 +263,16 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
-  await device1.inputText("accessibility id", "Message input box", "@");
-  // Check that all users are showing in mentions box
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Mentions list",
-  });
-
-  // Select User B
-
-  await device1.selectByText("Contact", userB.userName);
-  await device1.clickOnByAccessibilityID("Send message button");
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: `Message sent status: Sent`,
-  });
-
-  // Check in user B's device if the format is correct
+  await device1.tagContact(platform, userB);
+  // Check format on User B's device
   await device2.findMessageWithBody("@You");
-  // Select User C
-  await sleepFor(2000);
-  await device1.inputText("accessibility id", "Message input box", "@");
-  // Check that all users are showing in mentions box
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Mentions list",
-  });
-  // Select User B
-  await device1.selectByText("Contact", userC.userName);
-  await device1.clickOnByAccessibilityID("Send message button");
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: `Message sent status: Sent`,
-    maxWait: 20000,
-  });
-
-  // Check in User C's device if the format is correct
-  // await device3.findMessageWithBody(`@You`);
+  // Bob to Select User C
+  await device2.tagContact(platform, userC);
+  // Check Charlies device(3) for correct format
+  await device3.findMessageWithBody(`@You`);
   //  Check User A format works
-  await device3.inputText("accessibility id", "Message input box", `@`);
-  await device3.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Mentions list",
-  });
-  // Select User A
-  await device3.selectByText("Contact", userA.userName);
-  await device3.clickOnByAccessibilityID("Send message button");
-  await device3.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: `Message sent status: Sent`,
-    maxWait: 20000,
-  });
+  await device3.tagContact(platform, userA);
+  // Check device 1 that correct format is shown (Alice's device)
   await device1.findMessageWithBody(`@You`);
   // Close app
   await closeApp(device1, device2, device3);
