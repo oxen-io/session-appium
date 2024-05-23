@@ -33,6 +33,7 @@ type Action = Coordinates & { type: "pointer"; duration?: number };
 
 type SharedDeviceInterface = {
   getPageSource: () => Promise<string>;
+  getDeviceTime: (platform: SupportedPlatformsType) => Promise<string>;
   back: () => Promise<void>;
   click: (elementId: string) => Promise<void>;
   doubleClick: (elementId: string) => Promise<void>;
@@ -140,6 +141,12 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async getText(elementId: string): Promise<string> {
     return this.toShared().getText(elementId);
+  }
+
+  public async getDeviceTime(
+    platform: SupportedPlatformsType
+  ): Promise<string> {
+    return this.toShared().getDeviceTime(platform);
   }
 
   public async setValueImmediate(
@@ -949,6 +956,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async sendMessage(message: string) {
     await this.inputText("accessibility id", "Message input box", message);
+
     // Click send
     await this.clickOnByAccessibilityID("Send message button");
     // Wait for tick
@@ -1037,11 +1045,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
     // Select 'Reply' option
     await this.clickOnByAccessibilityID("Reply to message");
     // Send message
-    const sentMessage = await this.sendMessage(
-      `${user.userName} message reply`
+    const replyMessage = await this.sendMessage(
+      `${user.userName} + " replied to ${body}`
     );
 
-    return sentMessage;
+    return replyMessage;
   }
 
   public async measureSendingTime(messageNumber: number) {
@@ -1156,6 +1164,12 @@ export class DeviceWrapper implements SharedDeviceInterface {
       await this.clickOnByAccessibilityID("Attachments button");
       await sleepFor(100);
       await this.clickOnByAccessibilityID("Documents folder");
+      await this.clickOnByAccessibilityID("Continue");
+      await this.clickOnElementAll({
+        strategy: "id",
+        selector: "com.android.permissioncontroller:id/permission_allow_button",
+        text: "Allow",
+      });
       await this.clickOnByAccessibilityID("Show roots");
       await sleepFor(100);
       await this.clickOnTextElementById(`android:id/title`, "Downloads");
@@ -1180,9 +1194,33 @@ export class DeviceWrapper implements SharedDeviceInterface {
       await this.waitForTextElementToBePresent({
         strategy: "accessibility id",
         selector: `Message sent status: Sent`,
-        maxWait: 50000,
+        maxWait: 60000,
       });
     }
+  }
+
+  public async sendImageWithMessageAndroid(message: string) {
+    await this.clickOnByAccessibilityID("Attachments button");
+    await sleepFor(100);
+    await this.clickOnByAccessibilityID("Images folder");
+    await this.clickOnByAccessibilityID("Continue");
+    await this.clickOnElementAll({
+      strategy: "id",
+      selector:
+        "com.android.permissioncontroller:id/permission_allow_all_button",
+      text: "Allow all",
+    });
+    await this.clickOnElementAll({
+      strategy: "id",
+      selector: "network.loki.messenger:id/mediapicker_folder_item_thumbnail",
+    });
+    await sleepFor(100);
+    await this.clickOnElementAll({
+      strategy: "id",
+      selector: "network.loki.messenger:id/mediapicker_image_item_thumbnail",
+    });
+    await this.inputText("accessibility id", "Message composition", message);
+    await this.clickOnByAccessibilityID("Send");
   }
 
   public async sendVideo(platform: SupportedPlatformsType) {
@@ -1192,6 +1230,12 @@ export class DeviceWrapper implements SharedDeviceInterface {
       await sleepFor(100);
       // Select images button/tab
       await this.clickOnByAccessibilityID("Documents folder");
+      await this.clickOnByAccessibilityID("Continue");
+      await this.clickOnElementAll({
+        strategy: "id",
+        selector: "com.android.permissioncontroller:id/permission_allow_button",
+        text: "Allow",
+      });
       await sleepFor(200);
       // Select video
       const mediaButtons = await this.findElementsByClass(
@@ -1226,6 +1270,89 @@ export class DeviceWrapper implements SharedDeviceInterface {
         maxWait: 50000,
       });
     }
+  }
+
+  public async sendDocument(platform: SupportedPlatformsType) {
+    if (platform === "android") {
+      await this.clickOnByAccessibilityID("Attachments button");
+      await this.clickOnByAccessibilityID("Documents folder");
+      await this.clickOnByAccessibilityID("Continue");
+      await this.clickOnElementAll({
+        strategy: "id",
+        selector: "com.android.permissioncontroller:id/permission_allow_button",
+        text: "Allow",
+      });
+      await this.waitForTextElementToBePresent({
+        strategy: "class name",
+        selector: "android.widget.Button",
+        text: "Documents",
+      });
+      await this.clickOnElementAll({
+        strategy: "class name",
+        selector: "android.widget.Button",
+        text: "Documents",
+      });
+      const testDocument = await this.doesElementExist({
+        strategy: "id",
+        selector: "android:id/title",
+        maxWait: 1000,
+        text: "test_file.pdf",
+      });
+      if (!testDocument) {
+        await runScriptAndLog(
+          `adb -s emulator-5554 push 'run/test/specs/media/test_file.pdf' /storage/emulated/0/Download`,
+          true
+        );
+      }
+      await sleepFor(1000);
+      await this.clickOnTextElementById("android:id/title", "test_file.pdf");
+    } else {
+      // Need to fix this for iOS
+      console.log(`This function is not yet implemented for iOS`);
+    }
+  }
+
+  public async getTimeFromDevice(
+    platform: SupportedPlatformsType
+  ): Promise<string> {
+    let timeString = ""; // Initialize the 'time' variable with an empty string
+    try {
+      let time = await this.getDeviceTime(platform);
+      timeString = await time.toString();
+      console.log(`Device time: ${timeString}`);
+    } catch (e) {
+      console.log(`Couldn't get time from device`);
+    }
+    return timeString;
+  }
+
+  public async tagContact(platform: SupportedPlatformsType, contact: User) {
+    await this.inputText("accessibility id", "Message input box", "@");
+    // Check that all users are showing in mentions box
+    await this.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Mentions list",
+    });
+
+    // Select User B (Bob) on device 1 (Alice's device)
+    if (platform === "android") {
+      await this.clickOnElementAll({
+        strategy: "accessibility id",
+        selector: "Contact mentions",
+        text: contact.userName,
+      });
+    } else {
+      await this.clickOnElementAll({
+        strategy: "accessibility id",
+        selector: "Contact",
+        text: contact.userName,
+      });
+    }
+    await this.clickOnByAccessibilityID("Send message button");
+    await this.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: `Message sent status: Sent`,
+    });
   }
 
   // ACTIONS

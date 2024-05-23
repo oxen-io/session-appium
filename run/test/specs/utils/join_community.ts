@@ -23,8 +23,8 @@ export const joinCommunity = async (
       text: communityName,
     });
   } else {
-    // TO FIX (ISSUE WITH ACCESS ID JOIN COMMUNITY?)
-    await device.clickOnByAccessibilityID("Join community");
+    // TODO FIX (ISSUE WITH ACCESS ID JOIN COMMUNITY? android needs updated)
+    await device.clickOnByAccessibilityID("Join community option");
     await device.inputText(
       "accessibility id",
       "Community input",
@@ -33,7 +33,7 @@ export const joinCommunity = async (
     await device.clickOnByAccessibilityID("Join community button");
     await device.waitForTextElementToBePresent({
       strategy: "accessibility id",
-      selector: "Username",
+      selector: "Conversation header name",
       text: communityName,
     });
   }

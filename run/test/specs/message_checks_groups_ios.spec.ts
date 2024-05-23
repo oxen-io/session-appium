@@ -509,7 +509,7 @@ describe("Message checks ios", () => {
   iosIt("Send video to group", sendVideoGroup);
   iosIt("Send voice message to group", sendVoiceMessageGroup);
   iosIt("Send document to group", sendDocGroup);
-  iosIt("Send GIF to group", sendGifGroup);
+  iosIt("Send gif to group", sendGifGroup);
   iosIt("Send long text to group", sendLongMessageGroup);
   iosIt("Send link to group", sendLinkGroup);
   iosIt("Delete message in group", deleteMessageGroup);

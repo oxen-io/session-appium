@@ -7,7 +7,6 @@ import {
   closeApp,
   openAppThreeDevices,
 } from "./utils/open_app";
-import { runScriptAndLog } from "./utils/utilities";
 
 async function sendImageGroup(platform: SupportedPlatformsType) {
   const testGroupName = "Message checks for groups";
@@ -34,32 +33,34 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
   await device1.sendImage(platform, testMessage);
   // Wait for image to appear in conversation screen
   await sleepFor(500);
-  await device2.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Media message",
-  });
-  await device3.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Media message",
-  });
-
-  // Reply to image from user B
-  // Waiting for image to load
+  await Promise.all([
+    device2.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Media message",
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Media message",
+    }),
+  ]);
+  // Reply to image - user B
+  // Sleep for is waiting for image to load
   await sleepFor(1000);
   await device2.longPress("Media message");
   await device2.clickOnByAccessibilityID("Reply to message");
   await device2.sendMessage(replyMessage);
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
-    text: replyMessage,
-  });
-  await device3.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
-    text: replyMessage,
-  });
-
+  await Promise.all([
+    device1.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Message body",
+      text: replyMessage,
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Message body",
+      text: replyMessage,
+    }),
+  ]);
   // Close server and devices
   await closeApp(device1, device2, device3);
 }
@@ -89,7 +90,9 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to video from ${userA.userName} in ${testGroupName}`;
   // Click on attachments button
   await device1.sendVideo(platform);
-  // Reply to message
+  // Check video appears in device 2 and device 3
+  // (wait for loading animation to disappear and play icon to appear)
+  // Device 2
   await Promise.all([
     device2.waitForLoadingAnimation(),
     device2.waitForTextElementToBePresent({
@@ -98,6 +101,7 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
       maxWait: 8000,
     }),
   ]);
+  // Device 3
   await Promise.all([
     device3.waitForLoadingAnimation(),
     device3.waitForTextElementToBePresent({
@@ -106,19 +110,23 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
       maxWait: 8000,
     }),
   ]);
+  // Reply to message on device 2
   await device2.longPress("Media message");
   await device2.clickOnByAccessibilityID("Reply to message");
   await device2.sendMessage(replyMessage);
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
-    text: replyMessage,
-  });
-  await device3.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
-    text: replyMessage,
-  });
+  // Check reply appears in device 1 and device 3
+  await Promise.all([
+    device1.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Message body",
+      text: replyMessage,
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Message body",
+      text: replyMessage,
+    }),
+  ]);
   // Close app and server
   await closeApp(device1, device2, device3);
 }
@@ -147,34 +155,39 @@ async function sendVoiceMessageGroup(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to voice message from ${userA.userName} in ${testGroupName}`;
   // Select voice message button to activate recording state
   await device1.longPress("New voice message");
-
   await device1.clickOnByAccessibilityID("Continue");
   await device1.clickOnElementXPath(
     `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.Button[1]`
   );
   await device1.pressAndHold("New voice message");
-  await device2.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Voice message",
-  });
-  await device3.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Voice message",
-  });
+  // Check device 2 and 3 for voice message from user A
+  await Promise.all([
+    device2.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Voice message",
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Voice message",
+    }),
+  ]);
+  // Reply to voice message
   await device2.longPress("Voice message");
   await device2.clickOnByAccessibilityID("Reply to message");
   await device2.sendMessage(replyMessage);
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
-    text: replyMessage,
-  });
-  await device3.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
-    text: replyMessage,
-  });
-
+  // Check device 1 and 3 for reply to apepar
+  await Promise.all([
+    device1.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Message body",
+      text: replyMessage,
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Message body",
+      text: replyMessage,
+    }),
+  ]);
   await closeApp(device1, device2, device3);
 }
 
@@ -199,57 +212,37 @@ async function sendDocumentGroup(platform: SupportedPlatformsType) {
     testGroupName
   );
   const replyMessage = `Replying to document from ${userA.userName} in ${testGroupName}`;
-  await device1.clickOnByAccessibilityID("Attachments button");
-  await sleepFor(100);
-  await device1.clickOnByAccessibilityID("Documents folder");
-  await sleepFor(500);
-  await device1.waitForTextElementToBePresent({
-    strategy: "class name",
-    selector: "android.widget.Button",
-    text: "Documents",
-  });
-  await device1.clickOnElementAll({
-    strategy: "class name",
-    selector: "android.widget.Button",
-    text: "Documents",
-  });
-  const testDocument = await device1.doesElementExist({
-    strategy: "id",
-    selector: "android:id/title",
-    maxWait: 1000,
-    text: "test_file.pdf",
-  });
-  if (!testDocument) {
-    await runScriptAndLog(
-      `adb -s emulator-5554 push 'run/test/specs/media/test_file.pdf' /storage/emulated/0/Download`,
-      true
-    );
-  }
-  await sleepFor(1000);
-  await device1.clickOnTextElementById("android:id/title", "test_file.pdf");
+  await device1.sendDocument(platform);
   // Reply to message
   await sleepFor(1000);
-  await device2.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Document",
-  });
-  await device3.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Document",
-  });
+  // Check document appears in both device 2 and 3's screen
+  await Promise.all([
+    device2.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Document",
+    }),
+    await device3.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Document",
+    }),
+  ]);
+  // Reply to document from user B
   await device2.longPress("Document");
   await device2.clickOnByAccessibilityID("Reply to message");
   await device2.sendMessage(replyMessage);
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
-    text: replyMessage,
-  });
-  await device3.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
-    text: replyMessage,
-  });
+  // Check reply from device 2 came through on device1 and device3
+  await Promise.all([
+    device1.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Message body",
+      text: replyMessage,
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Message body",
+      text: replyMessage,
+    }),
+  ]);
   // Close app and server
   await closeApp(device1, device2, device3);
 }
@@ -480,7 +473,7 @@ describe("Message checks for groups android", () => {
   androidIt("Send voice message to group", sendVoiceMessageGroup);
   androidIt("Send document to group", sendDocumentGroup);
   androidIt("Send link to group", sendLinkGroup);
-  androidIt("Send GIF to group", sendGifGroup);
+  androidIt("Send gif to group", sendGifGroup);
   androidIt("Send long message to group", sendLongMessageGroup);
   androidIt("Delete message in group", deleteMessageGroup);
 });
