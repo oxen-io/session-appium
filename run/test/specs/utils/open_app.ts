@@ -19,6 +19,10 @@ import {
 } from "./binaries";
 import { sleepFor } from "./sleep_for";
 import { compact } from "lodash";
+import { linkedDevice } from "./link_device";
+import { newUser } from "./create_account";
+import { User } from "../../../types/testing";
+import { newContact } from "./create_contact";
 
 const APPIUM_PORT = 4728;
 export const APPIUM_IOS_PORT = 8110;
@@ -28,6 +32,48 @@ export type SupportedPlatformsType = "android" | "ios";
 /* ******************Command to run Appium Server: *************************************
 ./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --use-plugins=execute-driver --allow-cors
 */
+// Basic test environment is 3 devices (device1, device2, device3) and 2 users (userA, userB)
+// Device 1 and 3 are linked devicesby userA
+export const createBasicTestEnvironment = async (
+  platform: SupportedPlatformsType
+): Promise<{
+  devices: DeviceWrapper[];
+  Alice: User;
+  Bob: User;
+  closeApp(): Promise<void>;
+}> => {
+  const [device1, device2, device3] = await openAppMultipleDevices(platform, 3);
+  const userA: User = await linkedDevice(device1, device3, "Alice", platform);
+  const userB: User = await newUser(device2, "Bob", platform);
+  await newContact(platform, device1, userA, device2, userB);
+  const closeApp = async (): Promise<void> => {
+    await Promise.all([
+      compact([device1, device2, device3]).map((d) => d.deleteSession()),
+    ]);
+    console.info("sessions closed");
+  };
+  return {
+    devices: [device1, device2, device3],
+    Alice: userA,
+    Bob: userB,
+    closeApp,
+  };
+};
+
+export const openAppMultipleDevices = async (
+  platform: SupportedPlatformsType,
+  numberOfDevices: number
+): Promise<DeviceWrapper[]> => {
+  // Create an array of promises for each device
+  const devicePromises = Array.from(
+    { length: numberOfDevices },
+    (_, index) => openAppOnPlatform(platform, index as CapabilitiesIndexType) // Convert index to CapabilitiesIndexType
+  );
+  // Use Promise.all to wait for all device apps to open
+  const apps = await Promise.all(devicePromises);
+  //  Map the result to return only the device objects
+  return apps.map((app) => app.device);
+};
 
 const openAppOnPlatform = async (
   platform: SupportedPlatformsType,
@@ -59,9 +105,9 @@ export const openAppTwoDevices = async (
     openAppOnPlatform(platform, 1),
   ]);
 
-  function closeAllApps() {
-    // do the thing
-  }
+  // function closeAllApps() {
+  //   // do the thing
+  // }
 
   return { device1: app1.device, device2: app2.device };
 };

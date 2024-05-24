@@ -6,16 +6,12 @@ import { SupportedPlatformsType } from "./open_app";
 export const newContact = async (
   platform: SupportedPlatformsType,
   device1: DeviceWrapper,
-  user1: User,
+  Alice: User,
   device2: DeviceWrapper,
-  user2: User
+  Bob: User
 ) => {
-  await device1.sendNewMessage(user2, `${user1.userName} to ${user2.userName}`);
-
-  // USER B WORKFLOW
-  // Click on message request panel
-  // Wait for push notification to disappear (otherwise appium can't find element)
-
+  await device1.sendNewMessage(Bob, `${Alice.userName} to ${Bob.userName}`);
+  // Click on message request folder
   await retryRequest(device1, device2);
   await sleepFor(100);
   await device2.clickOnByAccessibilityID("Message requests banner");
@@ -26,21 +22,22 @@ export const newContact = async (
   );
   // Type into message input box
   await device2.sendMessage(
-    `Reply-message-${user2.userName}-to-${user1.userName}`
+    `Reply-message-${Bob.userName}-to-${Alice.userName}`
   );
   // Verify config message states message request was accepted
   await device1.waitForControlMessageToBePresent(
     "Your message request has been accepted."
   );
 
-  console.warn(`${user1.userName} and ${user2.userName} are now contacts`);
-  return { user1, user2, device1, device2 };
+  console.warn(`${Alice.userName} and ${Bob.userName} are now contacts`);
+  return { Alice, Bob, device1, device2 };
 };
 
 export const retryRequest = async (
   device1: DeviceWrapper,
   device2: DeviceWrapper
 ) => {
+  const time = Date.now();
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message sent status: Sent",
@@ -49,7 +46,7 @@ export const retryRequest = async (
     strategy: "accessibility id",
     selector: "Message requests banner",
   });
-  if (!banner) {
+  if (!banner && time - Date.now() < 10000) {
     await device1.sendMessage("Retry");
     console.log(`Retrying message request`);
   } else {
