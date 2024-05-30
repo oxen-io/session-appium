@@ -104,7 +104,7 @@ async function sendImageCommunityAndroid(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  const replyMessage = `Replying to image from ${userA.userName} in community ${testCommunityName}`;
+  const replyMessage = `Replying to image from ${userA.userName} in community ${testCommunityName} + ${time}`;
   await Promise.all([
     device1.navigateBack(platform),
     device2.navigateBack(platform),
