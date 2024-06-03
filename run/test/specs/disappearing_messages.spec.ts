@@ -135,7 +135,7 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   const testGroupName = "Disappear after send test";
   const testMessage = "Testing disappear after sent in groups";
   let time: DMTimeOption;
-  const action: DisappearActions = "sent";
+  const mode: DisappearActions = "sent";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
@@ -168,19 +168,19 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   // Check the default time is set to
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "1 day",
+    selector: DISAPPEARING_TIMES.ONE_DAY,
   });
-  await device1.disappearRadioButtonSelected("1 day");
+  await device1.disappearRadioButtonSelected(DISAPPEARING_TIMES.ONE_DAY);
   // Change time to testing time of 10 seconds
 
   if (platform === "android") {
-    time = "30 seconds";
+    time = DISAPPEARING_TIMES.THIRTY_SECONDS;
     await device1.clickOnElementAll({
       strategy: "accessibility id",
       selector: time,
     });
   } else {
-    time = "10 seconds";
+    time = DISAPPEARING_TIMES.TEN_SECONDS;
     await device1.clickOnElementAll({
       strategy: "accessibility id",
       selector: time,
@@ -193,13 +193,13 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   await console.log(`Control message not working on Android: ignoring`);
   // await Promise.all([
   //   device1.disappearingControlMessage(
-  //     `You set messages to disappear ${time} after they have been ${action}.`
+  //     `You set messages to disappear ${time} after they have been ${mode}.`
   //   ),
   //   device2.disappearingControlMessage(
-  //     `${userA.userName} has set messages to disappear ${time} after they have been ${action}.`
+  //     `${userA.userName} has set messages to disappear ${time} after they have been ${mode}.`
   //   ),
   //   device3.disappearingControlMessage(
-  //     `${userA.userName} has set messages to disappear ${time} after they have been ${action}.`
+  //     `${userA.userName} has set messages to disappear ${time} after they have been ${mode}.`
   //   ),
   // ]);
   // Send message to verify deletion
@@ -285,10 +285,10 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   await sleepFor(1000);
   // await Promise.all([
   //   device.waitForControlMessageToBePresent(
-  //     `${userA.userName} has set their messages to disappear ${time} after they have been sent.`
+  //     `${userA.userName} has set their messages to disappear ${time} after they have been ${mode}.`
   //   ),
   //   device.waitForControlMessageToBePresent(
-  //     `${userA.userName} has set their messages to disappear ${time} after they have been sent.`
+  //     `${userA.userName} has set their messages to disappear ${time} after they have been ${mode}.`
   //   ),
   // ]);
   await device.sendMessage(testMessage);

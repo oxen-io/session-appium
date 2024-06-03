@@ -1,3 +1,4 @@
+import { DISAPPEARING_TIMES } from "../../../constants";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { ConversationType, MergedOptions } from "../../../types/testing";
 import { SupportedPlatformsType } from "./open_app";
@@ -26,10 +27,10 @@ export const setDisappearingMessage = async (
   }
   await device.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "1 day",
+    selector: DISAPPEARING_TIMES.ONE_DAY,
   });
 
-  await device.disappearRadioButtonSelected("1 day");
+  await device.disappearRadioButtonSelected(DISAPPEARING_TIMES.ONE_DAY);
   await device.clickOnElementAll({
     strategy: "accessibility id",
     selector: timerDuration,
