@@ -1,3 +1,4 @@
+import { XPATHS } from "../../constants";
 import { iosIt } from "../../types/sessionIt";
 import { InteractionPoints } from "../../types/testing";
 import { sleepFor, clickOnCoordinates } from "./utils";
@@ -36,7 +37,6 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID("Attachments button");
   await sleepFor(5000);
   await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardOpen);
-
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
     selector: "Allow Full Access",
@@ -148,7 +148,7 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
   // Select video
   const videoFolder = await device1.doesElementExist({
     strategy: "xpath",
-    selector: `//XCUIElementTypeStaticText[@name="Videos"]`,
+    selector: XPATHS.VIDEO_TOGGLE,
     maxWait: 1000,
   });
   if (videoFolder) {
@@ -262,7 +262,7 @@ async function sendVoiceMessageGroup(platform: SupportedPlatformsType) {
   // Close server and devices
   await closeApp(device1, device2, device3);
 }
-
+// TODO
 async function sendDocGroup(platform: SupportedPlatformsType) {
   const testGroupName = "Message checks for groups";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
@@ -315,9 +315,7 @@ async function sendGifGroup(platform: SupportedPlatformsType) {
   await sleepFor(500);
   // Need to select Continue on GIF warning
   await device1.clickOnByAccessibilityID("Continue");
-  await device1.clickOnElementXPath(
-    `(//XCUIElementTypeImage[@name="gif cell"])[1]`
-  );
+  await device1.clickOnElementXPath(XPATHS.FIRST_GIF);
   await device1.clickOnByAccessibilityID("Message input box");
   await device1.inputText("accessibility id", "Text input box", testMessage);
   await device1.clickOnByAccessibilityID("Send button");
@@ -500,7 +498,11 @@ async function deleteMessageGroup(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID("Delete message");
   // Select 'Delete for everyone'
   await device1.clickOnByAccessibilityID("Delete for me");
-  await device1.hasElementBeenDeleted("accessibility id", sentMessage);
+  await device1.hasElementBeenDeleted({
+    strategy: "accessibility id",
+    selector: "Message body",
+    text: sentMessage,
+  });
   // Excellentgit
   await closeApp(device1, device2, device3);
 }
@@ -510,7 +512,7 @@ describe("Message checks ios", () => {
   iosIt("Send video to group", sendVideoGroup);
   iosIt("Send voice message to group", sendVoiceMessageGroup);
   iosIt("Send document to group", sendDocGroup);
-  iosIt("Send GIF to group", sendGifGroup);
+  iosIt("Send gif to group", sendGifGroup);
   iosIt("Send long text to group", sendLongMessageGroup);
   iosIt("Send link to group", sendLinkGroup);
   iosIt("Delete message in group", deleteMessageGroup);

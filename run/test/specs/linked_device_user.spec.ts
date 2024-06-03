@@ -1,3 +1,4 @@
+import { XPATHS } from "../../constants";
 import { androidIt, iosIt } from "../../types/sessionIt";
 import { parseDataImage } from "./utils/check_colour";
 import { newUser } from "./utils/create_account";
@@ -18,10 +19,10 @@ async function linkDevice(platform: SupportedPlatformsType) {
   // link device
   const userA = await linkedDevice(device1, device2, "Alice", platform);
   // Check that 'Youre almost finished' reminder doesn't pop up on device2
-  await device2.hasElementBeenDeleted(
-    "accessibility id",
-    "Recovery phrase reminder"
-  );
+  await device2.hasElementBeenDeleted({
+    strategy: "accessibility id",
+    selector: "Recovery phrase reminder",
+  });
   // Verify username and session ID match
   await device2.clickOnByAccessibilityID("User settings");
   // Check username
@@ -40,25 +41,6 @@ async function linkDevice(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
-async function contactsSyncLinkedDevice(platform: SupportedPlatformsType) {
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  // link device
-  const userA = await linkedDevice(device1, device2, "Alice", platform);
-
-  const userB = await newUser(device3, "Bob", platform);
-
-  await newContact(platform, device1, userA, device3, userB);
-  await runOnlyOnIOS(platform, () => device1.clickOnByAccessibilityID("Back"));
-  await runOnlyOnAndroid(platform, () =>
-    device1.clickOnByAccessibilityID("Navigate up")
-  );
-  // Check that user synced on linked device
-  await device2.findMatchingTextAndAccessibilityId(
-    "Conversation list item",
-    userB.userName
-  );
-  await closeApp(device1, device2, device3);
-}
 // TO FIX (USERNAME ISN'T CORRECT)
 async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
   // Open server and two devices
@@ -223,7 +205,10 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
   // check on device 1 if user B is unblocked
   // Need to wait for blocked banner to disappear (takes a minute)
   await sleepFor(8000);
-  await device1.hasElementBeenDeleted("accessibility id", "Blocked banner");
+  await device1.hasElementBeenDeleted({
+    strategy: "accessibility id",
+    selector: "Blocked banner",
+  });
   // Send message from user B to user A to see if unblock worked
 
   const sentMessage = await device2.sendMessage("Unsend message");
@@ -241,6 +226,7 @@ async function blockedUserLinkedDevice(platform: SupportedPlatformsType) {
 async function avatarRestorediOS(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const spongebobsBirthday = "199805010700.00";
+  const pixelHexColour = "04cbfe";
   await linkedDevice(device1, device2, "Alice", platform);
 
   await device1.clickOnByAccessibilityID("User settings");
@@ -297,7 +283,7 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   const base64 = await device1.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
   console.log("RGB Value of pixel is:", pixelColor);
-  if (pixelColor === "04cbfe") {
+  if (pixelColor === pixelHexColour) {
     console.log("Colour is correct");
   } else {
     throw new Error("Colour isn't 04cbfe, it is: " + pixelColor);
@@ -312,7 +298,7 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   await sleepFor(3000);
   const base64A = await device2.getElementScreenshot(el2.ELEMENT);
   const pixelColorLinked = await parseDataImage(base64A);
-  if (pixelColorLinked === "04cbfe") {
+  if (pixelColorLinked === pixelHexColour) {
     console.log("Colour is correct on linked device");
   } else {
     console.log("Colour isn't 04cbfe, it is: ", pixelColorLinked);
@@ -323,6 +309,7 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
 async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const spongebobsBirthday = "199905020700.00";
+  const pixelHexColour = "04cbfe";
   await linkedDevice(device1, device2, "Alice", platform);
 
   await device1.clickOnByAccessibilityID("User settings");
@@ -337,9 +324,10 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
     "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
   );
   await sleepFor(500);
+  // Browse button
   await device1.clickOnElementAll({
     strategy: "xpath",
-    selector: `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.TabHost/android.widget.LinearLayout/android.widget.FrameLayout/androidx.viewpager.widget.ViewPager/android.widget.RelativeLayout/android.widget.GridView/android.widget.LinearLayout/android.widget.LinearLayout[2]`,
+    selector: XPATHS.BROWSE_BUTTON,
   });
   // Check if permissions need to be enabled
   // Check if image is already on device
@@ -382,14 +370,14 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
     strategy: "accessibility id",
     selector: "User settings",
   });
-  await sleepFor(3000);
+  await sleepFor(5000);
   const base64 = await device1.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
   console.log("RGB Value of pixel is:", pixelColor);
-  if (pixelColor === "03cbfe") {
+  if (pixelColor === pixelHexColour) {
     console.log("Colour is correct on device 1");
   } else {
-    console.log("Colour isn't 03cbfe, it is: ", pixelColor);
+    console.log("Colour isn't pixelHexColour, it is: ", pixelColor);
   }
   console.log("Now checking avatar on linked device");
   // Check avatar on device 2
@@ -398,13 +386,13 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
     strategy: "accessibility id",
     selector: "User settings",
   });
-  await sleepFor(3000);
+  await sleepFor(5000);
   const base64A = await device2.getElementScreenshot(el2.ELEMENT);
   const pixelColorLinked = await parseDataImage(base64A);
-  if (pixelColorLinked === "03cbfe") {
+  if (pixelColorLinked === pixelHexColour) {
     console.log("Colour is correct on linked device");
   } else {
-    console.log("Colour isn't 03cbfe, it is: ", pixelColorLinked);
+    console.log("Colour isn't pixelHexColour, it is: ", pixelColorLinked);
   }
   await closeApp(device1, device2);
 }
@@ -415,9 +403,6 @@ describe("Linked device - user tests", () => {
 
   iosIt("Profile picture syncs", avatarRestorediOS);
   androidIt("Profile picture syncs", avatarRestoredAndroid);
-
-  androidIt("Contact syncs", contactsSyncLinkedDevice);
-  iosIt("Contact syncs", contactsSyncLinkedDevice);
 
   androidIt("Changed username syncs", changeUsernameLinkedDevice);
   iosIt("Changed username syncs", changeUsernameLinkedDevice);

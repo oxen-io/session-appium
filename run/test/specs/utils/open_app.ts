@@ -59,6 +59,10 @@ export const openAppTwoDevices = async (
     openAppOnPlatform(platform, 1),
   ]);
 
+  function closeAllApps() {
+    // do the thing
+  }
+
   return { device1: app1.device, device2: app2.device };
 };
 

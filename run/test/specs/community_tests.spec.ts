@@ -11,7 +11,7 @@ import {
 } from "./utils/open_app";
 import { runScriptAndLog } from "./utils/utilities";
 
-async function sendImageCommunity(platform: SupportedPlatformsType) {
+async function sendImageCommunityiOS(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const testCommunityLink = `https://chat.lokinet.dev/testing-all-the-things?public_key=1d7e7f92b1ed3643855c98ecac02fc7274033a3467653f047d6e433540c03f17`;
   const testCommunityName = `Testing All The Things!`;
@@ -27,10 +27,8 @@ async function sendImageCommunity(platform: SupportedPlatformsType) {
     device1.navigateBack(platform),
     device2.navigateBack(platform),
   ]);
-  await Promise.all([
-    joinCommunity(platform, device1, testCommunityLink, testCommunityName),
-    joinCommunity(platform, device2, testCommunityLink, testCommunityName),
-  ]);
+  await joinCommunity(platform, device1, testCommunityLink, testCommunityName);
+  await joinCommunity(platform, device2, testCommunityLink, testCommunityName);
   await Promise.all([
     device1.scrollToBottom(platform),
     device2.scrollToBottom(platform),
@@ -38,10 +36,7 @@ async function sendImageCommunity(platform: SupportedPlatformsType) {
   // await device1.sendImage(platform, testMessage, true);
   await device1.clickOnByAccessibilityID("Attachments button");
   await sleepFor(5000);
-  await clickOnCoordinates(
-    device1,
-    InteractionPoints.ImagesFolderKeyboardClosed
-  );
+  await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardOpen);
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
     selector: "Allow Full Access",
@@ -97,7 +92,48 @@ async function sendImageCommunity(platform: SupportedPlatformsType) {
   closeApp(device1, device2);
 }
 
+async function sendImageCommunityAndroid(platform: SupportedPlatformsType) {
+  const { device1, device2 } = await openAppTwoDevices(platform);
+  const testCommunityLink = `https://chat.lokinet.dev/testing-all-the-things?public_key=1d7e7f92b1ed3643855c98ecac02fc7274033a3467653f047d6e433540c03f17`;
+  const testCommunityName = `Testing All The Things!`;
+  const time = await device1.getTimeFromDevice(platform);
+  const testMessage = `Testing sending images to communities + ${time}`;
+  // Create user A and user B
+  const [userA, userB] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+  ]);
+  await newContact(platform, device1, userA, device2, userB);
+  const replyMessage = `Replying to image from ${userA.userName} in community ${testCommunityName} + ${time}`;
+  await Promise.all([
+    device1.navigateBack(platform),
+    device2.navigateBack(platform),
+  ]);
+  await Promise.all([
+    joinCommunity(platform, device1, testCommunityLink, testCommunityName),
+    joinCommunity(platform, device2, testCommunityLink, testCommunityName),
+  ]);
+  // await Promise.all([
+  //   device1.scrollToBottom(platform),
+  //   device2.scrollToBottom(platform),
+  // ]);
+  await device1.sendImageWithMessageAndroid(testMessage);
+
+  await device2.scrollToBottom(platform);
+  await device2.longPressMessage(testMessage);
+  await device2.clickOnByAccessibilityID("Reply to message");
+  await device2.sendMessage(replyMessage);
+  await device1.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Message body",
+    text: replyMessage,
+  });
+  // await device1.scrollToBottom(platform);
+
+  closeApp(device1, device2);
+}
+
 describe("Community message checks", () => {
-  iosIt("Send image to community", sendImageCommunity);
-  androidIt("Send image to community", sendImageCommunity);
+  iosIt("Send image to community", sendImageCommunityiOS);
+  androidIt("Send image to community", sendImageCommunityAndroid);
 });

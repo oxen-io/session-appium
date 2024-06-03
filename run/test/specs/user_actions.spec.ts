@@ -3,9 +3,11 @@ import { parseDataImage } from "./utils/check_colour";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils/index";
+import { linkedDevice } from "./utils/link_device";
 import {
   closeApp,
   openAppOnPlatformSingleDevice,
+  openAppThreeDevices,
   openAppTwoDevices,
   SupportedPlatformsType,
 } from "./utils/open_app";
@@ -13,14 +15,19 @@ import { runScriptAndLog } from "./utils/utilities";
 
 async function createContact(platform: SupportedPlatformsType) {
   // first we want to install the app on each device with our custom call to run it
-  const { device1, device2 } = await openAppTwoDevices(platform);
+  const { device1, device2, device3 } = await openAppThreeDevices(platform);
 
-  const userA = await newUser(device1, "Alice", platform);
+  const userA = await linkedDevice(device1, device3, "Alice", platform);
   const userB = await newUser(device2, "Bob", platform);
 
   await newContact(platform, device1, userA, device2, userB);
+  await device3.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Conversation list item",
+    text: userB.userName,
+  });
   // Wait for tick
-  await closeApp(device1, device2);
+  await closeApp(device1, device2, device3);
 }
 async function blockUserInConversationOptions(
   platform: SupportedPlatformsType
@@ -66,7 +73,10 @@ async function blockUserInConversationOptions(
   );
   console.warn("User has been unblocked");
   // Look for alert (shouldn't be there)
-  await device1.hasElementBeenDeleted("accessibility id", "Blocked banner");
+  await device1.hasElementBeenDeleted({
+    strategy: "accessibility id",
+    selector: "Blocked banner",
+  });
   // Has capabilities returned to blocked user (can they send message)
   const hasUserBeenUnblockedMessage = await device2.sendMessage(
     "Hey, am I unblocked?"
@@ -135,6 +145,8 @@ async function changeUsername(platform: SupportedPlatformsType) {
       "Username is not picking up text but using access id text",
       changedUsername
     );
+  } else {
+    console.log("Username is not found`");
   }
   // select tick
   if (platform === "android") {
@@ -149,7 +161,8 @@ async function changeUsername(platform: SupportedPlatformsType) {
 // TO FIX (WRONG USER FLOW?)
 async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
-  const spongebobsBirthday = "199905020700.00";
+  const spongebobsBirthday = "199905010700.00";
+  const pixelHexColour = "cbfeff";
   // Create new user
   await newUser(device, "Alice", platform);
   // Click on settings/avatar
@@ -209,17 +222,14 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
     selector: "User settings",
     maxWait: 10000,
   });
-
   const base64 = await device.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
   console.log("RGB Value of pixel is:", pixelColor);
-  if (pixelColor === "03cbfe") {
+  if (pixelColor === pixelHexColour) {
     console.log("Colour is correct on device 1");
   } else {
-    console.log("Colour isn't 03cbfe, it is: ", pixelColor);
+    console.log("Colour isn't cbfeff, it is: ", pixelColor);
   }
-  // Check avatar on device 2
-
   await closeApp(device);
 }
 

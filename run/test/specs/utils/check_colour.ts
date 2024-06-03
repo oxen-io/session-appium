@@ -20,5 +20,6 @@ export async function parseDataImage(base64: string) {
   const middlePx = px.buffer.slice(pxDataStart, pxDataEnd);
   // console.warn("middlePx RGB: ", Buffer.from(middlePx).toString("hex"));
   const pixelColor = Buffer.from(middlePx).toString("hex");
+  // console.warn("Middle x:", middleX, "middleY:", middleY, "width:", width);
   return pixelColor;
 }

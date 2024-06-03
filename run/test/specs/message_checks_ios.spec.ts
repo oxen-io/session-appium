@@ -1,3 +1,4 @@
+import { XPATHS } from "../../constants";
 import { iosIt } from "../../types/sessionIt";
 import { InteractionPoints } from "../../types/testing";
 import { newUser } from "./utils/create_account";
@@ -217,7 +218,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
   // Select video
   const videoFolder = await device1.doesElementExist({
     strategy: "xpath",
-    selector: `//XCUIElementTypeStaticText[@name="Videos"]`,
+    selector: XPATHS.VIDEO_TOGGLE,
     maxWait: 5000,
   });
   if (videoFolder) {
@@ -328,9 +329,7 @@ async function sendGif(platform: SupportedPlatformsType) {
   await sleepFor(500);
   // Need to select Continue on GIF warning
   await device1.clickOnByAccessibilityID("Continue");
-  await device1.clickOnElementXPath(
-    `(//XCUIElementTypeImage[@name="gif cell"])[1]`
-  );
+  await device1.clickOnElementXPath(XPATHS.FIRST_GIF);
   await device1.clickOnByAccessibilityID("Text input box");
   await device1.inputText("accessibility id", "Text input box", testMessage);
   await device1.clickOnByAccessibilityID("Send button");
@@ -581,7 +580,7 @@ describe("Message checks ios", () => {
   iosIt("Send video", sendVideo);
   iosIt("Send voice message", sendVoiceMessage);
   // iosIt("Send document", sendDoc);
-  iosIt("Send GIF", sendGif);
+  iosIt("Send gif", sendGif);
   iosIt("Send long text", sendLongMessage);
   iosIt("Send link", sendLink);
   iosIt("Send community invitation message", sendCommunityInvitation);

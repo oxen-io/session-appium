@@ -1,8 +1,9 @@
+import { DISAPPEARING_TIMES } from "../../../constants";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { ConversationType, MergedOptions } from "../../../types/testing";
 import { SupportedPlatformsType } from "./open_app";
+import { runOnlyOnIOS } from "./run_on";
 import { sleepFor } from "./sleep_for";
-
 export const setDisappearingMessage = async (
   platform: SupportedPlatformsType,
   device: DeviceWrapper,
@@ -26,15 +27,16 @@ export const setDisappearingMessage = async (
   }
   await device.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "1 day",
+    selector: DISAPPEARING_TIMES.ONE_DAY,
   });
 
-  await device.disappearRadioButtonSelected("1 day");
-  await device.clickOnByAccessibilityID(timerDuration);
+  await device.disappearRadioButtonSelected(DISAPPEARING_TIMES.ONE_DAY);
+  await device.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: timerDuration,
+  });
   await device.clickOnByAccessibilityID("Set button");
-  if (platform === "ios") {
-    await device.navigateBack(platform);
-  }
+  await runOnlyOnIOS(platform, () => device.navigateBack(platform));
   await sleepFor(1000);
   if (device2) {
     await device2.clickOnElementAll({

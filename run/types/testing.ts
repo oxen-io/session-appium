@@ -15,7 +15,9 @@ export type GroupName =
   | "Linked device group"
   | "Testing disappearing messages"
   | "Group to test adding contact"
-  | "Disappear after send test";
+  | "Disappear after send test"
+  | "Testing voice messages in groups for disappearing messages"
+  | "Disappear after sent test";
 
 export type Group = {
   userName: GroupName;
@@ -38,19 +40,23 @@ export const InteractionPoints: Record<string, Coordinates> = {
 };
 
 export type Strategy = "accessibility id" | "xpath" | "id" | "class name";
-
 export type ConversationType = "1:1" | "Group" | "Community" | "Note to Self";
 
 export type DisappearModes = "read" | "send";
 export type DisappearActions = "read" | "sent";
 export type DMTimeOption =
+  | "5 seconds"
   | "10 seconds"
   | "30 seconds"
   | "1 minute"
+  | "5 minutes"
+  | "30 minutes"
+  | "1 hour"
   | "12 hours"
   | "1 day"
   | "1 week"
-  | "2 weeks";
+  | "2 weeks"
+  | "Off";
 
 export type DisappearOpts1o1 = [
   "1:1",
@@ -81,6 +87,10 @@ export type StrategyExtractionObj =
   | {
       strategy: Extract<Strategy, "xpath">;
       selector: XPath;
+    }
+  | {
+      strategy: Extract<Strategy, "DMTimeOption">;
+      selector: DMTimeOption;
     };
 
 export type DisappearingControlMessage =
@@ -142,6 +152,7 @@ export type AccessibilityId =
   | "New direct message"
   | "Join Community"
   | "Join community"
+  | "Join community option"
   | "Join community button"
   | "Enter Community URL"
   | "Community input"
@@ -150,6 +161,7 @@ export type AccessibilityId =
   | "Create group"
   | "Group name input"
   | "Contact"
+  | "Contact mentions"
   | "Empty state label"
   | "Empty list"
   | "Restore your session button"
@@ -168,18 +180,10 @@ export type AccessibilityId =
   | "Disappearing messages"
   | "Disappear after read option"
   | "Disappear after send option"
-  | "10 seconds"
-  | "30 seconds"
-  | "1 minute"
-  | "12 hours"
-  | "1 day"
-  | "1 week"
-  | "2 weeks"
   | "Set button"
   | "Disable disappearing messages"
   | "Disappearing messages time picker"
   | "Time selector"
-  | "Message input box"
   | "Message body"
   | "Group name"
   | "Accept name change"
@@ -197,6 +201,7 @@ export type AccessibilityId =
   | "Configuration message"
   | "Mentions list"
   | "Send message button"
+  | "Send"
   | "Mentions list"
   | "Message sent status"
   | "Message sent status: Sent"
@@ -240,6 +245,7 @@ export type AccessibilityId =
   | "1988-09-08 21:00:00 +0000"
   | "Attachments button"
   | "Documents folder"
+  | "Images folder"
   | "Untrusted attachment message"
   | "Download media"
   | "Download"
@@ -249,6 +255,8 @@ export type AccessibilityId =
   | "Voice message"
   | "GIF button"
   | "Text input box"
+  | "Message input box"
+  | "Message composition"
   | "Send button"
   | "Recents"
   | "Details"
@@ -276,4 +284,15 @@ export type AccessibilityId =
   | "Follow Setting"
   | "Set"
   | "Allow Full Access"
-  | "Loading animation";
+  | "5 seconds"
+  | "10 seconds"
+  | "30 seconds"
+  | "1 minute"
+  | "5 minutes"
+  | "30 minutes"
+  | "1 hour"
+  | "12 hours"
+  | "1 day"
+  | "1 week"
+  | "2 weeks"
+  | "Off";
