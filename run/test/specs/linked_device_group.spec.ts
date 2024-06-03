@@ -121,7 +121,7 @@ async function groupCreationandNameChangeLinkedDeviceAndroid(
   // Click on settings/more info
   await device1.clickOnByAccessibilityID("More options");
   // Edit group
-  await sleepFor(100);
+  await sleepFor(500);
   await device1.clickOnTextElementById(
     `network.loki.messenger:id/title`,
     "Edit group"

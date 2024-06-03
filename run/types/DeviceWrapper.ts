@@ -793,7 +793,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     maxWait?: number;
   } & StrategyExtractionObj): Promise<AppiumNextElementType> {
     let el: null | AppiumNextElementType = null;
-    const maxWaitMSec: number = typeof maxWait === "number" ? maxWait : 15000;
+    const maxWaitMSec: number = typeof maxWait === "number" ? maxWait : 60000;
     let currentWait = 0;
     const waitPerLoop = 100;
     while (el === null) {
