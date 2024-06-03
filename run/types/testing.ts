@@ -295,4 +295,5 @@ export type AccessibilityId =
   | "1 day"
   | "1 week"
   | "2 weeks"
-  | "Off";
+  | "Off"
+  | "Loading animation";
