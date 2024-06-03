@@ -32,3 +32,27 @@ export function iosIt(
     await test("ios");
   });
 }
+
+export function mobileIt(
+  platform: SupportedPlatformsType,
+  title: string,
+  test: (platform: SupportedPlatformsType) => Promise<void>
+) {
+  const testName = `${title} ${platform}`;
+
+  return it(testName, async () => {
+    console.info(`\n\n==========> Running "${testName}"\n\n`);
+    await test(platform);
+  });
+}
+
+export function bothPlatformsIt(
+  title: string,
+  test: (platform: SupportedPlatformsType) => Promise<void>
+) {
+  // Define test for Android
+  mobileIt("android", title, test);
+
+  // Define test for iOS
+  mobileIt("ios", title, test);
+}

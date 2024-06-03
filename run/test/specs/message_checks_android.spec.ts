@@ -1,3 +1,4 @@
+import { XPATHS } from "../../constants";
 import { androidIt } from "../../types/sessionIt";
 import { sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
@@ -144,9 +145,7 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
   await device1.longPress("New voice message");
 
   await device1.clickOnByAccessibilityID("Continue");
-  await device1.clickOnElementXPath(
-    `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.Button[1]`
-  );
+  await device1.clickOnElementXPath(XPATHS.VOICE_TOGGLE);
   await device1.pressAndHold("New voice message");
   // await device1.waitForTextElementToBePresent("Voice message");
   await device2.clickOnByAccessibilityID("Untrusted attachment message");
@@ -188,9 +187,7 @@ async function sendGif(platform: SupportedPlatformsType) {
 
   // Select gif
   await sleepFor(3000);
-  await device1.clickOnElementXPath(
-    `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.ScrollView/androidx.viewpager.widget.ViewPager/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.FrameLayout[1]`
-  );
+  await device1.clickOnElementXPath(XPATHS.FIRST_GIF);
 
   // Check if the 'Tap to download media' config appears
   // Click on config
@@ -366,7 +363,7 @@ async function deleteMessage(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID("Delete message");
   // Select 'Delete for just me'
   await device1.clickOnByAccessibilityID("Delete just for me");
-  await device1.hasElementBeenDeletedNew({
+  await device1.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Message body",
     text: sentMessage,

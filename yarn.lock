@@ -2705,15 +2705,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ci@npm:^2.2.0":
-  version: 2.3.0
-  resolution: "ci@npm:2.3.0"
-  bin:
-    ci: dist/cli.js
-  checksum: 34e3945a018e4a16b8dd6c828c38d2c78673e62b6d673465cb6288bdb2b28728d11003d861a900bac5a87b484cd34129471ed852d241b8b86c05ebe05d0dcb9b
-  languageName: node
-  linkType: hard
-
 "clean-stack@npm:^2.0.0":
   version: 2.2.0
   resolution: "clean-stack@npm:2.2.0"
@@ -6770,7 +6761,6 @@ __metadata:
     appium: "npm:^2.4.1"
     appium-uiautomator2-driver: "patch:appium-uiautomator2-driver@file%3A../.appium/node_modules/appium-uiautomator2-driver%23../.appium/node_modules/appium-uiautomator2-driver%3A%3Ahash=ed7690&locator=root-workspace-0b6124%2540workspace%253A.#./patches/appium-uiautomator2-driver-file-af32bb34eb.patch"
     appium-xcuitest-driver: "file:../.appium/node_modules/appium-xcuitest-driver"
-    ci: "npm:^2.2.0"
     eslint: "npm:^8.33.0"
     lodash: "npm:^4.17.21"
     mocha: "npm:^10.2.0"

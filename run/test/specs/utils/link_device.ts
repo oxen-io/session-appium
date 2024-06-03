@@ -41,7 +41,10 @@ export const linkedDevice = async (
     device2.clickOnByAccessibilityID("Don’t Allow")
   );
   await sleepFor(1000);
-  await device2.hasElementBeenDeleted("accessibility id", "Continue");
+  await device2.hasElementBeenDeleted({
+    strategy: "accessibility id",
+    selector: "Continue",
+  });
   await runOnlyOnAndroid(platform, () =>
     device2.clickOnTextElementById(
       `com.android.permissioncontroller:id/permission_allow_button`,

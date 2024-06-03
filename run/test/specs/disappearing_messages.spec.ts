@@ -1,9 +1,10 @@
-import { androidIt, iosIt } from "../../types/sessionIt";
+import { bothPlatformsIt } from "../../types/sessionIt";
 import {
   DMTimeOption,
   DisappearActions,
   DisappearModes,
 } from "../../types/testing";
+import { DISAPPEARING_TIMES } from "../../constants";
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
@@ -46,9 +47,12 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
     // await device2.disappearingControlMessage(
     //   `You set messages to disappear ${time} after they have been ${controlMode}.`
     // );
-  } else {
-    `${userA.userName} has set messages to disappear ${time} after they have been ${time}.`;
   }
+  await runOnlyOnIOS(platform, () =>
+    device2.disappearingControlMessage(
+      `${userA.userName} has set messages to disappear ${time} after they have been ${controlMode}.`
+    )
+  );
   // Send message to verify that deletion is working
   await device1.sendMessage(testMessage);
   await device2.clickOnElementByText({
@@ -59,12 +63,12 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
   // Wait for message to disappear
   await sleepFor(10000);
   await Promise.all([
-    device1.hasElementBeenDeletedNew({
+    device1.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Message body",
       text: testMessage,
     }),
-    device2.hasElementBeenDeletedNew({
+    device2.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Message body",
       text: testMessage,
@@ -112,12 +116,12 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
   // Wait for 10 seconds
   await sleepFor(10000);
   await Promise.all([
-    device1.hasElementBeenDeletedNew({
+    device1.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Message body",
       text: testMessage,
     }),
-    device2.hasElementBeenDeletedNew({
+    device2.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Message body",
       text: testMessage,
@@ -171,10 +175,16 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
 
   if (platform === "android") {
     time = "30 seconds";
-    await device1.clickOnByAccessibilityID(time);
+    await device1.clickOnElementAll({
+      strategy: "accessibility id",
+      selector: time,
+    });
   } else {
     time = "10 seconds";
-    await device1.clickOnByAccessibilityID(time);
+    await device1.clickOnElementAll({
+      strategy: "accessibility id",
+      selector: time,
+    });
   }
   // Save setting
   await device1.clickOnByAccessibilityID("Set button");
@@ -226,6 +236,8 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
   const testMessage = `Testing disappearing messages in Note to Self`;
   const userA = await newUser(device, "Alice", platform);
+  const time: DMTimeOption = "10 seconds";
+  const timeMs = 10000;
   // Send message to self to bring up Note to Self conversation
   await device.clickOnByAccessibilityID("New conversation button");
   await device.clickOnByAccessibilityID("New direct message");
@@ -260,25 +272,28 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   await sleepFor(1000);
   await device.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "1 day",
+    selector: DISAPPEARING_TIMES.ONE_DAY,
   });
-  await device.disappearRadioButtonSelected("1 day");
-  await device.clickOnByAccessibilityID("10 seconds");
+  await device.disappearRadioButtonSelected(DISAPPEARING_TIMES.ONE_DAY);
+  await device.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: time,
+  });
   await device.clickOnByAccessibilityID("Set button");
   await runOnlyOnIOS(platform, () => device.navigateBack(platform));
 
   await sleepFor(1000);
   // await Promise.all([
   //   device.waitForControlMessageToBePresent(
-  //     `${userA.userName} has set their messages to disappear 10 seconds after they have been sent.`
+  //     `${userA.userName} has set their messages to disappear ${time} after they have been sent.`
   //   ),
   //   device.waitForControlMessageToBePresent(
-  //     `${userA.userName} has set their messages to disappear 10 seconds after they have been sent.`
+  //     `${userA.userName} has set their messages to disappear ${time} after they have been sent.`
   //   ),
   // ]);
   await device.sendMessage(testMessage);
-  await sleepFor(10000);
-  await device.hasElementBeenDeletedNew({
+  await sleepFor(timeMs);
+  await device.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Message body",
     text: testMessage,
@@ -289,19 +304,16 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
 }
 
 describe("Disappearing messages", () => {
-  // iosIt("Disappearing messages legacy", disappearingMessagesLegacy);
-  // androidIt("Disappearing messages legacy", disappearingMessagesLegacy);
-  iosIt("Disappear after send", disappearAfterSend);
-  androidIt("Disappear after send", disappearAfterSend);
+  bothPlatformsIt("Disappear after send", disappearAfterSend);
 
-  iosIt("Disappear after read", disappearAfterRead);
-  androidIt("Disappear after read", disappearAfterRead);
+  bothPlatformsIt("Disappear after read", disappearAfterRead);
 
-  iosIt("Disappear after send groups", disappearAfterSendGroups);
-  androidIt("Disappear after send groups", disappearAfterSendGroups);
+  bothPlatformsIt("Disappear after send groups", disappearAfterSendGroups);
 
-  iosIt("Disappear after send note to self", disappearAfterSendNoteToSelf);
-  androidIt("Disappear after send note to self", disappearAfterSendNoteToSelf);
+  bothPlatformsIt(
+    "Disappear after send note to self",
+    disappearAfterSendNoteToSelf
+  );
 });
 
 // TO DO - ADD TEST TO TURN OFF DISAPPEARING MESSAGES

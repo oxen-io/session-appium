@@ -263,15 +263,15 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
-  await device1.tagContact(platform, userB);
+  await device1.mentionContact(platform, userB);
   // Check format on User B's device
   await device2.findMessageWithBody("@You");
   // Bob to Select User C
-  await device2.tagContact(platform, userC);
+  await device2.mentionContact(platform, userC);
   // Check Charlies device(3) for correct format
   await device3.findMessageWithBody(`@You`);
   //  Check User A format works
-  await device3.tagContact(platform, userA);
+  await device3.mentionContact(platform, userA);
   // Check device 1 that correct format is shown (Alice's device)
   await device1.findMessageWithBody(`@You`);
   // Close app

@@ -243,8 +243,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       duration: duration,
     };
 
-    const actions = [action];
-    await this.toShared().performTouch(actions);
+    await this.toShared().performTouch([action]);
   }
 
   public async performActions(actions: ActionSequence): Promise<void> {
@@ -601,26 +600,6 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return selector;
   }
 
-  // public async findText(
-  //   strategy: Strategy,
-  //   selector: string,
-  //   text: string
-  // ): Promise<AppiumNextElementType> {
-  //   let el: null | AppiumNextElementType = null;
-  //   console.log(
-  //     `Waiting for accessibility ID '${selector}' to be present with ${text}`
-  //   );
-  //   while (el === null) {
-  //     try {
-  //       const els = await this.findElements(strategy, selector);
-  //       el = await this.findMatchingTextInElementArray(els, text);
-  //     } catch (e) {
-  //       console.log(`findText threw an error`);
-  //     }
-  //   }
-  //   return el;
-  // }
-
   public async findMatchingTextAndAccessibilityId(
     accessibilityId: AccessibilityId,
     textToLookFor: string
@@ -747,7 +726,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return element;
   }
 
-  public async hasElementBeenDeletedNew({
+  public async hasElementBeenDeleted({
     text,
     maxWait = 15000,
     ...args
@@ -785,20 +764,6 @@ export class DeviceWrapper implements SharedDeviceInterface {
         }
       }
     } while (Date.now() - start <= maxWait && element);
-  }
-
-  public async hasElementBeenDeleted(strategy: Strategy, selector: string) {
-    const fakeError = `${selector}: has been found, but shouldn't have been. OOPS`;
-    try {
-      await this.findElement(strategy, selector);
-
-      throw new Error(fakeError);
-    } catch (e: any) {
-      if (e.message === fakeError) {
-        throw e;
-      }
-    }
-    console.log(`${strategy}: ${selector} "is not visible, congratulations"`);
   }
 
   public async hasTextElementBeenDeleted(
@@ -1103,6 +1068,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       console.log(`Couldn't find radioButton ${timeOption}`);
     }
   }
+
   // TODO FIX UP THIS FUNCTION
   public async sendImage(
     platform: SupportedPlatformsType,
@@ -1326,7 +1292,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return timeString;
   }
 
-  public async tagContact(platform: SupportedPlatformsType, contact: User) {
+  public async mentionContact(platform: SupportedPlatformsType, contact: User) {
     await this.inputText("accessibility id", "Message input box", "@");
     // Check that all users are showing in mentions box
     await this.waitForTextElementToBePresent({
@@ -1459,11 +1425,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   /* === all the utilities function ===  */
-  private isIOS(): boolean {
+  public isIOS(): boolean {
     return isDeviceIOS(this.device);
   }
 
-  private isAndroid(): boolean {
+  public isAndroid(): boolean {
     return isDeviceAndroid(this.device);
   }
 

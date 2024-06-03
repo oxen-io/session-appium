@@ -1,3 +1,4 @@
+import { XPATHS } from "../../constants";
 import { androidIt } from "../../types/sessionIt";
 import { sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
@@ -156,9 +157,7 @@ async function sendVoiceMessageGroup(platform: SupportedPlatformsType) {
   // Select voice message button to activate recording state
   await device1.longPress("New voice message");
   await device1.clickOnByAccessibilityID("Continue");
-  await device1.clickOnElementXPath(
-    `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.Button[1]`
-  );
+  await device1.clickOnElementXPath(XPATHS.VOICE_TOGGLE);
   await device1.pressAndHold("New voice message");
   // Check device 2 and 3 for voice message from user A
   await Promise.all([
@@ -457,7 +456,7 @@ async function deleteMessageGroup(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID("Delete message");
   // Select 'Delete for everyone'
   await device1.clickOnByAccessibilityID("Delete just for me");
-  await device1.hasElementBeenDeletedNew({
+  await device1.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Message body",
     text: sentMessage,

@@ -1,8 +1,10 @@
+import { XPATHS } from "../../constants";
 import { androidIt } from "../../types/sessionIt";
 import {
   DMTimeOption,
   DisappearActions,
   DisappearModes,
+  DisappearOpts1o1,
 } from "../../types/testing";
 import { sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
@@ -54,13 +56,13 @@ async function disappearingImageMessage(platform: SupportedPlatformsType) {
   await sleepFor(60000);
 
   await Promise.all([
-    device1.hasElementBeenDeletedNew({
+    device1.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Message body",
       maxWait: 1000,
       text: testMessage,
     }),
-    device2.hasElementBeenDeletedNew({
+    device2.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Message body",
       maxWait: 1000,
@@ -102,11 +104,11 @@ async function disappearingVideoMessage(platform: SupportedPlatformsType) {
   // Wait for disappearing message timer to remove video
   await sleepFor(60000);
   await Promise.all([
-    device1.hasElementBeenDeletedNew({
+    device1.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Media message",
     }),
-    device2.hasElementBeenDeletedNew({
+    device2.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Media message",
     }),
@@ -122,28 +124,26 @@ async function disappearingVoiceMessage(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   const time: DMTimeOption = "1 minute";
-  const mode: DisappearActions = "sent";
+  const controlMode: DisappearActions = "sent";
   await newContact(platform, device1, userA, device2, userB);
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after send option", "1 minute"],
+    ["1:1", "Disappear after send option", time],
     device2
   );
   // TODO FIX
   // await device2.disappearingControlMessage(
-  //   `${userA.userName} has set messages to disappear ${time} after they have been ${mode}.`
+  //   `${userA.userName} has set messages to disappear ${time} after they have been ${controlMode}.`
   // );
   // await device2.disappearingControlMessage(
-  //   `You set messages to disappear ${time} after they have been ${mode}.`
+  //   `You set messages to disappear ${time} after they have been ${controlMode}.`
   // );
   // Wait for control messages to disappear
   // await sleepFor(60000);
   await device1.longPress("New voice message");
   await device1.clickOnByAccessibilityID("Continue");
-  await device1.clickOnElementXPath(
-    `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.Button[1]`
-  );
+  await device1.clickOnElementXPath(XPATHS.VOICE_TOGGLE);
   await device1.pressAndHold("New voice message");
   // await device1.clickOnByAccessibilityID("OK");
   // await device1.pressAndHold("New voice message");
@@ -153,12 +153,12 @@ async function disappearingVoiceMessage(platform: SupportedPlatformsType) {
   });
   await device2.clickOnByAccessibilityID("Untrusted attachment message");
   await device2.clickOnByAccessibilityID("Download media");
-  await sleepFor(60000);
-  await device1.hasElementBeenDeletedNew({
+  await sleepFor(Number(time));
+  await device1.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Voice message",
   });
-  await device2.hasElementBeenDeletedNew({
+  await device2.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Voice message",
   });
@@ -168,7 +168,8 @@ async function disappearingVoiceMessage(platform: SupportedPlatformsType) {
 async function disappearingGifMessage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const time: DMTimeOption = "1 minute";
-  const mode: DisappearActions = "sent";
+  const controlMode: DisappearActions = "sent";
+  const mode: DisappearModes = "send";
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -178,15 +179,15 @@ async function disappearingGifMessage(platform: SupportedPlatformsType) {
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after send option", "1 minute"],
+    ["1:1", `Disappear after ${mode} option`, time],
     device2
   ); // Wait for control messages to disappear before sending image (to check if the control messages are interfering with finding the untrusted attachment message)
   // TODO FIX
   // await device2.disappearingControlMessage(
-  //   `${userA.userName} has set messages to disappear ${time} after they have been ${mode}.`
+  //   `${userA.userName} has set messages to disappear ${time} after they have been ${controlMode}.`
   // );
   // await device2.disappearingControlMessage(
-  //   `You set messages to disappear ${time} after they have been ${mode}.`
+  //   `You set messages to disappear ${time} after they have been ${controlMode}.`
   // );
   // await sleepFor(60000);
   // Click on attachments button
@@ -199,23 +200,21 @@ async function disappearingGifMessage(platform: SupportedPlatformsType) {
   });
   // Select gif
   await sleepFor(500);
-  await device1.clickOnElementXPath(
-    `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.ScrollView/androidx.viewpager.widget.ViewPager/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.FrameLayout[1]`
-  );
+  await device1.clickOnElementXPath(XPATHS.FIRST_GIF);
   // Check if the 'Tap to download media' config appears
   // Click on config
   await device2.clickOnByAccessibilityID("Untrusted attachment message");
   // Click on 'download'
   await device2.clickOnByAccessibilityID("Download media");
-  // Wait for 10 seconds
-  await sleepFor(60000);
+  // Wait for 60 seconds (time)
+  await sleepFor(Number(time));
   // Check if GIF has been deleted on both devices
-  await device1.hasElementBeenDeletedNew({
+  await device1.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Media message",
     maxWait: 1000,
   });
-  await device2.hasElementBeenDeletedNew({
+  await device2.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Media message",
     maxWait: 1000,
@@ -226,6 +225,7 @@ async function disappearingGifMessage(platform: SupportedPlatformsType) {
 async function disappearingLinkMessage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const testLink = `https://type-level-typescript.com/objects-and-records`;
+  const time: DMTimeOption = "30 seconds";
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -235,7 +235,7 @@ async function disappearingLinkMessage(platform: SupportedPlatformsType) {
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after send option", "30 seconds"],
+    ["1:1", "Disappear after send option", time],
     device2
   );
   // await device1.navigateBack(platform);
@@ -259,15 +259,15 @@ async function disappearingLinkMessage(platform: SupportedPlatformsType) {
     strategy: "id",
     selector: "network.loki.messenger:id/linkPreviewView",
   });
-  // Wait for 10 seconds to disappear
-  await sleepFor(10000);
+  // Wait for 30 seconds to disappear
+  await sleepFor(Number(time));
   await Promise.all([
-    device1.hasElementBeenDeletedNew({
+    device1.hasElementBeenDeleted({
       strategy: "id",
       selector: "network.loki.messenger:id/linkPreviewView",
       maxWait: 1000,
     }),
-    device2.hasElementBeenDeletedNew({
+    device2.hasElementBeenDeleted({
       strategy: "id",
       selector: "network.loki.messenger:id/linkPreviewView",
       maxWait: 1000,
@@ -334,13 +334,13 @@ async function disappearingCommunityInviteMessage(
   }
   // Wait for 10 seconds for message to disappear
   await sleepFor(10000);
-  await device2.hasElementBeenDeletedNew({
+  await device2.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Message body",
     maxWait: 1000,
     text: communityName,
   });
-  await device1.hasElementBeenDeletedNew({
+  await device1.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Message body",
     maxWait: 1000,
@@ -448,13 +448,13 @@ async function disappearingCallMessage(platform: SupportedPlatformsType) {
   );
   // Wait 10 seconds for control message to be deleted
   await sleepFor(10000);
-  await device1.hasElementBeenDeletedNew({
+  await device1.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Control message",
     text: `You called ${userB.userName}`,
     maxWait: 1000,
   });
-  await device2.hasElementBeenDeletedNew({
+  await device2.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Control message",
     text: `${userA.userName} called you`,

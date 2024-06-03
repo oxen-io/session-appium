@@ -73,7 +73,10 @@ async function blockUserInConversationOptions(
   );
   console.warn("User has been unblocked");
   // Look for alert (shouldn't be there)
-  await device1.hasElementBeenDeleted("accessibility id", "Blocked banner");
+  await device1.hasElementBeenDeleted({
+    strategy: "accessibility id",
+    selector: "Blocked banner",
+  });
   // Has capabilities returned to blocked user (can they send message)
   const hasUserBeenUnblockedMessage = await device2.sendMessage(
     "Hey, am I unblocked?"
@@ -159,6 +162,7 @@ async function changeUsername(platform: SupportedPlatformsType) {
 async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
   const spongebobsBirthday = "199905010700.00";
+  const pixelHexColour = "cbfeff";
   // Create new user
   await newUser(device, "Alice", platform);
   // Click on settings/avatar
@@ -221,7 +225,7 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   const base64 = await device.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
   console.log("RGB Value of pixel is:", pixelColor);
-  if (pixelColor === "cbfeff") {
+  if (pixelColor === pixelHexColour) {
     console.log("Colour is correct on device 1");
   } else {
     console.log("Colour isn't cbfeff, it is: ", pixelColor);

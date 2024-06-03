@@ -15,7 +15,7 @@ const sharedCapabilities: AppiumCapabilities = {
     "org.thoughtcrime.securesms.onboarding.LandingActivity",
   "appium:automationName": "UiAutomator2",
   "appium:newCommandTimeout": 300000,
-  "appium:eventTimings": true,
+  "appium:eventTimings": false,
 };
 
 const emulator1Udid = "emulator-5554";

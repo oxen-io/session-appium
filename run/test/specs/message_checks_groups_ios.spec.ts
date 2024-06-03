@@ -1,3 +1,4 @@
+import { XPATHS } from "../../constants";
 import { iosIt } from "../../types/sessionIt";
 import { InteractionPoints } from "../../types/testing";
 import { sleepFor, clickOnCoordinates } from "./utils";
@@ -147,7 +148,7 @@ async function sendVideoGroup(platform: SupportedPlatformsType) {
   // Select video
   const videoFolder = await device1.doesElementExist({
     strategy: "xpath",
-    selector: `//XCUIElementTypeStaticText[@name="Videos"]`,
+    selector: XPATHS.VIDEO_TOGGLE,
     maxWait: 1000,
   });
   if (videoFolder) {
@@ -314,9 +315,7 @@ async function sendGifGroup(platform: SupportedPlatformsType) {
   await sleepFor(500);
   // Need to select Continue on GIF warning
   await device1.clickOnByAccessibilityID("Continue");
-  await device1.clickOnElementXPath(
-    `(//XCUIElementTypeImage[@name="gif cell"])[1]`
-  );
+  await device1.clickOnElementXPath(XPATHS.FIRST_GIF);
   await device1.clickOnByAccessibilityID("Message input box");
   await device1.inputText("accessibility id", "Text input box", testMessage);
   await device1.clickOnByAccessibilityID("Send button");
@@ -499,7 +498,11 @@ async function deleteMessageGroup(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID("Delete message");
   // Select 'Delete for everyone'
   await device1.clickOnByAccessibilityID("Delete for me");
-  await device1.hasElementBeenDeleted("accessibility id", sentMessage);
+  await device1.hasElementBeenDeleted({
+    strategy: "accessibility id",
+    selector: "Message body",
+    text: sentMessage,
+  });
   // Excellentgit
   await closeApp(device1, device2, device3);
 }

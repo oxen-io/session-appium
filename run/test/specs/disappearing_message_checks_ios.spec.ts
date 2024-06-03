@@ -1,3 +1,4 @@
+import { XPATHS } from "../../constants";
 import { iosIt } from "../../types/sessionIt";
 import { GroupName, InteractionPoints } from "../../types/testing";
 import { clickOnCoordinates, sleepFor } from "./utils";
@@ -87,13 +88,13 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID("Download media", 5000);
   await sleepFor(10000);
   await Promise.all([
-    device1.hasElementBeenDeletedNew({
+    device1.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Message body",
       maxWait: 1000,
       text: testMessage,
     }),
-    device2.hasElementBeenDeletedNew({
+    device2.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Message body",
       maxWait: 1000,
@@ -151,7 +152,7 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
   // Select video
   const videoFolder = await device1.doesElementExist({
     strategy: "xpath",
-    selector: `//XCUIElementTypeStaticText[@name="Videos"]`,
+    selector: XPATHS.VIDEO_TOGGLE,
     maxWait: 5000,
   });
   if (videoFolder) {
@@ -178,13 +179,13 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID("Send button");
   await sleepFor(10000);
   await Promise.all([
-    device1.hasElementBeenDeletedNew({
+    device1.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Message body",
       maxWait: 1000,
       text: testMessage,
     }),
-    device2.hasElementBeenDeletedNew({
+    device2.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Message body",
       maxWait: 1000,
@@ -222,12 +223,12 @@ async function disappearingVoiceMessage1o1(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID("Untrusted attachment message", 5000);
   await device2.clickOnByAccessibilityID("Download", 5000);
   await sleepFor(10000);
-  await device1.hasElementBeenDeletedNew({
+  await device1.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Voice message",
     maxWait: 1000,
   });
-  await device2.hasElementBeenDeletedNew({
+  await device2.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Voice message",
     maxWait: 1000,
@@ -262,7 +263,7 @@ async function disappearingGifMessage1o1(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID("Continue");
   await device1.clickOnElementAll({
     strategy: "xpath",
-    selector: `(//XCUIElementTypeImage[@name="gif cell"])[1]`,
+    selector: XPATHS.FIRST_GIF,
   });
   await device1.clickOnByAccessibilityID("Text input box");
   await device1.inputText("accessibility id", "Text input box", testMessage);
@@ -276,13 +277,13 @@ async function disappearingGifMessage1o1(platform: SupportedPlatformsType) {
   // Wait for 10 seconds
   await sleepFor(10000);
   // Check if GIF has been deleted on both devices
-  await device1.hasElementBeenDeletedNew({
+  await device1.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Message body",
     maxWait: 1000,
     text: testMessage,
   });
-  await device2.hasElementBeenDeletedNew({
+  await device2.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Message body",
     maxWait: 1000,
@@ -331,13 +332,13 @@ async function disappearingLinkMessage(platform: SupportedPlatformsType) {
   });
   // Wait for 10 seconds to disappear
   await sleepFor(10000);
-  await device1.hasElementBeenDeletedNew({
+  await device1.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Message body",
     maxWait: 1000,
     text: testLink,
   });
-  await device2.hasElementBeenDeletedNew({
+  await device2.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Message body",
     maxWait: 1000,
@@ -390,13 +391,13 @@ async function disappearingCommunityInviteMessage1o1(
   });
   // Wait for 10 seconds for message to disappear
   await sleepFor(10000);
-  await device2.hasElementBeenDeletedNew({
+  await device2.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Message body",
     maxWait: 1000,
     text: communityName,
   });
-  await device1.hasElementBeenDeletedNew({
+  await device1.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Message body",
     maxWait: 1000,
@@ -459,13 +460,13 @@ async function disappearingCallMessage1o1(platform: SupportedPlatformsType) {
   );
   // Wait 10 seconds for control message to be deleted
   await sleepFor(10000);
-  await device1.hasElementBeenDeletedNew({
+  await device1.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Control message",
     text: `You called ${userB.userName}`,
     maxWait: 1000,
   });
-  await device2.hasElementBeenDeletedNew({
+  await device2.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Control message",
     text: `${userA.userName} called you`,
@@ -556,19 +557,19 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   });
   await sleepFor(10000);
   await Promise.all([
-    device1.hasElementBeenDeletedNew({
+    device1.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Message body",
       maxWait: 1000,
       text: testMessage,
     }),
-    device2.hasElementBeenDeletedNew({
+    device2.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Message body",
       maxWait: 1000,
       text: testMessage,
     }),
-    device3.hasElementBeenDeletedNew({
+    device3.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Message body",
       maxWait: 1000,
@@ -635,7 +636,7 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
   // Select video
   const videoFolder = await device1.doesElementExist({
     strategy: "xpath",
-    selector: `//XCUIElementTypeStaticText[@name="Videos"]`,
+    selector: XPATHS.VIDEO_TOGGLE,
     maxWait: 1000,
   });
   if (videoFolder) {
@@ -663,19 +664,19 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID("Send button");
   await sleepFor(10000);
   await Promise.all([
-    device1.hasElementBeenDeletedNew({
+    device1.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Message body",
       maxWait: 1000,
       text: testMessage,
     }),
-    device2.hasElementBeenDeletedNew({
+    device2.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Message body",
       maxWait: 1000,
       text: testMessage,
     }),
-    device3.hasElementBeenDeletedNew({
+    device3.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Message body",
       maxWait: 1000,
@@ -720,17 +721,17 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
   });
   await sleepFor(10000);
   await Promise.all([
-    device1.hasElementBeenDeletedNew({
+    device1.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Voice message",
       maxWait: 1000,
     }),
-    device2.hasElementBeenDeletedNew({
+    device2.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Voice message",
       maxWait: 1000,
     }),
-    device2.hasElementBeenDeletedNew({
+    device2.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Voice message",
       maxWait: 1000,
@@ -773,7 +774,7 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID("Continue", 5000);
   await device1.clickOnElementAll({
     strategy: "xpath",
-    selector: `(//XCUIElementTypeImage[@name="gif cell"])[1]`,
+    selector: XPATHS.FIRST_GIF,
   });
   await device1.clickOnByAccessibilityID("Text input box");
   await device1.inputText("accessibility id", "Text input box", testMessage);
@@ -782,19 +783,19 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
   await sleepFor(10000);
   // Check if GIF has been deleted on both devices
   await Promise.all([
-    device1.hasElementBeenDeletedNew({
+    device1.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Message body",
       maxWait: 1000,
       text: testMessage,
     }),
-    device2.hasElementBeenDeletedNew({
+    device2.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Message body",
       maxWait: 1000,
       text: testMessage,
     }),
-    device3.hasElementBeenDeletedNew({
+    device3.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Message body",
       maxWait: 1000,
@@ -854,19 +855,19 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   // Wait for 10 seconds to disappear
   await sleepFor(10000);
   await Promise.all([
-    device1.hasElementBeenDeletedNew({
+    device1.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Message body",
       maxWait: 1000,
       text: testLink,
     }),
-    device2.hasElementBeenDeletedNew({
+    device2.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Message body",
       maxWait: 1000,
       text: testLink,
     }),
-    device3.hasElementBeenDeletedNew({
+    device3.hasElementBeenDeleted({
       strategy: "accessibility id",
       selector: "Message body",
       maxWait: 1000,
