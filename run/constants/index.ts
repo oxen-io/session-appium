@@ -24,8 +24,3 @@ const DISAPPEARING_TIMES: { [key: string]: DMTimeOption } = {
 };
 
 export { DISAPPEARING_TIMES };
-
-const DISAPPEARING_ACTION = {
-  SEND: "sent",
-  READ: "read",
-};
