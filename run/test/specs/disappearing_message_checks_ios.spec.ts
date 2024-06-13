@@ -120,9 +120,14 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
     ["1:1", "Disappear after send option", "10 seconds"],
     device2
   );
-  await device1.navigateBack(platform);
+  // await device1.navigateBack(platform);
   await device1.clickOnByAccessibilityID("Attachments button");
   // Select images button/tab
+  await sleepFor(5000);
+  await clickOnCoordinates(
+    device1,
+    InteractionPoints.ImagesFolderKeyboardClosed
+  );
   await sleepFor(100);
   // Check if android or ios (android = documents folder/ ios = images folder)
 

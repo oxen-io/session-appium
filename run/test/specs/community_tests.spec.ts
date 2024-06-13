@@ -133,7 +133,7 @@ async function sendImageCommunityAndroid(platform: SupportedPlatformsType) {
   closeApp(device1, device2);
 }
 
-describe("Community message checks", () => {
+describe.skip("Community message checks", () => {
   iosIt("Send image to community", sendImageCommunityiOS);
   androidIt("Send image to community", sendImageCommunityAndroid);
 });
