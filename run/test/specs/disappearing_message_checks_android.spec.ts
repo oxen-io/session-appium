@@ -207,7 +207,7 @@ async function disappearingGifMessage(platform: SupportedPlatformsType) {
   // Click on 'download'
   await device2.clickOnByAccessibilityID("Download media");
   // Wait for 60 seconds (time)
-  await sleepFor(Number(time));
+  await sleepFor(60000);
   // Check if GIF has been deleted on both devices
   await device1.hasElementBeenDeleted({
     strategy: "accessibility id",
@@ -225,7 +225,7 @@ async function disappearingGifMessage(platform: SupportedPlatformsType) {
 async function disappearingLinkMessage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const testLink = `https://type-level-typescript.com/objects-and-records`;
-  const time: DMTimeOption = "30 seconds";
+  const time: DMTimeOption = DISAPPEARING_TIMES.THIRTY_SECONDS;
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -260,7 +260,7 @@ async function disappearingLinkMessage(platform: SupportedPlatformsType) {
     selector: "network.loki.messenger:id/linkPreviewView",
   });
   // Wait for 30 seconds to disappear
-  await sleepFor(Number(time));
+  await sleepFor(30000);
   await Promise.all([
     device1.hasElementBeenDeleted({
       strategy: "id",
@@ -282,6 +282,7 @@ async function disappearingCommunityInviteMessage(
   const { device1, device2 } = await openAppTwoDevices(platform);
   const communityLink = `https://chat.lokinet.dev/testing-all-the-things?public_key=1d7e7f92b1ed3643855c98ecac02fc7274033a3467653f047d6e433540c03f17`;
   const communityName = "Testing All The Things!";
+  const time: DMTimeOption = DISAPPEARING_TIMES.THIRTY_SECONDS;
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -292,7 +293,7 @@ async function disappearingCommunityInviteMessage(
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after send option", "30 seconds"],
+    ["1:1", "Disappear after send option", time],
     device2
   );
 
@@ -351,6 +352,7 @@ async function disappearingCommunityInviteMessage(
 // TODO fix with calls
 async function disappearingCallMessage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
+  const time: DMTimeOption = DISAPPEARING_TIMES.THIRTY_SECONDS;
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -360,7 +362,7 @@ async function disappearingCallMessage(platform: SupportedPlatformsType) {
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after send option", "30 seconds"],
+    ["1:1", "Disappear after send option", time],
     device2
   );
 

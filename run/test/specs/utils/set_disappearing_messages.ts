@@ -28,13 +28,13 @@ export const setDisappearingMessage = async (
     await device.clickOnByAccessibilityID(timerType);
   }
   await device.waitForTextElementToBePresent({
-    strategy: "DMTimeOption",
+    strategy: "accessibility id",
     selector: DISAPPEARING_TIMES.ONE_DAY,
   });
 
   await device.disappearRadioButtonSelected(DISAPPEARING_TIMES.ONE_DAY);
   await device.clickOnElementAll({
-    strategy: "DMTimeOption",
+    strategy: "accessibility id",
     selector: timerDuration,
   });
   await device.clickOnByAccessibilityID("Set button");

@@ -39,12 +39,7 @@ export const InteractionPoints: Record<string, Coordinates> = {
   DocumentKeyboardOpen: { x: 34, y: 445 },
 };
 
-export type Strategy =
-  | "accessibility id"
-  | "xpath"
-  | "id"
-  | "class name"
-  | "DMTimeOption";
+export type Strategy = "accessibility id" | "xpath" | "id" | "class name";
 
 export type ConversationType = "1:1" | "Group" | "Community" | "Note to Self";
 
@@ -289,4 +284,16 @@ export type AccessibilityId =
   | "Follow setting"
   | "Follow Setting"
   | "Set"
-  | "Allow Full Access";
+  | "Allow Full Access"
+  | "5 seconds"
+  | "10 seconds"
+  | "30 seconds"
+  | "1 minute"
+  | "5 minutes"
+  | "30 minutes"
+  | "1 hour"
+  | "12 hours"
+  | "1 day"
+  | "1 week"
+  | "2 weeks"
+  | "Off";

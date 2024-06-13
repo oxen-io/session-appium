@@ -87,7 +87,7 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   const testMessage = "Checking disappear after read is working";
-  const time: DMTimeOption = "10 seconds";
+  const time: DMTimeOption = DISAPPEARING_TIMES.TEN_SECONDS;
   const mode: DisappearModes = "read";
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
@@ -209,8 +209,8 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
   const testMessage = `Testing disappearing messages in Note to Self`;
   const userA = await newUser(device, "Alice", platform);
-  const time: DMTimeOption = "10 seconds";
-  const timeMs = 10000;
+  let time: DMTimeOption;
+  const controlMode: DisappearActions = "sent";
   // Send message to self to bring up Note to Self conversation
   await device.clickOnByAccessibilityID("New conversation button");
   await device.clickOnByAccessibilityID("New direct message");
@@ -244,12 +244,16 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   // Check default timer is set
   await sleepFor(1000);
   await device.waitForTextElementToBePresent({
-    strategy: "DMTimeOption",
+    strategy: "accessibility id",
     selector: DISAPPEARING_TIMES.ONE_DAY,
   });
   await device.disappearRadioButtonSelected(DISAPPEARING_TIMES.ONE_DAY);
+  time =
+    platform === "ios"
+      ? DISAPPEARING_TIMES.TEN_SECONDS
+      : DISAPPEARING_TIMES.THIRTY_SECONDS;
   await device.clickOnElementAll({
-    strategy: "DMTimeOption",
+    strategy: "accessibility id",
     selector: time,
   });
   await device.clickOnByAccessibilityID("Set button");
@@ -258,14 +262,16 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   await sleepFor(1000);
   // await Promise.all([
   //   device.waitForControlMessageToBePresent(
-  //     `${userA.userName} has set their messages to disappear ${time} after they have been ${mode}.`
+  //     `${userA.userName} has set their messages to disappear ${time} after they have been ${controlMode}.`
   //   ),
   //   device.waitForControlMessageToBePresent(
-  //     `${userA.userName} has set their messages to disappear ${time} after they have been ${mode}.`
+  //     `${userA.userName} has set their messages to disappear ${time} after they have been ${controlMode}.`
   //   ),
   // ]);
   await device.sendMessage(testMessage);
-  await sleepFor(timeMs);
+  // Sleep time dependent on platform
+  const sleepTime = platform === "ios" ? 10000 : 30000;
+  await sleepFor(sleepTime);
   await device.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Message body",
