@@ -157,14 +157,15 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID("More options");
   // Select disappearing messages option
   await sleepFor(1000);
-  if (platform === "android") {
+  await runOnlyOnAndroid(platform, () =>
     device1.clickOnTextElementById(
       `network.loki.messenger:id/title`,
       "Disappearing messages"
-    );
-  } else {
-    await device1.clickOnByAccessibilityID("Disappearing Messages");
-  }
+    )
+  );
+  await runOnlyOnIOS(platform, () =>
+    device1.clickOnByAccessibilityID("Disappearing Messages")
+  );
   // Check the default time is set to
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",

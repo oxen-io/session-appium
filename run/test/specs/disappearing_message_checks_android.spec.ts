@@ -299,15 +299,11 @@ async function disappearingCommunityInviteMessage(
   await device1.navigateBack(platform);
   await joinCommunity(platform, device1, communityLink, communityName);
   await device1.clickOnByAccessibilityID("More options");
-  if (platform === "ios") {
-    await device1.clickOnByAccessibilityID("Add Members");
-  } else {
-    await device1.clickOnElementAll({
-      strategy: "id",
-      selector: "network.loki.messenger:id/title",
-      text: "Add members",
-    });
-  }
+  await device1.clickOnElementAll({
+    strategy: "id",
+    selector: "network.loki.messenger:id/title",
+    text: "Add members",
+  });
   await device1.clickOnElementByText({
     strategy: "accessibility id",
     selector: "Contact",
@@ -315,23 +311,15 @@ async function disappearingCommunityInviteMessage(
   });
   await device1.clickOnByAccessibilityID("Done");
   // Check device 2 for invitation from user A
-  if (platform === "ios") {
-    await device2.waitForTextElementToBePresent({
-      strategy: "accessibility id",
-      selector: "Community invitation",
-      text: communityName,
-    });
-  } else {
-    await device2.waitForTextElementToBePresent({
-      strategy: "id",
-      selector: "network.loki.messenger:id/openGroupTitleTextView",
-      text: communityName,
-    });
-    await device2.clickOnElementAll({
-      strategy: "id",
-      selector: "network.loki.messenger:id/openGroupInvitationIconBackground",
-    });
-  }
+  await device2.waitForTextElementToBePresent({
+    strategy: "id",
+    selector: "network.loki.messenger:id/openGroupTitleTextView",
+    text: communityName,
+  });
+  await device2.clickOnElementAll({
+    strategy: "id",
+    selector: "network.loki.messenger:id/openGroupInvitationIconBackground",
+  });
   // Wait for 10 seconds for message to disappear
   await sleepFor(10000);
   await device2.hasElementBeenDeleted({

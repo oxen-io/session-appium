@@ -31,10 +31,10 @@ export const joinCommunity = async (
       communityLink
     );
     await device.clickOnByAccessibilityID("Join community button");
-    await device.waitForTextElementToBePresent({
-      strategy: "accessibility id",
-      selector: "Conversation header name",
-      text: communityName,
-    });
   }
+  await device.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Conversation header name",
+    text: communityName,
+  });
 };

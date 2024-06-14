@@ -36,7 +36,10 @@ async function sendImageCommunityiOS(platform: SupportedPlatformsType) {
   // await device1.sendImage(platform, testMessage, true);
   await device1.clickOnByAccessibilityID("Attachments button");
   await sleepFor(5000);
-  await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardOpen);
+  await clickOnCoordinates(
+    device1,
+    InteractionPoints.ImagesFolderKeyboardClosed
+  );
   const permissions = await device1.doesElementExist({
     strategy: "accessibility id",
     selector: "Allow Full Access",
@@ -79,15 +82,7 @@ async function sendImageCommunityiOS(platform: SupportedPlatformsType) {
     selector: `Message sent status: Sent`,
     maxWait: 50000,
   });
-  // await Promise.all([
-  //   device1.scrollToBottom(platform),
-  //   device2.scrollToBottom(platform),
-  // ]);
   await device2.replyToMessage(userA, testMessage);
-  // await Promise.all([
-  //   device1.scrollToBottom(platform),
-  //   device2.scrollToBottom(platform),
-  // ]);
 
   closeApp(device1, device2);
 }
@@ -133,7 +128,7 @@ async function sendImageCommunityAndroid(platform: SupportedPlatformsType) {
   closeApp(device1, device2);
 }
 
-describe.skip("Community message checks", () => {
+describe("Community message checks", () => {
   iosIt("Send image to community", sendImageCommunityiOS);
   androidIt("Send image to community", sendImageCommunityAndroid);
 });

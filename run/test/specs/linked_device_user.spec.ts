@@ -56,11 +56,11 @@ async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
   await device1.deleteText("Username");
   await device1.inputText("accessibility id", "Username", newUsername);
   // Select apply
-  if (platform === "android") {
-    device1.clickOnByAccessibilityID("Apply");
-  } else {
-    device1.clickOnByAccessibilityID("Done");
-  }
+  await runOnlyOnAndroid(platform, () =>
+    device1.clickOnByAccessibilityID("Apply")
+  );
+  await runOnlyOnIOS(platform, () => device1.clickOnByAccessibilityID("Done"));
+
   // Check on linked device if name has updated
   await device2.clickOnByAccessibilityID("User settings");
   await runOnlyOnAndroid(platform, () => device2.navigateBack(platform));

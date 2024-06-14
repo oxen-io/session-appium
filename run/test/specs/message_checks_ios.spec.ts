@@ -20,7 +20,6 @@ async function sendImage(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   const testMessage = "Ron Swanson doesn't like birthdays";
-  const replyMessage = `Replying to image from ${userA.userName}`;
 
   await newContact(platform, device1, userA, device2, userB);
   // await device1.sendImage(platform, testMessage);
@@ -81,10 +80,7 @@ async function sendImage(platform: SupportedPlatformsType) {
     selector: "Message body",
     text: testMessage,
   });
-  await device2.longPressMessage(testMessage);
-
-  await device2.clickOnByAccessibilityID("Reply to message");
-  await device2.sendMessage(replyMessage);
+  const replyMessage = await device2.replyToMessage(userA, testMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",
@@ -181,7 +177,6 @@ async function sendVideo(platform: SupportedPlatformsType) {
   ]);
   const bestDayOfYear = `198809090700.00`;
   const testMessage = "Testing-video-1";
-  const replyMessage = `Replying to video from ${userA.userName}`;
   // create contact
   await newContact(platform, device1, userA, device2, userB);
   // Push image to device for selection
@@ -255,9 +250,7 @@ async function sendVideo(platform: SupportedPlatformsType) {
     selector: "Message body",
     text: testMessage,
   });
-  await device2.longPressMessage(testMessage);
-  await device2.clickOnByAccessibilityID("Reply to message");
-  await device2.sendMessage(replyMessage);
+  const replyMessage = await device2.replyToMessage(userA, testMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",
@@ -277,9 +270,6 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to voice message from ${userA.userName}`;
   await newContact(platform, device1, userA, device2, userB);
   // Select voice message button to activate recording state
-  // await device1.longPress("New voice message");
-  // "Session" would like to access the microphone (Don't allow/ OK)
-  // await device1.clickOnByAccessibilityID("OK");
   await device1.pressAndHold("New voice message");
   await device1.clickOnByAccessibilityID("Allow");
   await device1.pressAndHold("New voice message");
@@ -296,6 +286,7 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
   await device2.longPress("Voice message");
   await device2.clickOnByAccessibilityID("Reply to message");
   await device2.sendMessage(replyMessage);
+
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",
@@ -305,25 +296,15 @@ async function sendVoiceMessage(platform: SupportedPlatformsType) {
 }
 
 async function sendGif(platform: SupportedPlatformsType) {
-  // Test sending a video
-  // open devices and server
   const { device1, device2 } = await openAppTwoDevices(platform);
-  // create user a and user b
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
   ]);
   const testMessage = "Testing-GIF-1";
-  const replyMessage = `Replying to GIF from ${userA.userName}`;
-  // create contact
   await newContact(platform, device1, userA, device2, userB);
-  // Click on attachments button
   await device1.clickOnByAccessibilityID("Attachments button");
   // Select GIF tab
-  console.log(
-    `InteractionPoints.GifButton: `,
-    InteractionPoints.GifButtonKeyboardOpen
-  );
   await clickOnCoordinates(device1, InteractionPoints.GifButtonKeyboardOpen);
   // Select gif
   await sleepFor(500);
@@ -345,10 +326,7 @@ async function sendGif(platform: SupportedPlatformsType) {
     selector: "Message body",
     text: testMessage,
   });
-  await device2.longPressMessage(testMessage);
-  // Check reply came through on device1
-  await device2.clickOnByAccessibilityID("Reply to message");
-  await device2.sendMessage(replyMessage);
+  const replyMessage = await device2.replyToMessage(userA, testMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",
@@ -389,12 +367,13 @@ async function sendLink(platform: SupportedPlatformsType) {
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
   ]);
+  const replyMessage = `Replying to link from ${userA.userName}`;
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // Send a link
 
   await device1.inputText("accessibility id", "Message input box", testLink);
-
+  // await device1.waitForLoadingAnimation();
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message sent status: Sent",
@@ -406,10 +385,8 @@ async function sendLink(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID("Send message button");
   // Send again for image
   await device1.inputText("accessibility id", "Message input box", testLink);
-  await sleepFor(100);
+  await sleepFor(500);
   await device1.clickOnByAccessibilityID("Send message button");
-  // Make sure link works (dialog pop ups saying are you sure?)
-
   // Make sure image preview is available in device 2
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -417,7 +394,9 @@ async function sendLink(platform: SupportedPlatformsType) {
     text: testLink,
   });
 
-  const replyMessage = await device2.replyToMessage(userA, testLink);
+  await device2.longPressMessage(testLink);
+  await device2.clickOnByAccessibilityID("Reply to message");
+  await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",
@@ -575,7 +554,7 @@ async function checkPerformance(platform: SupportedPlatformsType) {
   console.log(timesArray);
 }
 
-describe("Message checks ios", () => {
+describe("Message checks 1:1 ios", () => {
   iosIt("Send image", sendImage);
   iosIt("Send video", sendVideo);
   iosIt("Send voice message", sendVoiceMessage);
@@ -592,3 +571,5 @@ describe("Message checks ios", () => {
 // Media saved notification
 // Send all message types in groups
 // Send all message types in communities
+
+// yarn test-describe --grep "Message checks ios"

@@ -94,8 +94,8 @@ export type StrategyExtractionObj =
     };
 
 export type DisappearingControlMessage =
-  | `You set disappearing message time to 5 seconds`
-  | `${string} set disappearing message time to 5 seconds`
+  | `You set disappearing message time to ${DMTimeOption}`
+  | `${string} set disappearing message time to ${DMTimeOption}`
   | `${string} has set messages to disappear ${DMTimeOption} after they have been ${DisappearActions}.`
   | `You set messages to disappear ${DMTimeOption} after they have been ${DisappearActions}.`;
 
