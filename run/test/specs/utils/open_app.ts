@@ -43,8 +43,8 @@ export const createBasicTestEnvironment = async (
   closeApp(): Promise<void>;
 }> => {
   const [device1, device2, device3] = await openAppMultipleDevices(platform, 3);
-  const userA: User = await linkedDevice(device1, device3, "Alice", platform);
-  const userB: User = await newUser(device2, "Bob", platform);
+  const userA = await linkedDevice(device1, device3, "Alice", platform);
+  const userB = await newUser(device2, "Bob", platform);
   await newContact(platform, device1, userA, device2, userB);
   const closeApp = async (): Promise<void> => {
     await Promise.all([
@@ -58,6 +58,15 @@ export const createBasicTestEnvironment = async (
     Bob: userB,
     closeApp,
   };
+};
+
+export const setUp1o1TestEnvironment = async (
+  platform: SupportedPlatformsType
+) => {
+  const [device1, device2, device3] = await openAppMultipleDevices(platform, 3);
+  const userA = await linkedDevice(device1, device3, "Alice", platform);
+  const userB = await newUser(device2, "Bob", platform);
+  await newContact(platform, device1, userA, device2, userB);
 };
 
 export const openAppMultipleDevices = async (

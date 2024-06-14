@@ -47,47 +47,7 @@ async function sendImageGroup(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
-  // await device1.sendImage(platform, testMessage);
-  await device1.clickOnByAccessibilityID("Attachments button");
-  await sleepFor(5000);
-  await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardOpen);
-  const permissions = await device1.doesElementExist({
-    strategy: "accessibility id",
-    selector: "Allow Full Access",
-    maxWait: 1000,
-  });
-  if (permissions) {
-    try {
-      await device1.clickOnByAccessibilityID(`Allow Full Access`);
-      // Select video
-    } catch (e) {
-      console.log("No permissions dialog");
-    }
-  } else {
-    console.log("No permissions dialog");
-  }
-  const testImage = await device1.doesElementExist({
-    strategy: "accessibility id",
-    selector: `1967-05-05 21:00:00 +0000`,
-    maxWait: 2000,
-  });
-  if (!testImage) {
-    await runScriptAndLog(
-      `touch -a -m -t ${ronSwansonBirthday} 'run/test/specs/media/test_image.jpg'`
-    );
-
-    await runScriptAndLog(
-      `xcrun simctl addmedia ${
-        process.env.IOS_FIRST_SIMULATOR || ""
-      } 'run/test/specs/media/test_image.jpg'`,
-      true
-    );
-  }
-  await sleepFor(100);
-  await device1.clickOnByAccessibilityID(`1967-05-05 21:00:00 +0000`);
-  await device1.clickOnByAccessibilityID("Text input box");
-  await device1.inputText("accessibility id", "Text input box", testMessage);
-  await device1.clickOnByAccessibilityID("Send button");
+  await device1.sendImage(platform, testMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: `Message sent status: Sent`,

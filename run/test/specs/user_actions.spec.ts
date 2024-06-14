@@ -3,15 +3,12 @@ import { parseDataImage } from "./utils/check_colour";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils/index";
-import { linkedDevice } from "./utils/link_device";
 import {
+  SupportedPlatformsType,
   closeApp,
   createBasicTestEnvironment,
-  openAppMultipleDevices,
   openAppOnPlatformSingleDevice,
-  openAppThreeDevices,
   openAppTwoDevices,
-  SupportedPlatformsType,
 } from "./utils/open_app";
 import { runScriptAndLog } from "./utils/utilities";
 
@@ -19,8 +16,15 @@ async function createContact(platform: SupportedPlatformsType) {
   // first we want to install the app on each device with our custom call to run it
 
   const testEnv = await createBasicTestEnvironment(platform);
-  const [device1, device2, device3] = testEnv.devices;
-  const [Alice, Bob] = [testEnv.Alice, testEnv.Bob];
+  const [device1, device3] = testEnv.devices;
+  const [Bob] = [testEnv.Bob];
+  // Audrics suggestion
+  // const {
+  //   devices: [device1, device2, device3],
+  //   Alice,
+  //   Bob,
+  //   closeApp,
+  // } = await createBasicTestEnvironment(platform);
 
   await device1.navigateBack(platform);
   // Check username has changed from session id on both device 1 and 3
@@ -28,12 +32,12 @@ async function createContact(platform: SupportedPlatformsType) {
     device1.waitForTextElementToBePresent({
       strategy: "accessibility id",
       selector: "Conversation list item",
-      text: Bob.userName,
+      text: `${Bob.userName}`,
     }),
     device3.waitForTextElementToBePresent({
       strategy: "accessibility id",
       selector: "Conversation list item",
-      text: Bob.userName,
+      text: `${Bob.userName}`,
     }),
   ]);
   // Check contact is added to contacts list on device 1 and 3 (linked device)
@@ -98,7 +102,7 @@ async function blockUserInConversationOptions(
     await device3.clickOnElementAll({
       strategy: "accessibility id",
       selector: "Conversation list item",
-      text: `Bob.userName`,
+      text: `${Bob.userName}`,
     });
     await device3.waitForTextElementToBePresent({
       strategy: "accessibility id",

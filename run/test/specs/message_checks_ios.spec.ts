@@ -8,9 +8,27 @@ import { joinCommunity } from "./utils/join_community";
 import {
   SupportedPlatformsType,
   closeApp,
+  createBasicTestEnvironment,
   openAppTwoDevices,
 } from "./utils/open_app";
 import { runScriptAndLog } from "./utils/utilities";
+
+describe("Message checks 1:1 ios", () => {
+  before(async () => {
+    console.log("Setting up tests...");
+  });
+  iosIt("Send image", sendImage);
+  iosIt("Send video", sendVideo);
+  iosIt("Send voice message", sendVoiceMessage);
+  // iosIt("Send document", sendDoc);
+  iosIt("Send gif", sendGif);
+  iosIt("Send long text", sendLongMessage);
+  iosIt("Send link", sendLink);
+  iosIt("Send community invitation message", sendCommunityInvitation);
+  iosIt("Unsend message", unsendMessage);
+  iosIt("Delete message", deleteMessage);
+  iosIt("Check performance", checkPerformance);
+});
 
 async function sendImage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
@@ -22,47 +40,7 @@ async function sendImage(platform: SupportedPlatformsType) {
   const testMessage = "Ron Swanson doesn't like birthdays";
 
   await newContact(platform, device1, userA, device2, userB);
-  // await device1.sendImage(platform, testMessage);
-  await device1.clickOnByAccessibilityID("Attachments button");
-  await sleepFor(5000);
-  await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardOpen);
-  const permissions = await device1.doesElementExist({
-    strategy: "accessibility id",
-    selector: "Allow Full Access",
-    maxWait: 1000,
-  });
-  if (permissions) {
-    try {
-      await device1.clickOnByAccessibilityID(`Allow Full Access`);
-      // Select video
-    } catch (e) {
-      console.log("No permissions dialog");
-    }
-  } else {
-    console.log("No permissions dialog");
-  }
-  const testImage = await device1.doesElementExist({
-    strategy: "accessibility id",
-    selector: `1967-05-05 21:00:00 +0000`,
-    maxWait: 2000,
-  });
-  if (!testImage) {
-    await runScriptAndLog(
-      `touch -a -m -t ${ronSwansonBirthday} 'run/test/specs/media/test_image.jpg'`
-    );
-
-    await runScriptAndLog(
-      `xcrun simctl addmedia ${
-        process.env.IOS_FIRST_SIMULATOR || ""
-      } 'run/test/specs/media/test_image.jpg'`,
-      true
-    );
-  }
-  await sleepFor(100);
-  await device1.clickOnByAccessibilityID(`1967-05-05 21:00:00 +0000`);
-  await device1.clickOnByAccessibilityID("Text input box");
-  await device1.inputText("accessibility id", "Text input box", testMessage);
-  await device1.clickOnByAccessibilityID("Send button");
+  await device1.sendImage(platform, testMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: `Message sent status: Sent`,
@@ -553,20 +531,6 @@ async function checkPerformance(platform: SupportedPlatformsType) {
   }
   console.log(timesArray);
 }
-
-describe("Message checks 1:1 ios", () => {
-  iosIt("Send image", sendImage);
-  iosIt("Send video", sendVideo);
-  iosIt("Send voice message", sendVoiceMessage);
-  // iosIt("Send document", sendDoc);
-  iosIt("Send gif", sendGif);
-  iosIt("Send long text", sendLongMessage);
-  iosIt("Send link", sendLink);
-  iosIt("Send community invitation message", sendCommunityInvitation);
-  iosIt("Unsend message", unsendMessage);
-  iosIt("Delete message", deleteMessage);
-  iosIt("Check performance", checkPerformance);
-});
 
 // Media saved notification
 // Send all message types in groups

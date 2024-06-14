@@ -1080,7 +1080,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       await this.clickOnByAccessibilityID("Attachments button");
       await sleepFor(5000);
       await clickOnCoordinates(
-        this.device,
+        this,
         InteractionPoints.ImagesFolderKeyboardOpen
       );
       const permissions = await this.doesElementExist({

@@ -37,10 +37,22 @@ export const linkedDevice = async (
   await device2.clickOnByAccessibilityID("Continue with settings");
   // Check for recovery phrase reminder
   await sleepFor(1000);
+  const displayName = await device2.doesElementExist({
+    strategy: "accessibility id",
+    selector: "Enter display name",
+  });
+  if (displayName) {
+    await device2.inputText(
+      "accessibility id",
+      "Enter display name",
+      user.userName
+    );
+    await device2.clickOnByAccessibilityID("Continue");
+  }
+  await sleepFor(1000);
   await runOnlyOnIOS(platform, () =>
     device2.clickOnByAccessibilityID("Don’t Allow")
   );
-  await sleepFor(1000);
   await device2.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Continue",
