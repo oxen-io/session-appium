@@ -11,6 +11,20 @@ import {
 } from "./utils/open_app";
 import { runScriptAndLog } from "./utils/utilities";
 
+describe("Group message checks ios", () => {
+  before(async () => {
+    console.log("Setting up tests...");
+  });
+  iosIt("Send image to group", sendImageGroup);
+  iosIt("Send video to group", sendVideoGroup);
+  iosIt("Send voice message to group", sendVoiceMessageGroup);
+  // iosIt("Send document to group", sendDocGroup);
+  iosIt("Send gif to group", sendGifGroup);
+  iosIt("Send long text to group", sendLongMessageGroup);
+  iosIt("Send link to group", sendLinkGroup);
+  iosIt("Delete message in group", deleteMessageGroup);
+});
+
 async function sendImageGroup(platform: SupportedPlatformsType) {
   const testGroupName = "Message checks for groups";
   const testMessage = "Sending image to group";
@@ -509,14 +523,3 @@ async function deleteMessageGroup(platform: SupportedPlatformsType) {
   // Excellentgit
   await closeApp(device1, device2, device3);
 }
-
-describe("Group message checks ios", () => {
-  iosIt("Send image to group", sendImageGroup);
-  iosIt("Send video to group", sendVideoGroup);
-  iosIt("Send voice message to group", sendVoiceMessageGroup);
-  // iosIt("Send document to group", sendDocGroup);
-  iosIt("Send gif to group", sendGifGroup);
-  iosIt("Send long text to group", sendLongMessageGroup);
-  iosIt("Send link to group", sendLinkGroup);
-  iosIt("Delete message in group", deleteMessageGroup);
-});
