@@ -240,7 +240,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       type: "pointer",
       x: xCoOrdinates,
       y: yCoOrdinates,
-      duration: duration,
+      duration,
     };
 
     await this.toShared().performTouch([action]);

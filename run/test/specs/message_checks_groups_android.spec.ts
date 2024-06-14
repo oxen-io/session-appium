@@ -466,7 +466,7 @@ async function deleteMessageGroup(platform: SupportedPlatformsType) {
   await closeApp(device1, device2, device3);
 }
 
-describe("Message checks for groups android", () => {
+describe("Group message checks android", () => {
   androidIt("Send image to group", sendImageGroup);
   androidIt("Send video to group", sendVideoGroup);
   androidIt("Send voice message to group", sendVoiceMessageGroup);

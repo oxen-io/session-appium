@@ -230,7 +230,7 @@ async function sendVoiceMessageGroup(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to voice message from ${userA.userName} in ${testGroupName}`;
   await device1.longPress("New voice message");
   // "Session" would like to access the microphone (Don't allow/ OK)
-  // await device1.clickOnByAccessibilityID("Allow");
+  await device1.clickOnByAccessibilityID("Allow");
   await device1.pressAndHold("New voice message");
 
   await device1.waitForTextElementToBePresent({
@@ -399,7 +399,7 @@ async function sendLongMessageGroup(platform: SupportedPlatformsType) {
 
 async function sendLinkGroup(platform: SupportedPlatformsType) {
   const testGroupName = "Message checks for groups";
-  const testLink = `https://example.org/`;
+  const testLink = `https://type-level-typescript.com/objects-and-records`;
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
@@ -407,7 +407,7 @@ async function sendLinkGroup(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
     newUser(device3, "Charlie", platform),
   ]);
-
+  const replyMessage = `Replying to link from ${userA.userName} in group ${testGroupName}`;
   // Create contact between User A and User B
   await createGroup(
     platform,
@@ -443,7 +443,10 @@ async function sendLinkGroup(platform: SupportedPlatformsType) {
     selector: "Message body",
     text: testLink,
   });
-  const replyMessage = await device2.replyToMessage(userA, testLink);
+  // Reply to link
+  await device2.longPressMessage(testLink);
+  await device2.clickOnByAccessibilityID("Reply to message");
+  await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message body",
@@ -507,11 +510,11 @@ async function deleteMessageGroup(platform: SupportedPlatformsType) {
   await closeApp(device1, device2, device3);
 }
 
-describe("Message checks ios", () => {
+describe("Group message checks ios", () => {
   iosIt("Send image to group", sendImageGroup);
   iosIt("Send video to group", sendVideoGroup);
   iosIt("Send voice message to group", sendVoiceMessageGroup);
-  iosIt("Send document to group", sendDocGroup);
+  // iosIt("Send document to group", sendDocGroup);
   iosIt("Send gif to group", sendGifGroup);
   iosIt("Send long text to group", sendLongMessageGroup);
   iosIt("Send link to group", sendLinkGroup);

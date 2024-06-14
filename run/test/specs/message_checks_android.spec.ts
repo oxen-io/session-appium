@@ -399,7 +399,7 @@ async function checkPerformance(platform: SupportedPlatformsType) {
   console.log(`Device 2:`, timesArray2);
 }
 
-describe("Message checks android", () => {
+describe("Message checks 1:1 android", () => {
   androidIt("Send image", sendImage);
   androidIt("Send video", sendVideo);
   androidIt("Send voice message", sendVoiceMessage);

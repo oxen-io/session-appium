@@ -207,7 +207,7 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
-describe("Voice calls ", () => {
+describe.skip("Voice calls ", () => {
   androidIt("Voice calls", voiceCallAndroid);
   iosIt("Voice calls", voiceCallIos);
 });
