@@ -6,6 +6,8 @@ import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils/index";
 import { linkedDevice } from "./utils/link_device";
 import {
   closeApp,
+  createBasicTestEnvironment,
+  openAppMultipleDevices,
   openAppOnPlatformSingleDevice,
   openAppThreeDevices,
   openAppTwoDevices,
@@ -15,39 +17,67 @@ import { runScriptAndLog } from "./utils/utilities";
 
 async function createContact(platform: SupportedPlatformsType) {
   // first we want to install the app on each device with our custom call to run it
-  const { device1, device2, device3 } = await openAppThreeDevices(platform);
 
-  const userA = await linkedDevice(device1, device3, "Alice", platform);
-  const userB = await newUser(device2, "Bob", platform);
+  const testEnv = await createBasicTestEnvironment(platform);
+  const [device1, device2, device3] = testEnv.devices;
+  const [Alice, Bob] = [testEnv.Alice, testEnv.Bob];
 
-  await newContact(platform, device1, userA, device2, userB);
-  await device3.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Conversation list item",
-    text: userB.userName,
-  });
+  await device1.navigateBack(platform);
+  // Check username has changed from session id on both device 1 and 3
+  await Promise.all([
+    device1.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Conversation list item",
+      text: Bob.userName,
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Conversation list item",
+      text: Bob.userName,
+    }),
+  ]);
+  // Check contact is added to contacts list on device 1 and 3 (linked device)
+  // await Promise.all([
+  //   device1.clickOnElementAll({
+  //     strategy: "accessibility id",
+  //     selector: "New conversation button",
+  //   }),
+  //   device3.clickOnElementAll({
+  //     strategy: "accessibility id",
+  //     selector: "New conversation button",
+  //   }),
+  // ]);
+
+  // NEED CONTACT ACCESSIBILITY ID TO BE ADDED
+  // await Promise.all([
+  //   device1.waitForTextElementToBePresent({
+  //     strategy: "accessibility id",
+  //     selector: "Contacts",
+  //   }),
+  //   device3.waitForTextElementToBePresent({
+  //     strategy: "accessibility id",
+  //     selector: "Contacts",
+  //   }),
+  // ]);
+
   // Wait for tick
-  await closeApp(device1, device2, device3);
+  await testEnv.closeApp();
 }
 async function blockUserInConversationOptions(
   platform: SupportedPlatformsType
 ) {
-  // Open App
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // Create user A
-  // Create Bob
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
-  // Create contact
-  await newContact(platform, device1, userA, device2, userB);
+  //Open three devices and creates two contacts (Alice and Bob)
+  // Alice has linked device (1 and 3)
+  const testEnv = await createBasicTestEnvironment(platform);
+  const [device1, device2, device3] = testEnv.devices;
+  const [Alice, Bob] = [testEnv.Alice, testEnv.Bob];
   // Block contact
   // Click on three dots (settings)
   await device1.clickOnByAccessibilityID("More options");
   // Select Block option
   await runOnlyOnIOS(platform, () => device1.clickOnByAccessibilityID("Block"));
-  await sleepFor(1000);
+  // Wait for menu to be clickable (Android)
+  await sleepFor(500);
   await runOnlyOnAndroid(platform, () =>
     device1.clickOnTextElementById(`network.loki.messenger:id/title`, "Block")
   );
@@ -55,23 +85,35 @@ async function blockUserInConversationOptions(
   await device1.clickOnByAccessibilityID("Confirm block");
   // On ios there is an alert that confirms that the user has been blocked
   await sleepFor(1000);
-  console.warn(`${userB.userName}` + " has been blocked");
   // On ios, you need to navigate back to conversation screen to confirm block
   await runOnlyOnIOS(platform, () => device1.navigateBack(platform));
   // Look for alert at top of screen (Bob is blocked. Unblock them?)
-  await device1.waitForTextElementToBePresent({
+  // Check device 1 for blocked status
+  const blockedStatus = await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Blocked banner",
   });
-
-  console.warn("User has been blocked");
+  if (blockedStatus) {
+    // Check linked device for blocked status (if shown on device1)
+    await device3.clickOnElementAll({
+      strategy: "accessibility id",
+      selector: "Conversation list item",
+      text: `Bob.userName`,
+    });
+    await device3.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Blocked banner",
+    });
+    console.warn(`${Bob.userName}` + " has been blocked");
+  } else console.warn("Blocked banner not found");
+  // Unblock Bob
   // Click on alert to unblock
   await device1.clickOnByAccessibilityID("Blocked banner");
   // on ios there is a confirm unblock alert, need to click 'unblock'
   await runOnlyOnIOS(platform, () =>
     device1.clickOnByAccessibilityID("Unblock")
   );
-  console.warn("User has been unblocked");
+  console.warn(`${Bob.userName}} has been unblocked`);
   // Look for alert (shouldn't be there)
   await device1.hasElementBeenDeleted({
     strategy: "accessibility id",
@@ -81,15 +123,22 @@ async function blockUserInConversationOptions(
   const hasUserBeenUnblockedMessage = await device2.sendMessage(
     "Hey, am I unblocked?"
   );
-  // Check in device 1 for message
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
-    text: hasUserBeenUnblockedMessage,
-  });
+  // Check in device 1 and device 3 for message
+  await Promise.all([
+    device1.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Message body",
+      text: hasUserBeenUnblockedMessage,
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Message body",
+      text: hasUserBeenUnblockedMessage,
+    }),
+  ]);
 
   // Close app
-  await closeApp(device1, device2);
+  await testEnv.closeApp();
 }
 
 async function blockUserInConversationList(platform: SupportedPlatformsType) {
