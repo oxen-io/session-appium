@@ -67,6 +67,8 @@ export const setUp1o1TestEnvironment = async (
   const userA = await linkedDevice(device1, device3, "Alice", platform);
   const userB = await newUser(device2, "Bob", platform);
   await newContact(platform, device1, userA, device2, userB);
+
+  return { device1, device2, device3, userA, userB };
 };
 
 export const openAppMultipleDevices = async (
@@ -281,11 +283,11 @@ const openiOSApp = async (
   console.warn("openiOSApp");
 
   // Logging to check that app path is correct
-  console.log(
-    `iOS App Full Path: ${
-      getIosCapabilities(capabilitiesIndex)["alwaysMatch"]["appium:app"]
-    }`
-  );
+  // console.log(
+  //   `iOS App Full Path: ${
+  //     getIosCapabilities(capabilitiesIndex)["alwaysMatch"]["appium:app"]
+  //   }`
+  // );
   const opts: DriverOpts = {
     address: `http://localhost:${APPIUM_PORT}`,
   } as DriverOpts;

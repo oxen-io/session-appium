@@ -1,6 +1,7 @@
 import { XPATHS } from "../../constants";
-import { iosIt } from "../../types/sessionIt";
-import { InteractionPoints } from "../../types/testing";
+import { DeviceWrapper } from "../../types/DeviceWrapper";
+import { iosIt, iosItWithSetup } from "../../types/sessionIt";
+import { InteractionPoints, SetupData, User } from "../../types/testing";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { clickOnCoordinates, sleepFor } from "./utils/index";
@@ -8,38 +9,73 @@ import { joinCommunity } from "./utils/join_community";
 import {
   SupportedPlatformsType,
   closeApp,
-  createBasicTestEnvironment,
   openAppTwoDevices,
+  setUp1o1TestEnvironment,
 } from "./utils/open_app";
 import { runScriptAndLog } from "./utils/utilities";
 
 describe("Message checks 1:1 ios", () => {
+  let setupData: SetupData = {
+    device1: undefined,
+    device2: undefined,
+    device3: undefined,
+    userA: undefined,
+    userB: undefined,
+  };
+
   before(async () => {
     console.log("Setting up tests...");
+    const setup = await setUp1o1TestEnvironment("ios");
+    setupData.device1 = setup.device1;
+    setupData.device2 = setup.device2;
+    setupData.userA = setup.userA;
+    setupData.userB = setup.userB;
   });
-  iosIt("Send image", sendImage);
-  iosIt("Send video", sendVideo);
-  iosIt("Send voice message", sendVoiceMessage);
-  // iosIt("Send document", sendDoc);
-  iosIt("Send gif", sendGif);
-  iosIt("Send long text", sendLongMessage);
-  iosIt("Send link", sendLink);
-  iosIt("Send community invitation message", sendCommunityInvitation);
-  iosIt("Unsend message", unsendMessage);
-  iosIt("Delete message", deleteMessage);
-  iosIt("Check performance", checkPerformance);
+
+  // Use a function to wrap test calls
+  iosItWithSetup(
+    "Send image",
+    setupData,
+    async ({ device1, device2, userA, userB }) => {
+      await sendImage("ios", device1, device2, userA, userB);
+    }
+  );
+  iosItWithSetup(
+    "Send video",
+    setupData,
+    async ({ device1, device2, device3, userA, userB }) => {
+      await sendVideo("ios", device1, device2, userA, userB);
+    }
+  );
+  // iosIt("Send voice message", sendVoiceMessage);
+  // // iosIt("Send document", sendDoc);
+  // iosIt("Send gif", sendGif);
+  // iosIt("Send long text", sendLongMessage);
+  // iosIt("Send link", sendLink);
+  // iosIt("Send community invitation message", sendCommunityInvitation);
+  // iosIt("Unsend message", unsendMessage);
+  // iosIt("Delete message", deleteMessage);
+  // iosIt("Check performance", checkPerformance);
+  // Run the setup tests after the before hook promises the setup is complete
 });
 
-async function sendImage(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  const ronSwansonBirthday = "196705060700.00";
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
+async function sendImage(
+  platform: SupportedPlatformsType,
+  device1: DeviceWrapper,
+  device2: DeviceWrapper,
+  userA: User,
+  userB: User
+) {
+  // const { device1, device2 } = await openAppTwoDevices(platform);
+  // const [userA, userB] = await Promise.all([
+  //   newUser(device1, "Alice", platform),
+  //   newUser(device2, "Bob", platform),
+  // ]);
+  if (!device1 || !device2 || !userA || !userB) {
+    throw new Error("Test setup incomplete");
+  }
   const testMessage = "Ron Swanson doesn't like birthdays";
-
-  await newContact(platform, device1, userA, device2, userB);
+  // await newContact(platform, device1, userA, device2, userB);
   await device1.sendImage(platform, testMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
@@ -65,7 +101,7 @@ async function sendImage(platform: SupportedPlatformsType) {
     text: replyMessage,
   });
   // Close app and server
-  await closeApp(device1, device2);
+  // await closeApp(device1, device2);
 }
 
 // HAVING ISSUES WITH ADDING PDF, WILL COME BACK TO THIS LATER
@@ -144,24 +180,30 @@ async function sendDoc(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
-async function sendVideo(platform: SupportedPlatformsType) {
+async function sendVideo(
+  platform: SupportedPlatformsType,
+  device1: DeviceWrapper,
+  device2: DeviceWrapper,
+  userA: User,
+  userB: User
+) {
   // Test sending a video
   // open devices
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // create user a and user b
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
+  // const { device1, device2 } = await openAppTwoDevices(platform);
+  // // create user a and user b
+  // const [userA, userB] = await Promise.all([
+  //   newUser(device1, "Alice", platform),
+  //   newUser(device2, "Bob", platform),
+  // ]);
   const bestDayOfYear = `198809090700.00`;
   const testMessage = "Testing-video-1";
   // create contact
-  await newContact(platform, device1, userA, device2, userB);
+  // await newContact(platform, device1, userA, device2, userB);
   // Push image to device for selection
   // Click on attachments button
   await device1.clickOnByAccessibilityID("Attachments button");
   // Select images button/tab
-  await sleepFor(1000);
+  await sleepFor(500);
   await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardOpen);
   // Select 'continue' on alert
   // Need to put a video on device
@@ -513,6 +555,7 @@ async function deleteMessage(platform: SupportedPlatformsType) {
   // Excellent
   await closeApp(device1, device2);
 }
+
 async function checkPerformance(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create two users

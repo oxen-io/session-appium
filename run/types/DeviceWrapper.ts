@@ -108,7 +108,7 @@ type AndroidDeviceInterface = {
 } & SharedDeviceInterface;
 
 export class DeviceWrapper implements SharedDeviceInterface {
-  private readonly device: DeviceWrapper;
+  private readonly device: unknown;
 
   constructor(device: DeviceWrapper) {
     this.device = device;

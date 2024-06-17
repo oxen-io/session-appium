@@ -40,6 +40,7 @@ export const linkedDevice = async (
   const displayName = await device2.doesElementExist({
     strategy: "accessibility id",
     selector: "Enter display name",
+    maxWait: 1000,
   });
   if (displayName) {
     await device2.inputText(

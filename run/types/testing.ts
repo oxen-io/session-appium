@@ -1,3 +1,5 @@
+import { DeviceWrapper } from "./DeviceWrapper";
+
 export type User = {
   userName: Username;
   sessionID: string;
@@ -24,6 +26,14 @@ export type Group = {
   userOne: User;
   userTwo: User;
   userThree: User;
+};
+
+export type SetupData = {
+  device1: DeviceWrapper | undefined;
+  device2: DeviceWrapper | undefined;
+  device3: DeviceWrapper | undefined;
+  userA: User | undefined;
+  userB: User | undefined;
 };
 
 export type Coordinates = {
