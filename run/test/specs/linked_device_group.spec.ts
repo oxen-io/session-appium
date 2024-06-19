@@ -236,14 +236,16 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
   await closeApp(device1, device2, device3, device4);
 }
 
-describe("Linked device - group tests", () => {
+describe("Linked device - group tests ios", () => {
   iosIt("Group and name syncs", groupCreationandNameChangeLinkedDeviceiOS);
+  iosIt("Leaving group syncs", leaveGroupLinkedDevice);
+});
+
+describe("Linked device - group tests android", () => {
   androidIt(
     "Group and name syncs",
     groupCreationandNameChangeLinkedDeviceAndroid
   );
-
-  iosIt("Leaving group syncs", leaveGroupLinkedDevice);
   androidIt("Leaving group syncs", leaveGroupLinkedDevice);
 });
 

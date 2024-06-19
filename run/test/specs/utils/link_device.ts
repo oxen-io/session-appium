@@ -35,13 +35,13 @@ export const linkedDevice = async (
   await await sleepFor(250);
   // Click continue on message notification settings
   await device2.clickOnByAccessibilityID("Continue with settings");
-  // Check for recovery phrase reminder
   await sleepFor(1000);
   const displayName = await device2.doesElementExist({
     strategy: "accessibility id",
     selector: "Enter display name",
     maxWait: 1000,
   });
+  await sleepFor(1000);
   if (displayName) {
     await device2.inputText(
       "accessibility id",
@@ -49,6 +49,7 @@ export const linkedDevice = async (
       user.userName
     );
     await device2.clickOnByAccessibilityID("Continue");
+  } else {
   }
   await sleepFor(1000);
   await runOnlyOnIOS(platform, () =>

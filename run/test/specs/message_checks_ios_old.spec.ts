@@ -421,6 +421,7 @@ async function sendCommunityInvitation(platform: SupportedPlatformsType) {
   await device1.navigateBack(platform);
   await joinCommunity(platform, device1, communityLink, communityName);
   await device1.clickOnByAccessibilityID("More options");
+  await sleepFor(500);
   await device1.clickOnByAccessibilityID("Add Members");
   await device1.clickOnElementByText({
     strategy: "accessibility id",
@@ -569,7 +570,6 @@ describe("Message checks 1:1 no-setup ios", () => {
 });
 
 // Media saved notification
-// Send all message types in groups
 // Send all message types in communities
 
 // yarn test-describe --grep "Message checks ios"

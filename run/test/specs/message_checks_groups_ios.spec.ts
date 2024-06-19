@@ -28,7 +28,6 @@ describe("Group message checks ios", () => {
 async function sendImageGroup(platform: SupportedPlatformsType) {
   const testGroupName = "Message checks for groups";
   const testMessage = "Sending image to group";
-  const ronSwansonBirthday = "196705060700.00";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([

@@ -397,22 +397,20 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
-describe("Linked device - user tests", () => {
+describe("Linked device - user tests ios", () => {
   iosIt("Link a device", linkDevice);
-  androidIt("Link a device", linkDevice);
-
   iosIt("Profile picture syncs", avatarRestorediOS);
-  androidIt("Profile picture syncs", avatarRestoredAndroid);
-
-  androidIt("Changed username syncs", changeUsernameLinkedDevice);
   iosIt("Changed username syncs", changeUsernameLinkedDevice);
-
-  androidIt("Deleted message syncs", deletedMessageLinkedDevice);
   iosIt("Deleted message syncs", deletedMessageLinkedDevice);
-
-  androidIt("Unsent message syncs", unSendMessageLinkedDevice);
   iosIt("Unsent message syncs", unSendMessageLinkedDevice);
-
   iosIt("Blocked user syncs", blockedUserLinkedDevice);
+});
+
+describe("Linked device - user tests android", () => {
+  androidIt("Link a device", linkDevice);
+  androidIt("Profile picture syncs", avatarRestoredAndroid);
+  androidIt("Changed username syncs", changeUsernameLinkedDevice);
+  androidIt("Deleted message syncs", deletedMessageLinkedDevice);
+  androidIt("Unsent message syncs", unSendMessageLinkedDevice);
   androidIt("Blocked user syncs", blockedUserLinkedDevice);
 });

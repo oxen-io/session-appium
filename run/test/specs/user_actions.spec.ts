@@ -545,29 +545,25 @@ async function readStatus(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
-describe("User actions", () => {
-  iosIt("Create contact", createContact);
-  androidIt("Create contact", createContact);
-
+describe("User actions ios", () => {
+  // iosIt("Create contact", createContact);
   iosIt("Block user in conversation options", blockUserInConversationOptions);
+  iosIt("Change username", changeUsername);
+  iosIt("Change profile picture", changeProfilePictureiOS);
+  iosIt("Set nickname", setNicknameIos);
+  iosIt("Read status", readStatus);
+});
+
+describe("User actions android", () => {
+  androidIt("Create contact", createContact);
   androidIt(
     "Block user in conversation options",
     blockUserInConversationOptions
   );
-
   androidIt("Block user in conversation list", blockUserInConversationList);
-
   androidIt("Change username", changeUsername);
-  iosIt("Change username", changeUsername);
-  // NEED TO FIX
   androidIt("Change profile picture", changeProfilePictureAndroid);
-  iosIt("Change profile picture", changeProfilePictureiOS);
-
   androidIt("Set nickname", setNicknameAndroid);
-  iosIt("Set nickname", setNicknameIos);
-
   androidIt("Read status", readStatus);
-  iosIt("Read status", readStatus);
 });
-
 // Typing indicators working

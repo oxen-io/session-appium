@@ -513,6 +513,13 @@ export class DeviceWrapper implements SharedDeviceInterface {
         strategy: "id",
         selector: "Select All",
         text: "Select All",
+        maxWait: 1000,
+      });
+    } else {
+      await this.clickOnElementByText({
+        strategy: "id",
+        selector: "Select All",
+        text: "Select All",
       });
     }
     await this.clear(el.ELEMENT);

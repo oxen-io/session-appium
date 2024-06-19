@@ -355,19 +355,18 @@ async function leaveGroupAndroid(platform: SupportedPlatformsType) {
   await closeApp(device1, device2, device3);
 }
 
-describe("Group Testing", () => {
+describe("Group testing ios", () => {
   iosIt("Create group", groupCreation);
-  androidIt("Create group", groupCreation);
-
   iosIt("Change group name", changeGroupNameIos);
-  androidIt("Change group name", changeGroupNameAndroid);
-
   iosIt("Add contact to group", addContactToGroup);
-  androidIt("Add contact to group", addContactToGroup);
-
   iosIt("Test mentions", mentionsForGroups);
-  androidIt("Test mentions", mentionsForGroups);
-
   iosIt("Leave group", leaveGroupIos);
+});
+
+describe("Group testing android", () => {
+  androidIt("Create group", groupCreation);
+  androidIt("Change group name", changeGroupNameAndroid);
+  androidIt("Add contact to group", addContactToGroup);
+  androidIt("Test mentions", mentionsForGroups);
   androidIt("Leave group", leaveGroupAndroid);
 });

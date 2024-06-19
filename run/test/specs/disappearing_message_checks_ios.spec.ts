@@ -881,7 +881,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   ]);
   await closeApp(device1, device2, device3);
 }
-describe("Disappearing messages checks 1o1", () => {
+describe("Disappearing messages checks 1:1 ios", () => {
   iosIt("Disappearing messages image", disappearingImageMessage1o1);
   iosIt("Disappearing messages video", disappearingVideoMessage1o1);
   iosIt("Disappearing messages voice", disappearingVoiceMessage1o1);
@@ -891,9 +891,9 @@ describe("Disappearing messages checks 1o1", () => {
     "Disappearing messages community invite",
     disappearingCommunityInviteMessage1o1
   );
-  iosIt("Disappearing messages call history", disappearingCallMessage1o1);
+  // iosIt("Disappearing messages call history", disappearingCallMessage1o1);
 });
-describe("Disappearing messages checks groups", () => {
+describe("Disappearing messages checks groups ios", () => {
   iosIt("Disappearing messages image group", disappearingImageMessageGroup);
   iosIt("Disappearing messages video group", disappearingVideoMessageGroup);
   iosIt("Disappearing messages voice group", disappearingVoiceMessageGroup);

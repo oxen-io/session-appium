@@ -210,21 +210,19 @@ async function clearAllRequests(platform: SupportedPlatformsType) {
   await closeApp(device1, device2);
 }
 
-describe("Message requests all", () => {
+describe("Message requests all ios", () => {
   iosIt("Message requests accept", acceptRequest);
-  androidIt("Message requests accept", acceptRequest);
-
   iosIt("Message requests decline", declineRequest);
-  androidIt("Message requests decline", declineRequest);
-
   iosIt("Message requests text reply", acceptRequestWithText);
-  androidIt("Message requests text reply", acceptRequestWithText);
-
   iosIt("Message requests block", blockRequest);
-  androidIt("Message requests block", blockRequest);
-
   iosIt("Delete request", deleteRequest);
-
   iosIt("Message requests clear all", clearAllRequests);
+});
+
+describe("Message requests all android", () => {
+  androidIt("Message requests accept", acceptRequest);
+  androidIt("Message requests decline", declineRequest);
+  androidIt("Message requests text reply", acceptRequestWithText);
+  androidIt("Message requests block", blockRequest);
   androidIt("Message requests clear all", clearAllRequests);
 });

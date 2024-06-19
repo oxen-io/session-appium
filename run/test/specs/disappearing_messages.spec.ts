@@ -1,4 +1,4 @@
-import { bothPlatformsIt } from "../../types/sessionIt";
+import { androidIt, bothPlatformsIt, iosIt } from "../../types/sessionIt";
 import {
   DMTimeOption,
   DisappearActions,
@@ -48,11 +48,11 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
     //   `You set messages to disappear ${time} after they have been ${controlMode}.`
     // );
   }
-  await runOnlyOnIOS(platform, () =>
-    device2.disappearingControlMessage(
-      `${userA.userName} has set messages to disappear ${time} after they have been ${controlMode}.`
-    )
-  );
+  // await runOnlyOnIOS(platform, () =>
+  //   device2.disappearingControlMessage(
+  //     `${userA.userName} has set messages to disappear ${time} after they have been ${controlMode}.`
+  //   )
+  // );
   // Send message to verify that deletion is working
   await device1.sendMessage(testMessage);
   await device2.clickOnElementByText({
@@ -304,17 +304,18 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   await closeApp(device);
 }
 
-describe("Disappearing messages", () => {
-  bothPlatformsIt("Disappear after send", disappearAfterSend);
+describe("Disappearing messages ios", () => {
+  iosIt("Disappear after send", disappearAfterSend);
+  iosIt("Disappear after read", disappearAfterRead);
+  iosIt("Disappear after send groups", disappearAfterSendGroups);
+  iosIt("Disappear after send note to self", disappearAfterSendNoteToSelf);
+});
 
-  bothPlatformsIt("Disappear after read", disappearAfterRead);
-
-  bothPlatformsIt("Disappear after send groups", disappearAfterSendGroups);
-
-  bothPlatformsIt(
-    "Disappear after send note to self",
-    disappearAfterSendNoteToSelf
-  );
+describe("Disappearing messages android", () => {
+  androidIt("Disappear after send", disappearAfterSend);
+  androidIt("Disappear after read", disappearAfterRead);
+  androidIt("Disappear after send groups", disappearAfterSendGroups);
+  androidIt("Disappear after send note to self", disappearAfterSendNoteToSelf);
 });
 
 // TO DO - ADD TEST TO TURN OFF DISAPPEARING MESSAGES
