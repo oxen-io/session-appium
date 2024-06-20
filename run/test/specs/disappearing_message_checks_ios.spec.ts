@@ -1,11 +1,16 @@
-import { XPATHS } from "../../constants";
+import { DISAPPEARING_TIMES, XPATHS } from "../../constants";
 import { iosIt } from "../../types/sessionIt";
-import { GroupName, InteractionPoints } from "../../types/testing";
+import {
+  DMTimeOption,
+  GroupName,
+  InteractionPoints,
+} from "../../types/testing";
 import { clickOnCoordinates, sleepFor } from "./utils";
 
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { createGroup } from "./utils/create_group";
+import { joinCommunity } from "./utils/join_community";
 import {
   closeApp,
   openAppThreeDevices,
@@ -19,6 +24,7 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const testMessage = "Testing disappearing messages for images";
   const ronSwansonBirthday = "196705060700.00";
+  const time = DISAPPEARING_TIMES.ONE_MINUTE;
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -28,7 +34,7 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType) {
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after send option", "10 seconds"],
+    ["1:1", "Disappear after read option", time],
     device2
   );
   // await device1.navigateBack(platform);
@@ -86,7 +92,7 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID("Untrusted attachment message");
   // User B - Click on 'download'
   await device2.clickOnByAccessibilityID("Download media", 5000);
-  await sleepFor(10000);
+  await sleepFor(60000);
   await Promise.all([
     device1.hasElementBeenDeleted({
       strategy: "accessibility id",
@@ -113,11 +119,12 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
   ]);
   const testMessage = "Testing disappearing messages for videos";
   const bestDayOfYear = `198809090700.00`;
+  const time: DMTimeOption = DISAPPEARING_TIMES.ONE_MINUTE;
   await newContact(platform, device1, userA, device2, userB);
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after send option", "10 seconds"],
+    ["1:1", "Disappear after read option", time],
     device2
   );
   // await device1.navigateBack(platform);
@@ -182,7 +189,7 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID("Text input box");
   await device1.inputText("accessibility id", "Text input box", testMessage);
   await device1.clickOnByAccessibilityID("Send button");
-  await sleepFor(10000);
+  await sleepFor(60000);
   await Promise.all([
     device1.hasElementBeenDeleted({
       strategy: "accessibility id",
@@ -202,6 +209,7 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
 
 async function disappearingVoiceMessage1o1(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
+  const time: DMTimeOption = DISAPPEARING_TIMES.ONE_MINUTE;
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -211,14 +219,21 @@ async function disappearingVoiceMessage1o1(platform: SupportedPlatformsType) {
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after send option", "10 seconds"],
+    ["1:1", "Disappear after read option", time],
     device2
   );
   // await device1.navigateBack(platform);
   await device1.longPress("New voice message");
-  await device1.clickOnByAccessibilityID("Allow");
-  await sleepFor(500);
-  await device1.pressAndHold("New voice message");
+  const permissions = await device1.doesElementExist({
+    strategy: "accessibility id",
+    selector: "Allow",
+    maxWait: 500,
+  });
+  if (permissions) {
+    await device1.clickOnByAccessibilityID("Allow");
+    await sleepFor(500);
+    await device1.pressAndHold("New voice message");
+  }
   // await device1.clickOnByAccessibilityID("OK");
   // await device1.pressAndHold("New voice message");
   await device1.waitForTextElementToBePresent({
@@ -226,23 +241,26 @@ async function disappearingVoiceMessage1o1(platform: SupportedPlatformsType) {
     selector: "Voice message",
   });
   await device2.clickOnByAccessibilityID("Untrusted attachment message", 5000);
-  await device2.clickOnByAccessibilityID("Download", 5000);
-  await sleepFor(10000);
-  await device1.hasElementBeenDeleted({
-    strategy: "accessibility id",
-    selector: "Voice message",
-    maxWait: 1000,
-  });
-  await device2.hasElementBeenDeleted({
-    strategy: "accessibility id",
-    selector: "Voice message",
-    maxWait: 1000,
-  });
+  await device2.clickOnByAccessibilityID("Download");
+  await sleepFor(60000);
+  await Promise.all([
+    device1.hasElementBeenDeleted({
+      strategy: "accessibility id",
+      selector: "Voice message",
+      maxWait: 1000,
+    }),
+    device2.hasElementBeenDeleted({
+      strategy: "accessibility id",
+      selector: "Voice message",
+      maxWait: 1000,
+    }),
+  ]);
   await closeApp(device1, device2);
 }
 
 async function disappearingGifMessage1o1(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
+  const time: DMTimeOption = DISAPPEARING_TIMES.ONE_MINUTE;
   const testMessage = "Testing disappearing messages for GIF's";
   // Create user A and user B
   const [userA, userB] = await Promise.all([
@@ -253,7 +271,7 @@ async function disappearingGifMessage1o1(platform: SupportedPlatformsType) {
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after send option", "10 seconds"],
+    ["1:1", "Disappear after read option", time],
     device2
   );
   // await device1.navigateBack(platform);
@@ -279,8 +297,8 @@ async function disappearingGifMessage1o1(platform: SupportedPlatformsType) {
   await sleepFor(100);
   // Click on 'download'
   await device2.clickOnByAccessibilityID("Download media");
-  // Wait for 10 seconds
-  await sleepFor(10000);
+  // Wait for 60 seconds
+  await sleepFor(60000);
   // Check if GIF has been deleted on both devices
   await device1.hasElementBeenDeleted({
     strategy: "accessibility id",
@@ -299,6 +317,7 @@ async function disappearingGifMessage1o1(platform: SupportedPlatformsType) {
 
 async function disappearingLinkMessage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
+  const time: DMTimeOption = DISAPPEARING_TIMES.ONE_MINUTE;
   const testLink = `https://type-level-typescript.com/objects-and-records`;
   // Create user A and user B
   const [userA, userB] = await Promise.all([
@@ -309,7 +328,7 @@ async function disappearingLinkMessage(platform: SupportedPlatformsType) {
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after send option", "10 seconds"],
+    ["1:1", "Disappear after read option", time],
     device2
   );
   // await device1.navigateBack(platform);
@@ -327,7 +346,7 @@ async function disappearingLinkMessage(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID("Send message button");
   // Send again for image
   await device1.inputText("accessibility id", "Message input box", testLink);
-  await sleepFor(100);
+  await sleepFor(500);
   await device1.clickOnByAccessibilityID("Send message button");
   // Make sure image preview is available in device 2
   await device2.waitForTextElementToBePresent({
@@ -335,20 +354,22 @@ async function disappearingLinkMessage(platform: SupportedPlatformsType) {
     selector: "Message body",
     text: testLink,
   });
-  // Wait for 10 seconds to disappear
-  await sleepFor(10000);
-  await device1.hasElementBeenDeleted({
-    strategy: "accessibility id",
-    selector: "Message body",
-    maxWait: 1000,
-    text: testLink,
-  });
-  await device2.hasElementBeenDeleted({
-    strategy: "accessibility id",
-    selector: "Message body",
-    maxWait: 1000,
-    text: testLink,
-  });
+  // Wait for 60 seconds to disappear
+  await sleepFor(60000);
+  await Promise.all([
+    device1.hasElementBeenDeleted({
+      strategy: "accessibility id",
+      selector: "Message body",
+      maxWait: 1000,
+      text: testLink,
+    }),
+    device2.hasElementBeenDeleted({
+      strategy: "accessibility id",
+      selector: "Message body",
+      maxWait: 1000,
+      text: testLink,
+    }),
+  ]);
   await closeApp(device1, device2);
 }
 
@@ -356,6 +377,7 @@ async function disappearingCommunityInviteMessage1o1(
   platform: SupportedPlatformsType
 ) {
   const { device1, device2 } = await openAppTwoDevices(platform);
+  const time: DMTimeOption = DISAPPEARING_TIMES.ONE_MINUTE;
   const communityLink = `https://chat.lokinet.dev/testing-all-the-things?public_key=1d7e7f92b1ed3643855c98ecac02fc7274033a3467653f047d6e433540c03f17`;
   const communityName = "Testing All The Things!";
   // Create user A and user B
@@ -367,20 +389,14 @@ async function disappearingCommunityInviteMessage1o1(
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after send option", "10 seconds"],
+    ["1:1", "Disappear after read option", time],
     device2
   );
   // await device1.navigateBack(platform);
-  // await device1.navigateBack(platform);
-  await device1.clickOnByAccessibilityID("New conversation button");
-  await device1.clickOnByAccessibilityID("Join community option");
-  await device1.inputText(
-    "accessibility id",
-    "Enter Community URL",
-    communityLink
-  );
-  await device1.clickOnByAccessibilityID("Join");
-  await device1.clickOnByAccessibilityID("More options", 10000);
+  await device1.navigateBack(platform);
+  await joinCommunity(platform, device1, communityLink, communityName);
+  await device1.clickOnByAccessibilityID("More options");
+  await sleepFor(1000);
   await device1.clickOnByAccessibilityID("Add Members");
   await device1.clickOnElementAll({
     strategy: "accessibility id",
@@ -395,24 +411,27 @@ async function disappearingCommunityInviteMessage1o1(
     text: communityName,
   });
   // Wait for 10 seconds for message to disappear
-  await sleepFor(10000);
-  await device2.hasElementBeenDeleted({
-    strategy: "accessibility id",
-    selector: "Message body",
-    maxWait: 1000,
-    text: communityName,
-  });
-  await device1.hasElementBeenDeleted({
-    strategy: "accessibility id",
-    selector: "Message body",
-    maxWait: 1000,
-    text: communityName,
-  });
+  await sleepFor(60000);
+  await Promise.all([
+    device2.hasElementBeenDeleted({
+      strategy: "accessibility id",
+      selector: "Message body",
+      maxWait: 1000,
+      text: communityName,
+    }),
+    device1.hasElementBeenDeleted({
+      strategy: "accessibility id",
+      selector: "Message body",
+      maxWait: 1000,
+      text: communityName,
+    }),
+  ]);
   await closeApp(device1, device2);
 }
 
 async function disappearingCallMessage1o1(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
+  const time: DMTimeOption = DISAPPEARING_TIMES.ONE_MINUTE;
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -422,7 +441,7 @@ async function disappearingCallMessage1o1(platform: SupportedPlatformsType) {
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after send option", "10 seconds"],
+    ["1:1", "Disappear after read option", time],
     device2
   );
   // await device1.navigateBack(platform);
@@ -484,6 +503,7 @@ async function disappearingCallMessage1o1(platform: SupportedPlatformsType) {
 
 async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
+  const time: DMTimeOption = DISAPPEARING_TIMES.TEN_SECONDS;
   const testMessage = "Testing disappearing messages for images";
   const testGroupName = "Test group";
   const ronSwansonBirthday = "196705060700.00";
@@ -507,7 +527,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   await setDisappearingMessage(platform, device1, [
     "Group",
     "Disappear after send option",
-    "10 seconds",
+    time,
   ]);
   // await device1.navigateBack(platform);
   // await device1.sendImage(platform, testMessage);
@@ -588,6 +608,7 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
   const testMessage = "Testing disappearing messages for videos";
   const bestDayOfYear = `198809090700.00`;
   const testGroupName = "Test group";
+  const time: DMTimeOption = DISAPPEARING_TIMES.TEN_SECONDS;
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create user A and user B
   const [userA, userB, userC] = await Promise.all([
@@ -608,7 +629,7 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
   await setDisappearingMessage(platform, device1, [
     "Group",
     "Disappear after send option",
-    "10 seconds",
+    time,
   ]);
   // await device1.navigateBack(platform);
   await device1.clickOnByAccessibilityID("Attachments button");
@@ -693,6 +714,7 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
 
 async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
+  const time: DMTimeOption = DISAPPEARING_TIMES.TEN_SECONDS;
   const testGroupName: GroupName =
     "Testing voice messages in groups for disappearing messages";
   // Create user A and user B
@@ -714,7 +736,7 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
   await setDisappearingMessage(platform, device1, [
     "Group",
     "Disappear after send option",
-    "10 seconds",
+    time,
   ]);
   // await device1.navigateBack(platform);
   await device1.longPress("New voice message");
@@ -748,6 +770,7 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
 async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
   const testGroupName = "Disappear after sent test";
   const testMessage = "Testing disappearing messages for GIF's";
+  const time: DMTimeOption = DISAPPEARING_TIMES.TEN_SECONDS;
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create user A and user B
   const [userA, userB, userC] = await Promise.all([
@@ -768,7 +791,7 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
   await setDisappearingMessage(platform, device1, [
     "Group",
     "Disappear after send option",
-    "10 seconds",
+    time,
   ]);
   // await device1.navigateBack(platform);
   // Click on attachments button
@@ -814,6 +837,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   const testGroupName = "Test group";
   const testLink = `https://type-level-typescript.com/objects-and-records`;
+  const time: DMTimeOption = DISAPPEARING_TIMES.TEN_SECONDS;
   // Create user A and user B
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -833,7 +857,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   await setDisappearingMessage(platform, device1, [
     "Group",
     "Disappear after send option",
-    "10 seconds",
+    time,
   ]);
   // await device1.navigateBack(platform);
   // Send a link

@@ -12,6 +12,7 @@ export const setDisappearingMessage = async (
 ) => {
   const enforcedType: ConversationType = conversationType;
   await device.clickOnByAccessibilityID("More options");
+  // Wait for UI to load conversation options menu
   await sleepFor(500);
   await runOnlyOnIOS(platform, () =>
     device.clickOnByAccessibilityID("Disappearing Messages")
