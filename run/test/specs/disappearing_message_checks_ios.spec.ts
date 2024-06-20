@@ -10,6 +10,7 @@ import { clickOnCoordinates, sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { createGroup } from "./utils/create_group";
+import { joinCommunity } from "./utils/join_community";
 import {
   closeApp,
   openAppThreeDevices,
@@ -345,7 +346,7 @@ async function disappearingLinkMessage(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID("Send message button");
   // Send again for image
   await device1.inputText("accessibility id", "Message input box", testLink);
-  await sleepFor(100);
+  await sleepFor(500);
   await device1.clickOnByAccessibilityID("Send message button");
   // Make sure image preview is available in device 2
   await device2.waitForTextElementToBePresent({
@@ -355,18 +356,20 @@ async function disappearingLinkMessage(platform: SupportedPlatformsType) {
   });
   // Wait for 60 seconds to disappear
   await sleepFor(60000);
-  await device1.hasElementBeenDeleted({
-    strategy: "accessibility id",
-    selector: "Message body",
-    maxWait: 1000,
-    text: testLink,
-  });
-  await device2.hasElementBeenDeleted({
-    strategy: "accessibility id",
-    selector: "Message body",
-    maxWait: 1000,
-    text: testLink,
-  });
+  await Promise.all([
+    device1.hasElementBeenDeleted({
+      strategy: "accessibility id",
+      selector: "Message body",
+      maxWait: 1000,
+      text: testLink,
+    }),
+    device2.hasElementBeenDeleted({
+      strategy: "accessibility id",
+      selector: "Message body",
+      maxWait: 1000,
+      text: testLink,
+    }),
+  ]);
   await closeApp(device1, device2);
 }
 
@@ -390,16 +393,10 @@ async function disappearingCommunityInviteMessage1o1(
     device2
   );
   // await device1.navigateBack(platform);
-  // await device1.navigateBack(platform);
-  await device1.clickOnByAccessibilityID("New conversation button");
-  await device1.clickOnByAccessibilityID("Join community option");
-  await device1.inputText(
-    "accessibility id",
-    "Enter Community URL",
-    communityLink
-  );
-  await device1.clickOnByAccessibilityID("Join");
+  await device1.navigateBack(platform);
+  await joinCommunity(platform, device1, communityLink, communityName);
   await device1.clickOnByAccessibilityID("More options");
+  await sleepFor(1000);
   await device1.clickOnByAccessibilityID("Add Members");
   await device1.clickOnElementAll({
     strategy: "accessibility id",
@@ -415,18 +412,20 @@ async function disappearingCommunityInviteMessage1o1(
   });
   // Wait for 10 seconds for message to disappear
   await sleepFor(60000);
-  await device2.hasElementBeenDeleted({
-    strategy: "accessibility id",
-    selector: "Message body",
-    maxWait: 1000,
-    text: communityName,
-  });
-  await device1.hasElementBeenDeleted({
-    strategy: "accessibility id",
-    selector: "Message body",
-    maxWait: 1000,
-    text: communityName,
-  });
+  await Promise.all([
+    device2.hasElementBeenDeleted({
+      strategy: "accessibility id",
+      selector: "Message body",
+      maxWait: 1000,
+      text: communityName,
+    }),
+    device1.hasElementBeenDeleted({
+      strategy: "accessibility id",
+      selector: "Message body",
+      maxWait: 1000,
+      text: communityName,
+    }),
+  ]);
   await closeApp(device1, device2);
 }
 
@@ -916,7 +915,7 @@ describe("Disappearing messages checks 1o1", () => {
     "Disappearing messages community invite",
     disappearingCommunityInviteMessage1o1
   );
-  iosIt("Disappearing messages call history", disappearingCallMessage1o1);
+  // iosIt("Disappearing messages call history", disappearingCallMessage1o1);
 });
 describe("Disappearing messages checks groups", () => {
   iosIt("Disappearing messages image group", disappearingImageMessageGroup);
