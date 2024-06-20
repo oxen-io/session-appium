@@ -28,7 +28,7 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType) {
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after send option", "10 seconds"],
+    ["1:1", "Disappear after read option", "1 minute"],
     device2
   );
   // await device1.navigateBack(platform);
@@ -117,7 +117,7 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after send option", "10 seconds"],
+    ["1:1", "Disappear after read option", "1 minute"],
     device2
   );
   // await device1.navigateBack(platform);
@@ -211,14 +211,21 @@ async function disappearingVoiceMessage1o1(platform: SupportedPlatformsType) {
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after send option", "10 seconds"],
+    ["1:1", "Disappear after read option", "1 minute"],
     device2
   );
   // await device1.navigateBack(platform);
   await device1.longPress("New voice message");
-  await device1.clickOnByAccessibilityID("Allow");
-  await sleepFor(500);
-  await device1.pressAndHold("New voice message");
+  const permissions = await device1.doesElementExist({
+    strategy: "accessibility id",
+    selector: "Allow",
+    maxWait: 500,
+  });
+  if (permissions) {
+    await device1.clickOnByAccessibilityID("Allow");
+    await sleepFor(500);
+    await device1.pressAndHold("New voice message");
+  }
   // await device1.clickOnByAccessibilityID("OK");
   // await device1.pressAndHold("New voice message");
   await device1.waitForTextElementToBePresent({
@@ -226,18 +233,20 @@ async function disappearingVoiceMessage1o1(platform: SupportedPlatformsType) {
     selector: "Voice message",
   });
   await device2.clickOnByAccessibilityID("Untrusted attachment message", 5000);
-  await device2.clickOnByAccessibilityID("Download", 5000);
-  await sleepFor(10000);
-  await device1.hasElementBeenDeleted({
-    strategy: "accessibility id",
-    selector: "Voice message",
-    maxWait: 1000,
-  });
-  await device2.hasElementBeenDeleted({
-    strategy: "accessibility id",
-    selector: "Voice message",
-    maxWait: 1000,
-  });
+  await device2.clickOnByAccessibilityID("Download");
+  await sleepFor(60000);
+  await Promise.all([
+    device1.hasElementBeenDeleted({
+      strategy: "accessibility id",
+      selector: "Voice message",
+      maxWait: 1000,
+    }),
+    device2.hasElementBeenDeleted({
+      strategy: "accessibility id",
+      selector: "Voice message",
+      maxWait: 1000,
+    }),
+  ]);
   await closeApp(device1, device2);
 }
 
@@ -253,7 +262,7 @@ async function disappearingGifMessage1o1(platform: SupportedPlatformsType) {
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after send option", "10 seconds"],
+    ["1:1", "Disappear after read option", "1 minute"],
     device2
   );
   // await device1.navigateBack(platform);
@@ -279,8 +288,8 @@ async function disappearingGifMessage1o1(platform: SupportedPlatformsType) {
   await sleepFor(100);
   // Click on 'download'
   await device2.clickOnByAccessibilityID("Download media");
-  // Wait for 10 seconds
-  await sleepFor(10000);
+  // Wait for 60 seconds
+  await sleepFor(60000);
   // Check if GIF has been deleted on both devices
   await device1.hasElementBeenDeleted({
     strategy: "accessibility id",
@@ -309,7 +318,7 @@ async function disappearingLinkMessage(platform: SupportedPlatformsType) {
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after send option", "10 seconds"],
+    ["1:1", "Disappear after read option", "1 minute"],
     device2
   );
   // await device1.navigateBack(platform);
@@ -336,7 +345,7 @@ async function disappearingLinkMessage(platform: SupportedPlatformsType) {
     text: testLink,
   });
   // Wait for 10 seconds to disappear
-  await sleepFor(10000);
+  await sleepFor(60000);
   await device1.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Message body",
@@ -367,7 +376,7 @@ async function disappearingCommunityInviteMessage1o1(
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after send option", "10 seconds"],
+    ["1:1", "Disappear after read option", "1 minute"],
     device2
   );
   // await device1.navigateBack(platform);
@@ -395,7 +404,7 @@ async function disappearingCommunityInviteMessage1o1(
     text: communityName,
   });
   // Wait for 10 seconds for message to disappear
-  await sleepFor(10000);
+  await sleepFor(60000);
   await device2.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Message body",
