@@ -40,6 +40,7 @@ export const InteractionPoints: Record<string, Coordinates> = {
 };
 
 export type Strategy = "accessibility id" | "xpath" | "id" | "class name";
+
 export type ConversationType = "1:1" | "Group" | "Community" | "Note to Self";
 
 export type DisappearModes = "read" | "send";
