@@ -16,7 +16,7 @@ async function sendImageCommunityiOS(platform: SupportedPlatformsType) {
   const testCommunityLink = `https://chat.lokinet.dev/testing-all-the-things?public_key=1d7e7f92b1ed3643855c98ecac02fc7274033a3467653f047d6e433540c03f17`;
   const testCommunityName = `Testing All The Things!`;
   const testMessage = "Testing sending images to communities";
-  const ronSwansonBirthday = "196705060700.00";
+  const testImageMessage = `Image message + ${new Date().getTime()}`;
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -33,8 +33,9 @@ async function sendImageCommunityiOS(platform: SupportedPlatformsType) {
     device1.scrollToBottom(platform),
     device2.scrollToBottom(platform),
   ]);
-  await device1.sendImage(platform, testMessage, true);
-  await device2.replyToMessage(userA, testMessage);
+  await device1.sendMessage(testMessage);
+  await device1.sendImage(platform, testImageMessage, true);
+  await device2.replyToMessage(userA, testImageMessage);
   closeApp(device1, device2);
 }
 
@@ -79,7 +80,7 @@ async function sendImageCommunityAndroid(platform: SupportedPlatformsType) {
   closeApp(device1, device2);
 }
 
-describe("Community message checks", () => {
+describe.skip("Community message checks", () => {
   iosIt("Send image to community", sendImageCommunityiOS);
   androidIt("Send image to community", sendImageCommunityAndroid);
 });

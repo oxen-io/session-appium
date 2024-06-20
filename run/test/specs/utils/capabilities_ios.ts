@@ -1,6 +1,6 @@
 import { AppiumXCUITestCapabilities } from "@wdio/types/build/Capabilities";
 import { W3CCapabilities } from "@wdio/types/build/Capabilities";
-const iosAppFullPath = `/Users/emilyburton/Desktop/Session.app`;
+const iosAppFullPath = `/Users/emilyburton/Downloads/session-ios-20240618T020520Z-a49a27207-sim/Session.app`;
 // const iosAppFullPath = `/Users/emilyburton/Downloads/session-ios-fixed-regression/Session.app`;
 
 const sharediOSCapabilities: AppiumXCUITestCapabilities = {
@@ -17,7 +17,7 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   "appium:reduceMotion": true,
   // "appium:isHeadless": true,
 } as AppiumXCUITestCapabilities;
-export type CapabilitiesIndexType = 0 | 1 | 2 | 3 | 4 | 5;
+export type CapabilitiesIndexType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 function getIOSSimulatorUUIDFromEnv(index: CapabilitiesIndexType): string {
   switch (index) {
@@ -47,7 +47,35 @@ function getIOSSimulatorUUIDFromEnv(index: CapabilitiesIndexType): string {
         return process.env.IOS_FOURTH_SIMULATOR;
       }
       throw new Error(
-        `getSimulatorUUIDFromEnv process.env.IOS_THIRD_SIMULATOR is not set`
+        `getSimulatorUUIDFromEnv process.env.IOS_FOURTH_SIMULATOR is not set`
+      );
+    case 4:
+      if (process.env.IOS_FIFTH_SIMULATOR) {
+        return process.env.IOS_FIFTH_SIMULATOR;
+      }
+      throw new Error(
+        `getSimulatorUUIDFromEnv process.env.IOS_FIFTH_SIMULATOR is not set`
+      );
+    case 5:
+      if (process.env.IOS_SIXTH_SIMULATOR) {
+        return process.env.IOS_SIXTH_SIMULATOR;
+      }
+      throw new Error(
+        `getSimulatorUUIDFromEnv process.env.IOS_SIXTH_SIMULATOR is not set`
+      );
+    case 6:
+      if (process.env.IOS_SEVENTH_SIMULATOR) {
+        return process.env.IOS_SEVENTH_SIMULATOR;
+      }
+      throw new Error(
+        `getSimulatorUUIDFromEnv process.env.IOS_SEVENTH_SIMULATOR is not set`
+      );
+    case 7:
+      if (process.env.IOS_EIGHTH_SIMULATOR) {
+        return process.env.IOS_EIGHTH_SIMULATOR;
+      }
+      throw new Error(
+        `getSimulatorUUIDFromEnv process.env.IOS_EIGHTH_SIMULATOR is not set`
       );
     default:
       throw new Error(
@@ -60,6 +88,10 @@ const emulator1Udid = getIOSSimulatorUUIDFromEnv(0);
 const emulator2Udid = getIOSSimulatorUUIDFromEnv(1);
 const emulator3Udid = getIOSSimulatorUUIDFromEnv(2);
 const emulator4Udid = getIOSSimulatorUUIDFromEnv(3);
+const emulator5Udid = getIOSSimulatorUUIDFromEnv(4);
+const emulator6Udid = getIOSSimulatorUUIDFromEnv(5);
+const emulator7Udid = getIOSSimulatorUUIDFromEnv(6);
+const emulator8Udid = getIOSSimulatorUUIDFromEnv(7);
 
 const capabilities1: AppiumXCUITestCapabilities = {
   ...sharediOSCapabilities,
@@ -84,7 +116,31 @@ const capabilities4: AppiumXCUITestCapabilities = {
   "appium:wdaLocalPort": 1256,
 };
 
-const countOfIosCapabilities = 4;
+const capabilities5: AppiumXCUITestCapabilities = {
+  ...sharediOSCapabilities,
+  "appium:udid": emulator5Udid,
+  "appium:wdaLocalPort": 1257,
+};
+
+const capabilities6: AppiumXCUITestCapabilities = {
+  ...sharediOSCapabilities,
+  "appium:udid": emulator6Udid,
+  "appium:wdaLocalPort": 1258,
+};
+
+const capabilities7: AppiumXCUITestCapabilities = {
+  ...sharediOSCapabilities,
+  "appium:udid": emulator7Udid,
+  "appium:wdaLocalPort": 1259,
+};
+
+const capabilities8: AppiumXCUITestCapabilities = {
+  ...sharediOSCapabilities,
+  "appium:udid": emulator8Udid,
+  "appium:wdaLocalPort": 1260,
+};
+
+const countOfIosCapabilities = 8;
 
 export function getIosCapabilities(
   capabilitiesIndex: CapabilitiesIndexType
@@ -99,7 +155,15 @@ export function getIosCapabilities(
       ? capabilities2
       : capabilitiesIndex === 2
       ? capabilities3
-      : capabilities4;
+      : capabilitiesIndex === 3
+      ? capabilities4
+      : capabilitiesIndex === 4
+      ? capabilities5
+      : capabilitiesIndex === 5
+      ? capabilities6
+      : capabilitiesIndex === 6
+      ? capabilities7
+      : capabilities8;
 
   return {
     firstMatch: [{}, {}],
