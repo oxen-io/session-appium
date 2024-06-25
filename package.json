@@ -1,39 +1,32 @@
 {
+  "name": "session-appium",
+  "version": "1.0.0",
   "scripts": {
     "tsc": "yarn clean-tsc && tsc",
     "clean-tsc": "find run/test/specs -type f -name '*.js' -delete",
     "tsc-watch": "yarn clean-tsc && tsc -w",
-    "test": "mocha --timeout 300000 --retries 2 --jobs 1 ./run/test/specs/*.spec.js -- --grep ",
-    "test-parallel-ios": "_TESTING=1 mocha-parallel-tests --timeout 300000 --retries 2 --parallel --jobs 8 ./run/test/specs/*.spec.js -- --grep ios",
-    "test-parallel-android": "_TESTING=1 mocha-parallel-tests --timeout 300000 --retries 2 --parallel --jobs 8 ./run/test/specs/*.spec.js -- --grep android",
+    "test": "mocha --timeout 300000 --parallel --retries 2 --jobs 1 ./run/test/specs/*.spec.js -- --grep ",
     "test-no-retry": "_TESTING=1 mocha --timeout 300000 --retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep ",
-    "test-one": "_TESTING=1 mocha --timeout 300000 --retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep",
-    "test-ios": "_TESTING=1 mocha --timeout 300000 -retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep ios",
+    "test-one": "_TESTING=1 mocha --parallel --timeout 300000 --retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep",
+    "test-ios": "_TESTING=1 mocha --parallel --timeout 300000 -retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep ios",
     "test-android": "_TESTING=1 mocha --timeout 300000 -retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep android",
     "build-and-test": "yarn tsc && yarn test",
-    "test-describe-ios": "_TESTING=1 mocha --timeout 300000 --retries 0 --jobs 1 ./run/test/specs/*.spec.js --grep ios",
-    "test-describe-android": "_TESTING=1 mocha --timeout 300000 --retries 0 --jobs 1 ./run/test/specs/*.spec.js --grep android",
     "test-one-logs": "_TESTING=1  _FORCELOGS=1 mocha --timeout 300000 --retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep",
-    "test-group-1-and-2": "_TESTING=1 mocha --timeout 300000 --retries 0 --jobs 1 ./run/test/specs/user_actions.spec.js ./run/test/specs/linked_device_user.spec.js ",
-    "test-group-3-and-4": "_TESTING=1 mocha --timeout 300000 --retries 0 --jobs 1 ./run/test/specs/linked_device_requests.spec.js ./run/test/specs/message_checks_ios.spec.js",
-    "test-group-5-and-6": "_TESTING=1 mocha --timeout 300000 --retries 0 --jobs 1 ./run/test/specs/message_checks_groups_ios.spec.js ./run/test/specs/group_tests.spec.js",
-    "test-group-7-and-8": "_TESTING=1 mocha --timeout 300000 --retries 0 --jobs 1 ./run/test/specs/message_requests.spec.js ./run/test/specs/disappearing_message_checks_ios.spec.js",
-    "test-group-9-and-10": "_TESTING=1 mocha --timeout 300000 --retries 0 --jobs 1 ./run/test/specs/disappearing_message_checks_groups_ios.spec.js ./run/test/specs/disappearing_messages.spec.js",
-    "test-parallel-pairs": "concurrently --kill-others-on-fail 'yarn test-group-1-and-2' 'yarn test-group-3-and-4' 'yarn test-group-5-and-6' 'yarn test-group-7-and-8' 'yarn test-group-9-and-10'"
+    "test-parallel-ios": "_TESTING=1 mocha --parallel --jobs 2 --timeout 300000 --retries 2 './run/test/specs/*.spec.js' --grep ios",
+    "test-parallel-android": "_TESTING=1 mocha --parallel --jobs 2 --timeout 300000 --retries 2  ./run/test/specs/*.spec.js -- --grep android"
   },
   "devDependencies": {
     "@appium/execute-driver-plugin": "^3.0.1",
     "@appium/images-plugin": "^2.0.1",
     "@types/jest": "^29.5.12",
     "@types/lodash": "^4.14.191",
+    "@types/mocha": "^7",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.59.5",
     "@wdio/types": "^8.1.2",
-    "concurrently": "^8.2.2",
     "eslint": "^8.33.0",
     "lodash": "^4.17.21",
     "mocha": "^10.4.0",
-    "mocha-parallel-tests": "2.0.0",
     "png-js": "^1.0.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.3.3",
@@ -48,9 +41,15 @@
     "@appium/support@npm:^4.0.0": "patch:@appium/support@npm%3A4.2.0#~/patches/@appium-support-npm-4.2.0-d9ae1632eb.patch"
   },
   "dependencies": {
-    "@types/mocha": "^10.0.6",
     "appium": "^2.4.1",
     "appium-uiautomator2-driver": "patch:appium-uiautomator2-driver@file%3A../.appium/node_modules/appium-uiautomator2-driver%23../.appium/node_modules/appium-uiautomator2-driver%3A%3Ahash=ed7690&locator=root-workspace-0b6124%2540workspace%253A.#./patches/appium-uiautomator2-driver-file-af32bb34eb.patch",
     "appium-xcuitest-driver": "file:../.appium/node_modules/appium-xcuitest-driver"
+  },
+  "mocha": {
+    "timeout": 300000,
+    "retries": 2,
+    "jobs": 2,
+    "require": "ts-node/register",
+    "recursive": true
   }
 }

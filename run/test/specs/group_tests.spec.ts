@@ -183,7 +183,11 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   // Exit to conversation list
   await device1.navigateBack(platform);
   // Select group conversation in list
-  await device1.selectByText("Conversation list item", group.userName);
+  await device1.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: "Conversation list item",
+    text: group.userName,
+  });
   // Click more options
   await device1.clickOnByAccessibilityID("More options");
   // Select edit group

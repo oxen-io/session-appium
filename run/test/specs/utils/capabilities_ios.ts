@@ -17,158 +17,70 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   "appium:reduceMotion": true,
   // "appium:isHeadless": true,
 } as AppiumXCUITestCapabilities;
-export type CapabilitiesIndexType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
-function getIOSSimulatorUUIDFromEnv(index: CapabilitiesIndexType): string {
-  switch (index) {
-    case 0:
-      if (process.env.IOS_FIRST_SIMULATOR) {
-        return process.env.IOS_FIRST_SIMULATOR;
-      }
-      throw new Error(
-        `getSimulatorUUIDFromEnv process.env.IOS_FIRST_SIMULATOR is not set`
-      );
-    case 1:
-      if (process.env.IOS_SECOND_SIMULATOR) {
-        return process.env.IOS_SECOND_SIMULATOR;
-      }
-      throw new Error(
-        `getSimulatorUUIDFromEnv process.env.IOS_SECOND_SIMULATOR is not set`
-      );
-    case 2:
-      if (process.env.IOS_THIRD_SIMULATOR) {
-        return process.env.IOS_THIRD_SIMULATOR;
-      }
-      throw new Error(
-        `getSimulatorUUIDFromEnv process.env.IOS_THIRD_SIMULATOR is not set`
-      );
-    case 3:
-      if (process.env.IOS_FOURTH_SIMULATOR) {
-        return process.env.IOS_FOURTH_SIMULATOR;
-      }
-      throw new Error(
-        `getSimulatorUUIDFromEnv process.env.IOS_FOURTH_SIMULATOR is not set`
-      );
-    case 4:
-      if (process.env.IOS_FIFTH_SIMULATOR) {
-        return process.env.IOS_FIFTH_SIMULATOR;
-      }
-      throw new Error(
-        `getSimulatorUUIDFromEnv process.env.IOS_FIFTH_SIMULATOR is not set`
-      );
-    case 5:
-      if (process.env.IOS_SIXTH_SIMULATOR) {
-        return process.env.IOS_SIXTH_SIMULATOR;
-      }
-      throw new Error(
-        `getSimulatorUUIDFromEnv process.env.IOS_SIXTH_SIMULATOR is not set`
-      );
-    case 6:
-      if (process.env.IOS_SEVENTH_SIMULATOR) {
-        return process.env.IOS_SEVENTH_SIMULATOR;
-      }
-      throw new Error(
-        `getSimulatorUUIDFromEnv process.env.IOS_SEVENTH_SIMULATOR is not set`
-      );
-    case 7:
-      if (process.env.IOS_EIGHTH_SIMULATOR) {
-        return process.env.IOS_EIGHTH_SIMULATOR;
-      }
-      throw new Error(
-        `getSimulatorUUIDFromEnv process.env.IOS_EIGHTH_SIMULATOR is not set`
-      );
-    default:
-      throw new Error(
-        `getSimulatorUUIDFromEnv unknown index: ${index as number}`
-      );
-  }
+export type CapabilitiesIndexType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+interface CustomW3CCapabilities extends W3CCapabilities {
+  "appium:wdaLocalPort": number;
+  "appium:udid": string;
 }
 
-const emulator1Udid = getIOSSimulatorUUIDFromEnv(0);
-const emulator2Udid = getIOSSimulatorUUIDFromEnv(1);
-const emulator3Udid = getIOSSimulatorUUIDFromEnv(2);
-const emulator4Udid = getIOSSimulatorUUIDFromEnv(3);
-const emulator5Udid = getIOSSimulatorUUIDFromEnv(4);
-const emulator6Udid = getIOSSimulatorUUIDFromEnv(5);
-const emulator7Udid = getIOSSimulatorUUIDFromEnv(6);
-const emulator8Udid = getIOSSimulatorUUIDFromEnv(7);
+function getIOSSimulatorUUIDFromEnv(index: CapabilitiesIndexType): string {
+  const envVars = [
+    "IOS_FIRST_SIMULATOR",
+    "IOS_SECOND_SIMULATOR",
+    "IOS_THIRD_SIMULATOR",
+    "IOS_FOURTH_SIMULATOR",
+    "IOS_FIFTH_SIMULATOR",
+    "IOS_SIXTH_SIMULATOR",
+    "IOS_SEVENTH_SIMULATOR",
+    "IOS_EIGHTH_SIMULATOR",
+  ];
 
-const capabilities1: AppiumXCUITestCapabilities = {
-  ...sharediOSCapabilities,
-  "appium:udid": emulator1Udid,
-  "appium:wdaLocalPort": 1253,
-};
-const capabilities2: AppiumXCUITestCapabilities = {
-  ...sharediOSCapabilities,
-  "appium:wdaLocalPort": 1254,
-  "appium:udid": emulator2Udid,
-};
+  const envVar = envVars[index];
+  const uuid = process.env[envVar];
 
-const capabilities3: AppiumXCUITestCapabilities = {
-  ...sharediOSCapabilities,
-  "appium:udid": emulator3Udid,
-  "appium:wdaLocalPort": 1255,
-};
+  if (!uuid) {
+    throw new Error(`Environment variable ${envVar} is not set`);
+  }
 
-const capabilities4: AppiumXCUITestCapabilities = {
-  ...sharediOSCapabilities,
-  "appium:udid": emulator4Udid,
-  "appium:wdaLocalPort": 1256,
-};
+  return uuid;
+}
 
-const capabilities5: AppiumXCUITestCapabilities = {
-  ...sharediOSCapabilities,
-  "appium:udid": emulator5Udid,
-  "appium:wdaLocalPort": 1257,
-};
+const emulatorUUIDs = Array.from({ length: 8 }, (_, index) =>
+  getIOSSimulatorUUIDFromEnv(index as CapabilitiesIndexType)
+);
 
-const capabilities6: AppiumXCUITestCapabilities = {
+const capabilities = emulatorUUIDs.map((udid, index) => ({
   ...sharediOSCapabilities,
-  "appium:udid": emulator6Udid,
-  "appium:wdaLocalPort": 1258,
-};
-
-const capabilities7: AppiumXCUITestCapabilities = {
-  ...sharediOSCapabilities,
-  "appium:udid": emulator7Udid,
-  "appium:wdaLocalPort": 1259,
-};
-
-const capabilities8: AppiumXCUITestCapabilities = {
-  ...sharediOSCapabilities,
-  "appium:udid": emulator8Udid,
-  "appium:wdaLocalPort": 1260,
-};
-
-const countOfIosCapabilities = 8;
+  "appium:udid": udid,
+  "appium:wdaLocalPort": 1253 + index,
+}));
 
 export function getIosCapabilities(
   capabilitiesIndex: CapabilitiesIndexType
 ): W3CCapabilities {
-  if (capabilitiesIndex >= countOfIosCapabilities) {
+  if (capabilitiesIndex >= capabilities.length) {
     throw new Error(`Asked invalid ios cap index: ${capabilitiesIndex}`);
   }
-  const caps =
-    capabilitiesIndex === 0
-      ? capabilities1
-      : capabilitiesIndex === 1
-      ? capabilities2
-      : capabilitiesIndex === 2
-      ? capabilities3
-      : capabilitiesIndex === 3
-      ? capabilities4
-      : capabilitiesIndex === 4
-      ? capabilities5
-      : capabilitiesIndex === 5
-      ? capabilities6
-      : capabilitiesIndex === 6
-      ? capabilities7
-      : capabilities8;
+
+  const caps = capabilities[capabilitiesIndex];
 
   return {
-    firstMatch: [{}, {}],
+    firstMatch: [{}],
+    alwaysMatch: { ...caps },
+  };
+}
+
+export function getCapabilitiesForWorker(
+  workerId: number
+): CustomW3CCapabilities {
+  const emulator = capabilities[workerId % capabilities.length];
+  return {
+    firstMatch: [{}],
     alwaysMatch: {
-      ...caps,
-    },
+      ...sharediOSCapabilities,
+      "appium:udid": emulator["appium:udid"],
+      "appium:wdaLocalPort": emulator["appium:wdaLocalPort"],
+    } as CustomW3CCapabilities,
   };
 }

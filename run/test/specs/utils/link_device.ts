@@ -52,9 +52,15 @@ export const linkedDevice = async (
   } else {
   }
   await sleepFor(1000);
-  await runOnlyOnIOS(platform, () =>
-    device2.clickOnByAccessibilityID("Don’t Allow")
-  );
+  const permissions = await device2.doesElementExist({
+    strategy: "accessibility id",
+    selector: "Don’t Allow",
+  });
+  if (permissions) {
+    await runOnlyOnIOS(platform, () =>
+      device2.clickOnByAccessibilityID("Don’t Allow")
+    );
+  }
   await device2.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Continue",

@@ -3,41 +3,41 @@ import { parseDataImage } from "./utils/check_colour";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils/index";
+import { linkedDevice } from "./utils/link_device";
 import {
   SupportedPlatformsType,
   closeApp,
   createBasicTestEnvironment,
+  openAppMultipleDevices,
   openAppOnPlatformSingleDevice,
+  openAppThreeDevices,
   openAppTwoDevices,
 } from "./utils/open_app";
 import { runScriptAndLog } from "./utils/utilities";
 
 async function createContact(platform: SupportedPlatformsType) {
   // first we want to install the app on each device with our custom call to run it
+  // const testEnv = await createBasicTestEnvironment(platform);
+  // const [device1, device3] = testEnv.devices;
+  // const userB = testEnv.Bob;
+  const [device1, device2, device3] = await openAppMultipleDevices(platform, 3);
+  const userA = await linkedDevice(device1, device3, "Alice", platform);
+  console.warn("process.env.MOCHA_WORKER_ID:", process.env.MOCHA_WORKER_ID);
+  const userB = await newUser(device2, "Bob", platform);
 
-  const testEnv = await createBasicTestEnvironment(platform);
-  const [device1, device3] = testEnv.devices;
-  const [Bob] = [testEnv.Bob];
-  // Audrics suggestion
-  // const {
-  //   devices: [device1, device2, device3],
-  //   Alice,
-  //   Bob,
-  //   closeApp,
-  // } = await createBasicTestEnvironment(platform);
-
+  await newContact(platform, device1, userA, device2, userB);
   await device1.navigateBack(platform);
   // Check username has changed from session id on both device 1 and 3
   await Promise.all([
     device1.waitForTextElementToBePresent({
       strategy: "accessibility id",
       selector: "Conversation list item",
-      text: `${Bob.userName}`,
+      text: userB.userName,
     }),
     device3.waitForTextElementToBePresent({
       strategy: "accessibility id",
       selector: "Conversation list item",
-      text: `${Bob.userName}`,
+      text: userB.userName,
     }),
   ]);
   // Check contact is added to contacts list on device 1 and 3 (linked device)
@@ -65,16 +65,19 @@ async function createContact(platform: SupportedPlatformsType) {
   // ]);
 
   // Wait for tick
-  await testEnv.closeApp();
+  await closeApp(device1, device2, device3);
 }
 async function blockUserInConversationOptions(
   platform: SupportedPlatformsType
 ) {
   //Open three devices and creates two contacts (Alice and Bob)
   // Alice has linked device (1 and 3)
-  const testEnv = await createBasicTestEnvironment(platform);
-  const [device1, device2, device3] = testEnv.devices;
-  const [Alice, Bob] = [testEnv.Alice, testEnv.Bob];
+  const { device1, device2, device3 } = await openAppThreeDevices(platform);
+  const userA = await linkedDevice(device1, device3, "Alice", platform);
+
+  const userB = await newUser(device2, "Bob", platform);
+
+  await newContact(platform, device1, userA, device2, userB);
   // Block contact
   // Click on three dots (settings)
   await device1.clickOnByAccessibilityID("More options");
@@ -102,22 +105,22 @@ async function blockUserInConversationOptions(
     await device3.clickOnElementAll({
       strategy: "accessibility id",
       selector: "Conversation list item",
-      text: `${Bob.userName}`,
+      text: `${userB.userName}`,
     });
     await device3.waitForTextElementToBePresent({
       strategy: "accessibility id",
       selector: "Blocked banner",
     });
-    console.warn(`${Bob.userName}` + " has been blocked");
+    console.warn(`${userB.userName}` + " has been blocked");
   } else console.warn("Blocked banner not found");
-  // Unblock Bob
+  // Unblock userB
   // Click on alert to unblock
   await device1.clickOnByAccessibilityID("Blocked banner");
   // on ios there is a confirm unblock alert, need to click 'unblock'
   await runOnlyOnIOS(platform, () =>
     device1.clickOnByAccessibilityID("Unblock")
   );
-  console.warn(`${Bob.userName}} has been unblocked`);
+  console.warn(`${userB.userName}} has been unblocked`);
   // Look for alert (shouldn't be there)
   await device1.hasElementBeenDeleted({
     strategy: "accessibility id",
@@ -142,7 +145,7 @@ async function blockUserInConversationOptions(
   ]);
 
   // Close app
-  await testEnv.closeApp();
+  await closeApp(device1, device2, device3);
 }
 
 async function blockUserInConversationList(platform: SupportedPlatformsType) {
@@ -202,13 +205,20 @@ async function changeUsername(platform: SupportedPlatformsType) {
     console.log("Username is not found`");
   }
   // select tick
-  if (platform === "android") {
-    device.clickOnByAccessibilityID("Apply");
-  } else {
-    device.clickOnByAccessibilityID("Done");
-  }
-  // verify new username
-
+  await runOnlyOnAndroid(platform, () =>
+    device.clickOnByAccessibilityID("Apply")
+  );
+  await runOnlyOnIOS(platform, () => device.clickOnByAccessibilityID("Done"));
+  await device.navigateBack(platform);
+  await device.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: "User settings",
+  });
+  await device.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Username",
+    text: newUsername,
+  });
   await closeApp(device);
 }
 // TO FIX (WRONG USER FLOW?)
@@ -546,7 +556,7 @@ async function readStatus(platform: SupportedPlatformsType) {
 }
 
 describe("User actions ios", () => {
-  // iosIt("Create contact", createContact);
+  iosIt("Create contact", createContact);
   iosIt("Block user in conversation options", blockUserInConversationOptions);
   iosIt("Change username", changeUsername);
   iosIt("Change profile picture", changeProfilePictureiOS);
