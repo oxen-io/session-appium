@@ -6,19 +6,29 @@ import {
 import { isNil, isString } from "lodash";
 import { CapabilitiesIndexType } from "./capabilities_ios";
 
-const androidAppFullPath = `/Users/emilyburton/Documents/session-android/app/build/outputs/apk/play/debug/session-1.18.2-universal.apk`;
+const androidAppFullPath = `/Users/emilyburton/Documents/session-android/app/build/outputs/apk/play/debug/session-1.18.3-universal.apk`;
 
 const sharedCapabilities: AppiumCapabilities = {
   "appium:app": androidAppFullPath,
   "appium:platformName": "Android",
   "appium:platformVersion": "14",
   "appium:appPackage": "network.loki.messenger",
-  "appium:appWaitActivity":
-    "org.thoughtcrime.securesms.onboarding.LandingActivity",
+  "appium:appActivity": "network.loki.messenger.RoutingActivity",
   "appium:automationName": "UiAutomator2",
   "appium:newCommandTimeout": 300000,
   "appium:eventTimings": false,
 };
+// const sharedCapabilities: AppiumCapabilities = {
+//   "appium:app": androidAppFullPath,
+//   "appium:platformName": "Android",
+//   "appium:platformVersion": "14",
+//   "appium:appPackage": "network.loki.messenger",
+//   "appium:appWaitActivity":
+//     "org.thoughtcrime.securesms.onboarding.LandingActivity",
+//   "appium:automationName": "UiAutomator2",
+//   "appium:newCommandTimeout": 300000,
+//   "appium:eventTimings": false,
+// };
 
 const emulator1Udid = "emulator-5554";
 const emulator2Udid = "emulator-5556";

@@ -10,7 +10,7 @@ export const newUser = async (
 ): Promise<User> => {
   // Click create session ID
 
-  await device.waitForTextElementToBePresent({
+  await device.clickOnElementAll({
     strategy: "accessibility id",
     selector: "Create account button",
   });
