@@ -1,19 +1,20 @@
+import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from ".";
 import { newUser } from "./create_account";
 import { SupportedPlatformsType } from "./open_app";
-import { sleepFor, runOnlyOnIOS, runOnlyOnAndroid } from ".";
 
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
+import { Username } from "../../../types/testing";
 
 export const linkedDevice = async (
   device1: DeviceWrapper,
   device2: DeviceWrapper,
-  userName: string,
+  userName: Username,
   platform: SupportedPlatformsType
 ) => {
   const user = await newUser(device1, userName, platform);
   // Log in with recovery seed on device 2
 
-  await device2.clickOnElement("Link a device");
+  await device2.clickOnByAccessibilityID("Link a device");
   // Enter recovery phrase into input box
   await device2.inputText(
     "accessibility id",
@@ -22,46 +23,36 @@ export const linkedDevice = async (
   );
   await sleepFor(1000);
   // Continue with recovery phrase
-  await runOnlyOnAndroid(platform, () => device2.clickOnElement("Link Device"));
-  await runOnlyOnIOS(platform, () => device2.clickOnElement("Continue"));
-
-  // TODO DELETE THIS AFTER ANDROID USER CONFIG ****************************
-  // if (!noDisplayName) {
-  //   await sleepFor(10000);
-  //   await device2.clickOnElementById(
-  //     "network.loki.messenger:id/snackbar_action"
-  //   );
-  //   await device2.inputText(
-  //     "accessibility id",
-  //     "Enter display name",
-  //     user.userName
-  //   );
-  //   await device2.clickOnElement("Continue");
-  // }
+  await device2.clickOnByAccessibilityID("Continue");
   // Wait for any notifications to disappear
-  await device2.waitForElementToBePresent({
+  await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Message Notifications",
     maxWait: 20000,
   });
+
   // Wait for transitiion animation between the two pages
   await await sleepFor(250);
   // Click continue on message notification settings
-  await device2.clickOnElement("Continue with settings");
-  // Dismiss notifications alert
-  // await device2.inputText(
-  //       "accessibility id",
-  //       "Enter display name",
-  //       user.userName
-  //     );
-  // await device2.clickOnElement("Continue")
+  await device2.clickOnByAccessibilityID("Continue with settings");
   // Check for recovery phrase reminder
   await sleepFor(1000);
-  await runOnlyOnIOS(platform, () => device2.clickOnElement("Don’t Allow"));
+  await runOnlyOnIOS(platform, () =>
+    device2.clickOnByAccessibilityID("Don’t Allow")
+  );
   await sleepFor(1000);
-  await device2.hasElementBeenDeleted("accessibility id", "Continue");
+  await device2.hasElementBeenDeleted({
+    strategy: "accessibility id",
+    selector: "Continue",
+  });
+  await runOnlyOnAndroid(platform, () =>
+    device2.clickOnTextElementById(
+      `com.android.permissioncontroller:id/permission_allow_button`,
+      "Allow"
+    )
+  );
   // Check that button was clicked
-  await device2.waitForElementToBePresent({
+  await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "New conversation button",
   });
