@@ -109,9 +109,11 @@ type AndroidDeviceInterface = {
 
 export class DeviceWrapper implements SharedDeviceInterface {
   private readonly device: unknown;
+  public readonly udid: string;
 
-  constructor(device: DeviceWrapper) {
+  constructor(device: DeviceWrapper, udid: string) {
     this.device = device;
+    this.udid = udid;
   }
 
   public async touchScroll(
@@ -716,7 +718,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
           }
         }
       } catch (e: any) {
-        // console.warn("doesElementExist failed with", e.message);
+        console.warn("doesElementExist failed with", e.message);
       }
 
       if (!element) {
@@ -1107,7 +1109,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       const testImage = await this.doesElementExist({
         strategy: "accessibility id",
         selector: `1967-05-05 21:00:00 +0000`,
-        maxWait: 2000,
+        maxWait: 1000,
       });
       if (!testImage) {
         await runScriptAndLog(

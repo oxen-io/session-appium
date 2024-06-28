@@ -102,6 +102,7 @@ export function getAndroidCapabilities(
 }
 export function getAndroidUdid(udidIndex: CapabilitiesIndexType): string {
   const allCaps = getAllCaps();
+
   if (udidIndex >= allCaps.length) {
     throw new Error(`Asked invalid android udid index: ${udidIndex}`);
   }

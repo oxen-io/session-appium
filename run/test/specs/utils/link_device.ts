@@ -35,7 +35,7 @@ export const linkedDevice = async (
   await await sleepFor(250);
   // Click continue on message notification settings
   await device2.clickOnByAccessibilityID("Continue with settings");
-  await sleepFor(1000);
+  await sleepFor(500);
   const displayName = await device2.doesElementExist({
     strategy: "accessibility id",
     selector: "Enter display name",
@@ -50,16 +50,20 @@ export const linkedDevice = async (
     );
     await device2.clickOnByAccessibilityID("Continue");
   } else {
+    await console.log("No display name");
   }
   await sleepFor(1000);
   const permissions = await device2.doesElementExist({
     strategy: "accessibility id",
     selector: "Don’t Allow",
+    maxWait: 1000,
   });
   if (permissions) {
     await runOnlyOnIOS(platform, () =>
       device2.clickOnByAccessibilityID("Don’t Allow")
     );
+  } else {
+    await "No permissions";
   }
   await device2.hasElementBeenDeleted({
     strategy: "accessibility id",

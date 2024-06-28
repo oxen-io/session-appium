@@ -76,11 +76,8 @@ export function getCapabilitiesForWorker(
 ): CustomW3CCapabilities {
   const emulator = capabilities[workerId % capabilities.length];
   return {
-    firstMatch: [{}],
-    alwaysMatch: {
-      ...sharediOSCapabilities,
-      "appium:udid": emulator["appium:udid"],
-      "appium:wdaLocalPort": emulator["appium:wdaLocalPort"],
-    } as CustomW3CCapabilities,
-  };
+    ...sharediOSCapabilities,
+    "appium:udid": emulator["appium:udid"],
+    "appium:wdaLocalPort": emulator["appium:wdaLocalPort"],
+  } as CustomW3CCapabilities;
 }
