@@ -19,7 +19,6 @@ async function disappearingImageMessage1o1Ios(
 ) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const testMessage = "Testing disappearing messages for images";
-  const ronSwansonBirthday = "196705060700.00";
   const time = DISAPPEARING_TIMES.ONE_MINUTE;
   // Create user A and user B
   const [userA, userB] = await Promise.all([

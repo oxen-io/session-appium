@@ -1,15 +1,17 @@
 import { DISAPPEARING_TIMES } from "../../constants";
-import { DMTimeOption, InteractionPoints } from "../../types/testing";
-import { sleepFor, clickOnCoordinates } from "./utils";
+import { iosIt } from "../../types/sessionIt";
+import { DMTimeOption } from "../../types/testing";
+import { sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { createGroup } from "./utils/create_group";
 import {
   SupportedPlatformsType,
-  openAppThreeDevices,
   closeApp,
+  openAppThreeDevices,
 } from "./utils/open_app";
 import { setDisappearingMessage } from "./utils/set_disappearing_messages";
-import { runScriptAndLog } from "./utils/utilities";
+
+iosIt("Send disappearing image to group", disappearingImageMessageGroup);
 
 async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);

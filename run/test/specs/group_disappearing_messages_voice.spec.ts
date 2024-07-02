@@ -11,7 +11,10 @@ import {
 } from "./utils/open_app";
 import { setDisappearingMessage } from "./utils/set_disappearing_messages";
 
-bothPlatformsIt("Send voice message to group", disappearingVoiceMessageGroup);
+bothPlatformsIt(
+  "Send disappearing voice message to group",
+  disappearingVoiceMessageGroup
+);
 
 async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
@@ -41,8 +44,16 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
   ]);
   // await device1.navigateBack(platform);
   await device1.longPress("New voice message");
-  // await device1.clickOnByAccessibilityID("OK");
-  // await device1.pressAndHold("New voice message");
+  const permissions = await device1.doesElementExist({
+    strategy: "accessibility id",
+    selector: "Allow",
+    maxWait: 500,
+  });
+  if (permissions) {
+    await device1.clickOnByAccessibilityID("Allow");
+    await sleepFor(500);
+  }
+  await device1.pressAndHold("New voice message");
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: "Voice message",

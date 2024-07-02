@@ -13,7 +13,7 @@ import {
 import { setDisappearingMessage } from "./utils/set_disappearing_messages";
 
 bothPlatformsIt(
-  "Disappearing messages link group",
+  "Send disappearing link to group",
   disappearingLinkMessageGroup
 );
 

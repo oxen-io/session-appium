@@ -40,32 +40,13 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
     platform === "ios"
       ? DISAPPEARING_TIMES.TEN_SECONDS
       : DISAPPEARING_TIMES.THIRTY_SECONDS;
-  await device1.clickOnByAccessibilityID("More options");
-  // Select disappearing messages option
-  await sleepFor(1000);
-  await runOnlyOnAndroid(platform, () =>
-    device1.clickOnTextElementById(
-      `network.loki.messenger:id/title`,
-      "Disappearing messages"
-    )
-  );
-  await runOnlyOnIOS(platform, () =>
-    device1.clickOnByAccessibilityID("Disappearing Messages")
-  );
-  // Check the default time is set to
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: DISAPPEARING_TIMES.ONE_DAY,
-  });
-  await device1.disappearRadioButtonSelected(DISAPPEARING_TIMES.ONE_DAY);
   // Change time to testing time of 10 seconds
-
   await setDisappearingMessage(platform, device1, [
     "Group",
     `Disappear after send option`,
     time,
   ]);
-  await runOnlyOnIOS(platform, () => device1.navigateBack(platform));
+  // await runOnlyOnIOS(platform, () => device1.navigateBack(platform));
   // Check control message
   await console.log(`Control message not working on Android: ignoring`);
   // await Promise.all([

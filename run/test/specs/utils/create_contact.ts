@@ -12,10 +12,10 @@ export const newContact = async (
 ) => {
   await device1.sendNewMessage(Bob, `${Alice.userName} to ${Bob.userName}`);
   // Click on message request folder
-  await retryRequest(device1, device2);
   await sleepFor(100);
   await device2.clickOnByAccessibilityID("Message requests banner");
   // Select message from User A
+  await retryRequest(device1, device2);
   await device2.clickOnByAccessibilityID("Message request");
   await runOnlyOnAndroid(platform, () =>
     device2.clickOnByAccessibilityID("Accept message request")
@@ -35,21 +35,33 @@ export const newContact = async (
 
 export const retryRequest = async (
   device1: DeviceWrapper,
-  device2: DeviceWrapper
+  device2: DeviceWrapper,
+  timeout: number = 10000
 ) => {
-  const time = Date.now();
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message sent status: Sent",
-  });
-  const banner = await device2.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message requests banner",
-  });
-  if (!banner && time - Date.now() < 10000) {
-    await device1.sendMessage("Retry");
-    console.log(`Retrying message request`);
-  } else {
-    console.log("Found message request banner: No need for retry");
+  const startTime = Date.now();
+  let messageRequest: boolean | null = false;
+
+  while (!messageRequest && Date.now() - startTime < timeout) {
+    const element = await device2.doesElementExist({
+      strategy: "accessibility id",
+      selector: "Message request",
+      maxWait: 1000, // Reduce max wait to avoid long pauses
+    });
+
+    messageRequest = element !== null;
+
+    if (!messageRequest) {
+      await device1.sendMessage("Retry");
+      console.log(`Retrying message request`);
+      await sleepFor(1000); // Add a short delay before retrying
+    } else {
+      console.log("Found message request: No need for retry");
+    }
+  }
+
+  if (!messageRequest) {
+    throw new Error(
+      "Message request did not appear within the timeout period: This is a common race condition on iOS."
+    );
   }
 };

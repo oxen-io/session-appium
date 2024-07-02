@@ -42,12 +42,7 @@ export const createBasicTestEnvironment = async (
   Bob: User;
   closeApp(): Promise<void>;
 }> => {
-  const workerId = parseInt(process.env.MOCHA_WORKER_ID || "0", 10);
-  const [device1, device2, device3] = await openAppMultipleDevices(
-    platform,
-    3,
-    workerId
-  );
+  const [device1, device2, device3] = await openAppMultipleDevices(platform, 3);
   const userA = await linkedDevice(device1, device3, "Alice", platform);
   const userB = await newUser(device2, "Bob", platform);
   await newContact(platform, device1, userA, device2, userB);
@@ -68,12 +63,7 @@ export const createBasicTestEnvironment = async (
 export const setUp1o1TestEnvironment = async (
   platform: SupportedPlatformsType
 ) => {
-  const workerId = parseInt(process.env.MOCHA_WORKER_ID || "0", 10);
-  const [device1, device2, device3] = await openAppMultipleDevices(
-    platform,
-    3,
-    workerId
-  );
+  const [device1, device2, device3] = await openAppMultipleDevices(platform, 3);
   const userA = await linkedDevice(device1, device3, "Alice", platform);
   const userB = await newUser(device2, "Bob", platform);
   await newContact(platform, device1, userA, device2, userB);
@@ -83,18 +73,17 @@ export const setUp1o1TestEnvironment = async (
 
 export const openAppMultipleDevices = async (
   platform: SupportedPlatformsType,
-  numberOfDevices: number,
-  workerId: number
+  numberOfDevices: number
 ): Promise<DeviceWrapper[]> => {
   // Create an array of promises for each device
-  const devicePromises = Array.from({ length: numberOfDevices }, (_, index) =>
-    openAppOnPlatform(
-      platform,
-      (workerId * (numberOfDevices - 1) + index) as CapabilitiesIndexType
-    )
+  const devicePromises = Array.from(
+    { length: numberOfDevices },
+    (_, index) => openAppOnPlatform(platform, index as CapabilitiesIndexType) // Just pass the index directly
   );
+
   // Use Promise.all to wait for all device apps to open
   const apps = await Promise.all(devicePromises);
+
   //  Map the result to return only the device objects
   return apps.map((app) => app.device);
 };
@@ -106,7 +95,7 @@ const openAppOnPlatform = async (
   device: DeviceWrapper;
 }> => {
   console.warn("process.env.MOCHA_WORKER_ID", process.env.MOCHA_WORKER_ID);
-  console.warn("staring capabilitiesIndex", capabilitiesIndex, platform);
+  console.warn("starting capabilitiesIndex", capabilitiesIndex, platform);
   return platform === "ios"
     ? openiOSApp(capabilitiesIndex)
     : openAndroidApp(capabilitiesIndex);
@@ -298,23 +287,24 @@ const openiOSApp = async (
 }> => {
   console.warn("openiOSApp");
 
-  // Logging to check that app path is correct
-  // console.log(
-  //   `iOS App Full Path: ${
-  //     getIosCapabilities(capabilitiesIndex)["alwaysMatch"]["appium:app"]
-  //   }`
-  // );
+  const workerId = parseInt(process.env.MOCHA_WORKER_ID || "0", 10);
+
+  // Calculate the actual capabilities index for the current worker
+  const actualCapabilitiesIndex = (workerId * 4 +
+    capabilitiesIndex) as CapabilitiesIndexType;
+
   const opts: DriverOpts = {
     address: `http://localhost:${APPIUM_PORT}`,
   } as DriverOpts;
+
   const driver = (iosDriver as any).XCUITestDriver;
 
-  const device: DeviceWrapper = new driver(opts);
-  const capabilities = getIosCapabilities(capabilitiesIndex);
+  const device: unknown = new driver(opts);
+  const capabilities = getIosCapabilities(actualCapabilitiesIndex);
   const udid = capabilities.alwaysMatch["appium:udid"] as string;
   const wrappedDevice = new DeviceWrapper(device, udid);
 
-  const caps = getIosCapabilities(capabilitiesIndex);
+  const caps = getIosCapabilities(actualCapabilitiesIndex);
   await wrappedDevice.createSession(caps);
 
   return { device: wrappedDevice };

@@ -11,7 +11,7 @@ import {
 } from "./utils/open_app";
 import { setDisappearingMessage } from "./utils/set_disappearing_messages";
 
-bothPlatformsIt("Send GIF to group", disappearingGifMessageGroup);
+bothPlatformsIt("Send disappearing GIF to group", disappearingGifMessageGroup);
 
 async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
   const testGroupName = "Disappear after sent test";

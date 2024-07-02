@@ -12,7 +12,10 @@ import {
 import { setDisappearingMessage } from "./utils/set_disappearing_messages";
 import { runScriptAndLog } from "./utils/utilities";
 
-bothPlatformsIt("Send video to group", disappearingVideoMessageGroup);
+bothPlatformsIt(
+  "Send disappearing video to group",
+  disappearingVideoMessageGroup
+);
 
 async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
   const testMessage = "Testing disappearing messages for videos";
