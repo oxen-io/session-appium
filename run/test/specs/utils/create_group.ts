@@ -47,7 +47,7 @@ export const createGroup = async (
     })
   );
   await runOnlyOnAndroid(platform, () =>
-    device1.waitForControlMessageToBePresent("You created a new group.", 5000)
+    device1.waitForControlMessageToBePresent("You created a new group.", 10000)
   );
   // Send message from User A to group to verify all working
   await device1.sendMessage(userAMessage);

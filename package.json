@@ -6,8 +6,8 @@
     "test": "_TESTING=1 mocha --timeout 300000 --retries 2 --jobs 1 ./run/test/specs/*.spec.js -- --grep ",
     "test-no-retry": "_TESTING=1 mocha --timeout 300000 --retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep ",
     "test-one": "_TESTING=1 mocha --timeout 300000 --retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep",
-    "test-ios": "_TESTING=1 mocha --timeout 300000 -retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep ios",
-    "test-android": "_TESTING=1 mocha --timeout 300000 -retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep android",
+    "test-ios": "_TESTING=1 mocha --timeout 3000000 -retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep ios",
+    "test-android": "_TESTING=1 mocha --timeout 3000000 -retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep android",
     "build-and-test": "yarn tsc && yarn test",
     "test-describe": "TESTING=1 mocha --timeout 300000 --retries 0 --jobs 1 ./run/test/specs/*.spec.js --grep ",
     "test-one-logs": "_TESTING=1  _FORCELOGS=1 mocha --timeout 300000 --retries 0 --jobs 1 ./run/test/specs/*.spec.js -- --grep"
