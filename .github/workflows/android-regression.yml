@@ -1,0 +1,25 @@
+name: Run android regression tests
+on:
+  workflow_dispatch:
+    inputs:
+      APK_URL:
+        description: "APK.tar.gz url to test"
+        required: true
+        type: string
+      # BRANCH:
+      #   description: "branch on oxen-io to checkout"
+      #   required: true
+      #   type: string
+  # push:
+  #   branches:
+  #     - test-docker-container
+
+jobs:
+  android-regression:
+    runs-on: [self-hosted, linux, x64, qa-android]
+    steps:
+      - uses: actions/checkout@v4
+        # with:
+        #   ref: my-branch
+      - name: run tests in already running container
+        run: docker exec --env APK_URL=${{ inputs.APK_URL }} $(docker ps -q) sh -c "dl_and_test"
