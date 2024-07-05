@@ -60,11 +60,18 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   await sleepFor(100);
   await device1.clickOnByAccessibilityID("Send message button");
   // Make sure image preview is available in device 2
-  await device2.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
-    text: testLink,
-  });
+  await Promise.all([
+    device2.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Message body",
+      text: testLink,
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Message body",
+      text: testLink,
+    }),
+  ]);
   // Wait for 10 seconds to disappear
   await sleepFor(10000);
   await Promise.all([

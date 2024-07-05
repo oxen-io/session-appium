@@ -8,7 +8,7 @@ import {
   closeApp,
 } from "./utils/open_app";
 
-bothPlatformsIt("Unsend message linked device", unSendMessageLinkedDevice);
+bothPlatformsIt("Unsent message syncs", unSendMessageLinkedDevice);
 
 async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);

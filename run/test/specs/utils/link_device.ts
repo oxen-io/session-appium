@@ -56,7 +56,7 @@ export const linkedDevice = async (
   const permissions = await device2.doesElementExist({
     strategy: "accessibility id",
     selector: "Don’t Allow",
-    maxWait: 1000,
+    maxWait: 2000,
   });
   if (permissions) {
     await runOnlyOnIOS(platform, () =>

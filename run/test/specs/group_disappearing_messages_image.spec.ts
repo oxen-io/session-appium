@@ -41,7 +41,19 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
     time,
   ]);
   // await device1.navigateBack(platform);
-  await device1.sendImage(platform, testMessage);
+  await device1.sendImage(platform, "Group", testMessage);
+  await Promise.all([
+    device2.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Message body",
+      text: testMessage,
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Message body",
+      text: testMessage,
+    }),
+  ]);
   await sleepFor(10000);
   await Promise.all([
     device1.hasElementBeenDeleted({

@@ -35,7 +35,7 @@ async function disappearingImageMessage1o1Ios(
   // await device1.navigateBack(platform);
 
   await sleepFor(500);
-  await device1.sendImage(platform, testMessage);
+  await device1.sendImage(platform, "1:1", testMessage);
   await device2.clickOnByAccessibilityID("Untrusted attachment message");
   // User B - Click on 'download'
   await device2.clickOnByAccessibilityID("Download media", 5000);
@@ -86,7 +86,7 @@ async function disappearingImageMessage1o1Android(
   //   );
   // Wait for control messages to disappear before sending image (to check if the control messages are interfering with finding the untrusted attachment message)
   await sleepFor(60000);
-  await device1.sendImage(platform, testMessage);
+  await device1.sendImage(platform, "1:1", testMessage);
   await device2.clickOnElementAll({
     strategy: "accessibility id",
     selector: "Untrusted attachment message",

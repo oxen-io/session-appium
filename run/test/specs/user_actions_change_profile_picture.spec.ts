@@ -47,7 +47,7 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
 
     await runScriptAndLog(
       `xcrun simctl addmedia ${
-        process.env.IOS_FIRST_SIMULATOR || ""
+        (device as { udid?: string }).udid || ""
       } 'run/test/specs/media/profile_picture.jpg'`,
       true
     );

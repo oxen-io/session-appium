@@ -32,7 +32,7 @@ async function sendImageGroupiOS(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
-  await device1.sendImage(platform, testMessage);
+  await device1.sendImage(platform, "Group", testMessage);
   await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
     selector: `Message sent status: Sent`,
@@ -76,7 +76,7 @@ async function sendImageGroupAndroid(platform: SupportedPlatformsType) {
     testGroupName
   );
   const replyMessage = `Replying to image from ${userA.userName}`;
-  await device1.sendImage(platform, testMessage);
+  await device1.sendImage(platform, "Group", testMessage);
   // Wait for image to appear in conversation screen
   await sleepFor(500);
   await Promise.all([

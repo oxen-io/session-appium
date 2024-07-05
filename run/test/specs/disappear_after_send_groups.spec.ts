@@ -17,6 +17,10 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   const testGroupName = "Disappear after send test";
   const testMessage = "Testing disappear after sent in groups";
   let time: DMTimeOption;
+  time =
+    platform === "ios"
+      ? DISAPPEARING_TIMES.TEN_SECONDS
+      : DISAPPEARING_TIMES.THIRTY_SECONDS;
   const controlMode: DisappearActions = "sent";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
@@ -36,10 +40,7 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
-  time =
-    platform === "ios"
-      ? DISAPPEARING_TIMES.TEN_SECONDS
-      : DISAPPEARING_TIMES.THIRTY_SECONDS;
+
   // Change time to testing time of 10 seconds
   await setDisappearingMessage(platform, device1, [
     "Group",

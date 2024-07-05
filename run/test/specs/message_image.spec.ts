@@ -22,7 +22,7 @@ async function sendImageIos(platform: SupportedPlatformsType) {
   const testMessage = "Ron Swanson doesn't like birthdays";
 
   await newContact(platform, device1, userA, device2, userB);
-  await device1.sendImage(platform, testMessage);
+  await device1.sendImage(platform, "1:1", testMessage);
   await device2.clickOnByAccessibilityID("Untrusted attachment message");
   await sleepFor(500);
   // User B - Click on 'download'

@@ -59,7 +59,7 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
     text: testMessage,
   });
   // Wait for message to disappear
-  await sleepFor(10000);
+  await sleepFor(30000);
   await Promise.all([
     device1.hasElementBeenDeleted({
       strategy: "accessibility id",

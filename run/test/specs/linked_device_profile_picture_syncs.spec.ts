@@ -50,7 +50,7 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
 
     await runScriptAndLog(
       `xcrun simctl addmedia ${
-        process.env.IOS_FIRST_SIMULATOR || ""
+        (device1 as { udid?: string }).udid || ""
       } 'run/test/specs/media/profile_picture.jpg'`,
       true
     );

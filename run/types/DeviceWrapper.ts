@@ -11,6 +11,7 @@ import {
 import {
   AccessibilityId,
   ControlMessage,
+  ConversationType,
   DMTimeOption,
   DisappearingControlMessage,
   Group,
@@ -510,21 +511,39 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async deleteText(accessibilityId: AccessibilityId) {
     const el = await this.findElementByAccessibilityId(accessibilityId);
-    await this.longClick(el, 1000);
-    if (this.isIOS()) {
-      await this.clickOnElementByText({
-        strategy: "id",
-        selector: "Select All",
-        text: "Select All",
-        maxWait: 1000,
-      });
-    } else {
-      await this.clickOnElementByText({
-        strategy: "id",
-        selector: "Select All",
-        text: "Select All",
-      });
+
+    let maxRetries = 3;
+    let retries = 0;
+    let success = false;
+
+    while (retries < maxRetries && !success) {
+      await this.longClick(el, 1000);
+      if (this.isIOS()) {
+        try {
+          await this.clickOnElementByText({
+            strategy: "id",
+            selector: "Select All",
+            text: "Select All",
+            maxWait: 1000,
+          });
+          success = true;
+        } catch (error) {
+          console.warn(
+            `Retrying long press and select all, attempt ${retries + 1}`
+          );
+        }
+      } else {
+        await this.longClick(el, 1000);
+        success = true;
+      }
+      retries++;
     }
+    if (!success) {
+      throw new Error(
+        `Failed to find "Select All" button after ${maxRetries} attempts`
+      );
+    }
+
     await this.clear(el.ELEMENT);
     console.warn(`Text has been cleared ` + accessibilityId);
     return;
@@ -1082,21 +1101,28 @@ export class DeviceWrapper implements SharedDeviceInterface {
   // TODO FIX UP THIS FUNCTION
   public async sendImage(
     platform: SupportedPlatformsType,
-    message?: string,
-    community?: boolean
+    conversationType: ConversationType,
+    message?: string
   ) {
     if (platform === "ios") {
       const ronSwansonBirthday = "196705060700.00";
       await this.clickOnByAccessibilityID("Attachments button");
       await sleepFor(5000);
-      await clickOnCoordinates(
-        this,
-        InteractionPoints.ImagesFolderKeyboardOpen
-      );
+      if (conversationType === "Group") {
+        await clickOnCoordinates(
+          this,
+          InteractionPoints.ImagesFolderKeyboardClosed
+        );
+      } else {
+        await clickOnCoordinates(
+          this,
+          InteractionPoints.ImagesFolderKeyboardOpen
+        );
+      }
       const permissions = await this.doesElementExist({
         strategy: "accessibility id",
         selector: "Allow Full Access",
-        maxWait: 1000,
+        maxWait: 2000,
       });
       if (permissions) {
         try {
@@ -1119,7 +1145,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
         await runScriptAndLog(
           `xcrun simctl addmedia ${
-            (this.device as { udid?: string }).udid || ""
+            (this as { udid?: string }).udid || ""
           } 'run/test/specs/media/test_image.jpg'`
         );
       }
@@ -1163,7 +1189,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       }
       await sleepFor(100);
       await this.clickOnTextElementById("android:id/title", "test_image.jpg");
-      if (community) {
+      if (conversationType === "Community") {
         await this.scrollToBottom(platform);
       }
       await this.waitForTextElementToBePresent({

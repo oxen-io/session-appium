@@ -53,6 +53,23 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID("Text input box");
   await device1.inputText("accessibility id", "Text input box", testMessage);
   await device1.clickOnByAccessibilityID("Send button");
+  await device1.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Message sent status: Sent",
+    maxWait: 20000,
+  });
+  await Promise.all([
+    device2.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Message body",
+      text: testMessage,
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Message body",
+      text: testMessage,
+    }),
+  ]);
   // Wait for 10 seconds
   await sleepFor(10000);
   // Check if GIF has been deleted on both devices

@@ -53,7 +53,9 @@ async function sendDocumentIos(platform: SupportedPlatformsType) {
     );
 
     await runScriptAndLog(
-      `xcrun simctl addmedia ${process.env.IOS_FIRST_SIMULATOR} 'run/test/specs/media/test_file.pdf'`,
+      `xcrun simctl addmedia ${
+        (device1 as { udid?: string }).udid
+      } 'run/test/specs/media/test_file.pdf'`,
       true
     );
   }
