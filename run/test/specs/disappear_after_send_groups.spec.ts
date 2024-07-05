@@ -1,13 +1,12 @@
-import { DISAPPEARING_TIMES } from "../../constants";
 import { bothPlatformsIt } from "../../types/sessionIt";
-import { DMTimeOption, DisappearActions } from "../../types/testing";
-import { sleepFor, runOnlyOnAndroid, runOnlyOnIOS } from "./utils";
+import { DisappearActions } from "../../types/testing";
+import { sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { createGroup } from "./utils/create_group";
 import {
   SupportedPlatformsType,
-  openAppThreeDevices,
   closeApp,
+  openAppThreeDevices,
 } from "./utils/open_app";
 import { setDisappearingMessage } from "./utils/set_disappearing_messages";
 
@@ -16,11 +15,6 @@ bothPlatformsIt("Disappear after send groups", disappearAfterSendGroups);
 async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   const testGroupName = "Disappear after send test";
   const testMessage = "Testing disappear after sent in groups";
-  let time: DMTimeOption;
-  time =
-    platform === "ios"
-      ? DISAPPEARING_TIMES.TEN_SECONDS
-      : DISAPPEARING_TIMES.THIRTY_SECONDS;
   const controlMode: DisappearActions = "sent";
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
@@ -41,11 +35,9 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
     testGroupName
   );
 
-  // Change time to testing time of 10 seconds
   await setDisappearingMessage(platform, device1, [
     "Group",
     `Disappear after send option`,
-    time,
   ]);
   // await runOnlyOnIOS(platform, () => device1.navigateBack(platform));
   // Check control message
@@ -76,8 +68,7 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
     }),
   ]);
   // Wait for 10 or 30 seconds
-  const sleepTime = platform === "ios" ? 10000 : 30000;
-  await sleepFor(sleepTime);
+  await sleepFor(30000);
   // Check for test messages (should be deleted)
   await Promise.all([
     device1.hasTextElementBeenDeleted("Message body", testMessage),

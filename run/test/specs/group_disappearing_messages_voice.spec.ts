@@ -1,13 +1,12 @@
-import { DISAPPEARING_TIMES } from "../../constants";
 import { bothPlatformsIt } from "../../types/sessionIt";
-import { DMTimeOption, GroupName } from "../../types/testing";
+import { GroupName } from "../../types/testing";
 import { sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { createGroup } from "./utils/create_group";
 import {
   SupportedPlatformsType,
-  openAppThreeDevices,
   closeApp,
+  openAppThreeDevices,
 } from "./utils/open_app";
 import { setDisappearingMessage } from "./utils/set_disappearing_messages";
 
@@ -18,7 +17,6 @@ bothPlatformsIt(
 
 async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  const time: DMTimeOption = DISAPPEARING_TIMES.TEN_SECONDS;
   const testGroupName: GroupName =
     "Testing voice messages in groups for disappearing messages";
   // Create user A and user B
@@ -40,7 +38,6 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
   await setDisappearingMessage(platform, device1, [
     "Group",
     "Disappear after send option",
-    time,
   ]);
   // await device1.navigateBack(platform);
   await device1.longPress("New voice message");

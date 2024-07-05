@@ -11,7 +11,6 @@ import {
 import {
   AccessibilityId,
   ControlMessage,
-  ConversationType,
   DMTimeOption,
   DisappearingControlMessage,
   Group,
@@ -717,7 +716,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     maxWait,
   }: { text?: string; maxWait?: number } & StrategyExtractionObj) {
     const beforeStart = Date.now();
-    const maxWaitMSec = maxWait || 300000;
+    const maxWaitMSec = maxWait || 30000;
     const waitPerLoop = 100;
     let element: AppiumNextElementType | null = null;
     while (element === null) {
@@ -952,7 +951,16 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.inputText("accessibility id", "Message input box", message);
 
     // Click send
-    await this.clickOnByAccessibilityID("Send message button");
+
+    const sendButton = await this.clickOnElementAll({
+      strategy: "accessibility id",
+      selector: "Send message button",
+    });
+    if (!sendButton) {
+      throw new Error(
+        "Send button not found: Need to restart iOS emulator: Known issue"
+      );
+    }
     // Wait for tick
     await this.waitForTextElementToBePresent({
       strategy: "accessibility id",
@@ -1000,7 +1008,15 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
     await this.inputText("accessibility id", "Message input box", message);
     // Click send
-    await this.clickOnByAccessibilityID("Send message button");
+    const sendButton = await this.clickOnElementAll({
+      strategy: "accessibility id",
+      selector: "Send message button",
+    });
+    if (!sendButton) {
+      throw new Error(
+        "Send button not found: Need to restart iOS emulator: Known issue"
+      );
+    }
     // Wait for tick
 
     await this.waitForTextElementToBePresent({
@@ -1101,22 +1117,23 @@ export class DeviceWrapper implements SharedDeviceInterface {
   // TODO FIX UP THIS FUNCTION
   public async sendImage(
     platform: SupportedPlatformsType,
-    conversationType: ConversationType,
-    message?: string
+    message?: string,
+    community?: boolean
   ) {
     if (platform === "ios") {
       const ronSwansonBirthday = "196705060700.00";
       await this.clickOnByAccessibilityID("Attachments button");
       await sleepFor(5000);
-      if (conversationType === "Group") {
+      const keyboard = await this.isKeyboardVisible(platform);
+      if (keyboard) {
         await clickOnCoordinates(
           this,
-          InteractionPoints.ImagesFolderKeyboardClosed
+          InteractionPoints.ImagesFolderKeyboardOpen
         );
       } else {
         await clickOnCoordinates(
           this,
-          InteractionPoints.ImagesFolderKeyboardOpen
+          InteractionPoints.ImagesFolderKeyboardClosed
         );
       }
       const permissions = await this.doesElementExist({
@@ -1189,7 +1206,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       }
       await sleepFor(100);
       await this.clickOnTextElementById("android:id/title", "test_image.jpg");
-      if (conversationType === "Community") {
+      if (community) {
         await this.scrollToBottom(platform);
       }
       await this.waitForTextElementToBePresent({
@@ -1384,6 +1401,17 @@ export class DeviceWrapper implements SharedDeviceInterface {
       console.log(`Couldn't get time from device`);
     }
     return timeString;
+  }
+
+  public async isKeyboardVisible(platform: SupportedPlatformsType) {
+    if (platform === "ios") {
+      const spaceBar = await this.doesElementExist({
+        strategy: "accessibility id",
+        selector: "space",
+        maxWait: 500,
+      });
+      return Boolean(spaceBar);
+    }
   }
 
   public async mentionContact(platform: SupportedPlatformsType, contact: User) {

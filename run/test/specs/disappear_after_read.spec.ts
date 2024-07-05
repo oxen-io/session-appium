@@ -21,7 +21,6 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
     newUser(device2, "Bob", platform),
   ]);
   const testMessage = "Checking disappear after read is working";
-  const time: DMTimeOption = DISAPPEARING_TIMES.TEN_SECONDS;
   const mode: DisappearModes = "read";
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
@@ -29,7 +28,7 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", `Disappear after ${mode} option`, time],
+    ["1:1", `Disappear after ${mode} option`],
     device2
   );
   // Check control message is correct on device 2
@@ -42,13 +41,13 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
     //   `You set messages to disappear ${time} after they have been ${mode}.`
     // );
   } else {
-    `${userA.userName} has set messages to disappear ${time} after they have been ${mode}.`;
+    `${userA.userName} has set messages to disappear 30 seconds after they have been ${mode}.`;
   }
   // Send message to verify that deletion is working
   await device1.sendMessage(testMessage);
   // Need function to read message
   // Wait for 10 seconds
-  await sleepFor(10000);
+  await sleepFor(30000);
   await Promise.all([
     device1.hasElementBeenDeleted({
       strategy: "accessibility id",

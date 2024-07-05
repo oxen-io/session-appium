@@ -16,7 +16,6 @@ androidIt("Disappearing link message 1o1", disappearingLinkMessage1o1Android);
 
 async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const time: DMTimeOption = DISAPPEARING_TIMES.ONE_MINUTE;
   const testLink = `https://type-level-typescript.com/objects-and-records`;
   // Create user A and user B
   const [userA, userB] = await Promise.all([
@@ -27,7 +26,7 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType) {
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after read option", time],
+    ["1:1", "Disappear after read option"],
     device2
   );
   // await device1.navigateBack(platform);
@@ -53,8 +52,8 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType) {
     selector: "Message body",
     text: testLink,
   });
-  // Wait for 60 seconds to disappear
-  await sleepFor(60000);
+  // Wait for 30 seconds to disappear
+  await sleepFor(30000);
   await Promise.all([
     device1.hasElementBeenDeleted({
       strategy: "accessibility id",
@@ -77,7 +76,6 @@ async function disappearingLinkMessage1o1Android(
 ) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const testLink = `https://type-level-typescript.com/objects-and-records`;
-  const time: DMTimeOption = DISAPPEARING_TIMES.THIRTY_SECONDS;
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -87,7 +85,7 @@ async function disappearingLinkMessage1o1Android(
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after send option", time],
+    ["1:1", "Disappear after send option"],
     device2
   );
   // await device1.navigateBack(platform);

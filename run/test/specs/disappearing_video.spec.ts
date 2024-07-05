@@ -1,20 +1,15 @@
-import { DISAPPEARING_TIMES, XPATHS } from "../../constants";
+import { DISAPPEARING_TIMES } from "../../constants";
 import { androidIt, iosIt } from "../../types/sessionIt";
-import {
-  DMTimeOption,
-  DisappearActions,
-  InteractionPoints,
-} from "../../types/testing";
-import { sleepFor, clickOnCoordinates } from "./utils";
+import { DMTimeOption, DisappearActions } from "../../types/testing";
+import { sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import {
   SupportedPlatformsType,
-  openAppTwoDevices,
   closeApp,
+  openAppTwoDevices,
 } from "./utils/open_app";
 import { setDisappearingMessage } from "./utils/set_disappearing_messages";
-import { runScriptAndLog } from "./utils/utilities";
 
 iosIt("Disappearing video message 1o1", disappearingVideoMessage1o1Ios);
 androidIt("Disappearing video message 1o1", disappearingVideoMessage1o1Android);
@@ -29,17 +24,16 @@ async function disappearingVideoMessage1o1Ios(
     newUser(device2, "Bob", platform),
   ]);
   const testMessage = "Testing disappearing messages for videos";
-  const time: DMTimeOption = DISAPPEARING_TIMES.ONE_MINUTE;
   await newContact(platform, device1, userA, device2, userB);
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after read option", time],
+    ["1:1", "Disappear after read option"],
     device2
   );
   // await device1.navigateBack(platform);
   await device1.sendVideoiOS(testMessage);
-  await sleepFor(60000);
+  await sleepFor(30000);
   await Promise.all([
     device1.hasElementBeenDeleted({
       strategy: "accessibility id",
@@ -66,14 +60,13 @@ async function disappearingVideoMessage1o1Android(
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
   ]);
-  const time: DMTimeOption = DISAPPEARING_TIMES.ONE_MINUTE;
   const controlMode: DisappearActions = "sent";
   await newContact(platform, device1, userA, device2, userB);
 
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after send option", time],
+    ["1:1", "Disappear after send option"],
     device2
   );
   // TODO FIX
@@ -89,7 +82,7 @@ async function disappearingVideoMessage1o1Android(
   await device2.clickOnByAccessibilityID("Untrusted attachment message");
   await device2.clickOnByAccessibilityID("Download media");
   // Wait for disappearing message timer to remove video
-  await sleepFor(60000);
+  await sleepFor(30000);
   await Promise.all([
     device1.hasElementBeenDeleted({
       strategy: "accessibility id",

@@ -18,7 +18,6 @@ async function disappearingVoiceMessage1o1Ios(
   platform: SupportedPlatformsType
 ) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const time: DMTimeOption = DISAPPEARING_TIMES.ONE_MINUTE;
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -28,7 +27,7 @@ async function disappearingVoiceMessage1o1Ios(
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after read option", time],
+    ["1:1", "Disappear after read option"],
     device2
   );
   // await device1.navigateBack(platform);
@@ -51,7 +50,7 @@ async function disappearingVoiceMessage1o1Ios(
   });
   await device2.clickOnByAccessibilityID("Untrusted attachment message", 5000);
   await device2.clickOnByAccessibilityID("Download");
-  await sleepFor(60000);
+  await sleepFor(30000);
   await Promise.all([
     device1.hasElementBeenDeleted({
       strategy: "accessibility id",
@@ -76,13 +75,12 @@ async function disappearingVoiceMessage1o1Android(
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
   ]);
-  const time: DMTimeOption = "1 minute";
   const controlMode: DisappearActions = "sent";
   await newContact(platform, device1, userA, device2, userB);
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after send option", time],
+    ["1:1", "Disappear after send option"],
     device2
   );
   // TODO FIX
@@ -106,7 +104,7 @@ async function disappearingVoiceMessage1o1Android(
   });
   await device2.clickOnByAccessibilityID("Untrusted attachment message");
   await device2.clickOnByAccessibilityID("Download media");
-  await sleepFor(60000);
+  await sleepFor(30000);
   await device1.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Voice message",

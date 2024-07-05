@@ -16,7 +16,6 @@ bothPlatformsIt("Send disappearing GIF to group", disappearingGifMessageGroup);
 async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
   const testGroupName = "Disappear after sent test";
   const testMessage = "Testing disappearing messages for GIF's";
-  const time: DMTimeOption = DISAPPEARING_TIMES.TEN_SECONDS;
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create user A and user B
   const [userA, userB, userC] = await Promise.all([
@@ -37,7 +36,6 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
   await setDisappearingMessage(platform, device1, [
     "Group",
     "Disappear after send option",
-    time,
   ]);
   // await device1.navigateBack(platform);
   // Click on attachments button

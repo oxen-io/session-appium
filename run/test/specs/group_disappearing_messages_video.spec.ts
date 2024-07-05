@@ -21,7 +21,6 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
   const testMessage = "Testing disappearing messages for videos";
   // const bestDayOfYear = `198809090700.00`;
   const testGroupName = "Test group";
-  const time: DMTimeOption = DISAPPEARING_TIMES.TEN_SECONDS;
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create user A and user B
   const [userA, userB, userC] = await Promise.all([
@@ -42,7 +41,6 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
   await setDisappearingMessage(platform, device1, [
     "Group",
     "Disappear after send option",
-    time,
   ]);
   // await device1.navigateBack(platform);
   await device1.sendVideoiOS(testMessage);

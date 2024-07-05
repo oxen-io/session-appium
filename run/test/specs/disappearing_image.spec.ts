@@ -19,7 +19,6 @@ async function disappearingImageMessage1o1Ios(
 ) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const testMessage = "Testing disappearing messages for images";
-  const time = DISAPPEARING_TIMES.ONE_MINUTE;
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -29,17 +28,17 @@ async function disappearingImageMessage1o1Ios(
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after read option", time],
+    ["1:1", "Disappear after read option"],
     device2
   );
   // await device1.navigateBack(platform);
 
   await sleepFor(500);
-  await device1.sendImage(platform, "1:1", testMessage);
+  await device1.sendImage(platform, testMessage);
   await device2.clickOnByAccessibilityID("Untrusted attachment message");
   // User B - Click on 'download'
   await device2.clickOnByAccessibilityID("Download media", 5000);
-  await sleepFor(60000);
+  await sleepFor(30000);
   await Promise.all([
     device1.hasElementBeenDeleted({
       strategy: "accessibility id",
@@ -62,7 +61,6 @@ async function disappearingImageMessage1o1Android(
 ) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const testMessage = "Testing disappearing messages for images";
-  const time = DISAPPEARING_TIMES.ONE_MINUTE;
   const mode: DisappearActions = "sent";
   // Create user A and user B
   const [userA, userB] = await Promise.all([
@@ -74,7 +72,7 @@ async function disappearingImageMessage1o1Android(
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after send option", time],
+    ["1:1", "Disappear after send option"],
     device2
   );
   // TODO FIX CONTROL MESSAGES ON ANDROID
@@ -85,8 +83,8 @@ async function disappearingImageMessage1o1Android(
   //     `You set messages to disappear ${time} after they have been ${mode}.`
   //   );
   // Wait for control messages to disappear before sending image (to check if the control messages are interfering with finding the untrusted attachment message)
-  await sleepFor(60000);
-  await device1.sendImage(platform, "1:1", testMessage);
+  await sleepFor(30000);
+  await device1.sendImage(platform, testMessage);
   await device2.clickOnElementAll({
     strategy: "accessibility id",
     selector: "Untrusted attachment message",

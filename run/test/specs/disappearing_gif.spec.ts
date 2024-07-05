@@ -21,7 +21,6 @@ androidIt("Disappearing GIF message 1o1", disappearingGifMessage1o1Android);
 
 async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const time: DMTimeOption = DISAPPEARING_TIMES.ONE_MINUTE;
   const testMessage = "Testing disappearing messages for GIF's";
   // Create user A and user B
   const [userA, userB] = await Promise.all([
@@ -32,7 +31,7 @@ async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType) {
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after read option", time],
+    ["1:1", "Disappear after read option"],
     device2
   );
   // await device1.navigateBack(platform);
@@ -59,7 +58,7 @@ async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType) {
   // Click on 'download'
   await device2.clickOnByAccessibilityID("Download media");
   // Wait for 60 seconds
-  await sleepFor(60000);
+  await sleepFor(30000);
   // Check if GIF has been deleted on both devices
   await device1.hasElementBeenDeleted({
     strategy: "accessibility id",
@@ -80,7 +79,6 @@ async function disappearingGifMessage1o1Android(
   platform: SupportedPlatformsType
 ) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const time: DMTimeOption = "1 minute";
   const controlMode: DisappearActions = "sent";
   const mode: DisappearModes = "send";
   // Create user A and user B
@@ -92,7 +90,7 @@ async function disappearingGifMessage1o1Android(
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", `Disappear after ${mode} option`, time],
+    ["1:1", `Disappear after ${mode} option`],
     device2
   ); // Wait for control messages to disappear before sending image (to check if the control messages are interfering with finding the untrusted attachment message)
   // TODO FIX
@@ -119,8 +117,8 @@ async function disappearingGifMessage1o1Android(
   await device2.clickOnByAccessibilityID("Untrusted attachment message");
   // Click on 'download'
   await device2.clickOnByAccessibilityID("Download media");
-  // Wait for 60 seconds (time)
-  await sleepFor(60000);
+  // Wait for 30 seconds (time)
+  await sleepFor(30000);
   // Check if GIF has been deleted on both devices
   await device1.hasElementBeenDeleted({
     strategy: "accessibility id",

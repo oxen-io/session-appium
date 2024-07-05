@@ -75,13 +75,13 @@ export type DisappearOpts1o1 = [
     | `Disappear after ${DisappearModes} option`
     | `Disappear after ${DisappearModes} option`
   ),
-  DMTimeOption
+  DMTimeOption?
 ];
 
 export type DisappearOptsGroup = [
   "Group" | "Note to Self",
   `Disappear after ${DisappearModes} option`,
-  DMTimeOption
+  DMTimeOption?
 ];
 
 export type MergedOptions = DisappearOpts1o1 | DisappearOptsGroup;
@@ -306,4 +306,5 @@ export type AccessibilityId =
   | "1 day"
   | "1 week"
   | "2 weeks"
-  | "Off";
+  | "Off"
+  | "space";

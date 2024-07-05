@@ -23,7 +23,6 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
     newUser(device1, "Alice", platform),
     newUser(device2, "Bob", platform),
   ]);
-  const time: DMTimeOption = "10 seconds";
   const mode: DisappearModes = "send";
   const testMessage = `Checking disappear after ${mode} is working`;
   const controlMode: DisappearActions = "sent";
@@ -33,22 +32,22 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", `Disappear after ${mode} option`, time],
+    ["1:1", `Disappear after ${mode} option`],
     device2
   );
   // Check control message is correct on device 2
   if (platform === "android") {
     console.log(`Android has broken control messages: ignoring`);
     // await device2.disappearingControlMessage(
-    //   `${userA.userName} has set messages to disappear ${time} after they have been ${controlMode}.`
+    //   `${userA.userName} has set messages to disappear 30 seconds after they have been ${controlMode}.`
     // );
     // await device2.disappearingControlMessage(
-    //   `You set messages to disappear ${time} after they have been ${controlMode}.`
+    //   `You set messages to disappear 30 seconds after they have been ${controlMode}.`
     // );
   }
   // await runOnlyOnIOS(platform, () =>
   //   device2.disappearingControlMessage(
-  //     `${userA.userName} has set messages to disappear ${time} after they have been ${controlMode}.`
+  //     `${userA.userName} has set messages to disappear 30 seconds after they have been ${controlMode}.`
   //   )
   // );
   // Send message to verify that deletion is working

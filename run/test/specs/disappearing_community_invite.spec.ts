@@ -25,7 +25,6 @@ async function disappearingCommunityInviteMessage1o1Ios(
   platform: SupportedPlatformsType
 ) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const time: DMTimeOption = DISAPPEARING_TIMES.ONE_MINUTE;
   const communityLink = `https://chat.lokinet.dev/testing-all-the-things?public_key=1d7e7f92b1ed3643855c98ecac02fc7274033a3467653f047d6e433540c03f17`;
   const communityName = "Testing All The Things!";
   // Create user A and user B
@@ -37,7 +36,7 @@ async function disappearingCommunityInviteMessage1o1Ios(
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after read option", time],
+    ["1:1", "Disappear after read option"],
     device2
   );
   // await device1.navigateBack(platform);
@@ -59,7 +58,7 @@ async function disappearingCommunityInviteMessage1o1Ios(
     text: communityName,
   });
   // Wait for 10 seconds for message to disappear
-  await sleepFor(60000);
+  await sleepFor(30000);
   await Promise.all([
     device2.hasElementBeenDeleted({
       strategy: "accessibility id",
@@ -83,7 +82,6 @@ async function disappearingCommunityInviteMessage1o1Android(
   const { device1, device2 } = await openAppTwoDevices(platform);
   const communityLink = `https://chat.lokinet.dev/testing-all-the-things?public_key=1d7e7f92b1ed3643855c98ecac02fc7274033a3467653f047d6e433540c03f17`;
   const communityName = "Testing All The Things!";
-  const time: DMTimeOption = DISAPPEARING_TIMES.THIRTY_SECONDS;
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -94,7 +92,7 @@ async function disappearingCommunityInviteMessage1o1Android(
   await setDisappearingMessage(
     platform,
     device1,
-    ["1:1", "Disappear after send option", time],
+    ["1:1", "Disappear after send option"],
     device2
   );
 
@@ -123,7 +121,7 @@ async function disappearingCommunityInviteMessage1o1Android(
     selector: "network.loki.messenger:id/openGroupInvitationIconBackground",
   });
   // Wait for 10 seconds for message to disappear
-  await sleepFor(10000);
+  await sleepFor(30000);
   await device2.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Message body",

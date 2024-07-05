@@ -21,7 +21,6 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   const testGroupName = "Test group";
   const testLink = `https://type-level-typescript.com/objects-and-records`;
-  const time: DMTimeOption = DISAPPEARING_TIMES.TEN_SECONDS;
   // Create user A and user B
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -41,7 +40,6 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   await setDisappearingMessage(platform, device1, [
     "Group",
     "Disappear after send option",
-    time,
   ]);
   // await device1.navigateBack(platform);
   // Send a link

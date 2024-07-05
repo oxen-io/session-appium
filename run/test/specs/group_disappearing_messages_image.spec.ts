@@ -15,7 +15,6 @@ iosIt("Send disappearing image to group", disappearingImageMessageGroup);
 
 async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  const time: DMTimeOption = DISAPPEARING_TIMES.TEN_SECONDS;
   const testMessage = "Testing disappearing messages for images";
   const testGroupName = "Test group";
   // Create user A and user B
@@ -38,10 +37,9 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   await setDisappearingMessage(platform, device1, [
     "Group",
     "Disappear after send option",
-    time,
   ]);
   // await device1.navigateBack(platform);
-  await device1.sendImage(platform, "Group", testMessage);
+  await device1.sendImage(platform, testMessage);
   await Promise.all([
     device2.waitForTextElementToBePresent({
       strategy: "accessibility id",
@@ -54,7 +52,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
       text: testMessage,
     }),
   ]);
-  await sleepFor(10000);
+  await sleepFor(30000);
   await Promise.all([
     device1.hasElementBeenDeleted({
       strategy: "accessibility id",
