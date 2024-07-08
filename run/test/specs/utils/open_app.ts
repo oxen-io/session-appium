@@ -120,10 +120,6 @@ export const openAppTwoDevices = async (
     openAppOnPlatform(platform, 1),
   ]);
 
-  // function closeAllApps() {
-  //   // do the thing
-  // }
-
   return { device1: app1.device, device2: app2.device };
 };
 
@@ -287,7 +283,13 @@ const openiOSApp = async (
 }> => {
   console.warn("openiOSApp");
 
-  const workerId = parseInt(process.env.MOCHA_WORKER_ID || "0", 10);
+  let workerId = parseInt(process.env.MOCHA_WORKER_ID || "0", 10);
+  if (isNaN(workerId)) {
+    console.warn("MOCHA_WORKER_ID is not a number. Defaulting to 0.");
+    workerId = 0; // Default to 0 if parsing fails
+  } else {
+    console.log(`MOCHA_WORKER_ID is ${workerId}`);
+  }
 
   // Calculate the actual capabilities index for the current worker
   const actualCapabilitiesIndex = (workerId * 4 +

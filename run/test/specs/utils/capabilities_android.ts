@@ -3,8 +3,21 @@ import { AppiumCapabilities } from "@wdio/types/build/Capabilities";
 import { W3CCapabilities } from "@wdio/types/build/Capabilities";
 import { isNil, isString } from "lodash";
 import { CapabilitiesIndexType } from "./capabilities_ios";
+import dotenv from "dotenv";
+dotenv.config();
+// Access the environment variable
+const androidPathPrefix = process.env.ANDROID_APP_PATH_PREFIX;
 
-const androidAppFullPath = `/Users/emilyburton/Downloads/session-android-20240531T000357Z-b544961d2-universal/session-1.18.4-universal.apk`;
+if (!androidPathPrefix) {
+  throw new Error("ANDROID_APP_PATH_PREFIX environment variable is not set");
+}
+
+// Concatenate the environment variable with the fixed part of the path
+const androidAppFullPath = `${androidPathPrefix}/android-1.18.4/session-1.18.4-universal.apk`;
+
+console.log(`Android app full path: ${androidAppFullPath}`);
+
+// const androidAppFullPath = `/Users/emilyburton/Downloads/session-android-20240531T000357Z-b544961d2-universal/session-1.18.4-universal.apk`;
 
 const sharedCapabilities: AppiumCapabilities = {
   "appium:app": androidAppFullPath,

@@ -1,7 +1,14 @@
 import { AppiumXCUITestCapabilities } from "@wdio/types/build/Capabilities";
 import { W3CCapabilities } from "@wdio/types/build/Capabilities";
-const iosAppFullPath = `/Users/emilyburton/Downloads/Session 3.app`;
-// const iosAppFullPath = `/Users/emilyburton/Downloads/session-ios-fixed-regression/Session.app`;
+import dotenv from "dotenv";
+dotenv.config();
+const iosPathPrefix = process.env.IOS_APP_PATH_PREFIX;
+
+if (!iosPathPrefix) {
+  throw new Error("IOS_APP_PATH_PREFIX environment variable is not set");
+}
+
+const iosAppFullPath = `${iosPathPrefix}/Session 3.app`;
 
 const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   "appium:app": iosAppFullPath,

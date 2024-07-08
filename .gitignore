@@ -16,6 +16,7 @@ apps/
 *.log
 chromeDriver
 .tmp
+.env
 
 run/**/*.js
 *.js.map

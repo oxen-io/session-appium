@@ -42,7 +42,8 @@
   "dependencies": {
     "appium": "^2.4.1",
     "appium-uiautomator2-driver": "patch:appium-uiautomator2-driver@file%3A../.appium/node_modules/appium-uiautomator2-driver%23../.appium/node_modules/appium-uiautomator2-driver%3A%3Ahash=ed7690&locator=root-workspace-0b6124%2540workspace%253A.#./patches/appium-uiautomator2-driver-file-af32bb34eb.patch",
-    "appium-xcuitest-driver": "file:../.appium/node_modules/appium-xcuitest-driver"
+    "appium-xcuitest-driver": "file:../.appium/node_modules/appium-xcuitest-driver",
+    "dotenv": "^16.4.5"
   },
   "mocha": {
     "timeout": 300000,
