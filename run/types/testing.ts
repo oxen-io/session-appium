@@ -1,3 +1,5 @@
+import { DeviceWrapper } from "./DeviceWrapper";
+
 export type User = {
   userName: Username;
   sessionID: string;
@@ -24,6 +26,14 @@ export type Group = {
   userOne: User;
   userTwo: User;
   userThree: User;
+};
+
+export type SetupData = {
+  device1: DeviceWrapper | undefined;
+  device2: DeviceWrapper | undefined;
+  device3: DeviceWrapper | undefined;
+  userA: User | undefined;
+  userB: User | undefined;
 };
 
 export type Coordinates = {
@@ -65,13 +75,13 @@ export type DisappearOpts1o1 = [
     | `Disappear after ${DisappearModes} option`
     | `Disappear after ${DisappearModes} option`
   ),
-  DMTimeOption
+  DMTimeOption?
 ];
 
 export type DisappearOptsGroup = [
   "Group" | "Note to Self",
   `Disappear after ${DisappearModes} option`,
-  DMTimeOption
+  DMTimeOption?
 ];
 
 export type MergedOptions = DisappearOpts1o1 | DisappearOptsGroup;
@@ -296,4 +306,5 @@ export type AccessibilityId =
   | "1 day"
   | "1 week"
   | "2 weeks"
-  | "Off";
+  | "Off"
+  | "space";

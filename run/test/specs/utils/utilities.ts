@@ -1,7 +1,6 @@
 import { pick } from "lodash";
 import * as util from "util";
 import { sleepFor } from ".";
-import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { getAdbFullPath } from "./binaries";
 
 import { exec as execNotPromised } from "child_process";
@@ -90,7 +89,7 @@ export const installAppToDeviceName = async (
   );
 };
 
-export const isDeviceIOS = (device: DeviceWrapper) => {
+export const isDeviceIOS = (device: unknown) => {
   return (
     (device as any).originalCaps.alwaysMatch[
       "appium:platformName"
@@ -98,4 +97,4 @@ export const isDeviceIOS = (device: DeviceWrapper) => {
   );
 };
 
-export const isDeviceAndroid = (device: DeviceWrapper) => !isDeviceIOS(device);
+export const isDeviceAndroid = (device: unknown) => !isDeviceIOS(device);

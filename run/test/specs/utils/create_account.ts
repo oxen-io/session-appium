@@ -43,13 +43,30 @@ export const newUser = async (
     device.clickOnByAccessibilityID("Don’t Allow")
   );
   await sleepFor(1000);
-  await runOnlyOnAndroid(platform, () =>
-    device.clickOnElementAll({
-      strategy: "id",
-      selector: `com.android.permissioncontroller:id/permission_allow_button`,
-      text: "Allow",
-    })
-  );
+  if (platform === "android") {
+    try {
+      const androidPermissions = await device.doesElementExist({
+        strategy: "id",
+        selector: "com.android.permissioncontroller:id/permission_allow_button",
+        text: "Allow",
+        maxWait: 5000,
+      });
+
+      if (androidPermissions) {
+        await device.clickOnElementAll({
+          strategy: "id",
+          selector:
+            "com.android.permissioncontroller:id/permission_allow_button",
+          text: "Allow",
+        });
+      } else {
+        console.log("Android: No permissions to allow");
+      }
+    } catch (error) {
+      console.error("Error handling Android permissions:", error);
+    }
+  }
+
   // Click on 'continue' button to open recovery phrase modal
   await device.waitForTextElementToBePresent({
     strategy: "accessibility id",

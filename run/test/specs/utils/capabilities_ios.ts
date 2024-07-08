@@ -1,7 +1,14 @@
 import { AppiumXCUITestCapabilities } from "@wdio/types/build/Capabilities";
 import { W3CCapabilities } from "@wdio/types/build/Capabilities";
-// const iosAppFullPath = `/Users/emilyburton/Desktop/Session.app`;
-const iosAppFullPath = `/Users/emilyburton/Downloads/session-ios-20240618T020520Z-a49a27207-sim 2/Session.app`;
+import dotenv from "dotenv";
+dotenv.config();
+const iosPathPrefix = process.env.IOS_APP_PATH_PREFIX;
+
+if (!iosPathPrefix) {
+  throw new Error("IOS_APP_PATH_PREFIX environment variable is not set");
+}
+
+const iosAppFullPath = `${iosPathPrefix}/Session 3.app`;
 
 const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   "appium:app": iosAppFullPath,
@@ -17,94 +24,67 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   "appium:reduceMotion": true,
   // "appium:isHeadless": true,
 } as AppiumXCUITestCapabilities;
-export type CapabilitiesIndexType = 0 | 1 | 2 | 3 | 4 | 5;
 
-function getIOSSimulatorUUIDFromEnv(index: CapabilitiesIndexType): string {
-  switch (index) {
-    case 0:
-      if (process.env.IOS_FIRST_SIMULATOR) {
-        return process.env.IOS_FIRST_SIMULATOR;
-      }
-      throw new Error(
-        `getSimulatorUUIDFromEnv process.env.IOS_FIRST_SIMULATOR is not set`
-      );
-    case 1:
-      if (process.env.IOS_SECOND_SIMULATOR) {
-        return process.env.IOS_SECOND_SIMULATOR;
-      }
-      throw new Error(
-        `getSimulatorUUIDFromEnv process.env.IOS_SECOND_SIMULATOR is not set`
-      );
-    case 2:
-      if (process.env.IOS_THIRD_SIMULATOR) {
-        return process.env.IOS_THIRD_SIMULATOR;
-      }
-      throw new Error(
-        `getSimulatorUUIDFromEnv process.env.IOS_THIRD_SIMULATOR is not set`
-      );
-    case 3:
-      if (process.env.IOS_FOURTH_SIMULATOR) {
-        return process.env.IOS_FOURTH_SIMULATOR;
-      }
-      throw new Error(
-        `getSimulatorUUIDFromEnv process.env.IOS_THIRD_SIMULATOR is not set`
-      );
-    default:
-      throw new Error(
-        `getSimulatorUUIDFromEnv unknown index: ${index as number}`
-      );
-  }
+export type CapabilitiesIndexType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+interface CustomW3CCapabilities extends W3CCapabilities {
+  "appium:wdaLocalPort": number;
+  "appium:udid": string;
 }
 
-const emulator1Udid = getIOSSimulatorUUIDFromEnv(0);
-const emulator2Udid = getIOSSimulatorUUIDFromEnv(1);
-const emulator3Udid = getIOSSimulatorUUIDFromEnv(2);
-const emulator4Udid = getIOSSimulatorUUIDFromEnv(3);
+function getIOSSimulatorUUIDFromEnv(index: CapabilitiesIndexType): string {
+  const envVars = [
+    "IOS_FIRST_SIMULATOR",
+    "IOS_SECOND_SIMULATOR",
+    "IOS_THIRD_SIMULATOR",
+    "IOS_FOURTH_SIMULATOR",
+    "IOS_FIFTH_SIMULATOR",
+    "IOS_SIXTH_SIMULATOR",
+    "IOS_SEVENTH_SIMULATOR",
+    "IOS_EIGHTH_SIMULATOR",
+  ];
 
-const capabilities1: AppiumXCUITestCapabilities = {
-  ...sharediOSCapabilities,
-  "appium:udid": emulator1Udid,
-  "appium:wdaLocalPort": 1253,
-};
-const capabilities2: AppiumXCUITestCapabilities = {
-  ...sharediOSCapabilities,
-  "appium:wdaLocalPort": 1254,
-  "appium:udid": emulator2Udid,
-};
+  const envVar = envVars[index];
+  const uuid = process.env[envVar];
 
-const capabilities3: AppiumXCUITestCapabilities = {
-  ...sharediOSCapabilities,
-  "appium:udid": emulator3Udid,
-  "appium:wdaLocalPort": 1255,
-};
+  if (!uuid) {
+    throw new Error(`Environment variable ${envVar} is not set`);
+  }
 
-const capabilities4: AppiumXCUITestCapabilities = {
-  ...sharediOSCapabilities,
-  "appium:udid": emulator4Udid,
-  "appium:wdaLocalPort": 1256,
-};
+  return uuid;
+}
 
-const countOfIosCapabilities = 4;
+const emulatorUUIDs = Array.from({ length: 8 }, (_, index) =>
+  getIOSSimulatorUUIDFromEnv(index as CapabilitiesIndexType)
+);
+
+const capabilities = emulatorUUIDs.map((udid, index) => ({
+  ...sharediOSCapabilities,
+  "appium:udid": udid,
+  "appium:wdaLocalPort": 1253 + index,
+}));
 
 export function getIosCapabilities(
   capabilitiesIndex: CapabilitiesIndexType
 ): W3CCapabilities {
-  if (capabilitiesIndex >= countOfIosCapabilities) {
+  if (capabilitiesIndex >= capabilities.length) {
     throw new Error(`Asked invalid ios cap index: ${capabilitiesIndex}`);
   }
-  const caps =
-    capabilitiesIndex === 0
-      ? capabilities1
-      : capabilitiesIndex === 1
-      ? capabilities2
-      : capabilitiesIndex === 2
-      ? capabilities3
-      : capabilities4;
+
+  const caps = capabilities[capabilitiesIndex];
 
   return {
-    firstMatch: [{}, {}],
-    alwaysMatch: {
-      ...caps,
-    },
+    firstMatch: [{}],
+    alwaysMatch: { ...caps },
   };
+}
+
+export function getCapabilitiesForWorker(
+  workerId: number
+): CustomW3CCapabilities {
+  const emulator = capabilities[workerId % capabilities.length];
+  return {
+    ...sharediOSCapabilities,
+    "appium:udid": emulator["appium:udid"],
+    "appium:wdaLocalPort": emulator["appium:wdaLocalPort"],
+  } as CustomW3CCapabilities;
 }

@@ -1,0 +1,126 @@
+import { androidIt, bothPlatformsIt, iosIt } from "../../types/sessionIt";
+import { sleepFor } from "./utils";
+import { newUser } from "./utils/create_account";
+import { createGroup } from "./utils/create_group";
+import {
+  SupportedPlatformsType,
+  openAppThreeDevices,
+  closeApp,
+} from "./utils/open_app";
+
+iosIt("Send link to group", sendLinkGroupiOS);
+androidIt("Send link to group", sendLinkGroupAndroid);
+
+async function sendLinkGroupiOS(platform: SupportedPlatformsType) {
+  const testGroupName = "Message checks for groups";
+  const testLink = `https://type-level-typescript.com/objects-and-records`;
+  const { device1, device2, device3 } = await openAppThreeDevices(platform);
+  // Create users A, B and C
+  const [userA, userB, userC] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+    newUser(device3, "Charlie", platform),
+  ]);
+  const replyMessage = `Replying to link from ${userA.userName} in group ${testGroupName}`;
+  // Create contact between User A and User B
+  await createGroup(
+    platform,
+    device1,
+    userA,
+    device2,
+    userB,
+    device3,
+    userC,
+    testGroupName
+  );
+  await device1.inputText("accessibility id", "Message input box", testLink);
+  await device1.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Message sent status: Sent",
+    maxWait: 20000,
+  });
+  // Accept dialog for link preview
+  await device1.clickOnByAccessibilityID("Enable");
+  // No preview on first send
+  await device1.clickOnByAccessibilityID("Send message button");
+  // Send again for image
+  await device1.inputText("accessibility id", "Message input box", testLink);
+  await sleepFor(1000);
+  await device1.clickOnByAccessibilityID("Send message button");
+  await device2.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Message body",
+    text: testLink,
+  });
+  await device3.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Message body",
+    text: testLink,
+  });
+  // Reply to link
+  await device2.longPressMessage(testLink);
+  await device2.clickOnByAccessibilityID("Reply to message");
+  await device2.sendMessage(replyMessage);
+  await device1.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Message body",
+    text: replyMessage,
+  });
+  await device3.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Message body",
+    text: replyMessage,
+  });
+  await closeApp(device1, device2, device3);
+}
+
+async function sendLinkGroupAndroid(platform: SupportedPlatformsType) {
+  const testGroupName = "Message checks for groups";
+  const { device1, device2, device3 } = await openAppThreeDevices(platform);
+  // Create users A, B and C
+  const [userA, userB, userC] = await Promise.all([
+    newUser(device1, "Alice", platform),
+    newUser(device2, "Bob", platform),
+    newUser(device3, "Charlie", platform),
+  ]);
+  // Create contact between User A and User B
+  await createGroup(
+    platform,
+    device1,
+    userA,
+    device2,
+    userB,
+    device3,
+    userC,
+    testGroupName
+  );
+  const testLink = `https://example.org/`;
+  // Send a link
+  await device1.inputText("accessibility id", "Message input box", testLink);
+  // Accept dialog for link preview
+  await device1.clickOnByAccessibilityID("Enable");
+  // No preview on first send
+  await device1.clickOnByAccessibilityID("Send message button");
+  await device1.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Message sent status: Sent",
+    maxWait: 20000,
+  });
+  await device2.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Message body",
+    text: testLink,
+  });
+  await device3.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Message body",
+    text: testLink,
+  });
+  await device2.replyToMessage(userA, testLink);
+  await device3.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Message body",
+    text: `${userA.userName} message reply`,
+  });
+  await closeApp(device1, device2, device3);
+}

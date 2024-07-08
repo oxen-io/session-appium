@@ -7,7 +7,11 @@ import { sleepFor } from "./sleep_for";
 export const setDisappearingMessage = async (
   platform: SupportedPlatformsType,
   device: DeviceWrapper,
-  [conversationType, timerType, timerDuration]: MergedOptions,
+  [
+    conversationType,
+    timerType,
+    timerDuration = DISAPPEARING_TIMES.THIRTY_SECONDS,
+  ]: MergedOptions,
   device2?: DeviceWrapper
 ) => {
   const enforcedType: ConversationType = conversationType;

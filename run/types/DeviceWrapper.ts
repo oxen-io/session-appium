@@ -20,6 +20,7 @@ import {
   User,
   XPath,
 } from "./testing";
+import { XPATHS } from "../constants";
 
 export type Coordinates = {
   x: number;
@@ -108,10 +109,12 @@ type AndroidDeviceInterface = {
 } & SharedDeviceInterface;
 
 export class DeviceWrapper implements SharedDeviceInterface {
-  private readonly device: DeviceWrapper;
+  private readonly device: unknown;
+  public readonly udid: string;
 
-  constructor(device: DeviceWrapper) {
+  constructor(device: unknown, udid: string) {
     this.device = device;
+    this.udid = udid;
   }
 
   public async touchScroll(
@@ -507,14 +510,39 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
   public async deleteText(accessibilityId: AccessibilityId) {
     const el = await this.findElementByAccessibilityId(accessibilityId);
-    await this.longClick(el, 1000);
-    if (this.isIOS()) {
-      await this.clickOnElementByText({
-        strategy: "id",
-        selector: "Select All",
-        text: "Select All",
-      });
+
+    let maxRetries = 3;
+    let retries = 0;
+    let success = false;
+
+    while (retries < maxRetries && !success) {
+      await this.longClick(el, 1000);
+      if (this.isIOS()) {
+        try {
+          await this.clickOnElementByText({
+            strategy: "id",
+            selector: "Select All",
+            text: "Select All",
+            maxWait: 1000,
+          });
+          success = true;
+        } catch (error) {
+          console.warn(
+            `Retrying long press and select all, attempt ${retries + 1}`
+          );
+        }
+      } else {
+        await this.longClick(el, 1000);
+        success = true;
+      }
+      retries++;
     }
+    if (!success) {
+      throw new Error(
+        `Failed to find "Select All" button after ${maxRetries} attempts`
+      );
+    }
+
     await this.clear(el.ELEMENT);
     console.warn(`Text has been cleared ` + accessibilityId);
     return;
@@ -688,7 +716,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     maxWait,
   }: { text?: string; maxWait?: number } & StrategyExtractionObj) {
     const beforeStart = Date.now();
-    const maxWaitMSec = maxWait || 300000;
+    const maxWaitMSec = maxWait || 30000;
     const waitPerLoop = 100;
     let element: AppiumNextElementType | null = null;
     while (element === null) {
@@ -709,7 +737,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
           }
         }
       } catch (e: any) {
-        // console.warn("doesElementExist failed with", e.message);
+        console.warn("doesElementExist failed with", e.message);
       }
 
       if (!element) {
@@ -923,7 +951,16 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.inputText("accessibility id", "Message input box", message);
 
     // Click send
-    await this.clickOnByAccessibilityID("Send message button");
+
+    const sendButton = await this.clickOnElementAll({
+      strategy: "accessibility id",
+      selector: "Send message button",
+    });
+    if (!sendButton) {
+      throw new Error(
+        "Send button not found: Need to restart iOS emulator: Known issue"
+      );
+    }
     // Wait for tick
     await this.waitForTextElementToBePresent({
       strategy: "accessibility id",
@@ -971,7 +1008,15 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
     await this.inputText("accessibility id", "Message input box", message);
     // Click send
-    await this.clickOnByAccessibilityID("Send message button");
+    const sendButton = await this.clickOnElementAll({
+      strategy: "accessibility id",
+      selector: "Send message button",
+    });
+    if (!sendButton) {
+      throw new Error(
+        "Send button not found: Need to restart iOS emulator: Known issue"
+      );
+    }
     // Wait for tick
 
     await this.waitForTextElementToBePresent({
@@ -1079,14 +1124,22 @@ export class DeviceWrapper implements SharedDeviceInterface {
       const ronSwansonBirthday = "196705060700.00";
       await this.clickOnByAccessibilityID("Attachments button");
       await sleepFor(5000);
-      await clickOnCoordinates(
-        this.device,
-        InteractionPoints.ImagesFolderKeyboardOpen
-      );
+      const keyboard = await this.isKeyboardVisible(platform);
+      if (keyboard) {
+        await clickOnCoordinates(
+          this,
+          InteractionPoints.ImagesFolderKeyboardOpen
+        );
+      } else {
+        await clickOnCoordinates(
+          this,
+          InteractionPoints.ImagesFolderKeyboardClosed
+        );
+      }
       const permissions = await this.doesElementExist({
         strategy: "accessibility id",
         selector: "Allow Full Access",
-        maxWait: 1000,
+        maxWait: 2000,
       });
       if (permissions) {
         try {
@@ -1100,7 +1153,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       const testImage = await this.doesElementExist({
         strategy: "accessibility id",
         selector: `1967-05-05 21:00:00 +0000`,
-        maxWait: 2000,
+        maxWait: 1000,
       });
       if (!testImage) {
         await runScriptAndLog(
@@ -1109,9 +1162,8 @@ export class DeviceWrapper implements SharedDeviceInterface {
 
         await runScriptAndLog(
           `xcrun simctl addmedia ${
-            process.env.IOS_FIRST_SIMULATOR || ""
-          } 'run/test/specs/media/test_image.jpg'`,
-          true
+            (this as { udid?: string }).udid || ""
+          } 'run/test/specs/media/test_image.jpg'`
         );
       }
       await sleepFor(100);
@@ -1189,53 +1241,110 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.clickOnByAccessibilityID("Send");
   }
 
-  public async sendVideo(platform: SupportedPlatformsType) {
-    if (platform === "android") {
-      // Click on attachments button
-      await this.clickOnByAccessibilityID("Attachments button");
-      await sleepFor(100);
-      // Select images button/tab
-      await this.clickOnByAccessibilityID("Documents folder");
-      await this.clickOnByAccessibilityID("Continue");
-      await this.clickOnElementAll({
-        strategy: "id",
-        selector: "com.android.permissioncontroller:id/permission_allow_button",
-        text: "Allow",
-      });
-      await sleepFor(200);
-      // Select video
-      const mediaButtons = await this.findElementsByClass(
-        "android.widget.Button"
-      );
-      const videosButton = await this.findMatchingTextInElementArray(
-        mediaButtons,
-        "Videos"
-      );
-      if (!videosButton) {
-        throw new Error("videosButton was not found");
-      }
-      await this.click(videosButton.ELEMENT);
-      const testVideo = await this.doesElementExist({
-        strategy: "id",
-        selector: "android:id/title",
-        maxWait: 1000,
-        text: "test_video.mp4",
-      });
-      if (!testVideo) {
-        // Adds video to downloads folder if it isn't already there
-        await runScriptAndLog(
-          `adb -s emulator-5554 push 'run/test/specs/media/test_video.mp4' /storage/emulated/0/Download`,
-          true
-        );
-      }
-      await sleepFor(100);
-      await this.clickOnTextElementById("android:id/title", "test_video.mp4");
-      await this.waitForTextElementToBePresent({
-        strategy: "accessibility id",
-        selector: `Message sent status: Sent`,
-        maxWait: 50000,
-      });
+  public async sendVideoiOS(message: string) {
+    const bestDayOfYear = `198809090700.00`;
+    await this.clickOnByAccessibilityID("Attachments button");
+    // Select images button/tab
+    await sleepFor(5000);
+    await clickOnCoordinates(
+      this,
+      InteractionPoints.ImagesFolderKeyboardClosed
+    );
+    await sleepFor(100);
+    // Check if android or ios (android = documents folder/ ios = images folder)
+
+    await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardOpen);
+    const permissions = await this.doesElementExist({
+      strategy: "accessibility id",
+      selector: "Allow Full Access",
+      maxWait: 5000,
+    });
+    if (permissions) {
+      await this.clickOnByAccessibilityID("Allow Full Access");
+    } else {
+      console.log("No permissions");
     }
+    await this.clickOnByAccessibilityID("Recents");
+    // Select video
+    const videoFolder = await this.doesElementExist({
+      strategy: "xpath",
+      selector: XPATHS.VIDEO_TOGGLE,
+      maxWait: 5000,
+    });
+    if (videoFolder) {
+      console.log("Videos folder found");
+      await this.clickOnByAccessibilityID("Videos");
+      await this.clickOnByAccessibilityID(`1988-09-08 21:00:00 +0000`);
+    } else {
+      console.log("Videos folder NOT found");
+      await runScriptAndLog(
+        `touch -a -m -t ${bestDayOfYear} 'run/test/specs/media/test_video.mp4'`,
+        true
+      );
+      await runScriptAndLog(
+        `xcrun simctl addmedia ${
+          this.udid || ""
+        } 'run/test/specs/media/test_video.mp4'`,
+        true
+      );
+      await this.clickOnByAccessibilityID(`1988-09-08 21:00:00 +0000`, 5000);
+    }
+    // Send with message
+    await this.clickOnByAccessibilityID("Text input box");
+    await this.inputText("accessibility id", "Text input box", message);
+    await this.clickOnByAccessibilityID("Send button");
+    await this.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: `Message sent status: Sent`,
+      maxWait: 10000,
+    });
+  }
+
+  public async sendVideoAndroid() {
+    // Click on attachments button
+    await this.clickOnByAccessibilityID("Attachments button");
+    await sleepFor(100);
+    // Select images button/tab
+    await this.clickOnByAccessibilityID("Documents folder");
+    await this.clickOnByAccessibilityID("Continue");
+    await this.clickOnElementAll({
+      strategy: "id",
+      selector: "com.android.permissioncontroller:id/permission_allow_button",
+      text: "Allow",
+    });
+    await sleepFor(200);
+    // Select video
+    const mediaButtons = await this.findElementsByClass(
+      "android.widget.Button"
+    );
+    const videosButton = await this.findMatchingTextInElementArray(
+      mediaButtons,
+      "Videos"
+    );
+    if (!videosButton) {
+      throw new Error("videosButton was not found");
+    }
+    await this.click(videosButton.ELEMENT);
+    const testVideo = await this.doesElementExist({
+      strategy: "id",
+      selector: "android:id/title",
+      maxWait: 1000,
+      text: "test_video.mp4",
+    });
+    if (!testVideo) {
+      // Adds video to downloads folder if it isn't already there
+      await runScriptAndLog(
+        `adb -s emulator-5554 push 'run/test/specs/media/test_video.mp4' /storage/emulated/0/Download`,
+        true
+      );
+    }
+    await sleepFor(100);
+    await this.clickOnTextElementById("android:id/title", "test_video.mp4");
+    await this.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: `Message sent status: Sent`,
+      maxWait: 50000,
+    });
   }
 
   public async sendDocument(platform: SupportedPlatformsType) {
@@ -1272,9 +1381,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
       }
       await sleepFor(1000);
       await this.clickOnTextElementById("android:id/title", "test_file.pdf");
-    } else {
-      // Need to fix this for iOS
-      console.log(`This function is not yet implemented for iOS`);
+      await this.waitForTextElementToBePresent({
+        strategy: "accessibility id",
+        selector: `Message sent status: Sent`,
+        maxWait: 50000,
+      });
     }
   }
 
@@ -1290,6 +1401,17 @@ export class DeviceWrapper implements SharedDeviceInterface {
       console.log(`Couldn't get time from device`);
     }
     return timeString;
+  }
+
+  public async isKeyboardVisible(platform: SupportedPlatformsType) {
+    if (platform === "ios") {
+      const spaceBar = await this.doesElementExist({
+        strategy: "accessibility id",
+        selector: "space",
+        maxWait: 500,
+      });
+      return Boolean(spaceBar);
+    }
   }
 
   public async mentionContact(platform: SupportedPlatformsType, contact: User) {
