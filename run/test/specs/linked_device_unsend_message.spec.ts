@@ -44,7 +44,11 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
     selector: "Deleted message",
   });
   // Check linked device for deleted message
-  await device3.hasTextElementBeenDeleted("Message body", sentMessage);
+  await device3.hasElementBeenDeleted({
+    strategy: "accessibility id",
+    selector: "Message body",
+    text: sentMessage,
+  });
   // Close app
   await closeApp(device1, device2, device3);
 }
