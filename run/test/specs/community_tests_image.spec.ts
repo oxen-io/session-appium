@@ -7,10 +7,11 @@ import {
   closeApp,
   openAppTwoDevices,
 } from "./utils/open_app";
+import { test } from "@playwright/test";
 
-describe.skip("Send image to community tests", () => {
-  iosIt("Send image to community", sendImageCommunityiOS);
-  androidIt("Send image to community", sendImageCommunityAndroid);
+test.describe("Community tests", () => {
+  iosIt("Send image to community", sendImageCommunityiOS, true);
+  androidIt("Send image to community", sendImageCommunityAndroid, true);
 });
 
 async function sendImageCommunityiOS(platform: SupportedPlatformsType) {

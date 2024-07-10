@@ -1,14 +1,17 @@
-import { bothPlatformsIt } from "../../types/sessionIt";
-import { runOnlyOnIOS, runOnlyOnAndroid, sleepFor } from "./utils";
+import { androidIt, iosIt } from "../../types/sessionIt";
+import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { linkedDevice } from "./utils/link_device";
 import {
   SupportedPlatformsType,
-  openAppThreeDevices,
   closeApp,
+  openAppThreeDevices,
 } from "./utils/open_app";
 
-bothPlatformsIt("Decline message request", declineRequest);
+iosIt("Decline message request", declineRequest);
+androidIt("Decline message request", declineRequest);
+
+// bothPlatformsIt("Decline message request", declineRequest);
 
 async function declineRequest(platform: SupportedPlatformsType) {
   // Check 'decline' button

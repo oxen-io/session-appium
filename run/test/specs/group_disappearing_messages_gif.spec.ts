@@ -1,17 +1,20 @@
-import { DISAPPEARING_TIMES, XPATHS } from "../../constants";
-import { bothPlatformsIt } from "../../types/sessionIt";
-import { DMTimeOption, InteractionPoints } from "../../types/testing";
+import { XPATHS } from "../../constants";
+import { androidIt, iosIt } from "../../types/sessionIt";
+import { InteractionPoints } from "../../types/testing";
 import { clickOnCoordinates, sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { createGroup } from "./utils/create_group";
 import {
   SupportedPlatformsType,
-  openAppThreeDevices,
   closeApp,
+  openAppThreeDevices,
 } from "./utils/open_app";
 import { setDisappearingMessage } from "./utils/set_disappearing_messages";
 
-bothPlatformsIt("Send disappearing GIF to group", disappearingGifMessageGroup);
+iosIt("Send disappearing GIF to group", disappearingGifMessageGroup);
+androidIt("Send disappearing GIF to group", disappearingGifMessageGroup);
+
+// bothPlatformsIt("Send disappearing GIF to group", disappearingGifMessageGroup);
 
 async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
   const testGroupName = "Disappear after sent test";

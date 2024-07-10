@@ -1,13 +1,13 @@
 import { XPATHS } from "../../constants";
-import { androidIt, bothPlatformsIt, iosIt } from "../../types/sessionIt";
+import { androidIt, iosIt } from "../../types/sessionIt";
 import { InteractionPoints } from "../../types/testing";
 import { clickOnCoordinates, sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { createGroup } from "./utils/create_group";
 import {
   SupportedPlatformsType,
-  openAppThreeDevices,
   closeApp,
+  openAppThreeDevices,
 } from "./utils/open_app";
 
 iosIt("Send GIF to group", sendGifGroupiOS);

@@ -1,12 +1,15 @@
-import { bothPlatformsIt } from "../../types/sessionIt";
+import { androidIt, iosIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
 import {
   SupportedPlatformsType,
-  openAppTwoDevices,
   closeApp,
+  openAppTwoDevices,
 } from "./utils/open_app";
 
-bothPlatformsIt("Accept message request with text", acceptRequestWithText);
+iosIt("Accept message request with text", acceptRequestWithText);
+androidIt("Accept message request with text", acceptRequestWithText);
+
+// bothPlatformsIt("Accept message request with text", acceptRequestWithText);
 
 async function acceptRequestWithText(platform: SupportedPlatformsType) {
   // Check accept request by sending text message

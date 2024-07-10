@@ -1,4 +1,4 @@
-import { androidIt, bothPlatformsIt, iosIt } from "../../types/sessionIt";
+import { androidIt, iosIt } from "../../types/sessionIt";
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { linkedDevice } from "./utils/link_device";
@@ -8,7 +8,10 @@ import {
   SupportedPlatformsType,
 } from "./utils/open_app";
 
-bothPlatformsIt("Block message request", blockedRequest);
+iosIt("Block message request", blockedRequest);
+androidIt("Block message request", blockedRequest);
+
+// bothPlatformsIt("Block message request", blockedRequest);
 
 async function blockedRequest(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);

@@ -1,11 +1,11 @@
-import { androidIt, bothPlatformsIt, iosIt } from "../../types/sessionIt";
+import { androidIt, iosIt } from "../../types/sessionIt";
 import { sleepFor } from "./utils";
 import { parseDataImage } from "./utils/check_colour";
 import { newUser } from "./utils/create_account";
 import {
   SupportedPlatformsType,
-  openAppOnPlatformSingleDevice,
   closeApp,
+  openAppOnPlatformSingleDevice,
 } from "./utils/open_app";
 import { runScriptAndLog } from "./utils/utilities";
 

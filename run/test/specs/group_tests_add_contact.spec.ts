@@ -1,15 +1,18 @@
-import { bothPlatformsIt } from "../../types/sessionIt";
-import { runOnlyOnIOS, sleepFor, runOnlyOnAndroid } from "./utils";
+import { androidIt, iosIt } from "../../types/sessionIt";
+import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { createGroup } from "./utils/create_group";
 import {
   SupportedPlatformsType,
-  openAppFourDevices,
   closeApp,
+  openAppFourDevices,
 } from "./utils/open_app";
 
-bothPlatformsIt("Add contact to group", addContactToGroup);
+iosIt("Add contact to group", addContactToGroup);
+androidIt("Add contact to group", addContactToGroup);
+
+// bothPlatformsIt("Add contact to group", addContactToGroup);
 
 async function addContactToGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3, device4 } = await openAppFourDevices(

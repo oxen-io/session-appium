@@ -1,13 +1,16 @@
-import { bothPlatformsIt } from "../../types/sessionIt";
+import { androidIt, iosIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
 import { createGroup } from "./utils/create_group";
 import {
   SupportedPlatformsType,
-  openAppThreeDevices,
   closeApp,
+  openAppThreeDevices,
 } from "./utils/open_app";
 
-bothPlatformsIt("Mentions for groups", mentionsForGroups);
+iosIt("Mentions for groups", mentionsForGroups);
+androidIt("Mentions for groups", mentionsForGroups);
+
+// bothPlatformsIt("Mentions for groups", mentionsForGroups);
 
 async function mentionsForGroups(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);

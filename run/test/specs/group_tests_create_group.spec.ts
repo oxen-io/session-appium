@@ -1,13 +1,16 @@
-import { bothPlatformsIt } from "../../types/sessionIt";
+import { androidIt, iosIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
 import { createGroup } from "./utils/create_group";
 import {
   SupportedPlatformsType,
-  openAppThreeDevices,
   closeApp,
+  openAppThreeDevices,
 } from "./utils/open_app";
 
-bothPlatformsIt("Create group", groupCreation);
+iosIt("Create group", groupCreation);
+androidIt("Create group", groupCreation);
+
+// bothPlatformsIt("Create group", groupCreation);
 
 async function groupCreation(platform: SupportedPlatformsType) {
   const testGroupName = "Test group";

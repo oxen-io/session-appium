@@ -1,6 +1,4 @@
-import { DISAPPEARING_TIMES } from "../../constants";
-import { bothPlatformsIt, iosIt } from "../../types/sessionIt";
-import { DMTimeOption } from "../../types/testing";
+import { androidIt, iosIt } from "../../types/sessionIt";
 import { sleepFor } from "./utils";
 
 import { newUser } from "./utils/create_account";
@@ -12,10 +10,13 @@ import {
 } from "./utils/open_app";
 import { setDisappearingMessage } from "./utils/set_disappearing_messages";
 
-bothPlatformsIt(
-  "Send disappearing link to group",
-  disappearingLinkMessageGroup
-);
+iosIt("Send disappearing link to group", disappearingLinkMessageGroup);
+androidIt("Send disappearing link to group", disappearingLinkMessageGroup);
+
+// bothPlatformsIt(
+//   "Send disappearing link to group",
+//   disappearingLinkMessageGroup
+// );
 
 async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);

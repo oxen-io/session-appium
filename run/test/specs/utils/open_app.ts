@@ -32,8 +32,9 @@ export type SupportedPlatformsType = "android" | "ios";
 /* ******************Command to run Appium Server: *************************************
 ./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --use-plugins=execute-driver --allow-cors
 */
+
 // Basic test environment is 3 devices (device1, device2, device3) and 2 users (userA, userB)
-// Device 1 and 3 are linked devicesby userA
+// Device 1 and 3 are linked devices by userA
 export const createBasicTestEnvironment = async (
   platform: SupportedPlatformsType
 ): Promise<{
@@ -76,9 +77,8 @@ export const openAppMultipleDevices = async (
   numberOfDevices: number
 ): Promise<DeviceWrapper[]> => {
   // Create an array of promises for each device
-  const devicePromises = Array.from(
-    { length: numberOfDevices },
-    (_, index) => openAppOnPlatform(platform, index as CapabilitiesIndexType) // Just pass the index directly
+  const devicePromises = Array.from({ length: numberOfDevices }, (_, index) =>
+    openAppOnPlatform(platform, index as CapabilitiesIndexType)
   );
 
   // Use Promise.all to wait for all device apps to open
@@ -94,7 +94,6 @@ const openAppOnPlatform = async (
 ): Promise<{
   device: DeviceWrapper;
 }> => {
-  console.warn("process.env.MOCHA_WORKER_ID", process.env.MOCHA_WORKER_ID);
   console.warn("starting capabilitiesIndex", capabilitiesIndex, platform);
   return platform === "ios"
     ? openiOSApp(capabilitiesIndex)
@@ -227,7 +226,6 @@ const openAndroidApp = async (
 ): Promise<{
   device: DeviceWrapper;
 }> => {
-  // await killAdbIfNotAlreadyDone();
   const targetName = getAndroidUdid(capabilitiesIndex);
 
   const emulatorAlreadyRunning = await isEmulatorRunning(targetName);
@@ -245,7 +243,6 @@ const openAndroidApp = async (
   );
   const driver = (androidDriver as any).AndroidUiautomator2Driver;
 
-  // console.warn('installAppToDeviceName ', driver);
   console.log(
     `Android App Full Path: ${
       getAndroidCapabilities(capabilitiesIndex)["alwaysMatch"]["appium:app"]
@@ -264,14 +261,11 @@ const openAndroidApp = async (
   `);
 
   await wrappedDevice.createSession(getAndroidCapabilities(capabilitiesIndex));
-  // this is required to make PopupWindow show up from the Android SDK
-  // this `any` was approved by Audric
   await (device as any).updateSettings({
     ignoreUnimportantViews: false,
     allowInvisibleElements: true,
     enableMultiWindows: true,
   });
-  // console.warn(`SessionID for android:${capabilitiesIndex}: "${sess[0]}"`);
 
   return { device: wrappedDevice };
 };
@@ -283,17 +277,8 @@ const openiOSApp = async (
 }> => {
   console.warn("openiOSApp");
 
-  let workerId = parseInt(process.env.MOCHA_WORKER_ID || "0", 10);
-  if (isNaN(workerId)) {
-    console.warn("MOCHA_WORKER_ID is not a number. Defaulting to 0.");
-    workerId = 0; // Default to 0 if parsing fails
-  } else {
-    console.log(`MOCHA_WORKER_ID is ${workerId}`);
-  }
-
   // Calculate the actual capabilities index for the current worker
-  const actualCapabilitiesIndex = (workerId * 4 +
-    capabilitiesIndex) as CapabilitiesIndexType;
+  const actualCapabilitiesIndex = capabilitiesIndex;
 
   const opts: DriverOpts = {
     address: `http://localhost:${APPIUM_PORT}`,

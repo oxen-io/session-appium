@@ -1,12 +1,12 @@
 import { XPATHS } from "../../constants";
-import { androidIt, bothPlatformsIt, iosIt } from "../../types/sessionIt";
+import { androidIt, iosIt } from "../../types/sessionIt";
 import { sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { createGroup } from "./utils/create_group";
 import {
   SupportedPlatformsType,
-  openAppThreeDevices,
   closeApp,
+  openAppThreeDevices,
 } from "./utils/open_app";
 
 iosIt("Send voice message to group", sendVoiceMessageGroupiOS);

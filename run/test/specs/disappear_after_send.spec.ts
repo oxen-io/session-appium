@@ -1,4 +1,4 @@
-import { bothPlatformsIt } from "../../types/sessionIt";
+import { androidIt, bothPlatformsIt, iosIt } from "../../types/sessionIt";
 import {
   DMTimeOption,
   DisappearModes,
@@ -14,7 +14,10 @@ import {
 } from "./utils/open_app";
 import { setDisappearingMessage } from "./utils/set_disappearing_messages";
 
-bothPlatformsIt("Disappear after send", disappearAfterSend);
+iosIt("Disappear after send", disappearAfterSend);
+androidIt("Disappear after send", disappearAfterSend);
+
+// bothPlatformsIt("Disappear after send", disappearAfterSend);
 
 async function disappearAfterSend(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

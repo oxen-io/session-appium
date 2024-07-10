@@ -1,3 +1,4 @@
+import { test } from "@playwright/test";
 import { androidIt, iosIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
 import { runOnlyOnAndroid, sleepFor } from "./utils/index";
@@ -6,9 +7,10 @@ import {
   closeApp,
   openAppTwoDevices,
 } from "./utils/open_app";
-describe.skip("Voice calls", () => {
-  androidIt("Voice calls", voiceCallAndroid);
-  iosIt("Voice calls", voiceCallIos);
+
+test.describe("Calls test", () => {
+  androidIt("Voice calls", voiceCallAndroid, true);
+  iosIt("Voice calls", voiceCallIos, true);
 });
 async function voiceCallIos(platform: SupportedPlatformsType) {
   // Open app
