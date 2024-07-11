@@ -1,4 +1,4 @@
-import { runOnlyOnIOS, sleepFor } from ".";
+import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from ".";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { User, Username } from "../../../types/testing";
 import { SupportedPlatformsType } from "./open_app";
@@ -27,9 +27,7 @@ export const newUser = async (
   // Select Continue to save notification settings
   await device.clickOnByAccessibilityID("Continue");
   // Need to add Don't allow notifications dismiss here
-  await runOnlyOnIOS(platform, () =>
-    device.clickOnByAccessibilityID("Don’t Allow")
-  );
+  await device.checkPermissions(platform);
   await sleepFor(1000);
   // No pop up for notifications on android anymore
   // Click on 'continue' button to open recovery phrase modal
@@ -37,18 +35,32 @@ export const newUser = async (
     strategy: "accessibility id",
     selector: "Reveal recovery phrase button",
   });
-  await device.clickOnByAccessibilityID("Continue");
+  await runOnlyOnIOS(platform, () =>
+    device.clickOnByAccessibilityID("Continue")
+  );
+  await runOnlyOnAndroid(platform, () =>
+    device.clickOnElementAll({
+      strategy: "accessibility id",
+      selector: "Reveal recovery phrase button",
+    })
+  );
   //Save recovery passwprd
-  await device.clickOnByAccessibilityID("Recovery password");
+  await device.clickOnByAccessibilityID("Recovery password container");
   // Save recovery phrase as variable
   const recoveryPhrase = await device.grabTextFromAccessibilityId(
-    "Recovery password"
+    "Recovery password container"
   );
   console.log(`${userName}s recovery phrase is "${recoveryPhrase}"`);
   // Exit Modal
-  await device.clickOnByAccessibilityID("Navigate up");
+  await device.navigateBack(platform);
   await device.clickOnByAccessibilityID("User settings");
   const accountID = await device.grabTextFromAccessibilityId("Account ID");
-
+  await runOnlyOnAndroid(platform, () => device.navigateBack(platform));
+  await runOnlyOnIOS(platform, () =>
+    device.clickOnElementAll({
+      strategy: "accessibility id",
+      selector: "Close button",
+    })
+  );
   return { userName, accountID, recoveryPhrase };
 };

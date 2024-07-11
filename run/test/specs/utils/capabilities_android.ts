@@ -6,7 +6,7 @@ import {
 import { isNil, isString } from "lodash";
 import { CapabilitiesIndexType } from "./capabilities_ios";
 
-const androidAppFullPath = `/Users/emilyburton/Documents/session-android/app/build/outputs/apk/play/debug/session-1.18.3-universal.apk`;
+const androidAppFullPath = `/Users/emilyburton/Desktop/android-to-be-tested/session-1.18.4-universal.apk`;
 
 const sharedCapabilities: AppiumCapabilities = {
   "appium:app": androidAppFullPath,

@@ -1423,6 +1423,31 @@ export class DeviceWrapper implements SharedDeviceInterface {
     }
   }
 
+  public async checkPermissions(platform: SupportedPlatformsType) {
+    let permissions;
+    if (platform === "ios") {
+      permissions = await this.doesElementExist({
+        strategy: "accessibility id",
+        selector: "Don’t Allow",
+        maxWait: 1000,
+      });
+    } else {
+      permissions = await this.doesElementExist({
+        strategy: "id",
+        selector: "com.android.permissioncontroller:id/permission_deny_button",
+        maxWait: 1000,
+      });
+    }
+    if (platform === "ios" && permissions) {
+      this.clickOnByAccessibilityID("Don’t Allow");
+    } else if (platform === "android" && permissions) {
+      this.clickOnElementAll({
+        strategy: "id",
+        selector: "com.android.permissioncontroller:id/permission_deny_button",
+      });
+    }
+  }
+
   /* === all the utilities function ===  */
   public isIOS(): boolean {
     return isDeviceIOS(this.device);

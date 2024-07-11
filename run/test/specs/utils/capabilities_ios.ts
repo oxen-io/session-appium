@@ -1,7 +1,7 @@
 import { AppiumXCUITestCapabilities } from "@wdio/types/build/Capabilities";
 import { W3CCapabilities } from "@wdio/types/build/Capabilities";
 // const iosAppFullPath = `/Users/emilyburton/Desktop/Session.app`;
-const iosAppFullPath = `/Users/emilyburton/Downloads/Session-2.app`;
+const iosAppFullPath = `/Users/emilyburton/Desktop/ios-to-be-tested/session-ios-20240703T225906Z-09500b169-sim/Session.app`;
 
 const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   "appium:app": iosAppFullPath,
