@@ -6,13 +6,13 @@ module.exports = (0, test_1.defineConfig)({
     fullyParallel: true,
     retries: 0,
     timeout: 300000,
-    workers: 4,
+    workers: 2,
     testMatch: "*.spec.ts",
+    reporter: "./sessionReporter.ts",
     use: {
         headless: false,
         screenshot: "only-on-failure",
         video: "retain-on-failure",
     },
-    reporter: "list",
 });
 //# sourceMappingURL=playwright.config.js.map

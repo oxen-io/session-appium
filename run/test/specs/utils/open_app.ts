@@ -203,6 +203,8 @@ async function waitForEmulatorToBeRunning(emulatorName: string) {
   } while (Date.now() - start < 25000 && !found);
 
   if (!found) {
+    console.error("plop");
+    throw new Error("timedout waiting for emulator to start");
     return;
   }
 
@@ -227,7 +229,16 @@ const openAndroidApp = async (
   device: DeviceWrapper;
 }> => {
   const targetName = getAndroidUdid(capabilitiesIndex);
-
+  const actualCapabilitiesIndex =
+    capabilitiesIndex + 4 * parseInt(process.env.TEST_PARALLEL_INDEX || "0");
+  if (isNaN(actualCapabilitiesIndex)) {
+    console.warn(
+      "actualCapabilities worker is not a number",
+      actualCapabilitiesIndex
+    );
+  } else {
+    console.warn("actualCapabilities worker", actualCapabilitiesIndex);
+  }
   const emulatorAlreadyRunning = await isEmulatorRunning(targetName);
   console.warn("emulatorAlreadyRunning", targetName, emulatorAlreadyRunning);
   if (!emulatorAlreadyRunning) {
@@ -242,7 +253,9 @@ const openAndroidApp = async (
     targetName
   );
   const driver = (androidDriver as any).AndroidUiautomator2Driver;
-
+  const capabilities = getAndroidCapabilities(
+    actualCapabilitiesIndex as CapabilitiesIndexType
+  );
   console.log(
     `Android App Full Path: ${
       getAndroidCapabilities(capabilitiesIndex)["alwaysMatch"]["appium:app"]
@@ -255,18 +268,27 @@ const openAndroidApp = async (
 
   const device: DeviceWrapper = new driver(opts);
   const udid = getAndroidUdid(capabilitiesIndex);
+  console.log(`udid: ${udid}`);
   const wrappedDevice = new DeviceWrapper(device, udid);
 
   await runScriptAndLog(`adb -s ${targetName} shell settings put global heads_up_notifications_enabled 0
-  `);
+    `);
+  await runScriptAndLog(`adb -s ${targetName} shell settings put global window_animation_scale 0
+    `);
+  await runScriptAndLog(`adb -s ${targetName} shell settings put global transition_animation_scale 0
+    `);
+  await runScriptAndLog(`adb -s ${targetName} shell settings put global animator_duration_scale 0
+    `);
 
-  await wrappedDevice.createSession(getAndroidCapabilities(capabilitiesIndex));
+  console.warn("1");
+  await wrappedDevice.createSession(capabilities);
+  console.warn("2");
   await (device as any).updateSettings({
     ignoreUnimportantViews: false,
     allowInvisibleElements: true,
     enableMultiWindows: true,
   });
-
+  console.warn("3");
   return { device: wrappedDevice };
 };
 
@@ -278,7 +300,8 @@ const openiOSApp = async (
   console.warn("openiOSApp");
 
   // Calculate the actual capabilities index for the current worker
-  const actualCapabilitiesIndex = capabilitiesIndex;
+  const actualCapabilitiesIndex =
+    capabilitiesIndex + 4 * parseInt(process.env.TEST_PARALLEL_INDEX || "0");
 
   const opts: DriverOpts = {
     address: `http://localhost:${APPIUM_PORT}`,
@@ -287,12 +310,13 @@ const openiOSApp = async (
   const driver = (iosDriver as any).XCUITestDriver;
 
   const device: unknown = new driver(opts);
-  const capabilities = getIosCapabilities(actualCapabilitiesIndex);
+  const capabilities = getIosCapabilities(
+    actualCapabilitiesIndex as CapabilitiesIndexType
+  );
   const udid = capabilities.alwaysMatch["appium:udid"] as string;
   const wrappedDevice = new DeviceWrapper(device, udid);
 
-  const caps = getIosCapabilities(actualCapabilitiesIndex);
-  await wrappedDevice.createSession(caps);
+  await wrappedDevice.createSession(capabilities);
 
   return { device: wrappedDevice };
 };

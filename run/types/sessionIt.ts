@@ -45,7 +45,12 @@ export function iosIt(
   } else {
     test(testName, async () => {
       console.info(`\n\n==========> Running "${testName}"\n\n`);
+      const startTime = Date.now();
       await testToRun("ios");
+      const endTime = Date.now();
+      console.info(
+        `\n\n==========> Finished "${testName}" in ${endTime - startTime}ms\n\n`
+      );
     });
   }
 }

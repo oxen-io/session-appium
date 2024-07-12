@@ -35,6 +35,11 @@ const emulator1Udid = "emulator-5554";
 const emulator2Udid = "emulator-5556";
 const emulator3Udid = "emulator-5558";
 const emulator4Udid = "emulator-5560";
+const emulator5Udid = "emulator-5562";
+const emulator6Udid = "emulator-5564";
+const emulator7Udid = "emulator-5566";
+const emulator8Udid = "emulator-5568";
+
 const physicalDevice1Udid = "99251FFAZ000TP";
 const physicalDevice2Udid = "SDEDU20311000793";
 
@@ -48,28 +53,31 @@ export const physicalDeviceCapabilities2: AppiumCapabilities = {
   "appium:udid": physicalDevice2Udid,
 };
 
-const emulatorCapabilities1: AppiumCapabilities = {
-  ...sharedCapabilities,
-  "appium:udid": emulator1Udid,
-};
-const emulatorCapabilities2: AppiumCapabilities = {
-  ...sharedCapabilities,
-  "appium:udid": emulator2Udid,
-};
+const udids = [
+  emulator1Udid,
+  emulator2Udid,
+  emulator3Udid,
+  emulator4Udid,
+  emulator5Udid,
+  emulator6Udid,
+  emulator7Udid,
+  emulator8Udid,
+];
 
-const emulatorCapabilities3: AppiumCapabilities = {
+const emulatorCapabilities: AppiumCapabilities[] = udids.map((udid) => ({
   ...sharedCapabilities,
-  "appium:udid": emulator3Udid,
-};
+  "appium:udid": udid,
+}));
 
-const emulatorCapabilities4: AppiumCapabilities = {
-  ...sharedCapabilities,
-  "appium:udid": emulator4Udid,
-};
-// const countOfAndroidCapabilities = 4;
-
-// const uuidsList = [emulator1Udid, emulator2Udid, emulator3Udid, emulator4Udid];
-// const deviceList = [physicalDevice1Udid, physicalDevice2Udid]
+// Access individual capabilities like this
+const emulatorCapabilities1 = emulatorCapabilities[0];
+const emulatorCapabilities2 = emulatorCapabilities[1];
+const emulatorCapabilities3 = emulatorCapabilities[2];
+const emulatorCapabilities4 = emulatorCapabilities[3];
+const emulatorCapabilities5 = emulatorCapabilities[4];
+const emulatorCapabilities6 = emulatorCapabilities[5];
+const emulatorCapabilities7 = emulatorCapabilities[6];
+const emulatorCapabilities8 = emulatorCapabilities[7];
 
 export const androidCapabilities = {
   sharedCapabilities,
@@ -82,6 +90,10 @@ function getAllCaps() {
     emulatorCapabilities2,
     emulatorCapabilities3,
     emulatorCapabilities4,
+    emulatorCapabilities5,
+    emulatorCapabilities6,
+    emulatorCapabilities7,
+    emulatorCapabilities8,
   ];
   const physicalDeviceCaps = [
     physicalDeviceCapabilities1,
