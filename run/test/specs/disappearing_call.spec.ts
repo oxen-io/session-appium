@@ -1,3 +1,4 @@
+import { test } from "@playwright/test";
 import { DISAPPEARING_TIMES } from "../../constants";
 import { androidIt, iosIt } from "../../types/sessionIt";
 import { DMTimeOption } from "../../types/testing";
@@ -10,9 +11,14 @@ import {
   closeApp,
 } from "./utils/open_app";
 import { setDisappearingMessage } from "./utils/set_disappearing_messages";
-describe.skip("Disappearing call message", () => {
-  iosIt("Disappearing call message 1o1", disappearingCallMessage1o1Ios);
-  androidIt("Disappearing call message 1o1", disappearingCallMessage1o1Android);
+
+test.describe("Disappearing call test", () => {
+  iosIt("Disappearing call message 1o1", disappearingCallMessage1o1Ios, true);
+  androidIt(
+    "Disappearing call message 1o1",
+    disappearingCallMessage1o1Android,
+    true
+  );
 });
 
 async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType) {

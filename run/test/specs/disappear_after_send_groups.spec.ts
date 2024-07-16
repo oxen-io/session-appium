@@ -1,4 +1,4 @@
-import { bothPlatformsIt } from "../../types/sessionIt";
+import { androidIt, bothPlatformsIt, iosIt } from "../../types/sessionIt";
 import { DisappearActions } from "../../types/testing";
 import { sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
@@ -9,8 +9,9 @@ import {
   openAppThreeDevices,
 } from "./utils/open_app";
 import { setDisappearingMessage } from "./utils/set_disappearing_messages";
-
-bothPlatformsIt("Disappear after send groups", disappearAfterSendGroups);
+iosIt("Disappear after send groups", disappearAfterSendGroups);
+androidIt("Disappear after send groups", disappearAfterSendGroups);
+// bothPlatformsIt("Disappear after send groups", disappearAfterSendGroups);
 
 async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   const testGroupName = "Disappear after send test";

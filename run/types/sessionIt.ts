@@ -1,3 +1,4 @@
+import { test } from "@playwright/test";
 import { SupportedPlatformsType } from "../test/specs/utils/open_app";
 import { DeviceWrapper } from "./DeviceWrapper";
 import { SetupData, User } from "./testing";
@@ -14,49 +15,75 @@ import { SetupData, User } from "./testing";
 
 export function androidIt(
   title: string,
-  test: (platform: SupportedPlatformsType) => Promise<void>
+  testToRun: (platform: SupportedPlatformsType) => Promise<void>,
+  shouldSkip: boolean = false
 ) {
   const testName = `${title} android`;
-  return it(testName, async () => {
-    console.info(`\n\n==========> Running "${testName}"\n\n`);
-    await test("android");
-  });
+  if (shouldSkip) {
+    test.skip(testName, async () => {
+      console.info(`\n\n==========> Skipping "${testName}"\n\n`);
+    });
+  } else {
+    test(testName, async () => {
+      console.info(`\n\n==========> Running "${testName}"\n\n`);
+      await testToRun("android");
+    });
+  }
 }
 
 export function iosIt(
   title: string,
-  test: (platform: SupportedPlatformsType) => Promise<void>
+  testToRun: (platform: SupportedPlatformsType) => Promise<void>,
+  shouldSkip: boolean = false
 ) {
   const testName = `${title} ios`;
 
-  return it(testName, async () => {
-    console.info(`\n\n==========> Running "${testName}"\n\n`);
-    await test("ios");
-  });
+  if (shouldSkip) {
+    test.skip(testName, async () => {
+      console.info(`\n\n==========> Skipping "${testName}"\n\n`);
+    });
+  } else {
+    test(testName, async () => {
+      console.info(`\n\n==========> Running "${testName}"\n\n`);
+      const startTime = Date.now();
+      await testToRun("ios");
+      const endTime = Date.now();
+      console.info(
+        `\n\n==========> Finished "${testName}" in ${endTime - startTime}ms\n\n`
+      );
+    });
+  }
 }
 
-export function mobileIt(
+function mobileIt(
   platform: SupportedPlatformsType,
   title: string,
-  test: (platform: SupportedPlatformsType) => Promise<void>
+  testToRun: (platform: SupportedPlatformsType) => Promise<void>,
+  shouldSkip: boolean = false
 ) {
   const testName = `${title} ${platform}`;
-
-  return it(testName, async () => {
-    console.info(`\n\n==========> Running "${testName}"\n\n`);
-    await test(platform);
-  });
+  if (shouldSkip) {
+    test.skip(testName, async () => {
+      console.info(`\n\n==========> Skipping "${testName}"\n\n`);
+    });
+  } else {
+    test(testName, async () => {
+      console.info(`\n\n==========> Running "${testName}"\n\n`);
+      await testToRun(platform);
+    });
+  }
 }
 
 export function bothPlatformsIt(
   title: string,
-  test: (platform: SupportedPlatformsType) => Promise<void>
+  testToRun: (platform: SupportedPlatformsType) => Promise<void>,
+  shouldSkip: boolean = false
 ) {
   // Define test for Android
-  mobileIt("android", title, test);
+  mobileIt("android", title, testToRun, shouldSkip);
 
   // Define test for iOS
-  mobileIt("ios", title, test);
+  mobileIt("ios", title, testToRun, shouldSkip);
 }
 
 // export function iosItWithSetup(
@@ -75,7 +102,7 @@ export function bothPlatformsIt(
 export function iosItWithSetup(
   title: string,
   setupData: SetupData,
-  test: (setupData: {
+  testToRun: (setupData: {
     device1: DeviceWrapper;
     device2: DeviceWrapper;
     device3: DeviceWrapper;
@@ -85,9 +112,9 @@ export function iosItWithSetup(
 ) {
   const testName = `${title} ios`;
 
-  return it(testName, async () => {
+  return test(testName, async () => {
     console.info(`\n\n==========> Running "${testName}" with setup data\n\n`);
-    await test({
+    await testToRun({
       device1: setupData.device1!,
       device2: setupData.device2!,
       device3: setupData.device3!,

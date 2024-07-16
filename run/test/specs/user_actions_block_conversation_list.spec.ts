@@ -1,14 +1,17 @@
-import { bothPlatformsIt } from "../../types/sessionIt";
+import { androidIt, iosIt } from "../../types/sessionIt";
 import { runOnlyOnAndroid, runOnlyOnIOS } from "./utils";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import {
   SupportedPlatformsType,
-  openAppTwoDevices,
   closeApp,
+  openAppTwoDevices,
 } from "./utils/open_app";
 
-bothPlatformsIt("Block user in conversation list", blockUserInConversationList);
+iosIt("Block user in conversation list", blockUserInConversationList);
+androidIt("Block user in conversation list", blockUserInConversationList);
+
+// bothPlatformsIt("Block user in conversation list", blockUserInConversationList);
 
 async function blockUserInConversationList(platform: SupportedPlatformsType) {
   // Open App

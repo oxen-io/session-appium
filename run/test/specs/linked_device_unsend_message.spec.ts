@@ -1,14 +1,17 @@
-import { bothPlatformsIt } from "../../types/sessionIt";
+import { androidIt, iosIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { linkedDevice } from "./utils/link_device";
 import {
   SupportedPlatformsType,
-  openAppThreeDevices,
   closeApp,
+  openAppThreeDevices,
 } from "./utils/open_app";
 
-bothPlatformsIt("Unsent message syncs", unSendMessageLinkedDevice);
+iosIt("Unsent message syncs", unSendMessageLinkedDevice);
+androidIt("Unsent message syncs", unSendMessageLinkedDevice);
+
+// bothPlatformsIt("Unsent message syncs", unSendMessageLinkedDevice);
 
 async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);

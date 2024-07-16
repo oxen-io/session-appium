@@ -1,12 +1,15 @@
-import { bothPlatformsIt } from "../../types/sessionIt";
+import { androidIt, iosIt } from "../../types/sessionIt";
 import { linkedDevice } from "./utils/link_device";
 import {
   SupportedPlatformsType,
-  openAppTwoDevices,
   closeApp,
+  openAppTwoDevices,
 } from "./utils/open_app";
 
-bothPlatformsIt("Link device", linkDevice);
+iosIt("Link device", linkDevice);
+androidIt("Link device", linkDevice);
+
+// bothPlatformsIt("Link device", linkDevice);
 
 async function linkDevice(platform: SupportedPlatformsType) {
   // Open server and two devices

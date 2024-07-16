@@ -1,4 +1,4 @@
-import { androidIt, bothPlatformsIt } from "../../types/sessionIt";
+import { androidIt } from "../../types/sessionIt";
 import { sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { createGroup } from "./utils/create_group";

@@ -1,14 +1,17 @@
-import { bothPlatformsIt } from "../../types/sessionIt";
+import { androidIt, iosIt } from "../../types/sessionIt";
 import { runOnlyOnIOS } from "./utils";
 import { newUser } from "./utils/create_account";
 import { linkedDevice } from "./utils/link_device";
 import {
   SupportedPlatformsType,
-  openAppThreeDevices,
   closeApp,
+  openAppThreeDevices,
 } from "./utils/open_app";
 
-bothPlatformsIt("Accept message request", acceptRequest);
+iosIt("Accept message request", acceptRequest);
+androidIt("Accept message request", acceptRequest);
+
+// bothPlatformsIt("Accept message request", acceptRequest);
 
 async function acceptRequest(platform: SupportedPlatformsType) {
   // Check 'accept' button

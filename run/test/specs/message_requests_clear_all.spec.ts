@@ -1,13 +1,16 @@
-import { bothPlatformsIt } from "../../types/sessionIt";
-import { sleepFor, runOnlyOnAndroid, runOnlyOnIOS } from "./utils";
+import { androidIt, iosIt } from "../../types/sessionIt";
+import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import {
   SupportedPlatformsType,
-  openAppTwoDevices,
   closeApp,
+  openAppTwoDevices,
 } from "./utils/open_app";
 
-bothPlatformsIt("Message requests clear all", clearAllRequests);
+iosIt("Message requests clear all", clearAllRequests);
+androidIt("Message requests clear all", clearAllRequests);
+
+// bothPlatformsIt("Message requests clear all", clearAllRequests);
 
 async function clearAllRequests(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

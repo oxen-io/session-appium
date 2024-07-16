@@ -1,21 +1,21 @@
-import { DISAPPEARING_TIMES, XPATHS } from "../../constants";
-import { bothPlatformsIt } from "../../types/sessionIt";
-import { DMTimeOption, InteractionPoints } from "../../types/testing";
-import { clickOnCoordinates, sleepFor } from "./utils";
+import { androidIt, iosIt } from "../../types/sessionIt";
+import { sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { createGroup } from "./utils/create_group";
 import {
   SupportedPlatformsType,
-  openAppThreeDevices,
   closeApp,
+  openAppThreeDevices,
 } from "./utils/open_app";
 import { setDisappearingMessage } from "./utils/set_disappearing_messages";
-import { runScriptAndLog } from "./utils/utilities";
 
-bothPlatformsIt(
-  "Send disappearing video to group",
-  disappearingVideoMessageGroup
-);
+iosIt("Send disappearing video to group", disappearingVideoMessageGroup);
+androidIt("Send disappearing video to group", disappearingVideoMessageGroup);
+
+// bothPlatformsIt(
+//   "Send disappearing video to group",
+//   disappearingVideoMessageGroup
+// );
 
 async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
   const testMessage = "Testing disappearing messages for videos";

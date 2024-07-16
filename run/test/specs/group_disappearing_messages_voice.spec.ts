@@ -1,4 +1,4 @@
-import { bothPlatformsIt } from "../../types/sessionIt";
+import { androidIt, iosIt } from "../../types/sessionIt";
 import { GroupName } from "../../types/testing";
 import { sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
@@ -10,10 +10,19 @@ import {
 } from "./utils/open_app";
 import { setDisappearingMessage } from "./utils/set_disappearing_messages";
 
-bothPlatformsIt(
+iosIt(
   "Send disappearing voice message to group",
   disappearingVoiceMessageGroup
 );
+androidIt(
+  "Send disappearing voice message to group",
+  disappearingVoiceMessageGroup
+);
+
+// bothPlatformsIt(
+//   "Send disappearing voice message to group",
+//   disappearingVoiceMessageGroup
+// );
 
 async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);

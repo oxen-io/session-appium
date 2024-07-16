@@ -1,17 +1,19 @@
-import { DISAPPEARING_TIMES } from "../../constants";
-import { bothPlatformsIt } from "../../types/sessionIt";
-import { DMTimeOption, DisappearModes } from "../../types/testing";
+import { androidIt, iosIt } from "../../types/sessionIt";
+import { DisappearModes } from "../../types/testing";
 import { sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import {
   SupportedPlatformsType,
-  openAppTwoDevices,
   closeApp,
+  openAppTwoDevices,
 } from "./utils/open_app";
 import { setDisappearingMessage } from "./utils/set_disappearing_messages";
 
-bothPlatformsIt("Disappear after read", disappearAfterRead);
+iosIt("Disappear after read", disappearAfterRead);
+androidIt("Disappear after read", disappearAfterRead);
+
+// bothPlatformsIt("Disappear after read", disappearAfterRead);
 
 async function disappearAfterRead(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

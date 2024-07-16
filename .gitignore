@@ -20,8 +20,9 @@ chromeDriver
 
 run/**/*.js
 *.js.map
+*.js
 run/test/specs/to do 
 to do
 .vscode/
 .yarn/
-
+playwright.config.ts

@@ -1,4 +1,4 @@
-import { bothPlatformsIt } from "../../types/sessionIt";
+import { androidIt, iosIt } from "../../types/sessionIt";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
 import { linkedDevice } from "./utils/link_device";
@@ -8,7 +8,10 @@ import {
   openAppMultipleDevices,
 } from "./utils/open_app";
 
-bothPlatformsIt("Create contact ios", createContact);
+iosIt("Create contact ios", createContact);
+androidIt("Create contact android", createContact);
+
+// bothPlatformsIt("Create contact ios", createContact);
 
 async function createContact(platform: SupportedPlatformsType) {
   // first we want to install the app on each device with our custom call to run it
