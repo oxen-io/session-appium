@@ -1,4 +1,5 @@
 import {
+  AppiumAndroidCapabilities,
   AppiumCapabilities,
   W3CCapabilities,
 } from "@wdio/types/build/Capabilities";
@@ -8,7 +9,7 @@ import { CapabilitiesIndexType } from "./capabilities_ios";
 
 const androidAppFullPath = `/Users/emilyburton/Desktop/android-to-be-tested/session-1.18.4-universal.apk`;
 
-const sharedCapabilities: AppiumCapabilities = {
+const sharedCapabilities: AppiumAndroidCapabilities & AppiumCapabilities = {
   "appium:app": androidAppFullPath,
   "appium:platformName": "Android",
   "appium:platformVersion": "14",

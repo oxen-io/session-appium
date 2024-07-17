@@ -7,8 +7,8 @@ import {
 import { CapabilitiesIndexType, getIosCapabilities } from "./capabilities_ios";
 import { installAppToDeviceName, runScriptAndLog } from "./utilities";
 
-import * as androidDriver from "appium-uiautomator2-driver";
-import * as iosDriver from "appium-xcuitest-driver";
+import AndroidUiautomator2Driver from 'appium-uiautomator2-driver';
+import * as iosDriver from 'appium-xcuitest-driver';
 
 import { DriverOpts } from "appium/build/lib/appium";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
@@ -186,20 +186,20 @@ const openAndroidApp = async (
     androidCapabilities.androidAppFullPath,
     targetName
   );
-  const driver = (androidDriver as any).AndroidUiautomator2Driver;
-
   // console.warn('installAppToDeviceName ', driver);
-  console.log(
-    `Android App Full Path: ${
-      getAndroidCapabilities(capabilitiesIndex)["alwaysMatch"]["appium:app"]
-    }`
-  );
+  // console.log(
+  //   `Android App Full Path: ${
+  //     getAndroidCapabilities(capabilitiesIndex)["alwaysMatch"]["appium:app"]
+  //   }`
+  // );
 
   const opts: DriverOpts = {
     address: `http://localhost:${APPIUM_PORT}`,
   } as DriverOpts;
 
-  const device: DeviceWrapper = new driver(opts);
+  const device: DeviceWrapper = new AndroidUiautomator2Driver(
+    opts
+  ) as any as DeviceWrapper;
   const wrappedDevice = new DeviceWrapper(device);
 
   await runScriptAndLog(`adb -s ${targetName} shell settings put global heads_up_notifications_enabled 0
@@ -226,17 +226,16 @@ const openiOSApp = async (
   console.warn("openiOSApp");
 
   // Logging to check that app path is correct
-  console.log(
-    `iOS App Full Path: ${
-      getIosCapabilities(capabilitiesIndex)["alwaysMatch"]["appium:app"]
-    }`
-  );
+  // console.log(
+  //   `iOS App Full Path: ${
+  //     getIosCapabilities(capabilitiesIndex)["alwaysMatch"]["appium:app"]
+  //   }`
+  // );
   const opts: DriverOpts = {
     address: `http://localhost:${APPIUM_PORT}`,
   } as DriverOpts;
-  const driver = (iosDriver as any).XCUITestDriver;
 
-  const device: DeviceWrapper = new driver(opts);
+  const device: DeviceWrapper = new (iosDriver as any).XCUITestDriver(opts);
   const wrappedDevice = new DeviceWrapper(device);
 
   const caps = getIosCapabilities(capabilitiesIndex);
