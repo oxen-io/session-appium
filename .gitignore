@@ -23,4 +23,4 @@ run/test/specs/to do
 to do
 .vscode/
 .yarn/
-
+.env
