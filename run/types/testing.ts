@@ -1,3 +1,5 @@
+import { DeviceWrapper } from "./DeviceWrapper";
+
 export type User = {
   userName: Username;
   accountID: string;
@@ -26,6 +28,14 @@ export type Group = {
   userThree: User;
 };
 
+export type SetupData = {
+  device1: DeviceWrapper | undefined;
+  device2: DeviceWrapper | undefined;
+  device3: DeviceWrapper | undefined;
+  userA: User | undefined;
+  userB: User | undefined;
+};
+
 export type Coordinates = {
   x: number;
   y: number;
@@ -40,6 +50,7 @@ export const InteractionPoints: Record<string, Coordinates> = {
 };
 
 export type Strategy = "accessibility id" | "xpath" | "id" | "class name";
+
 export type ConversationType = "1:1" | "Group" | "Community" | "Note to Self";
 
 export type DisappearModes = "read" | "send";
@@ -64,13 +75,13 @@ export type DisappearOpts1o1 = [
     | `Disappear after ${DisappearModes} option`
     | `Disappear after ${DisappearModes} option`
   ),
-  DMTimeOption
+  DMTimeOption?
 ];
 
 export type DisappearOptsGroup = [
   "Group" | "Note to Self",
   `Disappear after ${DisappearModes} option`,
-  DMTimeOption
+  DMTimeOption?
 ];
 
 export type MergedOptions = DisappearOpts1o1 | DisappearOptsGroup;
@@ -94,8 +105,8 @@ export type StrategyExtractionObj =
     };
 
 export type DisappearingControlMessage =
-  | `You set disappearing message time to 5 seconds`
-  | `${string} set disappearing message time to 5 seconds`
+  | `You set disappearing message time to ${DMTimeOption}`
+  | `${string} set disappearing message time to ${DMTimeOption}`
   | `${string} has set messages to disappear ${DMTimeOption} after they have been ${DisappearActions}.`
   | `You set messages to disappear ${DMTimeOption} after they have been ${DisappearActions}.`;
 
@@ -298,4 +309,5 @@ export type AccessibilityId =
   | "Off"
   | "Loading animation"
   | "Recovery password container"
-  | "Copy button";
+  | "Copy button"
+  | "space";

@@ -1,594 +1,636 @@
-import { XPATHS } from "../../constants";
-import { iosIt } from "../../types/sessionIt";
-import { InteractionPoints } from "../../types/testing";
-import { newUser } from "./utils/create_account";
-import { newContact } from "./utils/create_contact";
-import { clickOnCoordinates, sleepFor } from "./utils/index";
-import { joinCommunity } from "./utils/join_community";
-import {
-  SupportedPlatformsType,
-  closeApp,
-  openAppTwoDevices,
-} from "./utils/open_app";
-import { runScriptAndLog } from "./utils/utilities";
+// import { XPATHS } from "../../constants";
+// import { DeviceWrapper } from "../../types/DeviceWrapper";
+// import { iosIt, iosItWithSetup } from "../../types/sessionIt";
+// import { InteractionPoints, SetupData, User } from "../../types/testing";
+// import { newUser } from "./utils/create_account";
+// import { newContact } from "./utils/create_contact";
+// import { clickOnCoordinates, sleepFor } from "./utils/index";
+// import { joinCommunity } from "./utils/join_community";
+// import {
+//   SupportedPlatformsType,
+//   closeApp,
+//   openAppTwoDevices,
+//   setUp1o1TestEnvironment,
+// } from "./utils/open_app";
+// import { runScriptAndLog } from "./utils/utilities";
 
-async function sendImage(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  const ronSwansonBirthday = "196705060700.00";
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
-  const testMessage = "Ron Swanson doesn't like birthdays";
-  const replyMessage = `Replying to image from ${userA.userName}`;
-  await newContact(platform, device1, userA, device2, userB);
-  // await device1.sendImage(platform, testMessage);
-  await device1.clickOnByAccessibilityID("Attachments button");
+// describe.skip("Message checks 1:1 ios", () => {
+//   let setupData: SetupData = {
+//     device1: undefined,
+//     device2: undefined,
+//     device3: undefined,
+//     userA: undefined,
+//     userB: undefined,
+//   };
 
-  await sleepFor(5000);
-  await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardOpen);
-  const permissions = await device1.doesElementExist({
-    strategy: "accessibility id",
-    selector: "Allow Full Access",
-    maxWait: 1000,
-  });
-  if (permissions) {
-    try {
-      await device1.clickOnByAccessibilityID(`Allow Full Access`);
-      // Select video
-    } catch (e) {
-      console.log("No permissions dialog");
-    }
-  } else {
-    console.log("No permissions dialog");
-  }
-  const testImage = await device1.doesElementExist({
-    strategy: "accessibility id",
-    selector: `1967-05-05 21:00:00 +0000`,
-    maxWait: 2000,
-  });
-  if (!testImage) {
-    await runScriptAndLog(
-      `touch -a -m -t ${ronSwansonBirthday} 'run/test/specs/media/test_image.jpg'`
-    );
+//   before(async () => {
+//     console.log("Setting up tests...");
+//     const setup = await setUp1o1TestEnvironment("ios");
+//     setupData.device1 = setup.device1;
+//     setupData.device2 = setup.device2;
+//     setupData.userA = setup.userA;
+//     setupData.userB = setup.userB;
+//   });
 
-    await runScriptAndLog(
-      `xcrun simctl addmedia ${
-        process.env.IOS_FIRST_SIMULATOR || ""
-      } 'run/test/specs/media/test_image.jpg'`,
-      true
-    );
-  }
-  await sleepFor(100);
-  await device1.clickOnByAccessibilityID(`1967-05-05 21:00:00 +0000`);
-  await device1.clickOnByAccessibilityID("Text input box");
-  await device1.inputText("accessibility id", "Text input box", testMessage);
-  await device1.clickOnByAccessibilityID("Send button");
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: `Message sent status: Sent`,
-    maxWait: 50000,
-  });
-  await device2.clickOnByAccessibilityID("Untrusted attachment message");
-  await sleepFor(500);
-  // User B - Click on 'download'
-  await device2.clickOnByAccessibilityID("Download media");
+//   // Use a function to wrap test calls
+//   iosItWithSetup(
+//     "Send image new",
+//     setupData,
+//     async ({ device1, device2, userA, userB }) => {
+//       await sendImage("ios", device1, device2, userA, userB);
+//     }
+//   );
+//   iosItWithSetup(
+//     "Send video new",
+//     setupData,
+//     async ({ device1, device2, device3, userA, userB }) => {
+//       await sendVideo("ios", device1, device2, userA, userB);
+//     }
+//   );
+//   iosItWithSetup(
+//     "Send voice message new",
+//     setupData,
+//     async ({ device1, device2, device3, userA, userB }) => {
+//       await sendVoiceMessage("ios", device1, device2, userA, userB);
+//     }
+//   );
+//   iosItWithSetup(
+//     "Send gif new",
+//     setupData,
+//     async ({ device1, device2, device3, userA, userB }) => {
+//       await sendGif("ios", device1, device2, userA, userB);
+//     }
+//   );
+//   iosItWithSetup(
+//     "Send long text new",
+//     setupData,
+//     async ({ device1, device2, device3, userA, userB }) => {
+//       await sendLongMessage("ios", device1, device2, userA, userB);
+//     }
+//   );
+//   iosItWithSetup(
+//     "Send link new",
+//     setupData,
+//     async ({ device1, device2, device3, userA, userB }) => {
+//       await sendLink("ios", device1, device2, userA, userB);
+//     }
+//   );
 
-  // Reply to message
+//   // // iosIt("Send document", sendDoc);
+//   // iosIt("Send long text", sendLongMessage);
+//   // iosIt("Send link", sendLink);
+//   // iosIt("Send community invitation message", sendCommunityInvitation);
+//   // iosIt("Unsend message", unsendMessage);
+//   // iosIt("Delete message", deleteMessage);
+//   // iosIt("Check performance", checkPerformance);
+//   // Run the setup tests after the before hook promises the setup is complete
+// });
 
-  await device2.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
-    text: testMessage,
-  });
-  await device2.longPressMessage(testMessage);
+// async function sendImage(
+//   platform: SupportedPlatformsType,
+//   device1: DeviceWrapper,
+//   device2: DeviceWrapper,
+//   userA: User,
+//   userB: User
+// ) {
+//   // const { device1, device2 } = await openAppTwoDevices(platform);
+//   // const [userA, userB] = await Promise.all([
+//   //   newUser(device1, "Alice", platform),
+//   //   newUser(device2, "Bob", platform),
+//   // ]);
+//   if (!device1 || !device2 || !userA || !userB) {
+//     throw new Error("Test setup incomplete");
+//   }
+//   const testMessage = "Ron Swanson doesn't like birthdays";
+//   // await newContact(platform, device1, userA, device2, userB);
+//   await device1.sendImage(platform, testMessage);
+//   await device1.waitForTextElementToBePresent({
+//     strategy: "accessibility id",
+//     selector: `Message sent status: Sent`,
+//     maxWait: 50000,
+//   });
+//   await device2.clickOnByAccessibilityID("Untrusted attachment message");
+//   await sleepFor(500);
+//   // User B - Click on 'download'
+//   await device2.clickOnByAccessibilityID("Download media");
 
-  await device2.clickOnByAccessibilityID("Reply to message");
-  await device2.sendMessage(replyMessage);
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
-    text: replyMessage,
-  });
-  // Close app and server
-  await closeApp(device1, device2);
-}
+//   // Reply to message
 
-// HAVING ISSUES WITH ADDING PDF, WILL COME BACK TO THIS LATER
+//   await device2.waitForTextElementToBePresent({
+//     strategy: "accessibility id",
+//     selector: "Message body",
+//     text: testMessage,
+//   });
+//   const replyMessage = await device2.replyToMessage(userA, testMessage);
+//   await device1.waitForTextElementToBePresent({
+//     strategy: "accessibility id",
+//     selector: "Message body",
+//     text: replyMessage,
+//   });
+//   // Close app and server
+//   // await closeApp(device1, device2);
+// }
 
-async function sendDoc(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
-  const testMessage = "Testing-document-1";
-  const replyMessage = `Replying to document from ${userA.userName}`;
-  const spongebobsBirthday = "199905010700.00";
-  await newContact(platform, device1, userA, device2, userB);
+// // HAVING ISSUES WITH ADDING PDF, WILL COME BACK TO THIS LATER
 
-  await device1.clickOnByAccessibilityID("Attachments button");
-  await sleepFor(100);
-  await clickOnCoordinates(device1, InteractionPoints.DocumentKeyboardOpen);
+// async function sendDoc(platform: SupportedPlatformsType) {
+//   const { device1, device2 } = await openAppTwoDevices(platform);
+//   const [userA, userB] = await Promise.all([
+//     newUser(device1, "Alice", platform),
+//     newUser(device2, "Bob", platform),
+//   ]);
+//   const testMessage = "Testing-document-1";
+//   const replyMessage = `Replying to document from ${userA.userName}`;
+//   const spongebobsBirthday = "199905010700.00";
+//   await newContact(platform, device1, userA, device2, userB);
 
-  const permissions = await device1.doesElementExist({
-    strategy: "accessibility id",
-    selector: "Allow Full Access",
-    maxWait: 1000,
-  });
-  if (permissions) {
-    try {
-      await device1.clickOnByAccessibilityID("Allow Full Access");
-    } catch (e) {
-      console.log("No permissions dialog");
-    }
-  }
-  const testDocument = await device1.doesElementExist({
-    strategy: "accessibility id",
-    selector: "test_file, pdf",
-    text: undefined,
-    maxWait: 1000,
-  });
+//   await device1.clickOnByAccessibilityID("Attachments button");
+//   await sleepFor(100);
+//   await clickOnCoordinates(device1, InteractionPoints.DocumentKeyboardOpen);
 
-  if (!testDocument) {
-    await runScriptAndLog(
-      `touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/test_file.pdf'`
-    );
+//   const permissions = await device1.doesElementExist({
+//     strategy: "accessibility id",
+//     selector: "Allow Full Access",
+//     maxWait: 1000,
+//   });
+//   if (permissions) {
+//     try {
+//       await device1.clickOnByAccessibilityID("Allow Full Access");
+//     } catch (e) {
+//       console.log("No permissions dialog");
+//     }
+//   }
+//   const testDocument = await device1.doesElementExist({
+//     strategy: "accessibility id",
+//     selector: "test_file, pdf",
+//     text: undefined,
+//     maxWait: 1000,
+//   });
 
-    await runScriptAndLog(
-      `xcrun simctl addmedia ${process.env.IOS_FIRST_SIMULATOR} 'run/test/specs/media/test_file.pdf'`,
-      true
-    );
-  }
-  await sleepFor(100);
-  await device1.clickOnByAccessibilityID("test_file, pdf");
-  await sleepFor(500);
-  await device1.clickOnByAccessibilityID("Text input box");
-  await device1.inputText("accessibility id", "Text input box", testMessage);
-  await device1.clickOnByAccessibilityID("Send button");
-  await device2.clickOnByAccessibilityID("Untrusted attachment message");
-  await sleepFor(500);
-  // User B - Click on 'download'
-  await device2.clickOnByAccessibilityID("Download media");
+//   if (!testDocument) {
+//     await runScriptAndLog(
+//       `touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/test_file.pdf'`
+//     );
 
-  // Reply to message
+//     await runScriptAndLog(
+//       `xcrun simctl addmedia ${process.env.IOS_FIRST_SIMULATOR} 'run/test/specs/media/test_file.pdf'`,
+//       true
+//     );
+//   }
+//   await sleepFor(100);
+//   await device1.clickOnByAccessibilityID("test_file, pdf");
+//   await sleepFor(500);
+//   await device1.clickOnByAccessibilityID("Text input box");
+//   await device1.inputText("accessibility id", "Text input box", testMessage);
+//   await device1.clickOnByAccessibilityID("Send button");
+//   await device2.clickOnByAccessibilityID("Untrusted attachment message");
+//   await sleepFor(500);
+//   // User B - Click on 'download'
+//   await device2.clickOnByAccessibilityID("Download media");
 
-  await device2.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
-    text: testMessage,
-  });
-  await device2.longPressMessage(testMessage);
-  await device2.clickOnByAccessibilityID("Reply to message");
-  await device2.sendMessage(replyMessage);
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
-    text: replyMessage,
-  });
-  // Close app and server
-  await closeApp(device1, device2);
-}
+//   // Reply to message
 
-async function sendVideo(platform: SupportedPlatformsType) {
-  // Test sending a video
-  // open devices
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // create user a and user b
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
-  const bestDayOfYear = `198809090700.00`;
-  const testMessage = "Testing-video-1";
-  const replyMessage = `Replying to video from ${userA.userName}`;
-  // create contact
-  await newContact(platform, device1, userA, device2, userB);
-  // Push image to device for selection
-  // Click on attachments button
-  await device1.clickOnByAccessibilityID("Attachments button");
-  // Select images button/tab
-  await sleepFor(1000);
-  await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardOpen);
-  // Select 'continue' on alert
-  // Need to put a video on device
-  // Session would like to access your photos
-  const permissions = await device1.doesElementExist({
-    strategy: "accessibility id",
-    selector: "Allow Full Access",
-    maxWait: 5000,
-  });
-  if (permissions) {
-    await device1.clickOnByAccessibilityID("Allow Full Access");
-  } else {
-    console.log("No permissions");
-  }
-  const settingsPermissions = await device1.doesElementExist({
-    strategy: "accessibility id",
-    selector: "Settings",
-    maxWait: 1000,
-  });
-  if (settingsPermissions) {
-    await device1.clickOnByAccessibilityID("Photos");
-    await device1.clickOnByAccessibilityID("All Photos");
-  } else {
-    console.log("No settings permission dialog");
-  }
-  await device1.clickOnByAccessibilityID("Recents");
-  // Select video
-  const videoFolder = await device1.doesElementExist({
-    strategy: "xpath",
-    selector: XPATHS.VIDEO_TOGGLE,
-    maxWait: 5000,
-  });
-  if (videoFolder) {
-    console.log("Videos folder found");
-    await device1.clickOnByAccessibilityID("Videos");
-    await device1.clickOnByAccessibilityID(`1988-09-08 21:00:00 +0000`);
-  } else {
-    console.log("Videos folder NOT found");
-    await runScriptAndLog(
-      `touch -a -m -t ${bestDayOfYear} 'run/test/specs/media/test_video.mp4'`,
-      true
-    );
-    await runScriptAndLog(
-      `xcrun simctl addmedia ${
-        process.env.IOS_FIRST_SIMULATOR || ""
-      } 'run/test/specs/media/test_video.mp4'`,
-      true
-    );
-    await device1.clickOnByAccessibilityID("Add", 5000);
-    await device1.clickOnByAccessibilityID(`1988-09-08 21:00:00 +0000`);
-  }
-  // Send with captions
-  await device1.clickOnByAccessibilityID("Text input box");
-  await device1.inputText("accessibility id", "Text input box", testMessage);
-  await device1.clickOnByAccessibilityID("Send button");
-  // Check if the 'Tap to download media' config appears
-  // User B - Click on untrusted attachment message
-  await device2.clickOnByAccessibilityID("Untrusted attachment message", 15000);
-  // User B - Click on 'download'
-  await device2.clickOnByAccessibilityID("Download media", 5000);
-  // Reply to message
-  await device2.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
-    text: testMessage,
-  });
-  await device2.longPressMessage(testMessage);
-  await device2.clickOnByAccessibilityID("Reply to message");
-  await device2.sendMessage(replyMessage);
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
-    text: replyMessage,
-  });
-  // Close app and server
-  await closeApp(device1, device2);
-}
+//   await device2.waitForTextElementToBePresent({
+//     strategy: "accessibility id",
+//     selector: "Message body",
+//     text: testMessage,
+//   });
+//   await device2.longPressMessage(testMessage);
+//   await device2.clickOnByAccessibilityID("Reply to message");
+//   await device2.sendMessage(replyMessage);
+//   await device1.waitForTextElementToBePresent({
+//     strategy: "accessibility id",
+//     selector: "Message body",
+//     text: replyMessage,
+//   });
+//   // Close app and server
+//   await closeApp(device1, device2);
+// }
 
-async function sendVoiceMessage(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // create user a and user b
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
-  const replyMessage = `Replying to voice message from ${userA.userName}`;
-  await newContact(platform, device1, userA, device2, userB);
-  // Select voice message button to activate recording state
-  // await device1.longPress("New voice message");
-  // "Session" would like to access the microphone (Don't allow/ OK)
-  // await device1.clickOnByAccessibilityID("OK");
-  await device1.pressAndHold("New voice message");
-  await device1.clickOnByAccessibilityID("Allow");
-  await device1.pressAndHold("New voice message");
-  await sleepFor(500);
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Voice message",
-  });
+// async function sendVideo(
+//   platform: SupportedPlatformsType,
+//   device1: DeviceWrapper,
+//   device2: DeviceWrapper,
+//   userA: User,
+//   userB: User
+// ) {
+//   // Test sending a video
+//   // open devices
+//   // const { device1, device2 } = await openAppTwoDevices(platform);
+//   // // create user a and user b
+//   // const [userA, userB] = await Promise.all([
+//   //   newUser(device1, "Alice", platform),
+//   //   newUser(device2, "Bob", platform),
+//   // ]);
+//   const bestDayOfYear = `198809090700.00`;
+//   const testMessage = "Testing-video-1";
+//   // create contact
+//   // await newContact(platform, device1, userA, device2, userB);
+//   // Push image to device for selection
+//   // Click on attachments button
+//   await device1.clickOnByAccessibilityID("Attachments button");
+//   // Select images button/tab
+//   await sleepFor(500);
+//   await clickOnCoordinates(
+//     device1,
+//     InteractionPoints.ImagesFolderKeyboardClosed
+//   );
+//   // Select 'continue' on alert
+//   // Need to put a video on device
+//   // Session would like to access your photos
+//   const permissions = await device1.doesElementExist({
+//     strategy: "accessibility id",
+//     selector: "Allow Full Access",
+//     maxWait: 5000,
+//   });
+//   if (permissions) {
+//     await device1.clickOnByAccessibilityID("Allow Full Access");
+//   } else {
+//     console.log("No permissions");
+//   }
+//   const settingsPermissions = await device1.doesElementExist({
+//     strategy: "accessibility id",
+//     selector: "Settings",
+//     maxWait: 1000,
+//   });
+//   if (settingsPermissions) {
+//     await device1.clickOnByAccessibilityID("Photos");
+//     await device1.clickOnByAccessibilityID("All Photos");
+//   } else {
+//     console.log("No settings permission dialog");
+//   }
+//   await device1.clickOnByAccessibilityID("Recents");
+//   // Select video
+//   const videoFolder = await device1.doesElementExist({
+//     strategy: "xpath",
+//     selector: XPATHS.VIDEO_TOGGLE,
+//     maxWait: 5000,
+//   });
+//   if (videoFolder) {
+//     console.log("Videos folder found");
+//     await device1.clickOnByAccessibilityID("Videos");
+//     await device1.clickOnByAccessibilityID(`1988-09-08 21:00:00 +0000`);
+//   } else {
+//     console.log("Videos folder NOT found");
+//     await runScriptAndLog(
+//       `touch -a -m -t ${bestDayOfYear} 'run/test/specs/media/test_video.mp4'`,
+//       true
+//     );
+//     await runScriptAndLog(
+//       `xcrun simctl addmedia ${
+//         process.env.IOS_FIRST_SIMULATOR || ""
+//       } 'run/test/specs/media/test_video.mp4'`,
+//       true
+//     );
+//     await device1.clickOnByAccessibilityID("Add", 5000);
+//     await device1.clickOnByAccessibilityID(`1988-09-08 21:00:00 +0000`);
+//   }
+//   // Send with captions
+//   await device1.clickOnByAccessibilityID("Text input box");
+//   await device1.inputText("accessibility id", "Text input box", testMessage);
+//   await device1.clickOnByAccessibilityID("Send button");
+//   // Check if the 'Tap to download media' config appears
+//   // User B - Click on untrusted attachment message
+//   // await device2.clickOnByAccessibilityID("Untrusted attachment message", 15000);
+//   // User B - Click on 'download'
+//   // await device2.clickOnByAccessibilityID("Download media", 5000);
+//   // Reply to message
+//   await device2.waitForTextElementToBePresent({
+//     strategy: "accessibility id",
+//     selector: "Message body",
+//     text: testMessage,
+//   });
+//   const replyMessage = await device2.replyToMessage(userA, testMessage);
+//   await device1.waitForTextElementToBePresent({
+//     strategy: "accessibility id",
+//     selector: "Message body",
+//     text: replyMessage,
+//   });
+//   // Close app and server
+//   // await closeApp(device1, device2);
+// }
 
-  await device2.clickOnByAccessibilityID("Untrusted attachment message");
-  await sleepFor(200);
-  await device2.clickOnByAccessibilityID("Download");
-  await sleepFor(500);
-  await device2.longPress("Voice message");
-  await device2.clickOnByAccessibilityID("Reply to message");
-  await device2.sendMessage(replyMessage);
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
-    text: replyMessage,
-  });
-  await closeApp(device1, device2);
-}
+// async function sendVoiceMessage(
+//   platform: SupportedPlatformsType,
+//   device1: DeviceWrapper,
+//   device2: DeviceWrapper,
+//   userA: User,
+//   userB: User
+// ) {
+//   // const { device1, device2 } = await openAppTwoDevices(platform);
+//   // // create user a and user b
+//   // const [userA, userB] = await Promise.all([
+//   //   newUser(device1, "Alice", platform),
+//   //   newUser(device2, "Bob", platform),
+//   // ]);
+//   const replyMessage = `Replying to voice message from ${userA.userName}`;
+//   // await newContact(platform, device1, userA, device2, userB);
+//   // Select voice message button to activate recording state
+//   await device1.pressAndHold("New voice message");
+//   // await device1.clickOnByAccessibilityID("Allow");
+//   // await device1.pressAndHold("New voice message");
+//   await sleepFor(500);
+//   await device1.waitForTextElementToBePresent({
+//     strategy: "accessibility id",
+//     selector: "Voice message",
+//   });
 
-async function sendGif(platform: SupportedPlatformsType) {
-  // Test sending a video
-  // open devices and server
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // create user a and user b
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
-  const testMessage = "Testing-GIF-1";
-  const replyMessage = `Replying to GIF from ${userA.userName}`;
-  // create contact
-  await newContact(platform, device1, userA, device2, userB);
-  // Click on attachments button
-  await device1.clickOnByAccessibilityID("Attachments button");
-  // Select GIF tab
-  console.log(
-    `InteractionPoints.GifButton: `,
-    InteractionPoints.GifButtonKeyboardOpen
-  );
-  await clickOnCoordinates(device1, InteractionPoints.GifButtonKeyboardOpen);
-  // Select gif
-  await sleepFor(500);
-  // Need to select Continue on GIF warning
-  await device1.clickOnByAccessibilityID("Continue");
-  await device1.clickOnElementXPath(XPATHS.FIRST_GIF);
-  await device1.clickOnByAccessibilityID("Text input box");
-  await device1.inputText("accessibility id", "Text input box", testMessage);
-  await device1.clickOnByAccessibilityID("Send button");
-  // Check if the 'Tap to download media' config appears
-  // Click on config
-  await device2.clickOnByAccessibilityID("Untrusted attachment message", 15000);
-  await sleepFor(100);
-  // Click on 'download'
-  await device2.clickOnByAccessibilityID("Download media");
-  // Reply to message
-  await device2.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
-    text: testMessage,
-  });
-  await device2.longPressMessage(testMessage);
-  // Check reply came through on device1
-  await device2.clickOnByAccessibilityID("Reply to message");
-  await device2.sendMessage(replyMessage);
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
-    text: replyMessage,
-  });
-  // Close app
-  await closeApp(device1, device2);
-}
+//   // await device2.clickOnByAccessibilityID("Untrusted attachment message");
+//   // await sleepFor(200);
+//   // await device2.clickOnByAccessibilityID("Download");
+//   await sleepFor(500);
+//   await device2.longPress("Voice message");
+//   await device2.clickOnByAccessibilityID("Reply to message");
+//   await device2.sendMessage(replyMessage);
 
-async function sendLongMessage(platform: SupportedPlatformsType) {
-  const longText =
-    "Mauris sapien dui, sagittis et fringilla eget, tincidunt vel mauris. Mauris bibendum quis ipsum ac pulvinar. Integer semper elit vitae placerat efficitur. Quisque blandit scelerisque orci, a fringilla dui. In a sollicitudin tortor. Vivamus consequat sollicitudin felis, nec pretium dolor bibendum sit amet. Integer non congue risus, id imperdiet diam. Proin elementum enim at felis commodo semper. Pellentesque magna magna, laoreet nec hendrerit in, suscipit sit amet risus. Nulla et imperdiet massa. Donec commodo felis quis arcu dignissim lobortis. Praesent nec fringilla felis, ut pharetra sapien. Donec ac dignissim nisi, non lobortis justo. Nulla congue velit nec sodales bibendum. Nullam feugiat, mauris ac consequat posuere, eros sem dignissim nulla, ac convallis dolor sem rhoncus dolor. Cras ut luctus risus, quis viverra mauris.";
-  // Sending a long text message
-  // Open device and server
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // Create user A and User B
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
-  // Create contact
-  await newContact(platform, device1, userA, device2, userB);
-  // Send a long message from User A to User B
-  await device1.sendMessage(longText);
-  // Reply to message (User B to User A)
-  const sentMessage = await device2.replyToMessage(userA, longText);
-  // Check reply came through on device1
-  await device1.findMessageWithBody(sentMessage);
-  // Close app
-  await closeApp(device1, device2);
-}
+//   await device1.waitForTextElementToBePresent({
+//     strategy: "accessibility id",
+//     selector: "Message body",
+//     text: replyMessage,
+//   });
+//   // await closeApp(device1, device2);
+// }
 
-async function sendLink(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  const testLink = `https://type-level-typescript.com/objects-and-records`;
-  // Create two users
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
-  // Create contact
-  await newContact(platform, device1, userA, device2, userB);
-  // Send a link
+// async function sendGif(
+//   platform: SupportedPlatformsType,
+//   device1: DeviceWrapper,
+//   device2: DeviceWrapper,
+//   userA: User,
+//   userB: User
+// ) {
+//   // const { device1, device2 } = await openAppTwoDevices(platform);
+//   // const [userA, userB] = await Promise.all([
+//   //   newUser(device1, "Alice", platform),
+//   //   newUser(device2, "Bob", platform),
+//   // ]);
+//   const testMessage = "Testing-GIF-1";
+//   // await newContact(platform, device1, userA, device2, userB);
+//   await device1.clickOnByAccessibilityID("Attachments button");
+//   // Select GIF tab
+//   await clickOnCoordinates(device1, InteractionPoints.GifButtonKeyboardOpen);
+//   // Select gif
+//   await sleepFor(500);
+//   // Need to select Continue on GIF warning
+//   await device1.clickOnByAccessibilityID("Continue");
+//   await device1.clickOnElementXPath(XPATHS.FIRST_GIF);
+//   await device1.clickOnByAccessibilityID("Text input box");
+//   await device1.inputText("accessibility id", "Text input box", testMessage);
+//   await device1.clickOnByAccessibilityID("Send button");
+//   // Check if the 'Tap to download media' config appears
+//   // Click on config
+//   // await device2.clickOnByAccessibilityID("Untrusted attachment message", 15000);
+//   // await sleepFor(100);
+//   // // Click on 'download'
+//   // await device2.clickOnByAccessibilityID("Download media");
+//   // Reply to message
+//   await device2.waitForTextElementToBePresent({
+//     strategy: "accessibility id",
+//     selector: "Message body",
+//     text: testMessage,
+//   });
+//   const replyMessage = await device2.replyToMessage(userA, testMessage);
+//   await device1.waitForTextElementToBePresent({
+//     strategy: "accessibility id",
+//     selector: "Message body",
+//     text: replyMessage,
+//   });
+//   // Close app
+//   // await closeApp(device1, device2);
+// }
 
-  await device1.inputText("accessibility id", "Message input box", testLink);
+// async function sendLongMessage(
+//   platform: SupportedPlatformsType,
+//   device1: DeviceWrapper,
+//   device2: DeviceWrapper,
+//   userA: User,
+//   userB: User
+// ) {
+//   const longText =
+//     "Mauris sapien dui, sagittis et fringilla eget, tincidunt vel mauris. Mauris bibendum quis ipsum ac pulvinar. Integer semper elit vitae placerat efficitur. Quisque blandit scelerisque orci, a fringilla dui. In a sollicitudin tortor. Vivamus consequat sollicitudin felis, nec pretium dolor bibendum sit amet. Integer non congue risus, id imperdiet diam. Proin elementum enim at felis commodo semper. Pellentesque magna magna, laoreet nec hendrerit in, suscipit sit amet risus. Nulla et imperdiet massa. Donec commodo felis quis arcu dignissim lobortis. Praesent nec fringilla felis, ut pharetra sapien. Donec ac dignissim nisi, non lobortis justo. Nulla congue velit nec sodales bibendum. Nullam feugiat, mauris ac consequat posuere, eros sem dignissim nulla, ac convallis dolor sem rhoncus dolor. Cras ut luctus risus, quis viverra mauris.";
+//   // Sending a long text message
+//   // Open device and server
+//   // const { device1, device2 } = await openAppTwoDevices(platform);
+//   // // Create user A and User B
+//   // const [userA, userB] = await Promise.all([
+//   //   newUser(device1, "Alice", platform),
+//   //   newUser(device2, "Bob", platform),
+//   // ]);
+//   // Create contact
+//   // await newContact(platform, device1, userA, device2, userB);
+//   // Send a long message from User A to User B
+//   await device1.sendMessage(longText);
+//   // Reply to message (User B to User A)
+//   const sentMessage = await device2.replyToMessage(userA, longText);
+//   // Check reply came through on device1
+//   await device1.findMessageWithBody(sentMessage);
+//   // Close app
+//   // await closeApp(device1, device2);
+// }
 
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message sent status: Sent",
-    maxWait: 20000,
-  });
-  // Accept dialog for link preview
-  await device1.clickOnByAccessibilityID("Enable");
-  // No preview on first send
-  await device1.clickOnByAccessibilityID("Send message button");
-  // Send again for image
-  await device1.inputText("accessibility id", "Message input box", testLink);
-  await sleepFor(100);
-  await device1.clickOnByAccessibilityID("Send message button");
-  // Make sure link works (dialog pop ups saying are you sure?)
+// async function sendLink(
+//   platform: SupportedPlatformsType,
+//   device1: DeviceWrapper,
+//   device2: DeviceWrapper,
+//   userA: User,
+//   userB: User
+// ) {
+//   // const { device1, device2 } = await openAppTwoDevices(platform);
+//   const testLink = `https://type-level-typescript.com/objects-and-records`;
+//   // Create two users
+//   // const [userA, userB] = await Promise.all([
+//   //   newUser(device1, "Alice", platform),
+//   //   newUser(device2, "Bob", platform),
+//   // ]);
+//   const replyMessage = `Replying to link from ${userA.userName}`;
+//   // Create contact
+//   // await newContact(platform, device1, userA, device2, userB);
+//   // Send a link
 
-  // Make sure image preview is available in device 2
-  await device2.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
-    text: testLink,
-  });
+//   await device1.inputText("accessibility id", "Message input box", testLink);
+//   // await device1.waitForLoadingAnimation();
+//   await device1.waitForTextElementToBePresent({
+//     strategy: "accessibility id",
+//     selector: "Message sent status: Sent",
+//     maxWait: 20000,
+//   });
+//   // Accept dialog for link preview
+//   await device1.clickOnByAccessibilityID("Enable");
+//   // No preview on first send
+//   await device1.clickOnByAccessibilityID("Send message button");
+//   // Send again for image
+//   await device1.inputText("accessibility id", "Message input box", testLink);
+//   await sleepFor(500);
+//   await device1.clickOnByAccessibilityID("Send message button");
+//   // Make sure image preview is available in device 2
+//   await device2.waitForTextElementToBePresent({
+//     strategy: "accessibility id",
+//     selector: "Message body",
+//     text: testLink,
+//   });
 
-  const replyMessage = await device2.replyToMessage(userA, testLink);
-  await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
-    text: replyMessage,
-  });
-  await closeApp(device1, device2);
-}
+//   await device2.longPressMessage(testLink);
+//   await device2.clickOnByAccessibilityID("Reply to message");
+//   await device2.sendMessage(replyMessage);
+//   await device1.waitForTextElementToBePresent({
+//     strategy: "accessibility id",
+//     selector: "Message body",
+//     text: replyMessage,
+//   });
+//   // await closeApp(device1, device2);
+// }
 
-async function sendCommunityInvitation(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  const communityLink = `https://chat.lokinet.dev/testing-all-the-things?public_key=1d7e7f92b1ed3643855c98ecac02fc7274033a3467653f047d6e433540c03f17`;
-  const communityName = "Testing All The Things!";
-  // Create two users
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
-  // Create contact
-  await newContact(platform, device1, userA, device2, userB);
-  // Join community on device 1
-  // Click on plus button
-  await device1.navigateBack(platform);
-  await joinCommunity(platform, device1, communityLink, communityName);
-  await device1.clickOnByAccessibilityID("More options");
-  await device1.clickOnByAccessibilityID("Add Members");
-  await device1.clickOnElementByText({
-    strategy: "accessibility id",
-    selector: "Contact",
-    text: userB.userName,
-  });
-  // await device1.clickOnByAccessibilityID("Invite");
-  await device1.clickOnByAccessibilityID("Done");
-  await device2.clickOnElementByText({
-    strategy: "accessibility id",
-    selector: "Community invitation",
-    text: communityName,
-  });
-  await device2.clickOnByAccessibilityID("Join");
-  // Check that join worked
-  await device2.navigateBack(platform);
-  await device2.clickOnElementByText({
-    strategy: "accessibility id",
-    selector: "Conversation list item",
-    text: communityName,
-  });
-  await device2.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Conversation header name",
-    text: communityName,
-  });
-  // await device2.waitForTextElementToBePresent({
-  //   strategy: "accessibility id",
-  //   selector: "Username",
-  //   text: communityName,
-  // });
+// async function sendCommunityInvitation(platform: SupportedPlatformsType) {
+//   const { device1, device2 } = await openAppTwoDevices(platform);
+//   const communityLink = `https://chat.lokinet.dev/testing-all-the-things?public_key=1d7e7f92b1ed3643855c98ecac02fc7274033a3467653f047d6e433540c03f17`;
+//   const communityName = "Testing All The Things!";
+//   // Create two users
+//   const [userA, userB] = await Promise.all([
+//     newUser(device1, "Alice", platform),
+//     newUser(device2, "Bob", platform),
+//   ]);
+//   // Create contact
+//   await newContact(platform, device1, userA, device2, userB);
+//   // Join community on device 1
+//   // Click on plus button
+//   await device1.navigateBack(platform);
+//   await joinCommunity(platform, device1, communityLink, communityName);
+//   await device1.clickOnByAccessibilityID("More options");
+//   await device1.clickOnByAccessibilityID("Add Members");
+//   await device1.clickOnElementByText({
+//     strategy: "accessibility id",
+//     selector: "Contact",
+//     text: userB.userName,
+//   });
+//   // await device1.clickOnByAccessibilityID("Invite");
+//   await device1.clickOnByAccessibilityID("Done");
+//   await device2.clickOnElementByText({
+//     strategy: "accessibility id",
+//     selector: "Community invitation",
+//     text: communityName,
+//   });
+//   await device2.clickOnByAccessibilityID("Join");
+//   // Check that join worked
+//   await device2.navigateBack(platform);
+//   await device2.clickOnElementByText({
+//     strategy: "accessibility id",
+//     selector: "Conversation list item",
+//     text: communityName,
+//   });
+//   await device2.waitForTextElementToBePresent({
+//     strategy: "accessibility id",
+//     selector: "Conversation header name",
+//     text: communityName,
+//   });
+//   // await device2.waitForTextElementToBePresent({
+//   //   strategy: "accessibility id",
+//   //   selector: "Username",
+//   //   text: communityName,
+//   // });
 
-  await closeApp(device1, device2);
-}
+//   await closeApp(device1, device2);
+// }
 
-async function unsendMessage(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
+// async function unsendMessage(platform: SupportedPlatformsType) {
+//   const { device1, device2 } = await openAppTwoDevices(platform);
 
-  // Create two users
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
-  // Create contact
-  await newContact(platform, device1, userA, device2, userB);
-  // send message from User A to User B
-  const sentMessage = await device1.sendMessage(
-    "Checking unsend functionality"
-  );
-  // await sleepFor(1000);
-  await device2.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
-    text: sentMessage,
-  });
-  console.log("Doing a long click on" + `${sentMessage}`);
-  // Select and long press on message to delete it
-  await device2.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
-    text: sentMessage,
-  });
-  await device1.longPressMessage(sentMessage);
-  // Select Delete icon
-  await device1.clickOnByAccessibilityID("Delete message");
-  // Select 'Delete for me and User B'
-  await device1.clickOnByAccessibilityID("Delete for everyone");
-  // Look in User B's chat for alert 'This message has been deleted?'
-  await device2.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Deleted message",
-    maxWait: 5000,
-  });
+//   // Create two users
+//   const [userA, userB] = await Promise.all([
+//     newUser(device1, "Alice", platform),
+//     newUser(device2, "Bob", platform),
+//   ]);
+//   // Create contact
+//   await newContact(platform, device1, userA, device2, userB);
+//   // send message from User A to User B
+//   const sentMessage = await device1.sendMessage(
+//     "Checking unsend functionality"
+//   );
+//   // await sleepFor(1000);
+//   await device2.waitForTextElementToBePresent({
+//     strategy: "accessibility id",
+//     selector: "Message body",
+//     text: sentMessage,
+//   });
+//   console.log("Doing a long click on" + `${sentMessage}`);
+//   // Select and long press on message to delete it
+//   await device2.waitForTextElementToBePresent({
+//     strategy: "accessibility id",
+//     selector: "Message body",
+//     text: sentMessage,
+//   });
+//   await device1.longPressMessage(sentMessage);
+//   // Select Delete icon
+//   await device1.clickOnByAccessibilityID("Delete message");
+//   // Select 'Delete for me and User B'
+//   await device1.clickOnByAccessibilityID("Delete for everyone");
+//   // Look in User B's chat for alert 'This message has been deleted?'
+//   await device2.waitForTextElementToBePresent({
+//     strategy: "accessibility id",
+//     selector: "Deleted message",
+//     maxWait: 5000,
+//   });
 
-  // Excellent
-  await closeApp(device1, device2);
-}
+//   // Excellent
+//   await closeApp(device1, device2);
+// }
 
-async function deleteMessage(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
+// async function deleteMessage(platform: SupportedPlatformsType) {
+//   const { device1, device2 } = await openAppTwoDevices(platform);
 
-  // Create two users
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
-  // Create contact
-  await newContact(platform, device1, userA, device2, userB);
-  // send message from User A to User B
-  const sentMessage = await device1.sendMessage(
-    "Checking delete functionality"
-  );
-  // await sleepFor(1000);
-  await device2.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
-    text: sentMessage,
-  });
-  // Select and long press on message to delete it
-  await device1.longPressMessage(sentMessage);
-  // Select Delete icon
-  await device1.clickOnByAccessibilityID("Delete message");
-  // Select 'Delete for me and User B'
-  await device1.clickOnByAccessibilityID("Delete for me");
-  // Look in User B's chat for alert 'This message has been deleted?'
-  //   await device1.hasElementBeenDeletedNew({
-  //     strategy: "accessibility id",
-  //     selector: "Message body",
-  //     text: sentMessage,
-  // });
+//   // Create two users
+//   const [userA, userB] = await Promise.all([
+//     newUser(device1, "Alice", platform),
+//     newUser(device2, "Bob", platform),
+//   ]);
+//   // Create contact
+//   await newContact(platform, device1, userA, device2, userB);
+//   // send message from User A to User B
+//   const sentMessage = await device1.sendMessage(
+//     "Checking delete functionality"
+//   );
+//   // await sleepFor(1000);
+//   await device2.waitForTextElementToBePresent({
+//     strategy: "accessibility id",
+//     selector: "Message body",
+//     text: sentMessage,
+//   });
+//   // Select and long press on message to delete it
+//   await device1.longPressMessage(sentMessage);
+//   // Select Delete icon
+//   await device1.clickOnByAccessibilityID("Delete message");
+//   // Select 'Delete for me and User B'
+//   await device1.clickOnByAccessibilityID("Delete for me");
+//   // Look in User B's chat for alert 'This message has been deleted?'
+//   //   await device1.hasElementBeenDeletedNew({
+//   //     strategy: "accessibility id",
+//   //     selector: "Message body",
+//   //     text: sentMessage,
+//   // });
 
-  // Excellent
-  await closeApp(device1, device2);
-}
-async function checkPerformance(platform: SupportedPlatformsType) {
-  const { device1, device2 } = await openAppTwoDevices(platform);
-  // Create two users
-  const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
-  ]);
-  // Create contact
-  await newContact(platform, device1, userA, device2, userB);
-  const timesArray: Array<number> = [];
+//   // Excellent
+//   await closeApp(device1, device2);
+// }
 
-  let i;
-  for (i = 1; i <= 10; i++) {
-    const timeMs = await device1.measureSendingTime(i);
-    timesArray.push(timeMs);
-  }
-  console.log(timesArray);
-}
+// async function checkPerformance(platform: SupportedPlatformsType) {
+//   const { device1, device2 } = await openAppTwoDevices(platform);
+//   // Create two users
+//   const [userA, userB] = await Promise.all([
+//     newUser(device1, "Alice", platform),
+//     newUser(device2, "Bob", platform),
+//   ]);
+//   // Create contact
+//   await newContact(platform, device1, userA, device2, userB);
+//   const timesArray: Array<number> = [];
 
-describe("Message checks ios", () => {
-  iosIt("Send image", sendImage);
-  iosIt("Send video", sendVideo);
-  iosIt("Send voice message", sendVoiceMessage);
-  // iosIt("Send document", sendDoc);
-  iosIt("Send gif", sendGif);
-  iosIt("Send long text", sendLongMessage);
-  iosIt("Send link", sendLink);
-  iosIt("Send community invitation message", sendCommunityInvitation);
-  iosIt("Unsend message", unsendMessage);
-  iosIt("Delete message", deleteMessage);
-  iosIt("Check performance", checkPerformance);
-});
+//   let i;
+//   for (i = 1; i <= 10; i++) {
+//     const timeMs = await device1.measureSendingTime(i);
+//     timesArray.push(timeMs);
+//   }
+//   console.log(timesArray);
+// }
 
-// Media saved notification
-// Send all message types in groups
-// Send all message types in communities
+// // Media saved notification
+// // Send all message types in groups
+// // Send all message types in communities
+
+// // yarn test-describe --grep "Message checks ios"

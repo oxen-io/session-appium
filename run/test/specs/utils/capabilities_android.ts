@@ -6,8 +6,21 @@ import {
 // import { W3CCapabilities } from "appium/build/lib/appium";
 import { isNil, isString } from "lodash";
 import { CapabilitiesIndexType } from "./capabilities_ios";
+import dotenv from "dotenv";
+dotenv.config();
+// Access the environment variable
+const androidPathPrefix = process.env.ANDROID_APP_PATH_PREFIX;
 
-const androidAppFullPath = `/Users/emilyburton/Desktop/android-to-be-tested/onboarding/session-1.18.5-universal.apk`;
+if (!androidPathPrefix) {
+  throw new Error("ANDROID_APP_PATH_PREFIX environment variable is not set");
+}
+
+// Concatenate the environment variable with the fixed part of the path
+const androidAppFullPath = `${androidPathPrefix}/Latest-android-build/android-1.18.4/session-1.18.4-universal.apk`;
+
+console.log(`Android app full path: ${androidAppFullPath}`);
+
+// const androidAppFullPath = `/Users/emilyburton/Downloads/session-android-20240531T000357Z-b544961d2-universal/session-1.18.4-universal.apk`;
 
 const sharedCapabilities: AppiumAndroidCapabilities & AppiumCapabilities = {
   "appium:app": androidAppFullPath,
@@ -35,6 +48,11 @@ const emulator1Udid = "emulator-5554";
 const emulator2Udid = "emulator-5556";
 const emulator3Udid = "emulator-5558";
 const emulator4Udid = "emulator-5560";
+const emulator5Udid = "emulator-5562";
+const emulator6Udid = "emulator-5564";
+const emulator7Udid = "emulator-5566";
+const emulator8Udid = "emulator-5568";
+
 const physicalDevice1Udid = "99251FFAZ000TP";
 const physicalDevice2Udid = "SDEDU20311000793";
 
@@ -48,28 +66,31 @@ export const physicalDeviceCapabilities2: AppiumCapabilities = {
   "appium:udid": physicalDevice2Udid,
 };
 
-const emulatorCapabilities1: AppiumCapabilities = {
-  ...sharedCapabilities,
-  "appium:udid": emulator1Udid,
-};
-const emulatorCapabilities2: AppiumCapabilities = {
-  ...sharedCapabilities,
-  "appium:udid": emulator2Udid,
-};
+const udids = [
+  emulator1Udid,
+  emulator2Udid,
+  emulator3Udid,
+  emulator4Udid,
+  emulator5Udid,
+  emulator6Udid,
+  emulator7Udid,
+  emulator8Udid,
+];
 
-const emulatorCapabilities3: AppiumCapabilities = {
+const emulatorCapabilities: AppiumCapabilities[] = udids.map((udid) => ({
   ...sharedCapabilities,
-  "appium:udid": emulator3Udid,
-};
+  "appium:udid": udid,
+}));
 
-const emulatorCapabilities4: AppiumCapabilities = {
-  ...sharedCapabilities,
-  "appium:udid": emulator4Udid,
-};
-// const countOfAndroidCapabilities = 4;
-
-// const uuidsList = [emulator1Udid, emulator2Udid, emulator3Udid, emulator4Udid];
-// const deviceList = [physicalDevice1Udid, physicalDevice2Udid]
+// Access individual capabilities like this
+const emulatorCapabilities1 = emulatorCapabilities[0];
+const emulatorCapabilities2 = emulatorCapabilities[1];
+const emulatorCapabilities3 = emulatorCapabilities[2];
+const emulatorCapabilities4 = emulatorCapabilities[3];
+const emulatorCapabilities5 = emulatorCapabilities[4];
+const emulatorCapabilities6 = emulatorCapabilities[5];
+const emulatorCapabilities7 = emulatorCapabilities[6];
+const emulatorCapabilities8 = emulatorCapabilities[7];
 
 export const androidCapabilities = {
   sharedCapabilities,
@@ -82,6 +103,10 @@ function getAllCaps() {
     emulatorCapabilities2,
     emulatorCapabilities3,
     emulatorCapabilities4,
+    emulatorCapabilities5,
+    emulatorCapabilities6,
+    emulatorCapabilities7,
+    emulatorCapabilities8,
   ];
   const physicalDeviceCaps = [
     physicalDeviceCapabilities1,
@@ -115,6 +140,7 @@ export function getAndroidCapabilities(
 }
 export function getAndroidUdid(udidIndex: CapabilitiesIndexType): string {
   const allCaps = getAllCaps();
+
   if (udidIndex >= allCaps.length) {
     throw new Error(`Asked invalid android udid index: ${udidIndex}`);
   }

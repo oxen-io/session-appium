@@ -16,11 +16,15 @@ apps/
 *.log
 chromeDriver
 .tmp
+.env
 
 run/**/*.js
 *.js.map
+*.js
 run/test/specs/to do 
 to do
 .vscode/
 .yarn/
 .env
+playwright.config.ts
+test-results/
