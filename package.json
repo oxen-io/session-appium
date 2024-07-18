@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@appium/execute-driver-plugin": "^3.0.1",
-    "@appium/images-plugin": "^2.0.1",
+    "@appium/images-plugin": "^3.0.17",
     "@types/jest": "^29.5.12",
     "@types/lodash": "^4.14.191",
     "@types/node": "^20.14.10",
@@ -32,11 +32,6 @@
     "wdio-wait-for": "^2.2.6"
   },
   "license": "MIT",
-  "resolutions": {
-    "@appium/support@npm:^4.1.10": "patch:@appium/support@npm%3A4.2.0#./patches/@appium-support-npm-4.2.0-d9ae1632eb.patch",
-    "@appium/support@npm:^4.2.0": "patch:@appium/support@npm%3A4.2.0#~/patches/@appium-support-npm-4.2.0-d9ae1632eb.patch",
-    "@appium/support@npm:^4.0.0": "patch:@appium/support@npm%3A4.2.0#~/patches/@appium-support-npm-4.2.0-d9ae1632eb.patch"
-  },
   "engines": {
     "node": ">=18",
     "pnpm": "use yarn",
