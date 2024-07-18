@@ -310,4 +310,5 @@ export type AccessibilityId =
   | "Loading animation"
   | "Recovery password container"
   | "Copy button"
-  | "space";
+  | "space"
+  | "Recovery password input";

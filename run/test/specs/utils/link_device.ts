@@ -18,9 +18,10 @@ export const linkedDevice = async (
   // Enter recovery phrase into input box
   await device2.inputText(
     "accessibility id",
-    "Recovery phrase input",
+    device2.isAndroid() ? "Recovery phrase input" : "Recovery password input",
     user.recoveryPhrase
   );
+
   // Wait for continue button to become active
   await sleepFor(500);
   // Continue with recovery phrase
@@ -34,6 +35,7 @@ export const linkedDevice = async (
   const displayName = await device2.doesElementExist({
     strategy: "accessibility id",
     selector: "Enter display name",
+    maxWait: 1000,
   });
   if (displayName) {
     await device2.inputText("accessibility id", "Enter display name", userName);
@@ -43,15 +45,7 @@ export const linkedDevice = async (
   }
   // Wait for permissions modal to pop up
   await sleepFor(500);
-  await runOnlyOnIOS(platform, () =>
-    device2.clickOnByAccessibilityID("Don’t Allow")
-  );
-  await runOnlyOnAndroid(platform, () =>
-    device2.clickOnTextElementById(
-      `com.android.permissioncontroller:id/permission_allow_button`,
-      "Allow"
-    )
-  );
+  await device2.checkPermissions(platform);
   await sleepFor(1000);
   await device2.hasElementBeenDeleted({
     strategy: "accessibility id",
