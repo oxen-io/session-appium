@@ -26,32 +26,37 @@ export const linkedDevice = async (
   // Continue with recovery phrase
   await device2.clickOnByAccessibilityID("Continue");
   // Wait for any notifications to disappear
-  await device2.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message Notifications",
-    maxWait: 20000,
-  });
-
-  // Wait for transitiion animation between the two pages
-  await await sleepFor(250);
+  await device2.clickOnByAccessibilityID("Slow mode notifications button");
   // Click continue on message notification settings
   await device2.clickOnByAccessibilityID("Continue");
+  // Wait for loading animation to look for display name
+  await device2.waitForLoadingOnboarding();
+  const displayName = await device2.doesElementExist({
+    strategy: "accessibility id",
+    selector: "Enter display name",
+  });
+  if (displayName) {
+    await device2.inputText("accessibility id", "Enter display name", userName);
+    await device2.clickOnByAccessibilityID("Continue");
+  } else {
+    console.warn("Display name found: Loading account");
+  }
   // Wait for permissions modal to pop up
-  await sleepFor(1000);
+  await sleepFor(500);
   await runOnlyOnIOS(platform, () =>
     device2.clickOnByAccessibilityID("Don’t Allow")
   );
-  await sleepFor(1000);
-  await device2.hasElementBeenDeleted({
-    strategy: "accessibility id",
-    selector: "Continue",
-  });
   await runOnlyOnAndroid(platform, () =>
     device2.clickOnTextElementById(
       `com.android.permissioncontroller:id/permission_allow_button`,
       "Allow"
     )
   );
+  await sleepFor(1000);
+  await device2.hasElementBeenDeleted({
+    strategy: "accessibility id",
+    selector: "Continue",
+  });
   // Check that button was clicked
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",

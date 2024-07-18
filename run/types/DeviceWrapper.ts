@@ -897,7 +897,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return el;
   }
   // TODO
-  public async waitForLoadingAnimation() {
+  public async waitForLoadingMedia() {
     let loadingAnimation: AppiumNextElementType | null = null;
 
     do {
@@ -907,12 +907,44 @@ export class DeviceWrapper implements SharedDeviceInterface {
           selector: "network.loki.messenger:id/thumbnail_load_indicator",
           maxWait: 1000,
         });
-        await sleepFor(100);
-        console.info("loadinganimation was found, waiting for it to be gone");
+
+        if (loadingAnimation) {
+          await sleepFor(100);
+          console.info(
+            "Loading animation was found, waiting for it to be gone"
+          );
+        }
       } catch (e: any) {
         console.log("Loading animation not found");
+        loadingAnimation = null;
       }
     } while (loadingAnimation);
+
+    console.info("Loading animation has finished");
+  }
+
+  public async waitForLoadingOnboarding() {
+    let loadingAnimation: AppiumNextElementType | null = null;
+    do {
+      try {
+        loadingAnimation = await this.waitForTextElementToBePresent({
+          strategy: "accessibility id",
+          selector: "Loading animation",
+          maxWait: 1000,
+        });
+
+        if (loadingAnimation) {
+          await sleepFor(500);
+          console.info(
+            "Loading animation was found, waiting for it to be gone"
+          );
+        }
+      } catch (e: any) {
+        console.log("Loading animation not found");
+        loadingAnimation = null;
+      }
+    } while (loadingAnimation);
+
     console.info("Loading animation has finished");
   }
 

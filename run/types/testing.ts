@@ -297,4 +297,5 @@ export type AccessibilityId =
   | "2 weeks"
   | "Off"
   | "Loading animation"
-  | "Recovery password container";
+  | "Recovery password container"
+  | "Copy button";

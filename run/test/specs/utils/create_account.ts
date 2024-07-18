@@ -14,7 +14,6 @@ export const newUser = async (
     strategy: "accessibility id",
     selector: "Create account button",
   });
-  // console.log(`${userName}s sessionID found: "${sessionID}" "${platform}"`);
   // Click continue on session Id creation
   await device.clickOnByAccessibilityID("Continue");
   // Input username
@@ -46,6 +45,7 @@ export const newUser = async (
   );
   //Save recovery passwprd
   await device.clickOnByAccessibilityID("Recovery password container");
+  await device.clickOnByAccessibilityID("Copy button");
   // Save recovery phrase as variable
   const recoveryPhrase = await device.grabTextFromAccessibilityId(
     "Recovery password container"
