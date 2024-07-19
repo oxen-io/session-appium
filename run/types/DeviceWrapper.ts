@@ -21,7 +21,7 @@ import {
   XPath,
 } from "./testing";
 import { XPATHS } from "../constants";
-import { LocatorsInterface } from "../test/specs/locators";
+import { LocatorsInterface } from "../../run/test/specs/locators";
 
 export type Coordinates = {
   x: number;
