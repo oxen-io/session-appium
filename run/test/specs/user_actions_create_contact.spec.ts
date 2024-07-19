@@ -20,7 +20,6 @@ async function createContact(platform: SupportedPlatformsType) {
   // const userB = testEnv.Bob;
   const [device1, device2, device3] = await openAppMultipleDevices(platform, 3);
   const userA = await linkedDevice(device1, device3, "Alice", platform);
-  console.warn("process.env.MOCHA_WORKER_ID:", process.env.MOCHA_WORKER_ID);
   const userB = await newUser(device2, "Bob", platform);
 
   await newContact(platform, device1, userA, device2, userB);

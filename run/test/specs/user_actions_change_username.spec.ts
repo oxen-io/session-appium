@@ -6,6 +6,7 @@ import {
   openAppOnPlatformSingleDevice,
   closeApp,
 } from "./utils/open_app";
+import { TickButton } from "./locators";
 
 bothPlatformsIt("Change username", changeUsername);
 
@@ -39,10 +40,7 @@ async function changeUsername(platform: SupportedPlatformsType) {
     console.log("Username is not found`");
   }
   // select tick
-  await runOnlyOnAndroid(platform, () =>
-    device.clickOnByAccessibilityID("Apply")
-  );
-  await runOnlyOnIOS(platform, () => device.clickOnByAccessibilityID("Done"));
+  await device.clickOnElementAll(new TickButton(device));
   await device.navigateBack(platform);
   await device.clickOnElementAll({
     strategy: "accessibility id",

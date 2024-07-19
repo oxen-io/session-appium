@@ -1,4 +1,5 @@
 import { androidIt, iosIt } from "../../types/sessionIt";
+import { ApplyChanges, EditGroupButton } from "./locators";
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
@@ -49,16 +50,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   // Click more options
   await device1.clickOnByAccessibilityID("More options");
   // Select edit group
-  await runOnlyOnIOS(platform, () =>
-    device1.clickOnByAccessibilityID("Edit group")
-  );
-  await sleepFor(1000);
-  await runOnlyOnAndroid(platform, () =>
-    device1.clickOnTextElementById(
-      `network.loki.messenger:id/title`,
-      "Edit group"
-    )
-  );
+  await device1.clickOnElementAll(new EditGroupButton(device1));
   // Add contact to group
   await device1.clickOnByAccessibilityID("Add members");
   // Select new user
@@ -76,12 +68,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID("Done");
   // Click done/apply again
   await sleepFor(1000);
-  await runOnlyOnIOS(platform, () =>
-    device1.clickOnByAccessibilityID("Apply changes")
-  );
-  await runOnlyOnAndroid(platform, () =>
-    device1.clickOnElementById("network.loki.messenger:id/action_apply")
-  );
+  await device1.clickOnElementAll(new ApplyChanges(device1));
   // Check config message
   await runOnlyOnIOS(platform, () =>
     device1.waitForControlMessageToBePresent(

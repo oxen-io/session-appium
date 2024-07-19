@@ -21,6 +21,7 @@ import {
   XPath,
 } from "./testing";
 import { XPATHS } from "../constants";
+import { LocatorsInterface } from "../test/specs/locators";
 
 export type Coordinates = {
   x: number;
@@ -358,14 +359,27 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async clickOnElementAll(
-    args: { text?: string; maxWait?: number } & StrategyExtractionObj
+    args:
+      | ({ text?: string; maxWait?: number } & StrategyExtractionObj)
+      | LocatorsInterface
   ) {
     let el: null | AppiumNextElementType = null;
-    const { text } = args;
-    if (text) {
-      el = await this.waitForTextElementToBePresent({ ...args, text });
+    let locator: StrategyExtractionObj & { text?: string; maxWait?: number };
+
+    if (args instanceof LocatorsInterface) {
+      locator = args.build();
     } else {
-      el = await this.waitForTextElementToBePresent(args);
+      locator = args as StrategyExtractionObj & {
+        text?: string;
+        maxWait?: number;
+      };
+    }
+
+    const { text } = locator;
+    if (text) {
+      el = await this.waitForTextElementToBePresent({ ...locator, text });
+    } else {
+      el = await this.waitForTextElementToBePresent(locator);
     }
     await this.click(el.ELEMENT);
     return el;
