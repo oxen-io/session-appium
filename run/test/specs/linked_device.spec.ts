@@ -32,8 +32,8 @@ async function linkDevice(platform: SupportedPlatformsType) {
   });
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Session ID",
-    text: userA.sessionID,
+    selector: "Account ID",
+    text: userA.accountID,
   });
 
   await closeApp(device1, device2);

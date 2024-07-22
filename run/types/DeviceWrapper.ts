@@ -762,7 +762,6 @@ export class DeviceWrapper implements SharedDeviceInterface {
       } catch (e: any) {
         console.warn("doesElementExist failed with", e.message);
       }
-
       if (!element) {
         await sleepFor(waitPerLoop);
       }
@@ -948,8 +947,8 @@ export class DeviceWrapper implements SharedDeviceInterface {
     console.log(`Control message ${text} has been found`);
     return el;
   }
-
-  public async waitForLoadingAnimation() {
+  // TODO
+  public async waitForLoadingMedia() {
     let loadingAnimation: AppiumNextElementType | null = null;
 
     do {
@@ -959,12 +958,44 @@ export class DeviceWrapper implements SharedDeviceInterface {
           selector: "network.loki.messenger:id/thumbnail_load_indicator",
           maxWait: 1000,
         });
-        await sleepFor(100);
-        console.info("loading-animation was found, waiting for it to be gone");
+
+        if (loadingAnimation) {
+          await sleepFor(100);
+          console.info(
+            "Loading animation was found, waiting for it to be gone"
+          );
+        }
       } catch (e: any) {
         console.log("Loading animation not found");
+        loadingAnimation = null;
       }
     } while (loadingAnimation);
+
+    console.info("Loading animation has finished");
+  }
+
+  public async waitForLoadingOnboarding() {
+    let loadingAnimation: AppiumNextElementType | null = null;
+    do {
+      try {
+        loadingAnimation = await this.waitForTextElementToBePresent({
+          strategy: "accessibility id",
+          selector: "Loading animation",
+          maxWait: 1000,
+        });
+
+        if (loadingAnimation) {
+          await sleepFor(500);
+          console.info(
+            "Loading animation was found, waiting for it to be gone"
+          );
+        }
+      } catch (e: any) {
+        console.log("Loading animation not found");
+        loadingAnimation = null;
+      }
+    } while (loadingAnimation);
+
     console.info("Loading animation has finished");
   }
 
@@ -1022,7 +1053,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.inputText(
       "accessibility id",
       "Session id input box",
-      user.sessionID
+      user.accountID
     );
     // Click next
     await this.scrollDown();
@@ -1569,10 +1600,13 @@ export class DeviceWrapper implements SharedDeviceInterface {
         selector: "com.android.permissioncontroller:id/permission_deny_button",
         maxWait: 1000,
       });
-      this.clickOnElementAll({
-        strategy: "id",
-        selector: "com.android.permissioncontroller:id/permission_deny_button",
-      });
+      if (permissions) {
+        this.clickOnElementAll({
+          strategy: "id",
+          selector:
+            "com.android.permissioncontroller:id/permission_deny_button",
+        });
+      }
       return;
     }
     if (platform === "ios") {
@@ -1601,8 +1635,8 @@ export class DeviceWrapper implements SharedDeviceInterface {
       await this.updateSettings({
         defaultActiveApplication: activeAppInfo.bundleId,
       });
+      return;
     }
-    return;
   }
   // eslint-disable-next-line @typescript-eslint/require-await
   public async execute(toExecute: string) {

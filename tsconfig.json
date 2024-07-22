@@ -12,7 +12,7 @@
     "strictPropertyInitialization": true,
     "strictNullChecks": true,
     "esModuleInterop": true,
-    "types": ["@wdio/types", "node", "mocha"],
+    "types": ["@wdio/types", "node"],
     "target": "es2019"
   }
 }

@@ -28,7 +28,7 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   await device.inputText(
     "accessibility id",
     "Session id input box",
-    userA.sessionID
+    userA.accountID
   );
   await device.scrollDown();
   await device.clickOnByAccessibilityID("Next");

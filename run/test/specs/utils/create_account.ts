@@ -1,7 +1,7 @@
-import { getSessionID, runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from ".";
-import { SupportedPlatformsType } from "./open_app";
-import { User, Username } from "../../../types/testing";
+import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from ".";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
+import { User, Username } from "../../../types/testing";
+import { SupportedPlatformsType } from "./open_app";
 
 export const newUser = async (
   device: DeviceWrapper,
@@ -9,23 +9,11 @@ export const newUser = async (
   platform: SupportedPlatformsType
 ): Promise<User> => {
   // Click create session ID
-  const createSessionId = "Create session ID";
-  await device.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: createSessionId,
-  });
-  await device.clickOnByAccessibilityID(createSessionId);
-  // Wait for animation to generate session id
-  await device.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Session ID",
-    maxWait: 8000,
-  });
-  // save session id as variable
-  const sessionID = await getSessionID(platform, device);
 
-  console.log(`${userName}s sessionID found: "${sessionID}" "${platform}"`);
-  // TODO add 'allow notifications' function here for android API 34
+  await device.clickOnElementAll({
+    strategy: "accessibility id",
+    selector: "Create account button",
+  });
   // Click continue on session Id creation
   await device.clickOnByAccessibilityID("Continue");
   // Input username
@@ -34,27 +22,45 @@ export const newUser = async (
   await device.clickOnByAccessibilityID("Continue");
   // Choose message notification options
   // Want to choose 'Slow Mode' so notifications don't interrupt test
-  await runOnlyOnAndroid(platform, () =>
-    device.clickOnByAccessibilityID("Slow mode notifications option")
-  );
-  await device.clickOnByAccessibilityID("Continue with settings");
+  await device.clickOnByAccessibilityID("Slow mode notifications button");
+  // Select Continue to save notification settings
+  await device.clickOnByAccessibilityID("Continue");
   // Need to add Don't allow notifications dismiss here
   await device.checkPermissions(platform);
   // Click on 'continue' button to open recovery phrase modal
   await device.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Continue",
+    selector: "Reveal recovery phrase button",
   });
-  await device.clickOnByAccessibilityID("Continue");
-  // Long Press the recovery phrase to reveal recovery phrase
-  await device.longPress("Recovery Phrase");
+  await runOnlyOnIOS(platform, () =>
+    device.clickOnByAccessibilityID("Continue")
+  );
+  await runOnlyOnAndroid(platform, () =>
+    device.clickOnElementAll({
+      strategy: "accessibility id",
+      selector: "Reveal recovery phrase button",
+    })
+  );
+  //Save recovery passwprd
+  await device.clickOnByAccessibilityID("Recovery password container");
+  await runOnlyOnAndroid(platform, () =>
+    device.clickOnByAccessibilityID("Copy button")
+  );
   // Save recovery phrase as variable
   const recoveryPhrase = await device.grabTextFromAccessibilityId(
-    "Recovery Phrase"
+    "Recovery password container"
   );
   console.log(`${userName}s recovery phrase is "${recoveryPhrase}"`);
   // Exit Modal
-  await device.clickOnByAccessibilityID("Navigate up");
-
-  return { userName, sessionID, recoveryPhrase };
+  await device.navigateBack(platform);
+  await device.clickOnByAccessibilityID("User settings");
+  const accountID = await device.grabTextFromAccessibilityId("Account ID");
+  await runOnlyOnAndroid(platform, () => device.navigateBack(platform));
+  await runOnlyOnIOS(platform, () =>
+    device.clickOnElementAll({
+      strategy: "accessibility id",
+      selector: "Close button",
+    })
+  );
+  return { userName, accountID, recoveryPhrase };
 };

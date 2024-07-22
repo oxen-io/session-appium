@@ -2,7 +2,7 @@ import { DeviceWrapper } from "./DeviceWrapper";
 
 export type User = {
   userName: Username;
-  sessionID: string;
+  accountID: string;
   recoveryPhrase: string;
 };
 
@@ -136,18 +136,18 @@ export type XPath =
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.ScrollView/androidx.viewpager.widget.ViewPager/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.FrameLayout[1]`;
 
 export type AccessibilityId =
-  | "Create session ID"
-  | "Session ID"
+  | "Create account button"
+  | "Account ID"
   | "Session ID generated"
   | "Session id input box"
   | "Enter display name"
   | "Continue"
-  | "Download media"
-  | "Slow mode notifications option"
+  | "Slow mode notifications button"
   | "Continue with settings"
   | "Don’t Allow"
   | "Allow"
-  | "Recovery Phrase"
+  | "Reveal recovery phrase button"
+  | "Recovery password"
   | "Navigate up"
   | "User settings"
   | "Notifications"
@@ -175,9 +175,9 @@ export type AccessibilityId =
   | "Contact mentions"
   | "Empty state label"
   | "Empty list"
-  | "Link a device"
+  | "Restore your session button"
   | "Link Device"
-  | "Enter your recovery phrase"
+  | "Recovery phrase input"
   | "Message Notifications"
   | "Settings"
   | "Call"
@@ -307,4 +307,8 @@ export type AccessibilityId =
   | "1 week"
   | "2 weeks"
   | "Off"
-  | "space";
+  | "Loading animation"
+  | "Recovery password container"
+  | "Copy button"
+  | "space"
+  | "Recovery password input";
