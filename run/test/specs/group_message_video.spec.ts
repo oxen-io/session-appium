@@ -96,7 +96,7 @@ async function sendVideoGroupAndroid(platform: SupportedPlatformsType) {
   // (wait for loading animation to disappear and play icon to appear)
   // Device 2
   await Promise.all([
-    device2.waitForLoadingAnimation(),
+    device2.waitForLoadingMedia(),
     device2.waitForTextElementToBePresent({
       strategy: "id",
       selector: "network.loki.messenger:id/play_overlay",
@@ -105,7 +105,7 @@ async function sendVideoGroupAndroid(platform: SupportedPlatformsType) {
   ]);
   // Device 3
   await Promise.all([
-    device3.waitForLoadingAnimation(),
+    device3.waitForLoadingMedia(),
     device3.waitForTextElementToBePresent({
       strategy: "id",
       selector: "network.loki.messenger:id/play_overlay",

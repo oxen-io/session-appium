@@ -14,67 +14,43 @@ export const linkedDevice = async (
   const user = await newUser(device1, userName, platform);
   // Log in with recovery seed on device 2
 
-  await device2.clickOnByAccessibilityID("Link a device");
+  await device2.clickOnByAccessibilityID("Restore your session button");
   // Enter recovery phrase into input box
   await device2.inputText(
     "accessibility id",
-    "Enter your recovery phrase",
+    device2.isAndroid() ? "Recovery phrase input" : "Recovery password input",
     user.recoveryPhrase
   );
-  await sleepFor(1000);
+
+  // Wait for continue button to become active
+  await sleepFor(500);
   // Continue with recovery phrase
   await device2.clickOnByAccessibilityID("Continue");
   // Wait for any notifications to disappear
-  await device2.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message Notifications",
-    maxWait: 20000,
-  });
-
-  // Wait for transitiion animation between the two pages
-  await await sleepFor(250);
+  await device2.clickOnByAccessibilityID("Slow mode notifications button");
   // Click continue on message notification settings
-  await device2.clickOnByAccessibilityID("Continue with settings");
-  await sleepFor(500);
+  await device2.clickOnByAccessibilityID("Continue");
+  // Wait for loading animation to look for display name
+  await device2.waitForLoadingOnboarding();
   const displayName = await device2.doesElementExist({
     strategy: "accessibility id",
     selector: "Enter display name",
     maxWait: 1000,
   });
-  await sleepFor(1000);
   if (displayName) {
-    await device2.inputText(
-      "accessibility id",
-      "Enter display name",
-      user.userName
-    );
+    await device2.inputText("accessibility id", "Enter display name", userName);
     await device2.clickOnByAccessibilityID("Continue");
   } else {
-    await console.log("No display name");
+    console.warn("Display name found: Loading account");
   }
+  // Wait for permissions modal to pop up
+  await sleepFor(500);
+  await device2.checkPermissions(platform);
   await sleepFor(1000);
-  const permissions = await device2.doesElementExist({
-    strategy: "accessibility id",
-    selector: "Don’t Allow",
-    maxWait: 2000,
-  });
-  if (permissions) {
-    await runOnlyOnIOS(platform, () =>
-      device2.clickOnByAccessibilityID("Don’t Allow")
-    );
-  } else {
-    await "No permissions";
-  }
   await device2.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Continue",
   });
-  await runOnlyOnAndroid(platform, () =>
-    device2.clickOnTextElementById(
-      `com.android.permissioncontroller:id/permission_allow_button`,
-      "Allow"
-    )
-  );
   // Check that button was clicked
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",

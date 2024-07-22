@@ -1,6 +1,9 @@
-import { AppiumCapabilities } from "@wdio/types/build/Capabilities";
+import {
+  AppiumAndroidCapabilities,
+  AppiumCapabilities,
+  W3CCapabilities,
+} from "@wdio/types/build/Capabilities";
 // import { W3CCapabilities } from "appium/build/lib/appium";
-import { W3CCapabilities } from "@wdio/types/build/Capabilities";
 import { isNil, isString } from "lodash";
 import { CapabilitiesIndexType } from "./capabilities_ios";
 import dotenv from "dotenv";
@@ -19,17 +22,27 @@ console.log(`Android app full path: ${androidAppFullPath}`);
 
 // const androidAppFullPath = `/Users/emilyburton/Downloads/session-android-20240531T000357Z-b544961d2-universal/session-1.18.4-universal.apk`;
 
-const sharedCapabilities: AppiumCapabilities = {
+const sharedCapabilities: AppiumAndroidCapabilities & AppiumCapabilities = {
   "appium:app": androidAppFullPath,
   "appium:platformName": "Android",
   "appium:platformVersion": "14",
   "appium:appPackage": "network.loki.messenger",
-  "appium:appWaitActivity":
-    "org.thoughtcrime.securesms.onboarding.LandingActivity",
+  "appium:appActivity": "network.loki.messenger.RoutingActivity",
   "appium:automationName": "UiAutomator2",
   "appium:newCommandTimeout": 300000,
   "appium:eventTimings": false,
 };
+// const sharedCapabilities: AppiumCapabilities = {
+//   "appium:app": androidAppFullPath,
+//   "appium:platformName": "Android",
+//   "appium:platformVersion": "14",
+//   "appium:appPackage": "network.loki.messenger",
+//   "appium:appWaitActivity":
+//     "org.thoughtcrime.securesms.onboarding.LandingActivity",
+//   "appium:automationName": "UiAutomator2",
+//   "appium:newCommandTimeout": 300000,
+//   "appium:eventTimings": false,
+// };
 
 const emulator1Udid = "emulator-5554";
 const emulator2Udid = "emulator-5556";

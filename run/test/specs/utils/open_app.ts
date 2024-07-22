@@ -8,7 +8,7 @@ import { CapabilitiesIndexType, getIosCapabilities } from "./capabilities_ios";
 import { installAppToDeviceName, runScriptAndLog } from "./utilities";
 
 import * as androidDriver from "appium-uiautomator2-driver";
-import * as iosDriver from "appium-xcuitest-driver";
+import * as iosDriver from 'appium-xcuitest-driver';
 
 import { DriverOpts } from "appium/build/lib/appium";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
