@@ -8,7 +8,7 @@ if (!iosPathPrefix) {
   throw new Error("IOS_APP_PATH_PREFIX environment variable is not set");
 }
 
-const iosAppFullPath = `${iosPathPrefix}/Latest-ios (live)/Session.app`;
+const iosAppFullPath = `${iosPathPrefix}/release-2.7.0-iOS/Session.app`;
 console.log(`iOS app full path: ${iosAppFullPath}`);
 
 const sharediOSCapabilities: AppiumXCUITestCapabilities = {

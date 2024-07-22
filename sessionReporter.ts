@@ -114,7 +114,7 @@ class SessionReporter implements Reporter {
     }
     this.allResults.push({ test, result });
 
-    console.log(chalk.bgWhiteBright(`\t\tResults so far:`));
+    console.log(chalk.bgWhiteBright.black(`\t\tResults so far:`));
     // we keep track of all the failed/passed states, but only render the passed status here even if it took a few retries
 
     const { allFailedSoFar, allPassedSoFar, partiallyPassed } =
@@ -131,7 +131,7 @@ class SessionReporter implements Reporter {
       notPassedCount * mean(this.allResults.map((m) => m.result.duration));
     const estimatedTotalMins = Math.floor(estimateLeftMs / (60 * 1000));
     console.log(
-      chalk.bgWhite(
+      chalk.bgWhite.black(
         `\t\tRemaining tests: ${notPassedCount}, rougly ${estimatedTotalMins}min total left, so about ${Math.ceil(
           estimatedTotalMins / this.countWorkers
         )}min as we have ${this.countWorkers} worker(s)...`
@@ -182,7 +182,7 @@ class SessionReporter implements Reporter {
 
   onEnd(result: FullResult) {
     console.log(
-      chalk.bgWhiteBright(
+      chalk.bgWhiteBright.black(
         `\n\n\n\t\tFinished the run: ${result.status}, count of tests run: ${
           this.allResults.length
         }, took ${Math.floor(
