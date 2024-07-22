@@ -7,8 +7,10 @@ import {
 import { CapabilitiesIndexType, getIosCapabilities } from "./capabilities_ios";
 import { installAppToDeviceName, runScriptAndLog } from "./utilities";
 
-import * as androidDriver from "appium-uiautomator2-driver";
-import * as iosDriver from "appium-xcuitest-driver";
+import AndroidUiautomator2Driver from "appium-uiautomator2-driver";
+import XCUITestDriver, {
+  XCUITestDriverOpts,
+} from "appium-xcuitest-driver/build/lib/driver";
 
 import { DriverOpts } from "appium/build/lib/appium";
 import { DeviceWrapper } from "../../../types/DeviceWrapper";
@@ -203,9 +205,7 @@ async function waitForEmulatorToBeRunning(emulatorName: string) {
   } while (Date.now() - start < 25000 && !found);
 
   if (!found) {
-    console.error("plop");
     throw new Error("timedout waiting for emulator to start");
-    return;
   }
 
   start = Date.now();
@@ -252,7 +252,6 @@ const openAndroidApp = async (
     androidCapabilities.androidAppFullPath,
     targetName
   );
-  const driver = (androidDriver as any).AndroidUiautomator2Driver;
   const capabilities = getAndroidCapabilities(
     actualCapabilitiesIndex as CapabilitiesIndexType
   );
@@ -266,7 +265,7 @@ const openAndroidApp = async (
     address: `http://localhost:${APPIUM_PORT}`,
   } as DriverOpts;
 
-  const device: DeviceWrapper = new driver(opts);
+  const device = new AndroidUiautomator2Driver(opts);
   const udid = getAndroidUdid(capabilitiesIndex);
   console.log(`udid: ${udid}`);
   const wrappedDevice = new DeviceWrapper(device, udid);
@@ -303,13 +302,11 @@ const openiOSApp = async (
   const actualCapabilitiesIndex =
     capabilitiesIndex + 4 * parseInt(process.env.TEST_PARALLEL_INDEX || "0");
 
-  const opts: DriverOpts = {
+  const opts: XCUITestDriverOpts = {
     address: `http://localhost:${APPIUM_PORT}`,
-  } as DriverOpts;
+  } as XCUITestDriverOpts;
 
-  const driver = (iosDriver as any).XCUITestDriver;
-
-  const device: unknown = new driver(opts);
+  const device: XCUITestDriver = new XCUITestDriver(opts);
   const capabilities = getIosCapabilities(
     actualCapabilitiesIndex as CapabilitiesIndexType
   );

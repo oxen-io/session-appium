@@ -39,34 +39,7 @@ export const newUser = async (
   );
   await device.clickOnByAccessibilityID("Continue with settings");
   // Need to add Don't allow notifications dismiss here
-  await runOnlyOnIOS(platform, () =>
-    device.clickOnByAccessibilityID("Don’t Allow")
-  );
-  await sleepFor(1000);
-  if (platform === "android") {
-    try {
-      const androidPermissions = await device.doesElementExist({
-        strategy: "id",
-        selector: "com.android.permissioncontroller:id/permission_allow_button",
-        text: "Allow",
-        maxWait: 5000,
-      });
-
-      if (androidPermissions) {
-        await device.clickOnElementAll({
-          strategy: "id",
-          selector:
-            "com.android.permissioncontroller:id/permission_allow_button",
-          text: "Allow",
-        });
-      } else {
-        console.log("Android: No permissions to allow");
-      }
-    } catch (error) {
-      console.error("Error handling Android permissions:", error);
-    }
-  }
-
+  await device.checkPermissions(platform);
   // Click on 'continue' button to open recovery phrase modal
   await device.waitForTextElementToBePresent({
     strategy: "accessibility id",

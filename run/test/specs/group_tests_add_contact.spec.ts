@@ -1,4 +1,5 @@
 import { androidIt, iosIt } from "../../types/sessionIt";
+import { ApplyChanges, EditGroup } from "./locators";
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
@@ -15,9 +16,8 @@ androidIt("Add contact to group", addContactToGroup);
 // bothPlatformsIt("Add contact to group", addContactToGroup);
 
 async function addContactToGroup(platform: SupportedPlatformsType) {
-  const { device1, device2, device3, device4 } = await openAppFourDevices(
-    platform
-  );
+  const { device1, device2, device3, device4 } =
+    await openAppFourDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, "Alice", platform),
@@ -49,16 +49,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   // Click more options
   await device1.clickOnByAccessibilityID("More options");
   // Select edit group
-  await runOnlyOnIOS(platform, () =>
-    device1.clickOnByAccessibilityID("Edit group")
-  );
-  await sleepFor(1000);
-  await runOnlyOnAndroid(platform, () =>
-    device1.clickOnTextElementById(
-      `network.loki.messenger:id/title`,
-      "Edit group"
-    )
-  );
+  await device1.clickOnElementAll(new EditGroup(device1));
   // Add contact to group
   await device1.clickOnByAccessibilityID("Add members");
   // Select new user
@@ -76,12 +67,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID("Done");
   // Click done/apply again
   await sleepFor(1000);
-  await runOnlyOnIOS(platform, () =>
-    device1.clickOnByAccessibilityID("Apply changes")
-  );
-  await runOnlyOnAndroid(platform, () =>
-    device1.clickOnElementById("network.loki.messenger:id/action_apply")
-  );
+  await device1.clickOnElementAll(new ApplyChanges(device1));
   // Check config message
   await runOnlyOnIOS(platform, () =>
     device1.waitForControlMessageToBePresent(
@@ -97,7 +83,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   await device4.navigateBack(platform);
   // Select group conversation in list
   await device4.selectByText("Conversation list item", group.userName);
-  // Check config
+  // Check control message
   await runOnlyOnIOS(platform, () =>
     device4.waitForControlMessageToBePresent(
       `${userD.userName} joined the group.`

@@ -1,4 +1,5 @@
 import { androidIt, iosIt } from "../../types/sessionIt";
+import { TickButton } from "./locators";
 import { sleepFor } from "./utils";
 import { newUser } from "./utils/create_account";
 import { newContact } from "./utils/create_contact";
@@ -117,7 +118,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Click on username to edit
   await device1.clickOnByAccessibilityID("Edit user nickname");
   // Click apply without entering new nickname
-  await device1.clickOnByAccessibilityID("Apply");
+  await device1.clickOnElementAll(new TickButton(device1));
   // Click out of pop up
   await device1.back();
   // Enter conversation to verify change

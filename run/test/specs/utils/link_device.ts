@@ -53,28 +53,11 @@ export const linkedDevice = async (
     await console.log("No display name");
   }
   await sleepFor(1000);
-  const permissions = await device2.doesElementExist({
-    strategy: "accessibility id",
-    selector: "Don’t Allow",
-    maxWait: 2000,
-  });
-  if (permissions) {
-    await runOnlyOnIOS(platform, () =>
-      device2.clickOnByAccessibilityID("Don’t Allow")
-    );
-  } else {
-    await "No permissions";
-  }
+  await device2.checkPermissions(platform);
   await device2.hasElementBeenDeleted({
     strategy: "accessibility id",
     selector: "Continue",
   });
-  await runOnlyOnAndroid(platform, () =>
-    device2.clickOnTextElementById(
-      `com.android.permissioncontroller:id/permission_allow_button`,
-      "Allow"
-    )
-  );
   // Check that button was clicked
   await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",

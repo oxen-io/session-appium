@@ -21,7 +21,13 @@ import {
   XPath,
 } from "./testing";
 import { XPATHS } from "../constants";
-import { LocatorsInterface } from "../../run/test/specs/locators";
+import { XCUITestDriver } from "appium-xcuitest-driver/build/lib/driver";
+import { AndroidUiautomator2Driver } from "appium-uiautomator2-driver";
+import {
+  LocatorsInterface,
+  PrivacyButton,
+  ReadReceiptsButton,
+} from "../../run/test/specs/locators";
 
 export type Coordinates = {
   x: number;
@@ -110,10 +116,13 @@ type AndroidDeviceInterface = {
 } & SharedDeviceInterface;
 
 export class DeviceWrapper implements SharedDeviceInterface {
-  private readonly device: unknown;
+  private readonly device: AndroidUiautomator2Driver | XCUITestDriver;
   public readonly udid: string;
 
-  constructor(device: unknown, udid: string) {
+  constructor(
+    device: AndroidUiautomator2Driver | XCUITestDriver,
+    udid: string
+  ) {
     this.device = device;
     this.udid = udid;
   }
@@ -1535,13 +1544,9 @@ export class DeviceWrapper implements SharedDeviceInterface {
       await sleepFor(100);
       await this.clickOnByAccessibilityID("User settings");
       await sleepFor(500);
-      await this.clickOnElementById(`network.loki.messenger:id/privacyButton`);
+      await this.clickOnElementAll(new PrivacyButton(this));
       await sleepFor(2000);
-      await this.clickOnElementAll({
-        strategy: "id",
-        selector: "android:id/summary",
-        text: "Send read receipts in one-to-one chats.",
-      });
+      await this.clickOnElementAll(new ReadReceiptsButton(this));
       await this.navigateBack(platform);
       await sleepFor(100);
       await this.navigateBack(platform);
@@ -1549,15 +1554,66 @@ export class DeviceWrapper implements SharedDeviceInterface {
       await this.navigateBack(platform);
       await sleepFor(100);
       await this.clickOnByAccessibilityID("User settings");
-      await this.clickOnElementAll({ strategy: "id", selector: "Privacy" });
-      await this.clickOnElementAll({
-        strategy: "xpath",
-        selector: `//XCUIElementTypeSwitch[@name="Read Receipts, Send read receipts in one-to-one chats."]`,
-      });
+      await this.clickOnElementAll(new PrivacyButton(this));
+      await this.clickOnElementAll(new ReadReceiptsButton(this));
       await this.navigateBack(platform);
       await sleepFor(100);
       await this.clickOnByAccessibilityID("Close button");
     }
+  }
+
+  public async checkPermissions(platform: SupportedPlatformsType) {
+    if (platform === "android") {
+      const permissions = await this.doesElementExist({
+        strategy: "id",
+        selector: "com.android.permissioncontroller:id/permission_deny_button",
+        maxWait: 1000,
+      });
+      this.clickOnElementAll({
+        strategy: "id",
+        selector: "com.android.permissioncontroller:id/permission_deny_button",
+      });
+      return;
+    }
+    if (platform === "ios") {
+      // Retrieve the currently active app information
+      const activeAppInfo = await this.execute("mobile: activeAppInfo");
+      // Switch the active context to the iOS home screen
+      await this.updateSettings({
+        defaultActiveApplication: "com.apple.springboard",
+      });
+
+      try {
+        // Execute the action in the home screen context
+        const iosPermissions = await this.doesElementExist({
+          strategy: "accessibility id",
+          selector: "Don’t Allow",
+        });
+        if (iosPermissions) {
+          await this.clickOnByAccessibilityID("Don’t Allow");
+        }
+      } catch (e) {
+        console.warn("FAILED WITH", e);
+        // Ignore any exceptions during the action
+      }
+
+      // Revert to the original app context
+      await this.updateSettings({
+        defaultActiveApplication: activeAppInfo.bundleId,
+      });
+    }
+    return;
+  }
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async execute(toExecute: string) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return (this.device as any).execute(toExecute);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async updateSettings(details: Record<string, any>) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return (this.device as any).updateSettings(details);
   }
 
   /* === all the utilities function ===  */
