@@ -27,19 +27,7 @@ async function sendDocumentIos(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID("Attachments button");
   await sleepFor(100);
   await clickOnCoordinates(device1, InteractionPoints.DocumentKeyboardOpen);
-
-  const permissions = await device1.doesElementExist({
-    strategy: "accessibility id",
-    selector: "Allow Full Access",
-    maxWait: 1000,
-  });
-  if (permissions) {
-    try {
-      await device1.clickOnByAccessibilityID("Allow Full Access");
-    } catch (e) {
-      console.log("No permissions dialog");
-    }
-  }
+  await device1.modalPopup("Allow Full Access")
   const testDocument = await device1.doesElementExist({
     strategy: "accessibility id",
     selector: "test_file, pdf",

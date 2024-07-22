@@ -1167,20 +1167,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
           InteractionPoints.ImagesFolderKeyboardClosed
         );
       }
-      const permissions = await this.doesElementExist({
-        strategy: "accessibility id",
-        selector: "Allow Full Access",
-        maxWait: 2000,
-      });
-      if (permissions) {
-        try {
-          await this.clickOnByAccessibilityID(`Allow Full Access`);
-        } catch (e) {
-          console.log("No permissions dialog");
-        }
-      } else {
-        console.log("No permissions dialog");
-      }
+      await this.modalPopup('Allow Full Access')
       const testImage = await this.doesElementExist({
         strategy: "accessibility id",
         selector: `1967-05-05 21:00:00 +0000`,
@@ -1285,16 +1272,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     // Check if android or ios (android = documents folder/ ios = images folder)
 
     await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardOpen);
-    const permissions = await this.doesElementExist({
-      strategy: "accessibility id",
-      selector: "Allow Full Access",
-      maxWait: 5000,
-    });
-    if (permissions) {
-      await this.clickOnByAccessibilityID("Allow Full Access");
-    } else {
-      console.log("No permissions");
-    }
+    await this.modalPopup('Allow Full Access')
     await this.clickOnByAccessibilityID("Recents");
     // Select video
     const videoFolder = await this.doesElementExist({
@@ -1600,6 +1578,46 @@ export class DeviceWrapper implements SharedDeviceInterface {
         selector: "com.android.permissioncontroller:id/permission_deny_button",
       });
     }
+  }
+
+  public async modalPopup(modalText: AccessibilityId) {
+      // Retrieve the currently active app information
+      const activeAppInfo = await this.execute("mobile: activeAppInfo");
+      // Switch the active context to the iOS home screen
+      await this.updateSettings({
+        defaultActiveApplication: "com.apple.springboard",
+      });
+
+      try {
+        // Execute the action in the home screen context
+        const iosPermissions = await this.doesElementExist({
+          strategy: "accessibility id",
+          selector: modalText,
+        });
+        if (iosPermissions) {
+          await this.clickOnByAccessibilityID(modalText);
+        }
+      } catch (e) {
+        console.warn("FAILED WITH", e);
+        // Ignore any exceptions during the action
+      }
+
+      // Revert to the original app context
+      await this.updateSettings({
+        defaultActiveApplication: activeAppInfo.bundleId,
+      });
+      return;
+    }
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async execute(toExecute: string) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return (this.device as any).execute(toExecute);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async updateSettings(details: Record<string, any>) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return (this.device as any).updateSettings(details);
   }
 
   /* === all the utilities function ===  */
