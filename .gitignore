@@ -26,5 +26,5 @@ to do
 .vscode/
 .yarn/
 .env
-playwright.config.ts
+playwright.config.js
 test-results/
