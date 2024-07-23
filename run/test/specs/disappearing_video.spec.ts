@@ -11,8 +11,8 @@ import {
 } from "./utils/open_app";
 import { setDisappearingMessage } from "./utils/set_disappearing_messages";
 
-iosIt("Disappearing video message 1o1", disappearingVideoMessage1o1Ios);
-androidIt("Disappearing video message 1o1", disappearingVideoMessage1o1Android);
+iosIt("Disappearing video message 1:1", disappearingVideoMessage1o1Ios);
+androidIt("Disappearing video message 1:1", disappearingVideoMessage1o1Android);
 
 async function disappearingVideoMessage1o1Ios(
   platform: SupportedPlatformsType
@@ -33,6 +33,13 @@ async function disappearingVideoMessage1o1Ios(
   );
   // await device1.navigateBack(platform);
   await device1.sendVideoiOS(testMessage);
+  await device2.clickOnByAccessibilityID("Untrusted attachment message", 5000);
+  await device2.clickOnByAccessibilityID("Download");
+  await device2.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Message body",
+    text: testMessage,
+  });
   await sleepFor(30000);
   await Promise.all([
     device1.hasElementBeenDeleted({

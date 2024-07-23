@@ -9,8 +9,8 @@ import {
 } from "./utils/open_app";
 import { setDisappearingMessage } from "./utils/set_disappearing_messages";
 
-iosIt("Send disappearing video to group", disappearingVideoMessageGroup);
-androidIt("Send disappearing video to group", disappearingVideoMessageGroup);
+iosIt("Disappearing Message video group", disappearingVideoMessageGroup);
+androidIt("Disappearing Message video group", disappearingVideoMessageGroup);
 
 // bothPlatformsIt(
 //   "Send disappearing video to group",

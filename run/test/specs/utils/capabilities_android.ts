@@ -16,7 +16,7 @@ if (!androidPathPrefix) {
 }
 
 // Concatenate the environment variable with the fixed part of the path
-const androidAppFullPath = `${androidPathPrefix}/Latest-android-build/android-1.18.4/session-1.18.4-universal.apk`;
+const androidAppFullPath = `${androidPathPrefix}/release-1.19.0-android/testnet/testnet-session-1.19.0.apk`;
 
 console.log(`Android app full path: ${androidAppFullPath}`);
 

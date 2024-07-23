@@ -18,7 +18,7 @@ export default defineConfig({
   repeatEach: process.env.PLAYWRIGHT_REPEAT_COUNT
     ? toNumber(process.env.PLAYWRIGHT_REPEAT_COUNT)
     : 0,
-  workers: toNumber(process.env.PLAYWRIGHT_WORKER_COUNT) || 1,
+  workers: 1,
   reportSlowTests: null,
   fullyParallel: true, // otherwise, tests in the same file are not run in parallel
 });

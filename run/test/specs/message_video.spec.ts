@@ -8,8 +8,8 @@ import {
   openAppTwoDevices,
 } from "./utils/open_app";
 
-iosIt("Send video", sendVideoIos);
-androidIt("Send video", sendVideoAndroid);
+iosIt("Send video 1:1", sendVideoIos);
+androidIt("Send video 1:1", sendVideoAndroid);
 
 async function sendVideoIos(platform: SupportedPlatformsType) {
   // Test sending a video

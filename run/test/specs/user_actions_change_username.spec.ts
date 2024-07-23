@@ -43,7 +43,10 @@ async function changeUsername(platform: SupportedPlatformsType) {
     device.clickOnByAccessibilityID("Apply")
   );
   await runOnlyOnIOS(platform, () => device.clickOnByAccessibilityID("Done"));
-  await device.navigateBack(platform);
+  await runOnlyOnIOS(platform, () =>
+    device.clickOnByAccessibilityID("Close button")
+  );
+  await runOnlyOnAndroid(platform, () => device.navigateBack(platform));
   await device.clickOnElementAll({
     strategy: "accessibility id",
     selector: "User settings",

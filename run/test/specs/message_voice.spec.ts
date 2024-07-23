@@ -9,8 +9,8 @@ import {
   closeApp,
 } from "./utils/open_app";
 
-iosIt("Send voice message", sendVoiceMessageIos);
-androidIt("Send voice message", sendVoiceMessageAndroid);
+iosIt("Send voice message 1:1", sendVoiceMessageIos);
+androidIt("Send voice message 1:1", sendVoiceMessageAndroid);
 
 async function sendVoiceMessageIos(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
@@ -23,7 +23,7 @@ async function sendVoiceMessageIos(platform: SupportedPlatformsType) {
   await newContact(platform, device1, userA, device2, userB);
   // Select voice message button to activate recording state
   await device1.pressAndHold("New voice message");
-  await device1.modalPopup("Allow");
+  await device1.modalPopup("Allow", 1000);
   await device1.pressAndHold("New voice message");
   await sleepFor(500);
   await device1.waitForTextElementToBePresent({

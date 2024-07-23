@@ -203,7 +203,6 @@ async function waitForEmulatorToBeRunning(emulatorName: string) {
   } while (Date.now() - start < 25000 && !found);
 
   if (!found) {
-    console.error("plop");
     throw new Error("timedout waiting for emulator to start");
     return;
   }

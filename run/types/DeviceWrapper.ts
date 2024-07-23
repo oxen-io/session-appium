@@ -516,7 +516,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     let success = false;
 
     while (retries < maxRetries && !success) {
-      await this.longClick(el, 1000);
+      await this.longClick(el, 2000);
       if (this.isIOS()) {
         try {
           await this.clickOnElementByText({
@@ -532,7 +532,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
           );
         }
       } else {
-        await this.longClick(el, 1000);
+        await this.longClick(el, 2000);
         success = true;
       }
       retries++;
@@ -1270,9 +1270,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     );
     await sleepFor(100);
     // Check if android or ios (android = documents folder/ ios = images folder)
-
-    await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardOpen);
-    await this.modalPopup('Allow Full Access')
+    await this.modalPopup('Allow Full Access', 1000)
     await this.clickOnByAccessibilityID("Recents");
     // Select video
     const videoFolder = await this.doesElementExist({
@@ -1580,7 +1578,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     }
   }
 
-  public async modalPopup(modalText: AccessibilityId) {
+  public async modalPopup(modalText: AccessibilityId, maxWait?: number | 1000) {
       // Retrieve the currently active app information
       const activeAppInfo = await this.execute("mobile: activeAppInfo");
       // Switch the active context to the iOS home screen
@@ -1593,6 +1591,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
         const iosPermissions = await this.doesElementExist({
           strategy: "accessibility id",
           selector: modalText,
+          maxWait: maxWait 
         });
         if (iosPermissions) {
           await this.clickOnByAccessibilityID(modalText);

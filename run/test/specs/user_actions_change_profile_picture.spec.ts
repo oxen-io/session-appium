@@ -20,7 +20,7 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
   // Click on settings/avatar
   await device.clickOnByAccessibilityID("User settings");
   await sleepFor(100);
-  await device.clickOnByAccessibilityID("Profile picture");
+  await device.clickOnByAccessibilityID("User settings");
   // await device.clickOnByAccessibilityID("Photo library");
   await device.clickOnByAccessibilityID("Image picker");
   await device.modalPopup("Allow Full Access");
@@ -51,7 +51,7 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
   // Take screenshot
   const el = await device.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Profile picture",
+    selector: "User settings",
   });
   await sleepFor(3000);
   const base64 = await device.getElementScreenshot(el.ELEMENT);

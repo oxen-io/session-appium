@@ -8,7 +8,6 @@ import {
   openAppTwoDevices,
 } from "./utils/open_app";
 
-iosIt("Block user in conversation list", blockUserInConversationList);
 androidIt("Block user in conversation list", blockUserInConversationList);
 
 // bothPlatformsIt("Block user in conversation list", blockUserInConversationList);

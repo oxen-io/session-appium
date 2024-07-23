@@ -11,8 +11,8 @@ import {
 } from "./utils/open_app";
 import { setDisappearingMessage } from "./utils/set_disappearing_messages";
 
-iosIt("Disappearing image message 1o1", disappearingImageMessage1o1Ios);
-androidIt("Disappearing image message 1o1", disappearingImageMessage1o1Android);
+iosIt("Disappearing image message 1:1", disappearingImageMessage1o1Ios);
+androidIt("Disappearing image message 1:1", disappearingImageMessage1o1Android);
 
 async function disappearingImageMessage1o1Ios(
   platform: SupportedPlatformsType

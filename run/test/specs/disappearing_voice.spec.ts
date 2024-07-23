@@ -11,8 +11,8 @@ import {
 } from "./utils/open_app";
 import { setDisappearingMessage } from "./utils/set_disappearing_messages";
 
-iosIt("Disappearing voice message 1o1", disappearingVoiceMessage1o1Ios);
-androidIt("Disappearing voice message 1o1", disappearingVoiceMessage1o1Android);
+iosIt("Disappearing voice message 1:1", disappearingVoiceMessage1o1Ios);
+androidIt("Disappearing voice message 1:1", disappearingVoiceMessage1o1Android);
 
 async function disappearingVoiceMessage1o1Ios(
   platform: SupportedPlatformsType
@@ -32,7 +32,7 @@ async function disappearingVoiceMessage1o1Ios(
   );
   // await device1.navigateBack(platform);
   await device1.longPress("New voice message");
-  await device1.modalPopup("Allow")
+  await device1.modalPopup("Allow");
   // await device1.clickOnByAccessibilityID("OK");
   // await device1.pressAndHold("New voice message");
   await device1.waitForTextElementToBePresent({
