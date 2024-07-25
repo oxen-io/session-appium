@@ -438,22 +438,45 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async longPressMessage(textToLookFor: string) {
-    try {
-      const el = await this.waitForTextElementToBePresent({
-        strategy: "accessibility id",
-        selector: "Message body",
-        text: textToLookFor,
-      });
-
-      await this.longClick(el, 2000);
-      console.log("LongClick successful");
-      if (!el) {
-        throw new Error(
-          `longPress on message: ${textToLookFor} unsuccessful, couldn't find message`
-        );
+    const maxRetries = 3;
+    let attempt = 0;
+    let success = false;
+  
+    while (attempt < maxRetries && !success) {
+      try {
+        const el = await this.waitForTextElementToBePresent({
+          strategy: "accessibility id",
+          selector: "Message body",
+          text: textToLookFor,
+        });
+  
+        if (!el) {
+          throw new Error(
+            `longPress on message: ${textToLookFor} unsuccessful, couldn't find message`
+          );
+        }
+  
+        await this.longClick(el, 3000);
+        const longPressSuccess = await this.waitForTextElementToBePresent({
+          strategy: 'accessibility id',
+          selector: 'Reply to message',
+          maxWait: 1000,
+        });
+  
+        if (longPressSuccess) {
+          console.log("LongClick successful");
+          success = true;  // Exit the loop if successful
+        } else {
+          throw new Error(`longPress on message: ${textToLookFor} unsuccessful`);
+        }
+      } catch (error) {
+        attempt++;
+        if (attempt >= maxRetries) {
+          throw new Error(`Longpress on message: ${textToLookFor} unsuccessful after ${maxRetries} attempts`);
+        }
+        console.log(`Longpress attempt ${attempt} failed. Retrying...`);
+        await sleepFor(1000);  
       }
-    } catch {
-      console.log(`Longpress on message: `, textToLookFor, `unsuccessful`);
     }
   }
 
@@ -1083,8 +1106,13 @@ export class DeviceWrapper implements SharedDeviceInterface {
     // Reply to media message from user B
     // Long press on imageSent element
     await this.longPressMessage(body);
+    const longPressSuccess = await this.waitForTextElementToBePresent({strategy: 'accessibility id', selector: 'Reply to message'})
+    if(longPressSuccess) {
+      await this.clickOnByAccessibilityID("Reply to message");
+    } else {
+      throw new Error (`Long press failed on ${body}`)
+    }
     // Select 'Reply' option
-    await this.clickOnByAccessibilityID("Reply to message");
     // Send message
     const replyMessage = await this.sendMessage(
       `${user.userName} + " replied to ${body}`
