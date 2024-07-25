@@ -8,11 +8,10 @@
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-
     "strictPropertyInitialization": true,
     "strictNullChecks": true,
     "esModuleInterop": true,
-    "types": ["@wdio/types", "jest", "node"],
+    "types": ["@wdio/types", "node"],
     "target": "es2019"
   }
 }

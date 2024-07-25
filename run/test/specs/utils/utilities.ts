@@ -1,11 +1,9 @@
-import {  pick } from "lodash";
+import { pick } from "lodash";
 import * as util from "util";
 import { sleepFor } from ".";
-import { DeviceWrapper } from "../../../types/DeviceWrapper";
 import { getAdbFullPath } from "./binaries";
 
-
-import {exec as execNotPromised} from 'child_process'
+import { exec as execNotPromised } from "child_process";
 const exec = util.promisify(execNotPromised);
 
 export async function runScriptAndLog(
@@ -60,12 +58,14 @@ export const installAppToDeviceName = async (
   if (!emulatorName) {
     throw new Error("emulatorName must be set");
   }
+  // If needing logs uncomment this
   // await runScriptAndLog(`emulator -avd ${emulatorName}`, true);
-
+  const start = Date.now();
   const adb = getAdbFullPath();
 
   await runScriptAndLog(
-    `${adb} -s ${emulatorName} uninstall io.appium.uiautomator2.server`  );
+    `${adb} -s ${emulatorName} uninstall io.appium.uiautomator2.server`
+  );
   await runScriptAndLog(
     `${adb} -s ${emulatorName} uninstall io.appium.uiautomator2.server.test`
   );
@@ -73,13 +73,9 @@ export const installAppToDeviceName = async (
   await runScriptAndLog(
     `${adb} -s ${emulatorName} uninstall io.appium.settings`
   );
-  await sleepFor(100);
-
   await runScriptAndLog(
     `${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-debug-androidTest.apk`
   );
-  await sleepFor(100);
-
   await runScriptAndLog(
     `${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-v4.27.0.apk`
   );
@@ -88,25 +84,12 @@ export const installAppToDeviceName = async (
     `${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/io.appium.settings/apks/settings_apk-debug.apk`
   );
   await sleepFor(100);
-
-  // runScriptAndLog(
-  //   `${adb} -s ${emulatorName} shell am start io.appium.uiautomator2.server`
-  // );
-  // await sleepFor(500);
-
-  // runScriptAndLog(
-  //   `${adb} -s ${emulatorName} shell am start io.appium.uiautomator2.server.test`
-  // );
-
-  await sleepFor(100);
   await runScriptAndLog(
     `${adb} -s ${emulatorName} install -g -t ${appFullPath}`
   );
-
-  await sleepFor(100);
 };
 
-export const isDeviceIOS = (device: DeviceWrapper) => {
+export const isDeviceIOS = (device: unknown) => {
   return (
     (device as any).originalCaps.alwaysMatch[
       "appium:platformName"
@@ -114,4 +97,4 @@ export const isDeviceIOS = (device: DeviceWrapper) => {
   );
 };
 
-export const isDeviceAndroid = (device: DeviceWrapper) => !isDeviceIOS(device);
+export const isDeviceAndroid = (device: unknown) => !isDeviceIOS(device);

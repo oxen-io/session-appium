@@ -8,11 +8,11 @@ export const saveSessionIDIos = async (device: DeviceWrapper) => {
   return selector;
 };
 
-export const getSessionID = async (
+export const getAccountID = async (
   platform: SupportedPlatformsType,
   device: DeviceWrapper
 ) => {
-  const sessionID = await device.grabTextFromAccessibilityId("Session ID");
+  const AccountID = await device.grabTextFromAccessibilityId("Account ID");
 
-  return sessionID;
+  return AccountID;
 };
