@@ -21,21 +21,10 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
 
   await device1.clickOnByAccessibilityID("User settings");
   await sleepFor(100);
-  await device1.clickOnByAccessibilityID("Profile picture");
+  await device1.clickOnByAccessibilityID("User settings");
   await device1.clickOnByAccessibilityID("Image picker");
   // Check if permissions need to be enabled
-  const permissions = await device1.doesElementExist({
-    strategy: "accessibility id",
-    selector: "Allow Full Access",
-    maxWait: 1000,
-  });
-  if (permissions) {
-    try {
-      await device1.clickOnByAccessibilityID("Allow Full Access");
-    } catch (e) {
-      console.log("No permissions dialog");
-    }
-  }
+  await device1.modalPopup("Allow Full Access", 1000);
   // Check if image is already on device
   const profilePicture = await device1.doesElementExist({
     strategy: "accessibility id",
@@ -66,7 +55,7 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   // Take screenshot
   const el = await device1.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Profile picture",
+    selector: "User settings",
   });
   await sleepFor(5000);
 
@@ -83,7 +72,7 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID("User settings");
   const el2 = await device2.waitForTextElementToBePresent({
     strategy: "accessibility id",
-    selector: "Profile picture",
+    selector: "User settings",
   });
   await sleepFor(3000);
   const base64A = await device2.getElementScreenshot(el2.ELEMENT);

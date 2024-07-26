@@ -10,8 +10,8 @@ import {
 } from "./utils/open_app";
 import { runScriptAndLog } from "./utils/utilities";
 
-iosIt("Send document", sendDocumentIos);
-androidIt("Send document", sendDocumentAndroid);
+iosIt("Send document 1:1", sendDocumentIos);
+androidIt("Send document 1:1", sendDocumentAndroid);
 
 async function sendDocumentIos(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
@@ -27,19 +27,7 @@ async function sendDocumentIos(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID("Attachments button");
   await sleepFor(100);
   await clickOnCoordinates(device1, InteractionPoints.DocumentKeyboardOpen);
-
-  const permissions = await device1.doesElementExist({
-    strategy: "accessibility id",
-    selector: "Allow Full Access",
-    maxWait: 1000,
-  });
-  if (permissions) {
-    try {
-      await device1.clickOnByAccessibilityID("Allow Full Access");
-    } catch (e) {
-      console.log("No permissions dialog");
-    }
-  }
+  await device1.modalPopup("Allow Full Access");
   const testDocument = await device1.doesElementExist({
     strategy: "accessibility id",
     selector: "test_file, pdf",

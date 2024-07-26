@@ -35,7 +35,7 @@ function testResultToDurationStr(tests: Array<Pick<TestAndResult, "result">>) {
 
 function formatGroupedByResults(testAndResults: Array<TestAndResult>) {
   const allPassed = testAndResults.every((m) => m.result.status === "passed");
-  const allFailed = testAndResults.every((m) => m.result.status !== "passed");
+  const allFailed = testAndResults.every((m) => m.result.status === "failed");
   const allSkipped = testAndResults.every((m) => m.result.status === "skipped");
   const firstItem = testAndResults[0]; // we know they all have the same state
   const statuses = testAndResults.map((m) => `"${m.result.status}"`).join(",");

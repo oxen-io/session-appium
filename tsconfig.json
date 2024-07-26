@@ -8,7 +8,6 @@
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-
     "strictPropertyInitialization": true,
     "strictNullChecks": true,
     "esModuleInterop": true,

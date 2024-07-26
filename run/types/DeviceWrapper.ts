@@ -457,22 +457,45 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async longPressMessage(textToLookFor: string) {
-    try {
-      const el = await this.waitForTextElementToBePresent({
-        strategy: "accessibility id",
-        selector: "Message body",
-        text: textToLookFor,
-      });
-
-      await this.longClick(el, 2000);
-      console.log("LongClick successful");
-      if (!el) {
-        throw new Error(
-          `longPress on message: ${textToLookFor} unsuccessful, couldn't find message`
-        );
+    const maxRetries = 3;
+    let attempt = 0;
+    let success = false;
+  
+    while (attempt < maxRetries && !success) {
+      try {
+        const el = await this.waitForTextElementToBePresent({
+          strategy: "accessibility id",
+          selector: "Message body",
+          text: textToLookFor,
+        });
+  
+        if (!el) {
+          throw new Error(
+            `longPress on message: ${textToLookFor} unsuccessful, couldn't find message`
+          );
+        }
+  
+        await this.longClick(el, 3000);
+        const longPressSuccess = await this.waitForTextElementToBePresent({
+          strategy: 'accessibility id',
+          selector: 'Reply to message',
+          maxWait: 1000,
+        });
+  
+        if (longPressSuccess) {
+          console.log("LongClick successful");
+          success = true;  // Exit the loop if successful
+        } else {
+          throw new Error(`longPress on message: ${textToLookFor} unsuccessful`);
+        }
+      } catch (error) {
+        attempt++;
+        if (attempt >= maxRetries) {
+          throw new Error(`Longpress on message: ${textToLookFor} unsuccessful after ${maxRetries} attempts`);
+        }
+        console.log(`Longpress attempt ${attempt} failed. Retrying...`);
+        await sleepFor(1000);  
       }
-    } catch {
-      console.log(`Longpress on message: `, textToLookFor, `unsuccessful`);
     }
   }
 
@@ -535,7 +558,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     let success = false;
 
     while (retries < maxRetries && !success) {
-      await this.longClick(el, 1000);
+      await this.longClick(el, 2000);
       if (this.isIOS()) {
         try {
           await this.clickOnElementByText({
@@ -551,7 +574,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
           );
         }
       } else {
-        await this.longClick(el, 1000);
+        await this.longClick(el, 2000);
         success = true;
       }
       retries++;
@@ -1106,8 +1129,13 @@ export class DeviceWrapper implements SharedDeviceInterface {
     // Reply to media message from user B
     // Long press on imageSent element
     await this.longPressMessage(body);
+    const longPressSuccess = await this.waitForTextElementToBePresent({strategy: 'accessibility id', selector: 'Reply to message'})
+    if(longPressSuccess) {
+      await this.clickOnByAccessibilityID("Reply to message");
+    } else {
+      throw new Error (`Long press failed on ${body}`)
+    }
     // Select 'Reply' option
-    await this.clickOnByAccessibilityID("Reply to message");
     // Send message
     const replyMessage = await this.sendMessage(
       `${user.userName} + " replied to ${body}`
@@ -1190,20 +1218,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
           InteractionPoints.ImagesFolderKeyboardClosed
         );
       }
-      const permissions = await this.doesElementExist({
-        strategy: "accessibility id",
-        selector: "Allow Full Access",
-        maxWait: 2000,
-      });
-      if (permissions) {
-        try {
-          await this.clickOnByAccessibilityID(`Allow Full Access`);
-        } catch (e) {
-          console.log("No permissions dialog");
-        }
-      } else {
-        console.log("No permissions dialog");
-      }
+      await this.modalPopup('Allow Full Access')
       const testImage = await this.doesElementExist({
         strategy: "accessibility id",
         selector: `1967-05-05 21:00:00 +0000`,
@@ -1306,18 +1321,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     );
     await sleepFor(100);
     // Check if android or ios (android = documents folder/ ios = images folder)
-
-    await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardOpen);
-    const permissions = await this.doesElementExist({
-      strategy: "accessibility id",
-      selector: "Allow Full Access",
-      maxWait: 5000,
-    });
-    if (permissions) {
-      await this.clickOnByAccessibilityID("Allow Full Access");
-    } else {
-      console.log("No permissions");
-    }
+    await this.modalPopup('Allow Full Access', 1000)
     await this.clickOnByAccessibilityID("Recents");
     // Select video
     const videoFolder = await this.doesElementExist({
@@ -1627,6 +1631,47 @@ export class DeviceWrapper implements SharedDeviceInterface {
       return;
     }
   }
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async execute(toExecute: string) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return (this.device as any).execute(toExecute);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/require-await
+  public async updateSettings(details: Record<string, any>) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return (this.device as any).updateSettings(details);
+  }
+
+  public async modalPopup(modalText: AccessibilityId, maxWait?: number | 1000) {
+      // Retrieve the currently active app information
+      const activeAppInfo = await this.execute("mobile: activeAppInfo");
+      // Switch the active context to the iOS home screen
+      await this.updateSettings({
+        defaultActiveApplication: "com.apple.springboard",
+      });
+
+      try {
+        // Execute the action in the home screen context
+        const iosPermissions = await this.doesElementExist({
+          strategy: "accessibility id",
+          selector: modalText,
+          maxWait: maxWait 
+        });
+        if (iosPermissions) {
+          await this.clickOnByAccessibilityID(modalText);
+        }
+      } catch (e) {
+        console.warn("FAILED WITH", e);
+        // Ignore any exceptions during the action
+      }
+
+      // Revert to the original app context
+      await this.updateSettings({
+        defaultActiveApplication: activeAppInfo.bundleId,
+      });
+      return;
+    }
   // eslint-disable-next-line @typescript-eslint/require-await
   public async execute(toExecute: string) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return

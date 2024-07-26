@@ -111,12 +111,8 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
 
   // Click on current group name
   await device1.clickOnByAccessibilityID("Group name");
-  await device1.inputText("accessibility id", "Group name", "   ");
-  await device1.clickOnByAccessibilityID("Accept name change");
   // Alert should pop up 'Please enter group name', click ok
   // If ios click ok / If Android go to next step
-
-  await device1.deleteText("Group name");
   // Enter new group name
   await device1.clickOnByAccessibilityID("Group name");
 
