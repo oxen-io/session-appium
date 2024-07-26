@@ -857,7 +857,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
           el = await this.findElement(strategy, selector);
         }
       } catch (e: any) {
-        console.warn("waitForTextElementToBePresent threw: ", e.message);
+        console.warn(
+          "waitForTextElementToBePresent threw: ",
+          e.message,
+          `${strategy}: '${selector}'`
+        );
       }
 
       if (!el) {

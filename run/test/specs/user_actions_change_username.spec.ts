@@ -6,7 +6,7 @@ import {
   openAppOnPlatformSingleDevice,
   closeApp,
 } from "./utils/open_app";
-import { TickButton } from "./locators";
+import { ExitUserProfile, TickButton } from "./locators";
 
 bothPlatformsIt("Change username", changeUsername);
 
@@ -41,7 +41,7 @@ async function changeUsername(platform: SupportedPlatformsType) {
   }
   // select tick
   await device.clickOnElementAll(new TickButton(device));
-  await device.navigateBack(platform);
+  await device.clickOnElementAll(new ExitUserProfile(device));
   await device.clickOnElementAll({
     strategy: "accessibility id",
     selector: "User settings",
