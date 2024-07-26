@@ -50,6 +50,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID("More options");
   // Select edit group
   await device1.clickOnElementAll(new EditGroup(device1));
+  await sleepFor(1000);
   // Add contact to group
   await device1.clickOnByAccessibilityID("Add members");
   // Select new user

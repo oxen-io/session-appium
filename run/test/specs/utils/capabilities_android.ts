@@ -16,7 +16,7 @@ if (!androidPathPrefix) {
 }
 
 // Concatenate the environment variable with the fixed part of the path
-const androidAppFullPath = `${androidPathPrefix}/Latest-android-build/android-1.18.4/session-1.18.4-universal.apk`;
+const androidAppFullPath = `${androidPathPrefix}`;
 
 console.log(`Android app full path: ${androidAppFullPath}`);
 
@@ -32,29 +32,6 @@ const sharedCapabilities: AppiumAndroidCapabilities & AppiumCapabilities = {
   "appium:newCommandTimeout": 300000,
   "appium:eventTimings": false,
 };
-// const sharedCapabilities: AppiumCapabilities = {
-//   "appium:app": androidAppFullPath,
-//   "appium:platformName": "Android",
-//   "appium:platformVersion": "14",
-//   "appium:appPackage": "network.loki.messenger",
-//   "appium:appWaitActivity":
-//     "org.thoughtcrime.securesms.onboarding.LandingActivity",
-//   "appium:automationName": "UiAutomator2",
-//   "appium:newCommandTimeout": 300000,
-//   "appium:eventTimings": false,
-// };
-
-// const sharedCapabilities: AppiumCapabilities = {
-//   "appium:app": androidAppFullPath,
-//   "appium:platformName": "Android",
-//   "appium:platformVersion": "14",
-//   "appium:appPackage": "network.loki.messenger",
-//   "appium:appWaitActivity":
-//     "org.thoughtcrime.securesms.onboarding.LandingActivity",
-//   "appium:automationName": "UiAutomator2",
-//   "appium:newCommandTimeout": 300000,
-//   "appium:eventTimings": false,
-// };
 
 const emulator1Udid = "emulator-5554";
 const emulator2Udid = "emulator-5556";

@@ -24,6 +24,7 @@ import { XPATHS } from "../constants";
 import { XCUITestDriver } from "appium-xcuitest-driver/build/lib/driver";
 import { AndroidUiautomator2Driver } from "appium-uiautomator2-driver";
 import {
+  ExitUserProfile,
   LocatorsInterface,
   PrivacyButton,
   ReadReceiptsButton,
@@ -384,12 +385,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       };
     }
 
-    const { text } = locator;
-    if (text) {
-      el = await this.waitForTextElementToBePresent({ ...locator, text });
-    } else {
-      el = await this.waitForTextElementToBePresent(locator);
-    }
+    el = await this.waitForTextElementToBePresent({ ...locator });
     await this.click(el.ELEMENT);
     return el;
   }
@@ -1570,27 +1566,16 @@ export class DeviceWrapper implements SharedDeviceInterface {
   /* ======= Settings functions =========*/
 
   public async turnOnReadReceipts(platform: SupportedPlatformsType) {
-    if (platform === "android") {
-      await this.navigateBack(platform);
-      await sleepFor(100);
-      await this.clickOnByAccessibilityID("User settings");
-      await sleepFor(500);
-      await this.clickOnElementAll(new PrivacyButton(this));
-      await sleepFor(2000);
-      await this.clickOnElementAll(new ReadReceiptsButton(this));
-      await this.navigateBack(platform);
-      await sleepFor(100);
-      await this.navigateBack(platform);
-    } else {
-      await this.navigateBack(platform);
-      await sleepFor(100);
-      await this.clickOnByAccessibilityID("User settings");
-      await this.clickOnElementAll(new PrivacyButton(this));
-      await this.clickOnElementAll(new ReadReceiptsButton(this));
-      await this.navigateBack(platform);
-      await sleepFor(100);
-      await this.clickOnByAccessibilityID("Close button");
-    }
+    await this.navigateBack(platform);
+    await sleepFor(100);
+    await this.clickOnByAccessibilityID("User settings");
+    await sleepFor(500);
+    await this.clickOnElementAll(new PrivacyButton(this));
+    await sleepFor(2000);
+    await this.clickOnElementAll(new ReadReceiptsButton(this));
+    await this.navigateBack(platform);
+    await sleepFor(100);
+    await this.clickOnElementAll(new ExitUserProfile(this));
   }
 
   public async checkPermissions(platform: SupportedPlatformsType) {
@@ -1627,7 +1612,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
           await this.clickOnByAccessibilityID("Don’t Allow");
         }
       } catch (e) {
-        console.warn("FAILED WITH", e);
+        console.warn("iosPermissions doesElementExist failed with: ", e);
         // Ignore any exceptions during the action
       }
 
