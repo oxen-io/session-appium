@@ -13,9 +13,9 @@ export const newContact = async (
   await device1.sendNewMessage(Bob, `${Alice.userName} to ${Bob.userName}`);
   // Click on message request folder
   await sleepFor(100);
+  await retryRequest(device1, device2);
   await device2.clickOnByAccessibilityID("Message requests banner");
   // Select message from User A
-  await retryRequest(device1, device2);
   await device2.clickOnByAccessibilityID("Message request");
   await runOnlyOnAndroid(platform, () =>
     device2.clickOnByAccessibilityID("Accept message request")
@@ -44,7 +44,7 @@ export const retryRequest = async (
   while (!messageRequest && Date.now() - startTime < timeout) {
     const element = await device2.doesElementExist({
       strategy: "accessibility id",
-      selector: "Message request",
+      selector: "Message requests banner",
       maxWait: 1000, // Reduce max wait to avoid long pauses
     });
 

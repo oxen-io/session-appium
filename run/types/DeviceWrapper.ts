@@ -756,7 +756,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
           }
         }
       } catch (e: any) {
-        console.warn("doesElementExist failed with", e.message);
+        console.warn(
+          `doesElementExist failed with`,
+          e.message,
+          `${strategy} ${selector}`
+        );
       }
       if (!element) {
         await sleepFor(waitPerLoop);
@@ -1221,7 +1225,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
         );
       }
       await sleepFor(100);
-      await this.clickOnByAccessibilityID(`1967-05-05 21:00:00 +0000`);
+      await this.clickOnByAccessibilityID(`1967-05-05 21:00:00 +0000`, 1000);
       if (message) {
         await this.clickOnByAccessibilityID("Text input box");
         await this.inputText("accessibility id", "Text input box", message);
@@ -1611,6 +1615,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
         const iosPermissions = await this.doesElementExist({
           strategy: "accessibility id",
           selector: "Don’t Allow",
+          maxWait: 1000,
         });
         if (iosPermissions) {
           await this.clickOnByAccessibilityID("Don’t Allow");
