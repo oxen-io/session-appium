@@ -94,7 +94,7 @@ async function sendLinkGroupAndroid(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
-  const testLink = `https://example.org/`;
+  const testLink = `https://type-level-typescript.com/objects-and-records`;
   // Send a link
   await device1.inputText("accessibility id", "Message input box", testLink);
   // Accept dialog for link preview
@@ -116,11 +116,20 @@ async function sendLinkGroupAndroid(platform: SupportedPlatformsType) {
     selector: "Message body",
     text: testLink,
   });
-  await device2.replyToMessage(userA, testLink);
-  await device3.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
-    text: `${userA.userName} message reply`,
-  });
+  await device2.longPressMessage(testLink);
+  await device2.clickOnByAccessibilityID("Reply to message");
+  await device2.sendMessage(`${userA.userName} message reply`);
+  await Promise.all([
+    device1.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Message body",
+      text: `${userB.userName} message reply`,
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: "accessibility id",
+      selector: "Message body",
+      text: `${userB.userName} message reply`,
+    }),
+  ]);
   await closeApp(device1, device2, device3);
 }

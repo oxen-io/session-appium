@@ -34,7 +34,12 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
   );
   await device1.mentionContact(platform, userB);
   // Check format on User B's device
-  await device2.findMessageWithBody("@You");
+  await device2.waitForTextElementToBePresent({
+    strategy: "accessibility id",
+    selector: "Message body",
+    text: "@You",
+  });
+  // await device2.findMessageWithBody(`@You`);
   // Bob to Select User C
   await device2.mentionContact(platform, userC);
   // Check Charlies device(3) for correct format

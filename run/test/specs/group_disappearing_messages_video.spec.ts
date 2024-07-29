@@ -9,8 +9,8 @@ import {
 } from "./utils/open_app";
 import { setDisappearingMessage } from "./utils/set_disappearing_messages";
 
-iosIt("Send disappearing video to group", disappearingVideoMessageGroup);
-androidIt("Send disappearing video to group", disappearingVideoMessageGroup);
+iosIt("Disappearing Message video group", disappearingVideoMessageGroup);
+androidIt("Disappearing Message video group", disappearingVideoMessageGroup);
 
 // bothPlatformsIt(
 //   "Send disappearing video to group",
@@ -44,62 +44,6 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
   ]);
   // await device1.navigateBack(platform);
   await device1.sendVideoiOS(testMessage);
-  // await device1.clickOnByAccessibilityID("Attachments button");
-  // // Select images button/tab
-  // // Check if android or ios (android = documents folder/ ios = images folder)
-  // await clickOnCoordinates(device1, InteractionPoints.ImagesFolderKeyboardOpen);
-  // const permissions = await device1.doesElementExist({
-  //   strategy: "accessibility id",
-  //   selector: "Allow Full Access",
-  //   maxWait: 5000,
-  // });
-  // if (permissions) {
-  //   await device1.clickOnByAccessibilityID("Allow Full Access");
-  // } else {
-  //   console.log("No permissions");
-  // }
-  // const settingsPermissions = await device1.doesElementExist({
-  //   strategy: "accessibility id",
-  //   selector: "Settings",
-  //   maxWait: 1000,
-  // });
-  // if (settingsPermissions) {
-  //   await device1.clickOnByAccessibilityID("Photos");
-  //   await device1.clickOnByAccessibilityID("All Photos");
-  // } else {
-  //   console.log("No settings permission dialog");
-  // }
-  // await device1.clickOnByAccessibilityID("Recents");
-  // await sleepFor(2000);
-  // // Select video
-  // const videoFolder = await device1.doesElementExist({
-  //   strategy: "xpath",
-  //   selector: XPATHS.VIDEO_TOGGLE,
-  //   maxWait: 1000,
-  // });
-  // if (videoFolder) {
-  //   console.log("Videos folder found");
-  //   await device1.clickOnByAccessibilityID("Videos");
-  //   await device1.clickOnByAccessibilityID(`1988-09-08 21:00:00 +0000`);
-  // } else {
-  //   console.log("Videos folder NOT found");
-  //   await runScriptAndLog(
-  //     `touch -a -m -t ${bestDayOfYear} 'run/test/specs/media/test_video.mp4'`,
-  //     true
-  //   );
-  //   await runScriptAndLog(
-  //     `xcrun simctl addmedia ${
-  //       process.env.IOS_FIRST_SIMULATOR || ""
-  //     } 'run/test/specs/media/test_video.mp4'`,
-  //     true
-  //   );
-  //   await sleepFor(2000);
-  //   await device1.clickOnByAccessibilityID(`1988-09-08 21:00:00 +0000`);
-  // }
-  // // Send with captions
-  // await device1.clickOnByAccessibilityID("Text input box");
-  // await device1.inputText("accessibility id", "Text input box", testMessage);
-  // await device1.clickOnByAccessibilityID("Send button");
   await sleepFor(10000);
   await Promise.all([
     device1.hasElementBeenDeleted({

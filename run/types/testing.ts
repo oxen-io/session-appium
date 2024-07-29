@@ -239,7 +239,6 @@ export type AccessibilityId =
   | "Delete for everyone"
   | "Deleted message"
   | "Blocked banner"
-  | "Profile picture"
   | "Photo library"
   | "Photos"
   | "Videos"

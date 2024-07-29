@@ -8,8 +8,8 @@ import {
   closeApp,
 } from "./utils/open_app";
 
-iosIt("Send link", sendLinkIos);
-androidIt("Send link", sendLinkAndroid);
+iosIt("Send link 1:1", sendLinkIos);
+androidIt("Send link 1:1", sendLinkAndroid);
 
 async function sendLinkIos(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
