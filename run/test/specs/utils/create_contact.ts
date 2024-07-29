@@ -1,7 +1,7 @@
-import { runOnlyOnAndroid, sleepFor } from ".";
-import { DeviceWrapper } from "../../../types/DeviceWrapper";
-import { User } from "../../../types/testing";
-import { SupportedPlatformsType } from "./open_app";
+import { runOnlyOnAndroid, sleepFor } from '.';
+import { DeviceWrapper } from '../../../types/DeviceWrapper';
+import { User } from '../../../types/testing';
+import { SupportedPlatformsType } from './open_app';
 
 export const newContact = async (
   platform: SupportedPlatformsType,
@@ -14,20 +14,16 @@ export const newContact = async (
   // Click on message request folder
   await sleepFor(100);
   await retryRequest(device1, device2);
-  await device2.clickOnByAccessibilityID("Message requests banner");
+  await device2.clickOnByAccessibilityID('Message requests banner');
   // Select message from User A
-  await device2.clickOnByAccessibilityID("Message request");
+  await device2.clickOnByAccessibilityID('Message request');
   await runOnlyOnAndroid(platform, () =>
-    device2.clickOnByAccessibilityID("Accept message request")
+    device2.clickOnByAccessibilityID('Accept message request')
   );
   // Type into message input box
-  await device2.sendMessage(
-    `Reply-message-${Bob.userName}-to-${Alice.userName}`
-  );
+  await device2.sendMessage(`Reply-message-${Bob.userName}-to-${Alice.userName}`);
   // Verify config message states message request was accepted
-  await device1.waitForControlMessageToBePresent(
-    "Your message request has been accepted."
-  );
+  await device1.waitForControlMessageToBePresent('Your message request has been accepted.');
 
   console.warn(`${Alice.userName} and ${Bob.userName} are now contacts`);
   return { Alice, Bob, device1, device2 };
@@ -43,25 +39,25 @@ export const retryRequest = async (
 
   while (!messageRequest && Date.now() - startTime < timeout) {
     const element = await device2.doesElementExist({
-      strategy: "accessibility id",
-      selector: "Message requests banner",
+      strategy: 'accessibility id',
+      selector: 'Message requests banner',
       maxWait: 1000, // Reduce max wait to avoid long pauses
     });
 
     messageRequest = element !== null;
 
     if (!messageRequest) {
-      await device1.sendMessage("Retry");
+      await device1.sendMessage('Retry');
       console.log(`Retrying message request`);
       await sleepFor(1000); // Add a short delay before retrying
     } else {
-      console.log("Found message request: No need for retry");
+      console.log('Found message request: No need for retry');
     }
   }
 
   if (!messageRequest) {
     throw new Error(
-      "Message request did not appear within the timeout period: This is a common race condition on iOS."
+      'Message request did not appear within the timeout period: This is a common race condition on iOS.'
     );
   }
 };

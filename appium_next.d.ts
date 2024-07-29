@@ -1,4 +1,4 @@
-import { ExternalDriver } from "@appium/types/build/lib/driver";
+import { ExternalDriver } from '@appium/types/build/lib/driver';
 
 // typings comes from :
 //    node_modules/@appium/types/build/lib/driver.d.ts
