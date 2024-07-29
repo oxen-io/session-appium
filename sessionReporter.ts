@@ -8,7 +8,7 @@ import type {
   TestResult,
 } from '@playwright/test/reporter';
 import chalk from 'chalk';
-import { Dictionary, groupBy, mean, sortBy } from 'lodash';
+import { Dictionary, groupBy, isEmpty, mean, sortBy } from 'lodash';
 
 type TestAndResult = { test: TestCase; result: TestResult };
 
@@ -71,12 +71,7 @@ class SessionReporter implements Reporter {
   private countWorkers: number = 1;
 
   constructor() {
-    this.printTestConsole = this.stringToBoolean(process.env.REPORTER_CONSOLE_BOOLEAN);
-  }
-
-  private stringToBoolean(value: string | undefined): boolean {
-    if (typeof value === 'undefined') return false; // default to false if undefined
-    return value.toLowerCase() === 'true';
+    this.printTestConsole = !isEmpty(process.env.REPORTER_CONSOLE_BOOLEAN);
   }
 
   onBegin(config: FullConfig, suite: Suite) {
