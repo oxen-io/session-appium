@@ -20,7 +20,11 @@ async function avatarRestorediOS(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID('User settings');
   await device1.clickOnByAccessibilityID('Image picker');
   // Check if permissions need to be enabled
-  await device1.modalPopup('Allow Full Access', 1000);
+  await device1.modalPopup({
+    strategy: 'accessibility id',
+    selector: 'Allow Full Access',
+    maxWait: 500,
+  });
   // Check if image is already on device
   const profilePicture = await device1.doesElementExist({
     strategy: 'accessibility id',

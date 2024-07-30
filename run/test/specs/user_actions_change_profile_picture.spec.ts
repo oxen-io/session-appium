@@ -19,7 +19,7 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
   await device.clickOnByAccessibilityID('User settings');
   // await device.clickOnByAccessibilityID("Photo library");
   await device.clickOnByAccessibilityID('Image picker');
-  await device.modalPopup('Allow Full Access');
+  await device.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
   const profilePicture = await device.doesElementExist({
     strategy: 'accessibility id',
     selector: `Photo, 01 May 1998, 7:00 am`,

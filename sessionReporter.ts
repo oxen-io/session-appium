@@ -10,6 +10,9 @@ import type {
 import chalk from 'chalk';
 import { Dictionary, groupBy, isEmpty, mean, sortBy } from 'lodash';
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 type TestAndResult = { test: TestCase; result: TestResult };
 
 function sortByTitle(toSort: Dictionary<Array<TestAndResult>>) {
@@ -71,14 +74,13 @@ class SessionReporter implements Reporter {
   private countWorkers: number = 1;
 
   constructor() {
-    this.printTestConsole = !isEmpty(process.env.REPORTER_CONSOLE_BOOLEAN);
+    this.printTestConsole = !isEmpty(process.env.PRINT_TEST_LOGS);
   }
 
   onBegin(config: FullConfig, suite: Suite) {
     this.allTestsCount = suite.allTests().length;
     this.countWorkers = config.workers;
 
-    this.printTestConsole = this.allTestsCount <= 1;
     console.log(
       `\t\tStarting the run with ${this.allTestsCount} tests, with ${this.countWorkers} workers, ${config.projects[0].retries} retries and ${config.projects[0].repeatEach} repeats`
     );
@@ -186,6 +188,12 @@ class SessionReporter implements Reporter {
   onStdOut?(chunk: string | Buffer, test: void | TestCase, _result: void | TestResult) {
     if (this.printTestConsole) {
       process.stdout.write(`"${test ? `${chalk.cyanBright(test.title)}` : ''}": ${chunk}`);
+    }
+  }
+
+  onStdErr?(chunk: string | Buffer, test: void | TestCase, _result: void | TestResult) {
+    if (this.printTestConsole) {
+      process.stdout.write(`"${test ? `${chalk.cyanBright(test.title)}` : ''}":err: ${chunk}`);
     }
   }
 

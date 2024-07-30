@@ -23,7 +23,7 @@ async function sendDocumentIos(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID('Attachments button');
   await sleepFor(100);
   await clickOnCoordinates(device1, InteractionPoints.DocumentKeyboardOpen);
-  await device1.modalPopup('Allow Full Access');
+  await device1.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
   const testDocument = await device1.doesElementExist({
     strategy: 'accessibility id',
     selector: 'test_file, pdf',

@@ -21,7 +21,7 @@ async function disappearingVoiceMessage1o1Ios(platform: SupportedPlatformsType) 
   await setDisappearingMessage(platform, device1, ['1:1', 'Disappear after read option'], device2);
   // await device1.navigateBack(platform);
   await device1.longPress('New voice message');
-  await device1.modalPopup('Allow');
+  await device1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
   // await device1.clickOnByAccessibilityID("OK");
   // await device1.pressAndHold("New voice message");
   await device1.waitForTextElementToBePresent({

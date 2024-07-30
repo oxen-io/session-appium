@@ -26,7 +26,7 @@ export const newUser = async (
   // Select Continue to save notification settings
   await device.clickOnByAccessibilityID('Continue');
   // Need to add Don't allow notifications dismiss here
-  await device.checkPermissions();
+  // await device.checkPermissions();
   // Click on 'continue' button to open recovery phrase modal
   await device.waitForTextElementToBePresent({
     strategy: 'accessibility id',

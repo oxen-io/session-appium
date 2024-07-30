@@ -39,7 +39,10 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType) {
   // Scroll to bottom of page to voice and video calls
   // Toggle voice settings on
   // Click enable on exposure IP address warning
-  await device1.modalPopup('Allow voice and video calls');
+  await device1.modalPopup({
+    strategy: 'accessibility id',
+    selector: 'Allow voice and video calls',
+  });
   await device1.clickOnByAccessibilityID('Continue');
   // Navigate back to conversation
   await sleepFor(500);
@@ -48,7 +51,10 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID('Call');
   await device2.clickOnByAccessibilityID('Settings');
   await device2.scrollDown();
-  await device2.modalPopup('Allow voice and video calls');
+  await device2.modalPopup({
+    strategy: 'accessibility id',
+    selector: 'Allow voice and video calls',
+  });
   await device2.clickOnByAccessibilityID('Enable');
   await sleepFor(500);
   await device2.clickOnByAccessibilityID('Close button');

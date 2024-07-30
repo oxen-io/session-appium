@@ -19,7 +19,7 @@ async function sendVoiceMessageIos(platform: SupportedPlatformsType) {
   await newContact(platform, device1, userA, device2, userB);
   // Select voice message button to activate recording state
   await device1.pressAndHold('New voice message');
-  await device1.modalPopup('Allow', 1000);
+  await device1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
   await device1.pressAndHold('New voice message');
   await sleepFor(500);
   await device1.waitForTextElementToBePresent({

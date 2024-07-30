@@ -45,13 +45,16 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   // Scroll to bottom of page to voice and video calls
   // Toggle voice settings on
   // Click enable on exposure IP address warning
-  await device1.modalPopup('Allow voice and video calls');
+  await device1.modalPopup({
+    strategy: 'accessibility id',
+    selector: 'Allow voice and video calls',
+  });
   await device1.clickOnByAccessibilityID('Continue');
   // Navigate back to conversation
   await device1.clickOnByAccessibilityID('Close button');
   await device1.clickOnByAccessibilityID('Call');
   // Need to allow microphone access
-  await device1.modalPopup('Allow');
+  await device1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
   // Call hasn't connected until microphone access is granted
   // await device1.clickOnByAccessibilityID("Call");
   // Missed call dialog should pop telling User B to enable calls
@@ -67,13 +70,16 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID('Call');
   await device2.clickOnByAccessibilityID('Settings');
   await device2.scrollDown();
-  await device2.modalPopup('Allow voice and video calls');
+  await device2.modalPopup({
+    strategy: 'accessibility id',
+    selector: 'Allow voice and video calls',
+  });
   await device2.clickOnByAccessibilityID('Enable');
   await device2.clickOnByAccessibilityID('Close button');
   // Make call on device 1 (userA)
   await device1.clickOnByAccessibilityID('Call');
   // await device1.clickOnByAccessibilityID("OK");
-  await device1.modalPopup('Allow');
+  await device1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
   await device1.clickOnByAccessibilityID('Call');
   // Wait for call to come through
   // await sleepFor(1000);

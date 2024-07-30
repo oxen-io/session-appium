@@ -1068,7 +1068,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       } else {
         await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardClosed);
       }
-      await this.modalPopup('Allow Full Access');
+      await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
       const testImage = await this.doesElementExist({
         strategy: 'accessibility id',
         selector: `1967-05-05 21:00:00 +0000`,
@@ -1149,6 +1149,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.clickOnElementAll({
       strategy: 'id',
       selector: 'network.loki.messenger:id/mediapicker_folder_item_thumbnail',
+      maxWait: 100,
     });
     await sleepFor(100);
     await this.clickOnElementAll({
@@ -1167,7 +1168,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardClosed);
     await sleepFor(100);
     // Check if android or ios (android = documents folder/ ios = images folder)
-    await this.modalPopup('Allow Full Access', 1000);
+    await this.modalPopup({
+      strategy: 'accessibility id',
+      selector: 'Allow Full Access',
+      maxWait: 500,
+    });
     await this.clickOnByAccessibilityID('Recents');
     // Select video
     const videoFolder = await this.doesElementExist({
@@ -1420,13 +1425,16 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.clickOnElementAll(new ExitUserProfile(this));
   }
 
-  public async checkPermissions() {
+  public async checkPermissions(
+    selector: Extract<AccessibilityId, 'Allow Full Access' | 'Don’t Allow' | 'Allow'>
+  ) {
     if (this.isAndroid()) {
       const permissions = await this.doesElementExist({
         strategy: 'id',
         selector: 'com.android.permissioncontroller:id/permission_deny_button',
         maxWait: 1000,
       });
+
       if (permissions) {
         this.clickOnElementAll({
           strategy: 'id',
@@ -1447,11 +1455,11 @@ export class DeviceWrapper implements SharedDeviceInterface {
         // Execute the action in the home screen context
         const iosPermissions = await this.doesElementExist({
           strategy: 'accessibility id',
-          selector: 'Don’t Allow',
-          maxWait: 1000,
+          selector,
+          maxWait: 500,
         });
         if (iosPermissions) {
-          await this.clickOnByAccessibilityID('Don’t Allow');
+          await this.clickOnByAccessibilityID(selector);
         }
       } catch (e) {
         console.warn('iosPermissions doesElementExist failed with: ', e);
@@ -1465,6 +1473,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       return;
     }
   }
+
   // eslint-disable-next-line @typescript-eslint/require-await
   public async execute(toExecute: string) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
@@ -1477,7 +1486,13 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return (this.device as any).updateSettings(details);
   }
 
-  public async modalPopup(modalText: AccessibilityId, maxWait?: number | 1000) {
+  public async modalPopup(
+    args: { maxWait?: number } & StrategyExtractionObj,
+    maxWait: number = 1000
+  ) {
+    if (!this.isIOS()) {
+      throw new Error('Not an ios device');
+    }
     // Retrieve the currently active app information
     const activeAppInfo = await this.execute('mobile: activeAppInfo');
     // Switch the active context to the iOS home screen
@@ -1488,12 +1503,14 @@ export class DeviceWrapper implements SharedDeviceInterface {
     try {
       // Execute the action in the home screen context
       const iosPermissions = await this.doesElementExist({
-        strategy: 'accessibility id',
-        selector: modalText,
-        maxWait: maxWait,
+        ...args,
+        maxWait: 500,
       });
+      console.warn('iosPermissions', iosPermissions);
       if (iosPermissions) {
-        await this.clickOnByAccessibilityID(modalText);
+        await this.clickOnElementAll({ ...args, maxWait });
+      } else {
+        console.warn('No iosPermissions', iosPermissions);
       }
     } catch (e) {
       console.warn('FAILED WITH', e);

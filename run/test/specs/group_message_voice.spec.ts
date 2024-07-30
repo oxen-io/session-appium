@@ -23,7 +23,7 @@ async function sendVoiceMessageGroupiOS(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to voice message from ${userA.userName} in ${testGroupName}`;
   await device1.longPress('New voice message');
   // "Session" would like to access the microphone (Don't allow/ OK)
-  await device1.modalPopup('Allow', 1000);
+  await device1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
   await device1.pressAndHold('New voice message');
 
   await device1.waitForTextElementToBePresent({
