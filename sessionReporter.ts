@@ -102,12 +102,15 @@ class SessionReporter implements Reporter {
           `\t\tFinished test "${test.title}": ${result.status} with stdout/stderr`
         )}`
       );
-      result.stdout.map(t => process.stdout.write(t.toString()));
-      console.warn(`stdout:`);
+      console.info(`stdout:`);
       result.stdout.map(t => process.stdout.write(t.toString()));
 
-      console.warn('stderr:');
+      console.info('stderr:');
       result.stderr.map(t => process.stderr.write(t.toString()));
+
+      console.info(
+        `test failed with "${result.error?.message}" \n\tvalue:${result.error?.value} \n\tsnippet:${result.error?.snippet} \n\tstack:${result.error?.stack}`
+      );
     } else {
       console.log(
         `${getChalkColorForStatus(result)(`\t\tFinished test "${test.title}": ${result.status}`)}`
@@ -198,7 +201,7 @@ class SessionReporter implements Reporter {
   }
 
   onError?(error: TestError) {
-    console.warn('global error:', error);
+    console.info('global error:', error);
   }
 }
 

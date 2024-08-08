@@ -86,7 +86,7 @@ const openAppOnPlatform = async (
 ): Promise<{
   device: DeviceWrapper;
 }> => {
-  console.warn('starting capabilitiesIndex', capabilitiesIndex, platform);
+  console.info('starting capabilitiesIndex', capabilitiesIndex, platform);
   return platform === 'ios' ? openiOSApp(capabilitiesIndex) : openAndroidApp(capabilitiesIndex);
 };
 
@@ -157,7 +157,7 @@ export const openAppFourDevices = async (
 
 async function createAndroidEmulator(emulatorName: string) {
   const createCmd = `echo "no" | ${getAvdManagerFullPath()} create avd --name ${emulatorName} -k 'system-images;android-31;google_apis;arm64-v8a' --force --skin pixel_5`;
-  console.warn(createCmd);
+  console.info(createCmd);
   await runScriptAndLog(createCmd);
   return emulatorName;
 }
@@ -166,7 +166,7 @@ async function startAndroidEmulator(emulatorName: string) {
   await runScriptAndLog(`echo "hw.lcd.density=440" >> ~/.android/avd/${emulatorName}.avd/config.ini
   `);
   const startEmulatorCmd = `${getEmulatorFullPath()} @${emulatorName} -no-snapshot`;
-  console.warn(`${startEmulatorCmd} & ; disown`);
+  console.info(`${startEmulatorCmd} & ; disown`);
   await runScriptAndLog(
     startEmulatorCmd // -netdelay none -no-snapshot -wipe-data
   );
@@ -215,12 +215,12 @@ const openAndroidApp = async (
   const actualCapabilitiesIndex =
     capabilitiesIndex + 4 * parseInt(process.env.TEST_PARALLEL_INDEX || '0');
   if (isNaN(actualCapabilitiesIndex)) {
-    console.warn('actualCapabilities worker is not a number', actualCapabilitiesIndex);
+    console.info('actualCapabilities worker is not a number', actualCapabilitiesIndex);
   } else {
-    console.warn('actualCapabilities worker', actualCapabilitiesIndex);
+    console.info('actualCapabilities worker', actualCapabilitiesIndex);
   }
   const emulatorAlreadyRunning = await isEmulatorRunning(targetName);
-  console.warn('emulatorAlreadyRunning', targetName, emulatorAlreadyRunning);
+  console.info('emulatorAlreadyRunning', targetName, emulatorAlreadyRunning);
   if (!emulatorAlreadyRunning) {
     await createAndroidEmulator(targetName);
     void startAndroidEmulator(targetName);
@@ -254,15 +254,15 @@ const openAndroidApp = async (
   await runScriptAndLog(`adb -s ${targetName} shell settings put global animator_duration_scale 0
     `);
 
-  console.warn('1');
+  console.info('1');
   await wrappedDevice.createSession(capabilities);
-  console.warn('2');
+  console.info('2');
   await (device as any).updateSettings({
     ignoreUnimportantViews: false,
     allowInvisibleElements: true,
     enableMultiWindows: true,
   });
-  console.warn('3');
+  console.info('3');
   return { device: wrappedDevice };
 };
 
@@ -271,7 +271,7 @@ const openiOSApp = async (
 ): Promise<{
   device: DeviceWrapper;
 }> => {
-  console.warn('openiOSApp');
+  console.info('openiOSApp');
 
   // Calculate the actual capabilities index for the current worker
   const actualCapabilitiesIndex =
@@ -316,12 +316,12 @@ const openiOSApp = async (
       if (createAccountButtonExists) {
         return { device: wrappedDevice };
       } else {
-        console.warn('Create account button not found. Retrying...');
+        console.info('Create account button not found. Retrying...');
         retries++;
         await wrappedDevice.deleteSession(); // Close the session before retrying
       }
     } catch (error) {
-      console.error('Error opening iOS app:', error);
+      console.info('Error opening iOS app:', error);
       retries++;
       if (wrappedDevice) {
         await wrappedDevice.deleteSession(); // Close the session in case of an error

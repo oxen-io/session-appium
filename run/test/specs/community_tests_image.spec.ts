@@ -6,8 +6,8 @@ import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/ope
 import { test } from '@playwright/test';
 
 test.describe('Community tests', () => {
-  iosIt('Send image to community', sendImageCommunityiOS, true);
-  androidIt('Send image to community', sendImageCommunityAndroid, true);
+  iosIt('Send image to community', sendImageCommunityiOS);
+  androidIt('Send image to community', sendImageCommunityAndroid);
 });
 
 async function sendImageCommunityiOS(platform: SupportedPlatformsType) {
@@ -60,12 +60,12 @@ async function sendImageCommunityAndroid(platform: SupportedPlatformsType) {
   await device2.longPressMessage(testMessage);
   await device2.clickOnByAccessibilityID('Reply to message');
   await device2.sendMessage(replyMessage);
+  await device1.scrollToBottom(platform);
   await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
     text: replyMessage,
   });
-  // await device1.scrollToBottom(platform);
 
   closeApp(device1, device2);
 }

@@ -29,7 +29,7 @@ async function acceptRequest(platform: SupportedPlatformsType) {
   // Verify config message for Alice 'Your message request has been accepted'
   await device1.waitForControlMessageToBePresent('Your message request has been accepted.');
   // Check conversation list for new contact (user A)
-  await runOnlyOnIOS(platform, () => device2.navigateBack(platform));
+  await device2.navigateBack(platform);
   await Promise.all([
     device2.waitForTextElementToBePresent({
       strategy: 'accessibility id',

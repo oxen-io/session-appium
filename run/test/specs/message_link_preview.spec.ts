@@ -20,7 +20,10 @@ async function sendLinkIos(platform: SupportedPlatformsType) {
   await newContact(platform, device1, userA, device2, userB);
   // Send a link
 
-  await device1.inputText('accessibility id', 'Message input box', testLink);
+  await device1.inputText(testLink, {
+    strategy: 'accessibility id',
+    selector: 'Message input box',
+  });
   // await device1.waitForLoadingAnimation();
   await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
@@ -32,7 +35,10 @@ async function sendLinkIos(platform: SupportedPlatformsType) {
   // No preview on first send
   await device1.clickOnByAccessibilityID('Send message button');
   // Send again for image
-  await device1.inputText('accessibility id', 'Message input box', testLink);
+  await device1.inputText(testLink, {
+    strategy: 'accessibility id',
+    selector: 'Message input box',
+  });
   await sleepFor(500);
   await device1.clickOnByAccessibilityID('Send message button');
   // Make sure image preview is available in device 2
@@ -64,7 +70,10 @@ async function sendLinkAndroid(platform: SupportedPlatformsType) {
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // Send a link
-  await device1.inputText('accessibility id', 'Message input box', testLink);
+  await device1.inputText(testLink, {
+    strategy: 'accessibility id',
+    selector: 'Message input box',
+  });
   // Accept dialog for link preview
   await device1.clickOnElementAll({
     strategy: 'accessibility id',

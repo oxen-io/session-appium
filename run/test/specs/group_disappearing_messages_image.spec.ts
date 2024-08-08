@@ -7,7 +7,7 @@ import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-iosIt('Send disappearing image to group', disappearingImageMessageGroup);
+iosIt('Disappearing image message to group', disappearingImageMessageGroup);
 
 async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);

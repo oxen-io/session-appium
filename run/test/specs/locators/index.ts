@@ -1,3 +1,4 @@
+import { ANDROID_XPATHS, IOS_XPATHS } from '../../../constants';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { StrategyExtractionObj } from '../../../types/testing';
 import { SupportedPlatformsType } from '../utils/open_app';
@@ -13,7 +14,7 @@ export abstract class LocatorsInterface {
     } else if (device.isIOS()) {
       this.platform = 'ios';
     } else {
-      console.warn('unsupported device type:', device);
+      console.info('unsupported device type:', device);
       throw new Error('unsupported device type');
     }
   }
@@ -119,6 +120,40 @@ export class ExitUserProfile extends LocatorsInterface {
           strategy: 'accessibility id',
           selector: 'Close button',
         } as const;
+    }
+  }
+}
+
+export class Username extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Enter display name',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Username',
+        } as const;
+    }
+  }
+}
+
+export class FirstGif extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'xpath',
+          selector: ANDROID_XPATHS.FIRST_GIF,
+        };
+      case 'ios':
+        return {
+          strategy: 'xpath',
+          selector: IOS_XPATHS.FIRST_GIF,
+        };
     }
   }
 }

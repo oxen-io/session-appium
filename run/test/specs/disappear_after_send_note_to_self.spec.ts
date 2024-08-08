@@ -21,10 +21,16 @@ async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   // Send message to self to bring up Note to Self conversation
   await device.clickOnByAccessibilityID('New conversation button');
   await device.clickOnByAccessibilityID('New direct message');
-  await device.inputText('accessibility id', 'Session id input box', userA.accountID);
+  await device.inputText(userA.accountID, {
+    strategy: 'accessibility id',
+    selector: 'Session id input box',
+  });
   await device.scrollDown();
   await device.clickOnByAccessibilityID('Next');
-  await device.inputText('accessibility id', 'Message input box', 'Creating note to self');
+  await device.inputText('Creating note to self', {
+    strategy: 'accessibility id',
+    selector: 'Message input box',
+  });
   await device.clickOnByAccessibilityID('Send message button');
   // Enable disappearing messages
   await setDisappearingMessage(platform, device, ['Note to Self', 'Disappear after send option']);

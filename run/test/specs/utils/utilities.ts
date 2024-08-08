@@ -31,8 +31,8 @@ export async function runScriptAndLog(toRun: string, verbose = false): Promise<s
   } catch (e: any) {
     const cmd = e.cmd;
     if (verbose) {
-      console.warn(`cmd which failed: "${cmd as string}"`);
-      console.warn(pick(e, ['stdout', 'stderr']));
+      console.info(`cmd which failed: "${cmd as string}"`);
+      console.info(pick(e, ['stdout', 'stderr']));
     }
     return ''.concat(e.stderr as string, e.stdout as string);
   }

@@ -32,7 +32,7 @@ export const createGroup = async (
   // Select Closed Group option
   await device1.clickOnByAccessibilityID('Create group');
   // Type in group name
-  await device1.inputText('accessibility id', 'Group name input', userName);
+  await device1.inputText(userName, { strategy: 'accessibility id', selector: 'Group name input' });
   // Select User B and User C
   await device1.selectByText('Contact', userTwo.userName);
   await device1.selectByText('Contact', userThree.userName);

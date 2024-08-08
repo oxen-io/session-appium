@@ -28,7 +28,10 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   await setDisappearingMessage(platform, device1, ['Group', 'Disappear after send option']);
   // await device1.navigateBack(platform);
   // Send a link
-  await device1.inputText('accessibility id', 'Message input box', testLink);
+  await device1.inputText(testLink, {
+    strategy: 'accessibility id',
+    selector: 'Message input box',
+  });
   await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message sent status: Sent',
@@ -39,7 +42,10 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   // No preview on first send
   await device1.clickOnByAccessibilityID('Send message button');
   // Send again for image
-  await device1.inputText('accessibility id', 'Message input box', testLink);
+  await device1.inputText(testLink, {
+    strategy: 'accessibility id',
+    selector: 'Message input box',
+  });
   await sleepFor(100);
   await device1.clickOnByAccessibilityID('Send message button');
   // Make sure image preview is available in device 2

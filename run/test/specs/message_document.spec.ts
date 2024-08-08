@@ -47,7 +47,10 @@ async function sendDocumentIos(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID('test_file, pdf');
   await sleepFor(500);
   await device1.clickOnByAccessibilityID('Text input box');
-  await device1.inputText('accessibility id', 'Text input box', testMessage);
+  await device1.inputText(testMessage, {
+    strategy: 'accessibility id',
+    selector: 'Text input box',
+  });
   await device1.clickOnByAccessibilityID('Send button');
   await device2.clickOnByAccessibilityID('Untrusted attachment message');
   await sleepFor(500);

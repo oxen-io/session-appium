@@ -1,10 +1,10 @@
-import { DISAPPEARING_TIMES, XPATHS } from '../../constants';
+import { ANDROID_XPATHS } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { DMTimeOption, DisappearActions } from '../../types/testing';
+import { DisappearActions } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
-import { SupportedPlatformsType, openAppTwoDevices, closeApp } from './utils/open_app';
+import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
 iosIt('Disappearing voice message 1:1', disappearingVoiceMessage1o1Ios);
@@ -23,7 +23,7 @@ async function disappearingVoiceMessage1o1Ios(platform: SupportedPlatformsType) 
   await device1.longPress('New voice message');
   await device1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
   // await device1.clickOnByAccessibilityID("OK");
-  // await device1.pressAndHold("New voice message");
+  await device1.pressAndHold('New voice message');
   await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Voice message',
@@ -67,7 +67,7 @@ async function disappearingVoiceMessage1o1Android(platform: SupportedPlatformsTy
   // await sleepFor(60000);
   await device1.longPress('New voice message');
   await device1.clickOnByAccessibilityID('Continue');
-  await device1.clickOnElementXPath(XPATHS.VOICE_TOGGLE);
+  await device1.clickOnElementXPath(ANDROID_XPATHS.VOICE_TOGGLE);
   await device1.pressAndHold('New voice message');
   // await device1.clickOnByAccessibilityID("OK");
   // await device1.pressAndHold("New voice message");

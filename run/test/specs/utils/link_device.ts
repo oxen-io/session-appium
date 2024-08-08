@@ -16,11 +16,10 @@ export const linkedDevice = async (
 
   await device2.clickOnByAccessibilityID('Restore your session button');
   // Enter recovery phrase into input box
-  await device2.inputText(
-    'accessibility id',
-    device2.isAndroid() ? 'Recovery phrase input' : 'Recovery password input',
-    user.recoveryPhrase
-  );
+  await device2.inputText(user.recoveryPhrase, {
+    strategy: 'accessibility id',
+    selector: device2.isAndroid() ? 'Recovery phrase input' : 'Recovery password input',
+  });
 
   // Wait for continue button to become active
   await sleepFor(500);
@@ -38,10 +37,13 @@ export const linkedDevice = async (
     maxWait: 1000,
   });
   if (displayName) {
-    await device2.inputText('accessibility id', 'Enter display name', userName);
+    await device2.inputText(userName, {
+      strategy: 'accessibility id',
+      selector: 'Enter display name',
+    });
     await device2.clickOnByAccessibilityID('Continue');
   } else {
-    console.warn('Display name found: Loading account');
+    console.info('Display name found: Loading account');
   }
   // Wait for permissions modal to pop up
   await sleepFor(500);
@@ -57,7 +59,7 @@ export const linkedDevice = async (
     selector: 'New conversation button',
   });
 
-  console.warn('Device 3 linked');
+  console.info('Device 3 linked');
 
   return user;
 };

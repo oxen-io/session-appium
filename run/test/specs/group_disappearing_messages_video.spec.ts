@@ -5,8 +5,8 @@ import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-iosIt('Disappearing Message video group', disappearingVideoMessageGroup);
-androidIt('Disappearing Message video group', disappearingVideoMessageGroup);
+iosIt('Disappearing message video group', disappearingVideoMessageGroup);
+androidIt('Disappearing message video group', disappearingVideoMessageGroup);
 
 // bothPlatformsIt(
 //   "Send disappearing video to group",

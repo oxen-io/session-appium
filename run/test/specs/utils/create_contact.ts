@@ -13,9 +13,10 @@ export const newContact = async (
   await device1.sendNewMessage(Bob, `${Alice.userName} to ${Bob.userName}`);
   // Click on message request folder
   await sleepFor(100);
-  await retryRequest(device1, device2);
+  // await retryRequestBanner(platform, device1, device2);
   await device2.clickOnByAccessibilityID('Message requests banner');
   // Select message from User A
+  // await retryRequest(platform, device1, device2);
   await device2.clickOnByAccessibilityID('Message request');
   await runOnlyOnAndroid(platform, () =>
     device2.clickOnByAccessibilityID('Accept message request')
@@ -25,39 +26,80 @@ export const newContact = async (
   // Verify config message states message request was accepted
   await device1.waitForControlMessageToBePresent('Your message request has been accepted.');
 
-  console.warn(`${Alice.userName} and ${Bob.userName} are now contacts`);
+  console.info(`${Alice.userName} and ${Bob.userName} are now contacts`);
   return { Alice, Bob, device1, device2 };
 };
 
-export const retryRequest = async (
+export const retryRequestBanner = async (
+  platform: SupportedPlatformsType,
   device1: DeviceWrapper,
   device2: DeviceWrapper,
   timeout: number = 10000
 ) => {
   const startTime = Date.now();
   let messageRequest: boolean | null = false;
+  if (platform === 'ios') {
+    while (!messageRequest && Date.now() - startTime < timeout) {
+      const element = await device2.doesElementExist({
+        strategy: 'accessibility id',
+        selector: 'Message requests banner',
+        maxWait: 1000,
+      });
 
-  while (!messageRequest && Date.now() - startTime < timeout) {
-    const element = await device2.doesElementExist({
-      strategy: 'accessibility id',
-      selector: 'Message requests banner',
-      maxWait: 1000, // Reduce max wait to avoid long pauses
-    });
+      messageRequest = element !== null;
 
-    messageRequest = element !== null;
+      if (!messageRequest) {
+        await device1.sendMessage('Retry');
+        console.log(`Retrying message request`);
+        await sleepFor(1000);
+      } else {
+        console.log('Found message request: No need for retry');
+      }
+    }
 
     if (!messageRequest) {
-      await device1.sendMessage('Retry');
-      console.log(`Retrying message request`);
-      await sleepFor(1000); // Add a short delay before retrying
+      throw new Error(
+        'Message request did not appear within the timeout period: This is a common race condition on iOS.'
+      );
     } else {
-      console.log('Found message request: No need for retry');
+      console.log('Android: retry functionality not needed');
     }
   }
+};
 
-  if (!messageRequest) {
-    throw new Error(
-      'Message request did not appear within the timeout period: This is a common race condition on iOS.'
-    );
+export const retryRequest = async (
+  platform: SupportedPlatformsType,
+  device1: DeviceWrapper,
+  device2: DeviceWrapper,
+  timeout: number = 10000
+) => {
+  const startTime = Date.now();
+  let messageRequest: boolean | null = false;
+  if (platform === 'ios') {
+    while (!messageRequest && Date.now() - startTime < timeout) {
+      const element = await device2.doesElementExist({
+        strategy: 'accessibility id',
+        selector: 'Message request',
+        maxWait: 1000,
+      });
+
+      messageRequest = element !== null;
+
+      if (!messageRequest) {
+        await device1.sendMessage('Retry');
+        console.log(`Retrying message request`);
+        await sleepFor(1000);
+      } else {
+        console.log('Found message request: No need for retry');
+      }
+    }
+
+    if (!messageRequest) {
+      throw new Error(
+        'Message request did not appear within the timeout period: This is a common race condition on iOS.'
+      );
+    }
+  } else {
+    console.log('Android: retry functionality not needed');
   }
 };

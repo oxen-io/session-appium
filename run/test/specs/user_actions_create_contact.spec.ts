@@ -20,6 +20,7 @@ async function createContact(platform: SupportedPlatformsType) {
 
   await newContact(platform, device1, userA, device2, userB);
   await device1.navigateBack(platform);
+  await device2.navigateBack(platform);
   // Check username has changed from session id on both device 1 and 3
   await Promise.all([
     device1.waitForTextElementToBePresent({

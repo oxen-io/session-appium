@@ -31,7 +31,10 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
 
   // Click on current group name
   await device1.clickOnByAccessibilityID('Group name');
-  await device1.inputText('accessibility id', 'Group name text field', '   ');
+  await device1.inputText('   ', {
+    strategy: 'accessibility id',
+    selector: 'Group name text field',
+  });
   await device1.clickOnByAccessibilityID('Accept name change');
   // Alert should pop up 'Please enter group name', click ok
   // If ios click ok / If Android go to next step
@@ -43,7 +46,10 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   // Enter new group name
   await device1.clickOnByAccessibilityID('Group name');
 
-  await device1.inputText('accessibility id', 'Group name text field', newGroupName);
+  await device1.inputText(newGroupName, {
+    strategy: 'accessibility id',
+    selector: 'Group name text field',
+  });
   // Click done/apply
   await device1.clickOnByAccessibilityID('Accept name change');
 
@@ -85,7 +91,7 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   // Enter new group name
   await device1.clickOnByAccessibilityID('Group name');
 
-  await device1.inputText('accessibility id', 'Group name', newGroupName);
+  await device1.inputText(newGroupName, { strategy: 'accessibility id', selector: 'Group name' });
   // Click done/apply
   await device1.clickOnByAccessibilityID('Accept name change');
   await device1.clickOnElementById('network.loki.messenger:id/action_apply');

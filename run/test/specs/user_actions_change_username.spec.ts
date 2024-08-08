@@ -2,7 +2,7 @@ import { bothPlatformsIt } from '../../types/sessionIt';
 import { sleepFor, runOnlyOnAndroid, runOnlyOnIOS } from './utils';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, openAppOnPlatformSingleDevice, closeApp } from './utils/open_app';
-import { ExitUserProfile, TickButton } from './locators';
+import { ApplyChanges, ExitUserProfile, TickButton, Username } from './locators';
 
 bothPlatformsIt('Change username', changeUsername);
 
@@ -17,8 +17,9 @@ async function changeUsername(platform: SupportedPlatformsType) {
   await device.clickOnByAccessibilityID('Username');
   // type in new username
   await sleepFor(100);
-  await device.deleteText('Username');
-  await device.inputText('accessibility id', 'Username', newUsername);
+  await device.deleteText(new Username(device));
+  await device.inputText(newUsername, new Username(device));
+  await device.clickOnElementAll(new TickButton(device));
   const changedUsername = await device.grabTextFromAccessibilityId('Username');
   console.log('Changed username', changedUsername);
   if (changedUsername === newUsername) {
@@ -33,7 +34,7 @@ async function changeUsername(platform: SupportedPlatformsType) {
     console.log('Username is not found`');
   }
   // select tick
-  await device.clickOnElementAll(new TickButton(device));
+
   await device.clickOnElementAll(new ExitUserProfile(device));
   await device.clickOnElementAll({
     strategy: 'accessibility id',

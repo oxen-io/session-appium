@@ -10,8 +10,8 @@ import {
   openAppThreeDevices,
 } from './utils/open_app';
 
-iosIt('Send image', sendImageIos);
-androidIt('Send image', sendImageAndroid);
+iosIt('Send image 1:1', sendImageIos);
+androidIt('Send image 1:1', sendImageAndroid);
 
 async function sendImageIos(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
@@ -65,6 +65,11 @@ async function sendImageAndroid(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID('Download media', 5000);
   // Wait for image to load (unclickable if not loaded correctly)
   // Check device 2 and linked device (device 3) for image
+  // await device3.clickOnElementAll({
+  //   strategy: 'accessibility id',
+  //   selector: 'Conversation list item',
+  //   text: userB.userName,
+  // });
   await Promise.all([
     device2.waitForTextElementToBePresent({
       strategy: 'accessibility id',

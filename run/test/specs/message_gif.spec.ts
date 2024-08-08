@@ -1,13 +1,11 @@
-import { XPATHS } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { InteractionPoints } from '../../types/testing';
-import { clickOnCoordinates, sleepFor } from './utils';
+import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
-import { SupportedPlatformsType, openAppTwoDevices, closeApp } from './utils/open_app';
+import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-iosIt('Send GIF', sendGifIos);
-androidIt('Send GIF', sendGifAndroid);
+iosIt('Send GIF 1:1', sendGifIos);
+androidIt('Send GIF 1:1', sendGifAndroid);
 
 async function sendGifIos(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
@@ -17,17 +15,7 @@ async function sendGifIos(platform: SupportedPlatformsType) {
   ]);
   const testMessage = 'Testing-GIF-1';
   await newContact(platform, device1, userA, device2, userB);
-  await device1.clickOnByAccessibilityID('Attachments button');
-  // Select GIF tab
-  await clickOnCoordinates(device1, InteractionPoints.GifButtonKeyboardOpen);
-  // Select gif
-  await sleepFor(500);
-  // Need to select Continue on GIF warning
-  await device1.clickOnByAccessibilityID('Continue');
-  await device1.clickOnElementXPath(XPATHS.FIRST_GIF);
-  await device1.clickOnByAccessibilityID('Text input box');
-  await device1.inputText('accessibility id', 'Text input box', testMessage);
-  await device1.clickOnByAccessibilityID('Send button');
+  await device1.sendGIF(testMessage);
   // Check if the 'Tap to download media' config appears
   // Click on config
   await device2.clickOnByAccessibilityID('Untrusted attachment message', 15000);
@@ -63,18 +51,7 @@ async function sendGifAndroid(platform: SupportedPlatformsType) {
   // create contact
   await newContact(platform, device1, userA, device2, userB);
   // Click on attachments button
-  await device1.clickOnByAccessibilityID('Attachments button');
-  // Select GIF tab
-
-  await device1.clickOnByAccessibilityID('GIF button');
-  await device1.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'Continue',
-  });
-
-  // Select gif
-  await sleepFor(3000);
-  await device1.clickOnElementXPath(XPATHS.FIRST_GIF);
+  await device1.sendGIF('Test message with GIF');
 
   // Check if the 'Tap to download media' config appears
   // Click on config

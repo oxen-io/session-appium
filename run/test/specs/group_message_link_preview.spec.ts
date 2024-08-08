@@ -20,7 +20,10 @@ async function sendLinkGroupiOS(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to link from ${userA.userName} in group ${testGroupName}`;
   // Create contact between User A and User B
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
-  await device1.inputText('accessibility id', 'Message input box', testLink);
+  await device1.inputText(testLink, {
+    strategy: 'accessibility id',
+    selector: 'Message input box',
+  });
   await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message sent status: Sent',
@@ -31,7 +34,10 @@ async function sendLinkGroupiOS(platform: SupportedPlatformsType) {
   // No preview on first send
   await device1.clickOnByAccessibilityID('Send message button');
   // Send again for image
-  await device1.inputText('accessibility id', 'Message input box', testLink);
+  await device1.inputText(testLink, {
+    strategy: 'accessibility id',
+    selector: 'Message input box',
+  });
   await sleepFor(1000);
   await device1.clickOnByAccessibilityID('Send message button');
   await device2.waitForTextElementToBePresent({
@@ -74,7 +80,10 @@ async function sendLinkGroupAndroid(platform: SupportedPlatformsType) {
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   const testLink = `https://type-level-typescript.com/objects-and-records`;
   // Send a link
-  await device1.inputText('accessibility id', 'Message input box', testLink);
+  await device1.inputText(testLink, {
+    strategy: 'accessibility id',
+    selector: 'Message input box',
+  });
   // Accept dialog for link preview
   await device1.clickOnByAccessibilityID('Enable');
   // No preview on first send

@@ -1,7 +1,5 @@
-import { XPATHS } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { InteractionPoints } from '../../types/testing';
-import { clickOnCoordinates, sleepFor } from './utils';
+import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
@@ -22,17 +20,7 @@ async function sendGifGroupiOS(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to GIF from ${userA.userName}`;
   // Create contact between User A and User B
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
-  await device1.clickOnByAccessibilityID('Attachments button');
-  // Select GIF tab
-  await clickOnCoordinates(device1, InteractionPoints.GifButtonKeyboardOpen);
-  // Select gif
-  await sleepFor(500);
-  // Need to select Continue on GIF warning
-  await device1.clickOnByAccessibilityID('Continue');
-  await device1.clickOnElementXPath(XPATHS.FIRST_GIF);
-  await device1.clickOnByAccessibilityID('Message input box');
-  await device1.inputText('accessibility id', 'Text input box', testMessage);
-  await device1.clickOnByAccessibilityID('Send button');
+  await device1.sendGIF(testMessage);
   await sleepFor(500);
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
@@ -74,19 +62,7 @@ async function sendGifGroupAndroid(platform: SupportedPlatformsType) {
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   const replyMessage = `Replying to GIF from ${userA.userName}`;
   // Click on attachments button
-  await device1.clickOnByAccessibilityID('Attachments button');
-  // Select GIF tab
-  await device1.clickOnByAccessibilityID('GIF button');
-  await device1.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'Continue',
-  });
-  // Select gif
-  await device1.clickOnElementAll({
-    strategy: 'xpath',
-    selector: `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.ScrollView/androidx.viewpager.widget.ViewPager/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.FrameLayout[1]`,
-    maxWait: 5000,
-  });
+  await device1.sendGIF('Test message with GIF');
   // Reply to message
   await device3.waitForTextElementToBePresent({
     strategy: 'accessibility id',

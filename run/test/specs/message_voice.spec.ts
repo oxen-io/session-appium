@@ -1,4 +1,4 @@
-import { XPATHS } from '../../constants';
+import { ANDROID_XPATHS } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -56,7 +56,7 @@ async function sendVoiceMessageAndroid(platform: SupportedPlatformsType) {
   await device1.longPress('New voice message');
 
   await device1.clickOnByAccessibilityID('Continue');
-  await device1.clickOnElementXPath(XPATHS.VOICE_TOGGLE);
+  await device1.clickOnElementXPath(ANDROID_XPATHS.VOICE_TOGGLE);
   await device1.pressAndHold('New voice message');
   // await device1.waitForTextElementToBePresent("Voice message");
   await device2.clickOnByAccessibilityID('Untrusted attachment message');

@@ -10,7 +10,7 @@
 // async function changeUsername(platform: SupportedPlatformsType) {
 //   const [device1, device2] = await openAppMultipleDevices(platform, 2);
 //   const userA = await linkedDevice(device1, device2, "Alice", platform);
-//   console.warn("process.env.MOCHA_WORKER_ID:", process.env.MOCHA_WORKER_ID);
+//   console.info("process.env.MOCHA_WORKER_ID:", process.env.MOCHA_WORKER_ID);
 //   console.log("Devices for changeUsername:", device1.udid, device2.udid);
 //   const newUsername = "Alice in chains";
 //   // click on settings/profile avatar

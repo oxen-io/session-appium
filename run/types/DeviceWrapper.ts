@@ -1,6 +1,15 @@
 import { W3CCapabilities } from '@wdio/types/build/Capabilities';
+import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
+import { XCUITestDriver } from 'appium-xcuitest-driver/build/lib/driver';
 import { isArray, isEmpty } from 'lodash';
-import { AppiumNextElementType } from '../../appium_next';
+import {
+  ExitUserProfile,
+  FirstGif,
+  LocatorsInterface,
+  PrivacyButton,
+  ReadReceiptsButton,
+} from '../../run/test/specs/locators';
+import { IOS_XPATHS } from '../constants';
 import { clickOnCoordinates, sleepFor } from '../test/specs/utils';
 import { SupportedPlatformsType } from '../test/specs/utils/open_app';
 import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/specs/utils/utilities';
@@ -16,15 +25,6 @@ import {
   User,
   XPath,
 } from './testing';
-import { XPATHS } from '../constants';
-import { XCUITestDriver } from 'appium-xcuitest-driver/build/lib/driver';
-import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
-import {
-  ExitUserProfile,
-  LocatorsInterface,
-  PrivacyButton,
-  ReadReceiptsButton,
-} from '../../run/test/specs/locators';
 
 export type Coordinates = {
   x: number;
@@ -35,66 +35,9 @@ export type ActionSequence = {
 };
 
 type Action = Coordinates & { type: 'pointer'; duration?: number };
+type AppiumNextElementType = { ELEMENT: string };
 
-type SharedDeviceInterface = {
-  getPageSource: () => Promise<string>;
-  getDeviceTime: (platform: SupportedPlatformsType) => Promise<string>;
-  back: () => Promise<void>;
-  click: (elementId: string) => Promise<void>;
-  doubleClick: (elementId: string) => Promise<void>;
-  clear: (elementId: string) => Promise<void>;
-  getText: (elementId: string) => Promise<string>;
-  setValueImmediate: (text: string, elementId: string) => Promise<void>;
-  getAttribute: (attribute: string, elementId: string) => Promise<string>;
-  keys: (value: string[]) => Promise<void>;
-  getElementRect: (
-    elementId: string
-  ) => Promise<undefined | { height: number; width: number; x: number; y: number }>;
-  getCssProperty: (name: string, elementId: string) => Promise<string>;
-  pushFile(path: string, data: string): Promise<void>;
-  getElementScreenshot: (elementId: string) => Promise<string>;
-  // gestures
-  scroll: (start: Coordinates, end: Coordinates, duration: number) => Promise<void>;
-  pressCoordinates: (
-    xCoOrdinates: number,
-    yCoOrdinates: number,
-    duration?: number
-  ) => Promise<void>;
-  performActions: (actions: any) => Promise<any>;
-  performTouch: (actions: Action[]) => Promise<any>;
-  // touchAction: (actions: Action) => Promise<any>;
-  tap: (xCoOrdinates: number, yCoOrdinates: number, duration?: number) => Promise<any>;
-  touchUp(CoOrdinates: Coordinates): Promise<void>;
-  touchDown(CoOrdinates: Coordinates): Promise<void>;
-  touchScroll(
-    x: Coordinates,
-    y: Coordinates,
-    element: AppiumNextElementType
-  ): Promise<AppiumNextElementType>;
-  // finding elements
-
-  findElement(strategy: Strategy, selector: string): Promise<AppiumNextElementType>;
-  findElements(strategy: Strategy, selector: string): Promise<Array<AppiumNextElementType>>;
-
-  // Session management
-  createSession: (caps: W3CCapabilities) => Promise<[string, Record<string, any>]>;
-  deleteSession: (sessionId?: string) => Promise<void>;
-};
-
-type IOSDeviceInterface = {
-  mobileTouchAndHold: (
-    duration: number /* In seconds */,
-    x: any,
-    y: any,
-    elementId: string
-  ) => Promise<void>;
-} & SharedDeviceInterface;
-
-type AndroidDeviceInterface = {
-  touchLongClick: (id: string) => Promise<void>;
-} & SharedDeviceInterface;
-
-export class DeviceWrapper implements SharedDeviceInterface {
+export class DeviceWrapper {
   private readonly device: AndroidUiautomator2Driver | XCUITestDriver;
   public readonly udid: string;
 
@@ -103,17 +46,13 @@ export class DeviceWrapper implements SharedDeviceInterface {
     this.udid = udid;
   }
 
-  public async touchScroll(x: Coordinates, y: Coordinates, element: AppiumNextElementType) {
-    return this.toShared().touchScroll(x, y, element);
-  }
-
   /**  === all the shared actions ===  */
   public async click(element: string) {
     // this one works for both devices so just call it without casting it
     return this.toShared().click(element);
   }
   public async doubleClick(elementId: string): Promise<void> {
-    return this.toShared().doubleClick(elementId);
+    return this.toShared().mobileDoubleTap(elementId);
   }
 
   public async back(): Promise<void> {
@@ -206,16 +145,18 @@ export class DeviceWrapper implements SharedDeviceInterface {
       y: yCoOrdinates,
       duration,
     };
-
-    await this.toShared().performTouch([action]);
+    if (this.isIOS()) {
+      await this.toIOS().mobileTap(xCoOrdinates, yCoOrdinates);
+      return;
+    }
+    if (this.isAndroid()) {
+      await this.toAndroid().mobileClickGesture({ x: xCoOrdinates, y: yCoOrdinates });
+      return;
+    }
   }
 
   public async performActions(actions: ActionSequence): Promise<void> {
-    await this.toShared().performActions(actions);
-  }
-
-  public async performTouch(actions: Action[]): Promise<any> {
-    return this.toShared().performTouch(actions);
+    await this.toShared().performActions([actions]);
   }
 
   public async pushFile(path: string, data: string): Promise<void> {
@@ -227,20 +168,13 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return this.toShared().getElementScreenshot(elementId);
   }
 
-  public async touchUp(CoOrdinates: Coordinates): Promise<void> {
-    return this.toShared().touchUp(CoOrdinates);
-  }
-  public async touchDown(CoOrdinates: Coordinates): Promise<void> {
-    return this.toShared().touchDown(CoOrdinates);
-  }
-
   // Session management
   public async createSession(caps: W3CCapabilities): Promise<[string, Record<string, any>]> {
     return this.toShared().createSession(caps);
   }
 
-  public async deleteSession(sessionId?: string): Promise<void> {
-    return this.toShared().deleteSession(sessionId);
+  public async deleteSession(): Promise<void> {
+    return this.toShared().deleteSession();
   }
 
   public async getPageSource(): Promise<string> {
@@ -252,14 +186,16 @@ export class DeviceWrapper implements SharedDeviceInterface {
   // ELEMENT INTERACTION
 
   public async findElement(strategy: Strategy, selector: string): Promise<AppiumNextElementType> {
-    return this.toShared().findElement(strategy, selector);
+    return this.toShared().findElement(strategy, selector) as Promise<AppiumNextElementType>;
   }
 
   public async findElements(
     strategy: Strategy,
     selector: string
   ): Promise<Array<AppiumNextElementType>> {
-    return this.toShared().findElements(strategy, selector);
+    return this.toShared().findElements(strategy, selector) as Promise<
+      Array<AppiumNextElementType>
+    >;
   }
 
   public async longClick(element: AppiumNextElementType, durationMs: number) {
@@ -268,7 +204,10 @@ export class DeviceWrapper implements SharedDeviceInterface {
       const duration = Math.floor(durationMs / 1000);
       return this.toIOS().mobileTouchAndHold(duration, undefined, undefined, element.ELEMENT);
     }
-    return this.toAndroid().touchLongClick(element.ELEMENT);
+    return this.toAndroid().mobileLongClickGesture({
+      elementId: element.ELEMENT,
+      duration: durationMs,
+    });
   }
 
   public async clickOnByAccessibilityID(
@@ -421,7 +360,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
         attempt++;
         if (attempt >= maxRetries) {
           throw new Error(
-            `Longpress on message: ${textToLookFor} unsuccessful after ${maxRetries} attempts`
+            `Longpress on message: ${textToLookFor} unsuccessful after ${maxRetries} attempts, ${error}`
           );
         }
         console.log(`Longpress attempt ${attempt} failed. Retrying...`);
@@ -436,7 +375,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       selector: 'Conversation list item',
       text: userName,
     });
-    await this.longClick(el, 2000);
+    await this.longClick(el, 3000);
   }
 
   public async pressAndHold(accessibilityId: AccessibilityId) {
@@ -474,8 +413,21 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return text;
   }
 
-  public async deleteText(accessibilityId: AccessibilityId) {
-    const el = await this.findElementByAccessibilityId(accessibilityId);
+  public async deleteText(
+    args: ({ text?: string; maxWait?: number } & StrategyExtractionObj) | LocatorsInterface
+  ) {
+    let el: null | AppiumNextElementType = null;
+    let locator: StrategyExtractionObj & { text?: string; maxWait?: number };
+    if (args instanceof LocatorsInterface) {
+      locator = args.build();
+    } else {
+      locator = args as StrategyExtractionObj & {
+        text?: string;
+        maxWait?: number;
+      };
+    }
+
+    el = await this.waitForTextElementToBePresent({ ...locator });
 
     let maxRetries = 3;
     let retries = 0;
@@ -493,7 +445,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
           });
           success = true;
         } catch (error) {
-          console.warn(`Retrying long press and select all, attempt ${retries + 1}`);
+          console.info(`Retrying long press and select all, attempt ${retries + 1}`);
         }
       } else {
         await this.longClick(el, 2000);
@@ -506,7 +458,8 @@ export class DeviceWrapper implements SharedDeviceInterface {
     }
 
     await this.clear(el.ELEMENT);
-    console.warn(`Text has been cleared ` + accessibilityId);
+
+    console.info(`Text has been cleared `);
     return;
   }
 
@@ -604,7 +557,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     if (elements && elements.length) {
       const matching = await this.findAsync(elements, async e => {
         const text = await this.getTextFromElement(e);
-        // console.error(`text ${text} lookigfor ${textToLookFor}`);
+        // console.info(`text ${text} lookigfor ${textToLookFor}`);
 
         return Boolean(text && text.toLowerCase() === textToLookFor.toLowerCase());
       });
@@ -676,7 +629,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
           }
         }
       } catch (e: any) {
-        console.warn(`doesElementExist failed with`, e.message, `${strategy} ${selector}`);
+        console.info(`doesElementExist failed with`, e.message, `${strategy} ${selector}`);
       }
       if (!element) {
         await sleepFor(waitPerLoop);
@@ -770,7 +723,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
           el = await this.findElement(strategy, selector);
         }
       } catch (e: any) {
-        console.warn(
+        console.info(
           'waitForTextElementToBePresent threw: ',
           e.message,
           `${strategy}: '${selector}'`
@@ -805,7 +758,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
         const els = await this.findElements('accessibility id', 'Control message');
         el = await this.findMatchingTextInElementArray(els, text);
       } catch (e: any) {
-        console.warn('waitForControlMessageToBePresent threw: ', e.message);
+        console.info('waitForControlMessageToBePresent threw: ', e.message);
       }
       if (!el) {
         await sleepFor(waitPerLoop);
@@ -834,7 +787,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
         const els = await this.findElements('accessibility id', 'Control message');
         el = await this.findMatchingTextInElementArray(els, text);
       } catch (e: any) {
-        console.warn('disappearingControlMessage threw: ', e.message);
+        console.info('disappearingControlMessage threw: ', e.message);
       }
       if (!el) {
         await sleepFor(waitPerLoop);
@@ -899,7 +852,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
   // UTILITY FUNCTIONS
 
   public async sendMessage(message: string) {
-    await this.inputText('accessibility id', 'Message input box', message);
+    await this.inputText(message, { strategy: 'accessibility id', selector: 'Message input box' });
 
     // Click send
 
@@ -945,13 +898,16 @@ export class DeviceWrapper implements SharedDeviceInterface {
     // Select direct message option
     await this.clickOnByAccessibilityID('New direct message');
     // Enter User B's session ID into input box
-    await this.inputText('accessibility id', 'Session id input box', user.accountID);
+    await this.inputText(user.accountID, {
+      strategy: 'accessibility id',
+      selector: 'Session id input box',
+    });
     // Click next
     await this.scrollDown();
     await this.clickOnByAccessibilityID('Next');
     // Type message into message input box
 
-    await this.inputText('accessibility id', 'Message input box', message);
+    await this.inputText(message, { strategy: 'accessibility id', selector: 'Message input box' });
     // Click send
     const sendButton = await this.clickOnElementAll({
       strategy: 'accessibility id',
@@ -1023,21 +979,29 @@ export class DeviceWrapper implements SharedDeviceInterface {
   }
 
   public async inputText(
-    strategy: Extract<Strategy, 'accessibility id'>,
-    selector: AccessibilityId,
-    text: string
+    textToInput: string,
+    args: ({ maxWait?: number } & StrategyExtractionObj) | LocatorsInterface
   ) {
-    await this.waitForTextElementToBePresent({ strategy, selector });
-
-    const element = await this.findElementByAccessibilityId(selector);
-    if (!element) {
-      throw new Error(`inputText: Did not find accessibilityId: ${selector} `);
+    let el: null | AppiumNextElementType = null;
+    let locator: StrategyExtractionObj & { text?: string; maxWait?: number };
+    if (args instanceof LocatorsInterface) {
+      locator = args.build();
+    } else {
+      locator = args as StrategyExtractionObj & {
+        text?: string;
+        maxWait?: number;
+      };
     }
 
-    await this.setValueImmediate(text, element.ELEMENT);
+    el = await this.waitForTextElementToBePresent({ ...locator });
+    if (!el) {
+      throw new Error(`inputText: Did not find accessibilityId: ${locator} `);
+    }
+
+    await this.setValueImmediate(textToInput, el.ELEMENT);
   }
 
-  public async getAttribute(attribute: string, elementId: string): Promise<string> {
+  public async getAttribute(attribute: string, elementId: string) {
     return this.toShared().getAttribute(attribute, elementId);
   }
 
@@ -1062,7 +1026,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       const ronSwansonBirthday = '196705060700.00';
       await this.clickOnByAccessibilityID('Attachments button');
       await sleepFor(5000);
-      const keyboard = await this.isKeyboardVisible(platform);
+      const keyboard = await this.isKeyboardVisible();
       if (keyboard) {
         await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardOpen);
       } else {
@@ -1089,7 +1053,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       await this.clickOnByAccessibilityID(`1967-05-05 21:00:00 +0000`, 1000);
       if (message) {
         await this.clickOnByAccessibilityID('Text input box');
-        await this.inputText('accessibility id', 'Text input box', message);
+        await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
       }
       await this.clickOnByAccessibilityID('Send button');
       await this.waitForTextElementToBePresent({
@@ -1146,17 +1110,20 @@ export class DeviceWrapper implements SharedDeviceInterface {
       selector: 'com.android.permissioncontroller:id/permission_allow_all_button',
       text: 'Allow all',
     });
+    await sleepFor(500);
     await this.clickOnElementAll({
       strategy: 'id',
       selector: 'network.loki.messenger:id/mediapicker_folder_item_thumbnail',
-      maxWait: 100,
     });
     await sleepFor(100);
     await this.clickOnElementAll({
       strategy: 'id',
       selector: 'network.loki.messenger:id/mediapicker_image_item_thumbnail',
     });
-    await this.inputText('accessibility id', 'Message composition', message);
+    await this.inputText(message, {
+      strategy: 'accessibility id',
+      selector: 'Message composition',
+    });
     await this.clickOnByAccessibilityID('Send');
   }
 
@@ -1165,7 +1132,12 @@ export class DeviceWrapper implements SharedDeviceInterface {
     await this.clickOnByAccessibilityID('Attachments button');
     // Select images button/tab
     await sleepFor(5000);
-    await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardClosed);
+    const keyboard = await this.isKeyboardVisible();
+    if (keyboard) {
+      await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardOpen);
+    } else {
+      await clickOnCoordinates(this, InteractionPoints.ImagesFolderKeyboardClosed);
+    }
     await sleepFor(100);
     // Check if android or ios (android = documents folder/ ios = images folder)
     await this.modalPopup({
@@ -1177,7 +1149,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     // Select video
     const videoFolder = await this.doesElementExist({
       strategy: 'xpath',
-      selector: XPATHS.VIDEO_TOGGLE,
+      selector: IOS_XPATHS.VIDEO_TOGGLE,
       maxWait: 5000,
     });
     if (videoFolder) {
@@ -1198,7 +1170,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
     }
     // Send with message
     await this.clickOnByAccessibilityID('Text input box');
-    await this.inputText('accessibility id', 'Text input box', message);
+    await this.inputText(message, { strategy: 'accessibility id', selector: 'Text input box' });
     await this.clickOnByAccessibilityID('Send button');
     await this.waitForTextElementToBePresent({
       strategy: 'accessibility id',
@@ -1291,8 +1263,33 @@ export class DeviceWrapper implements SharedDeviceInterface {
     }
   }
 
+  public async sendGIF(message: string) {
+    await this.clickOnByAccessibilityID('Attachments button');
+    if (this.isAndroid()) {
+      this.clickOnElementAll({ strategy: 'accessibility id', selector: 'GIF button' });
+    }
+    if (this.isIOS()) {
+      const keyboard = await this.isKeyboardVisible();
+      if (keyboard) {
+        await clickOnCoordinates(this, InteractionPoints.GifButtonKeyboardOpen);
+      } else {
+        clickOnCoordinates(this, InteractionPoints.GifButtonKeyboardClosed);
+      }
+    }
+    await this.clickOnByAccessibilityID('Continue', 5000);
+    await this.clickOnElementAll(new FirstGif(this));
+    if (this.isIOS()) {
+      await this.clickOnByAccessibilityID('Text input box');
+      await this.inputText(message, {
+        strategy: 'accessibility id',
+        selector: 'Text input box',
+      });
+      await this.clickOnByAccessibilityID('Send button');
+    }
+  }
+
   public async getTimeFromDevice(platform: SupportedPlatformsType): Promise<string> {
-    let timeString = ''; // Initialize the 'time' variable with an empty string
+    let timeString = '';
     try {
       let time = await this.getDeviceTime(platform);
       timeString = await time.toString();
@@ -1303,19 +1300,21 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return timeString;
   }
 
-  public async isKeyboardVisible(platform: SupportedPlatformsType) {
-    if (platform === 'ios') {
+  public async isKeyboardVisible() {
+    if (this.isIOS()) {
       const spaceBar = await this.doesElementExist({
         strategy: 'accessibility id',
         selector: 'space',
         maxWait: 500,
       });
       return Boolean(spaceBar);
+    } else {
+      console.log(`Not an iOS device: shouldn't use this function`);
     }
   }
 
   public async mentionContact(platform: SupportedPlatformsType, contact: User) {
-    await this.inputText('accessibility id', 'Message input box', '@');
+    await this.inputText(`@`, { strategy: 'accessibility id', selector: 'Message input box' });
     // Check that all users are showing in mentions box
     await this.waitForTextElementToBePresent({
       strategy: 'accessibility id',
@@ -1362,7 +1361,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       1000
     );
 
-    console.warn('Swiped left on ', selector);
+    console.info('Swiped left on ', selector);
   }
 
   public async swipeLeft(accessibilityId: AccessibilityId, text: string) {
@@ -1380,7 +1379,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
       1000
     );
 
-    console.warn('Swiped left on ', el);
+    console.info('Swiped left on ', el);
     // let some time for swipe action to happen and UI to update
   }
 
@@ -1462,7 +1461,7 @@ export class DeviceWrapper implements SharedDeviceInterface {
           await this.clickOnByAccessibilityID(selector);
         }
       } catch (e) {
-        console.warn('iosPermissions doesElementExist failed with: ', e);
+        console.info('iosPermissions doesElementExist failed with: ', e);
         // Ignore any exceptions during the action
       }
 
@@ -1506,14 +1505,14 @@ export class DeviceWrapper implements SharedDeviceInterface {
         ...args,
         maxWait: 500,
       });
-      console.warn('iosPermissions', iosPermissions);
+      console.info('iosPermissions', iosPermissions);
       if (iosPermissions) {
         await this.clickOnElementAll({ ...args, maxWait });
       } else {
-        console.warn('No iosPermissions', iosPermissions);
+        console.info('No iosPermissions', iosPermissions);
       }
     } catch (e) {
-      console.warn('FAILED WITH', e);
+      console.info('FAILED WITH', e);
       // Ignore any exceptions during the action
     }
 
@@ -1533,21 +1532,21 @@ export class DeviceWrapper implements SharedDeviceInterface {
     return isDeviceAndroid(this.device);
   }
 
-  private toIOS(): IOSDeviceInterface {
+  private toIOS(): XCUITestDriver {
     if (!this.isIOS()) {
       throw new Error('Not an ios device');
     }
-    return this.device as unknown as IOSDeviceInterface;
+    return this.device as unknown as XCUITestDriver;
   }
 
-  private toAndroid(): AndroidDeviceInterface {
+  private toAndroid(): AndroidUiautomator2Driver {
     if (!this.isAndroid()) {
       throw new Error('Not an android device');
     }
-    return this.device as unknown as AndroidDeviceInterface;
+    return this.device as unknown as AndroidUiautomator2Driver;
   }
 
-  private toShared(): SharedDeviceInterface {
-    return this.device as unknown as SharedDeviceInterface;
+  private toShared(): AndroidUiautomator2Driver & XCUITestDriver {
+    return this.device as unknown as AndroidUiautomator2Driver & XCUITestDriver;
   }
 }

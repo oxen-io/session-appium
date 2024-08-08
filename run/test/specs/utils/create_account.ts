@@ -17,7 +17,10 @@ export const newUser = async (
   // Click continue on session Id creation
   await device.clickOnByAccessibilityID('Continue');
   // Input username
-  await device.inputText('accessibility id', 'Enter display name', userName);
+  await device.inputText(userName, {
+    strategy: 'accessibility id',
+    selector: 'Enter display name',
+  });
   // Click continue
   await device.clickOnByAccessibilityID('Continue');
   // Choose message notification options
@@ -26,7 +29,7 @@ export const newUser = async (
   // Select Continue to save notification settings
   await device.clickOnByAccessibilityID('Continue');
   // Need to add Don't allow notifications dismiss here
-  // await device.checkPermissions();
+  await device.checkPermissions(`Allow`);
   // Click on 'continue' button to open recovery phrase modal
   await device.waitForTextElementToBePresent({
     strategy: 'accessibility id',

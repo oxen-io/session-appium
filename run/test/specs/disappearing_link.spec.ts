@@ -23,7 +23,10 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType) {
   // await device1.navigateBack(platform);
 
   // Send a link
-  await device1.inputText('accessibility id', 'Message input box', testLink);
+  await device1.inputText(testLink, {
+    strategy: 'accessibility id',
+    selector: 'Message input box',
+  });
   await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message sent status: Sent',
@@ -34,7 +37,10 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType) {
   // No preview on first send
   await device1.clickOnByAccessibilityID('Send message button');
   // Send again for image
-  await device1.inputText('accessibility id', 'Message input box', testLink);
+  await device1.inputText(testLink, {
+    strategy: 'accessibility id',
+    selector: 'Message input box',
+  });
   await sleepFor(500);
   await device1.clickOnByAccessibilityID('Send message button');
   // Make sure image preview is available in device 2
@@ -74,7 +80,10 @@ async function disappearingLinkMessage1o1Android(platform: SupportedPlatformsTyp
   await setDisappearingMessage(platform, device1, ['1:1', 'Disappear after send option'], device2);
   // await device1.navigateBack(platform);
   // Send a link
-  await device1.inputText('accessibility id', 'Message input box', testLink);
+  await device1.inputText(testLink, {
+    strategy: 'accessibility id',
+    selector: 'Message input box',
+  });
   // Accept dialog for link preview
   await device1.clickOnByAccessibilityID('Enable');
   // No preview on first send
@@ -85,7 +94,10 @@ async function disappearingLinkMessage1o1Android(platform: SupportedPlatformsTyp
     maxWait: 20000,
   });
   // Send again for image
-  await device1.inputText('accessibility id', 'Message input box', testLink);
+  await device1.inputText(testLink, {
+    strategy: 'accessibility id',
+    selector: 'Message input box',
+  });
   await sleepFor(100);
   await device1.clickOnByAccessibilityID('Send message button');
   // Make sure image preview is available in device 2

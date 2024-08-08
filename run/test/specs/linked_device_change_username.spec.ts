@@ -1,6 +1,10 @@
+import { bothPlatformsIt } from '../../types/sessionIt';
+import { ApplyChanges, TickButton, Username } from './locators';
 import { sleepFor, runOnlyOnAndroid, runOnlyOnIOS } from './utils';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, openAppTwoDevices, closeApp } from './utils/open_app';
+
+bothPlatformsIt('Change username linked device', changeUsernameLinkedDevice);
 
 async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
   // Open server and two devices
@@ -13,12 +17,10 @@ async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
   // Select username
   await device1.clickOnByAccessibilityID('Username');
   await sleepFor(100);
-  await device1.deleteText('Username');
-  await device1.inputText('accessibility id', 'Username', newUsername);
+  await device1.deleteText(new Username(device1));
+  await device1.inputText(newUsername, new Username(device1));
   // Select apply
-  await runOnlyOnAndroid(platform, () => device1.clickOnByAccessibilityID('Apply'));
-  await runOnlyOnIOS(platform, () => device1.clickOnByAccessibilityID('Done'));
-
+  await device1.clickOnElementAll(new TickButton(device1));
   // Check on linked device if name has updated
   await device2.clickOnByAccessibilityID('User settings');
   await runOnlyOnAndroid(platform, () => device2.navigateBack(platform));

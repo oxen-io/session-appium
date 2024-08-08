@@ -55,14 +55,14 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
       strategy: 'accessibility id',
       selector: 'Blocked banner',
     });
-    console.warn(`${userB.userName}` + ' has been blocked');
-  } else console.warn('Blocked banner not found');
+    console.info(`${userB.userName}` + ' has been blocked');
+  } else console.info('Blocked banner not found');
   // Unblock userB
   // Click on alert to unblock
   await device1.clickOnByAccessibilityID('Blocked banner');
   // on ios there is a confirm unblock alert, need to click 'unblock'
   await runOnlyOnIOS(platform, () => device1.clickOnByAccessibilityID('Unblock'));
-  console.warn(`${userB.userName}} has been unblocked`);
+  console.info(`${userB.userName}} has been unblocked`);
   // Look for alert (shouldn't be there)
   await device1.hasElementBeenDeleted({
     strategy: 'accessibility id',

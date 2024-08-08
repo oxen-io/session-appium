@@ -19,7 +19,7 @@ async function groupCreationandNameChangeLinkedDeviceiOS(platform: SupportedPlat
   ]);
   const testGroupName = 'Linked device group';
   const newGroupName = 'New group name';
-  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
+  await createGroup(platform, device1, userA, device3, userB, device4, userC, testGroupName);
   // Test that group has loaded on linked device
   await device2.clickOnElementAll({
     strategy: 'accessibility id',
@@ -36,7 +36,10 @@ async function groupCreationandNameChangeLinkedDeviceiOS(platform: SupportedPlat
   // click on group name to change it
   await device1.clickOnByAccessibilityID('Group name');
   // Type in new name
-  await device1.inputText('accessibility id', 'Group name text field', newGroupName);
+  await device1.inputText(newGroupName, {
+    strategy: 'accessibility id',
+    selector: 'Group name text field',
+  });
   // Confirm change (tick on android/ first done on ios)
   await device1.clickOnByAccessibilityID('Accept name change');
   // Apply changes (Apply on android/ second done on ios)
@@ -93,7 +96,7 @@ async function groupCreationandNameChangeLinkedDeviceAndroid(platform: Supported
   // click on group name to change it
   await device1.clickOnByAccessibilityID('Group name');
   // Type in new name
-  await device1.inputText('accessibility id', 'Group name', newGroupName);
+  await device1.inputText(newGroupName, { strategy: 'accessibility id', selector: 'Group name' });
   // Confirm change (tick on android/ first done on ios)
   await device1.clickOnByAccessibilityID('Accept name change');
   // Apply changes (Apply on android/ second done on ios)

@@ -1,9 +1,9 @@
-import { XPATHS } from '../../constants';
+import { ANDROID_XPATHS } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { sleepFor } from './utils';
 import { parseDataImage } from './utils/check_colour';
 import { linkedDevice } from './utils/link_device';
-import { SupportedPlatformsType, openAppTwoDevices, closeApp } from './utils/open_app';
+import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 import { runScriptAndLog } from './utils/utilities';
 
 iosIt('Avatar restored', avatarRestorediOS);
@@ -106,7 +106,7 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
   // Browse button
   await device1.clickOnElementAll({
     strategy: 'xpath',
-    selector: XPATHS.BROWSE_BUTTON,
+    selector: ANDROID_XPATHS.BROWSE_BUTTON,
   });
   // Check if permissions need to be enabled
   // Check if image is already on device

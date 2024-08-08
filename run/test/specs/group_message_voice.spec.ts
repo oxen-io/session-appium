@@ -1,6 +1,5 @@
-import { XPATHS } from '../../constants';
+import { ANDROID_XPATHS } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
@@ -72,7 +71,7 @@ async function sendVoiceMessageGroupAndroid(platform: SupportedPlatformsType) {
   // Select voice message button to activate recording state
   await device1.longPress('New voice message');
   await device1.clickOnByAccessibilityID('Continue');
-  await device1.clickOnElementXPath(XPATHS.VOICE_TOGGLE);
+  await device1.clickOnElementXPath(ANDROID_XPATHS.VOICE_TOGGLE);
   await device1.pressAndHold('New voice message');
   // Check device 2 and 3 for voice message from user A
   await Promise.all([

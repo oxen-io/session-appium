@@ -22,9 +22,9 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID('Username');
   await sleepFor(500);
   await device1.clickOnByAccessibilityID('Username');
-  await device1.deleteText('Username');
+  await device1.deleteText({ strategy: 'accessibility id', selector: 'Username' });
   // Type in nickname
-  await device1.inputText('accessibility id', 'Username', nickName);
+  await device1.inputText(nickName, { strategy: 'accessibility id', selector: 'Username' });
   // Click apply/done
   await device1.clickOnByAccessibilityID('Done');
   // Check it's changed in heading also
@@ -43,14 +43,14 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   // Click on edit
   await device1.clickOnByAccessibilityID('Username');
   // Empty username input
-  await device1.deleteText('Username');
-  await device1.inputText('accessibility id', 'Username', ' ');
+  await device1.deleteText({ strategy: 'accessibility id', selector: 'Username' });
+  await device1.inputText(' ', { strategy: 'accessibility id', selector: 'Username' });
   await await device1.clickOnByAccessibilityID('Done');
   // Check in conversation header
   await device1.navigateBack(platform);
   // await sleepFor(500);
   const revertedNickname = await device1.grabTextFromAccessibilityId('Conversation header name');
-  console.warn(`revertedNickname:` + revertedNickname);
+  console.info(`revertedNickname:` + revertedNickname);
   if (revertedNickname !== userB.userName) {
     throw new Error(`revertedNickname doesn't match username`);
   }
@@ -63,6 +63,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
 
 async function setNicknameAndroid(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
+
   const [userA, userB] = await Promise.all([
     newUser(device1, 'Alice', platform),
     newUser(device2, 'Bob', platform),
@@ -78,7 +79,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Select username to edit
   await device1.clickOnByAccessibilityID('Edit user nickname');
   // Type in nickname
-  await device1.inputText('accessibility id', 'Username', nickName);
+  await device1.inputText(nickName, { strategy: 'accessibility id', selector: 'Username' });
   // Click on tick button
   await device1.clickOnByAccessibilityID('Apply');
   // CLick out of pop up

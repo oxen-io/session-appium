@@ -20,8 +20,7 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // Navigate back to conversation list
-  await runOnlyOnAndroid(platform, () => device1.clickOnByAccessibilityID('Navigate up'));
-  await runOnlyOnIOS(platform, () => device1.clickOnByAccessibilityID('Back'));
+  await device1.navigateBack(platform);
   // on ios swipe left on conversation
   await runOnlyOnAndroid(platform, () => device1.longPressConversation(userB.userName));
   await runOnlyOnIOS(platform, () => device1.swipeLeft('Conversation list item', userB.userName));
