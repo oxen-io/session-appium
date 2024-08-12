@@ -13,6 +13,7 @@ export default defineConfig({
   testIgnore: '*.js',
   outputDir: './tests/automation/test-results',
   retries: 1,
+  globalSetup: './globalSetup.ts',
   // process.env.PLAYWRIGHT_RETRIES_COUNT
   //   ? toNumber(process.env.PLAYWRIGHT_RETRIES_COUNT)
   //   : 0,

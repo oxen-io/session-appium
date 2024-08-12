@@ -19,6 +19,7 @@ import { linkedDevice } from './link_device';
 import { newUser } from './create_account';
 import { User } from '../../../types/testing';
 import { newContact } from './create_contact';
+import { cleanPermissions } from './before_test_setup';
 
 const APPIUM_PORT = 4728;
 export const APPIUM_IOS_PORT = 8110;
@@ -284,54 +285,8 @@ const openiOSApp = async (
   const capabilities = getIosCapabilities(actualCapabilitiesIndex as CapabilitiesIndexType);
   const udid = capabilities.alwaysMatch['appium:udid'] as string;
 
-  let wrappedDevice: DeviceWrapper | null = null;
-  const maxRetries = 3;
-  let retries = 0;
-
-  while (retries < maxRetries) {
-    try {
-      const device: XCUITestDriver = new XCUITestDriver(opts);
-      wrappedDevice = new DeviceWrapper(device, udid);
-
-      await wrappedDevice.createSession(capabilities);
-
-      await wrappedDevice.modalPopup({
-        strategy: 'xpath',
-        selector: `//XCUIElementTypeAlert//*//XCUIElementTypeButton`,
-        maxWait: 500,
-      });
-
-      await runScriptAndLog(
-        `xcrun simctl privacy ${udid} reset all com.loki-project.loki-messenger`,
-        true
-      );
-
-      // Check if the "Create account button" is present
-      const createAccountButtonExists = await wrappedDevice.doesElementExist({
-        strategy: 'accessibility id',
-        selector: 'Create account button',
-        maxWait: 5000, // Wait up to 5 seconds for the button to appear
-      });
-
-      if (createAccountButtonExists) {
-        return { device: wrappedDevice };
-      } else {
-        console.info('Create account button not found. Retrying...');
-        retries++;
-        await wrappedDevice.deleteSession(); // Close the session before retrying
-      }
-    } catch (error) {
-      console.info('Error opening iOS app:', error);
-      retries++;
-      if (wrappedDevice) {
-        await wrappedDevice.deleteSession(); // Close the session in case of an error
-      }
-    }
-  }
-
-  throw new Error(
-    'Failed to open the iOS app and find the Create account button after multiple retries.'
-  );
+  const { device: wrappedDevice } = await cleanPermissions(opts, udid, capabilities);
+  return { device: wrappedDevice };
 };
 
 export const closeApp = async (

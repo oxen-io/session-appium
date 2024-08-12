@@ -1,24 +1,11 @@
-// import { DeviceWrapper } from "../../types/DeviceWrapper";
-// import { androidIt, iosIt } from "../../types/sessionIt";
-// import { sleepFor } from "./utils";
-// import { newUser } from "./utils/create_account";
-// import { linkedDevice } from "./utils/link_device";
-
-import { androidIt } from '../../types/sessionIt';
+import { androidIt, iosIt } from '../../types/sessionIt';
 import { Username } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
-import { SupportedPlatformsType, openAppOnPlatformSingleDevice, closeApp } from './utils/open_app';
+import { SupportedPlatformsType, closeApp, openAppOnPlatformSingleDevice } from './utils/open_app';
 
-// import {
-//   closeApp,
-//   openAppOnPlatformSingleDevice,
-//   openAppTwoDevices,
-//   SupportedPlatformsType,
-// } from "./utils/open_app";
-
-// iosIt("Tiny test", tinyTest);
-androidIt('Tiny test', tinyTest);
+iosIt('Tiny test', tinyTest, true);
+androidIt('Tiny test', tinyTest, true);
 
 async function tinyTest(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
