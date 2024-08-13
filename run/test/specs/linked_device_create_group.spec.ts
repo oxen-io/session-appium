@@ -5,10 +5,10 @@ import { createGroup } from './utils/create_group';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppFourDevices } from './utils/open_app';
 
-iosIt('Create group and change name syncs', groupCreationandNameChangeLinkedDeviceiOS);
-androidIt('Create group and change name syncs', groupCreationandNameChangeLinkedDeviceAndroid);
+iosIt('Create group and change name syncs', linkedGroupiOS);
+androidIt('Create group and change name syncs', linkedGroupAndroid);
 
-async function groupCreationandNameChangeLinkedDeviceiOS(platform: SupportedPlatformsType) {
+async function linkedGroupiOS(platform: SupportedPlatformsType) {
   const { device1, device2, device3, device4 } = await openAppFourDevices(platform);
 
   const userA = await linkedDevice(device1, device2, 'Alice', platform);
@@ -68,7 +68,7 @@ async function groupCreationandNameChangeLinkedDeviceiOS(platform: SupportedPlat
   await closeApp(device1, device2, device3, device4);
 }
 
-async function groupCreationandNameChangeLinkedDeviceAndroid(platform: SupportedPlatformsType) {
+async function linkedGroupAndroid(platform: SupportedPlatformsType) {
   const { device1, device2, device3, device4 } = await openAppFourDevices(platform);
 
   const userA = await linkedDevice(device1, device4, 'Alice', platform);

@@ -42,19 +42,6 @@ const emulator6Udid = 'emulator-5564';
 const emulator7Udid = 'emulator-5566';
 const emulator8Udid = 'emulator-5568';
 
-const physicalDevice1Udid = '99251FFAZ000TP';
-const physicalDevice2Udid = 'SDEDU20311000793';
-
-export const physicalDeviceCapabilities1: AppiumCapabilities = {
-  ...sharedCapabilities,
-  'appium:udid': physicalDevice1Udid,
-};
-
-export const physicalDeviceCapabilities2: AppiumCapabilities = {
-  ...sharedCapabilities,
-  'appium:udid': physicalDevice2Udid,
-};
-
 const udids = [
   emulator1Udid,
   emulator2Udid,
@@ -97,14 +84,6 @@ function getAllCaps() {
     emulatorCapabilities7,
     emulatorCapabilities8,
   ];
-  const physicalDeviceCaps = [physicalDeviceCapabilities1, physicalDeviceCapabilities2];
-  const allowPhysicalDevice = !isNil(process.env.ALLOW_PHYSICAL_DEVICES);
-
-  const allCaps = [...physicalDeviceCaps, ...emulatorCaps];
-
-  if (allowPhysicalDevice) {
-    return allCaps;
-  }
   return emulatorCaps;
 }
 

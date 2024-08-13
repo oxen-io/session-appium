@@ -51,49 +51,31 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
       }),
     ]);
   }
-  // Wait for 10 seconds
+  // Wait for 30 seconds
   await sleepFor(30000);
   // Check if GIF has been deleted on both devices
   if (platform === 'ios') {
-    await Promise.all([
-      device1.hasElementBeenDeleted({
-        strategy: 'accessibility id',
-        selector: 'Message body',
-        maxWait: 1000,
-        text: testMessage,
-      }),
-      device2.hasElementBeenDeleted({
-        strategy: 'accessibility id',
-        selector: 'Message body',
-        maxWait: 1000,
-        text: testMessage,
-      }),
-      device3.hasElementBeenDeleted({
-        strategy: 'accessibility id',
-        selector: 'Message body',
-        maxWait: 1000,
-        text: testMessage,
-      }),
-    ]);
+    await Promise.all(
+      [device1, device2, device3].map(device =>
+        device.hasElementBeenDeleted({
+          strategy: 'accessibility id',
+          selector: 'Message body',
+          maxWait: 1000,
+          text: testMessage,
+        })
+      )
+    );
   }
   if (platform === 'android') {
-    await Promise.all([
-      device1.hasElementBeenDeleted({
-        strategy: 'accessibility id',
-        selector: 'Media message',
-        maxWait: 1000,
-      }),
-      device2.hasElementBeenDeleted({
-        strategy: 'accessibility id',
-        selector: 'Media message',
-        maxWait: 1000,
-      }),
-      device3.hasElementBeenDeleted({
-        strategy: 'accessibility id',
-        selector: 'Media message',
-        maxWait: 1000,
-      }),
-    ]);
+    await Promise.all(
+      [device1, device2, device3].map(device =>
+        device.hasElementBeenDeleted({
+          strategy: 'accessibility id',
+          selector: 'Media message',
+          maxWait: 1000,
+        })
+      )
+    );
   }
 
   await closeApp(device1, device2, device3);

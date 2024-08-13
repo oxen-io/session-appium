@@ -32,8 +32,7 @@ async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
   if (changedUsername === newUsername) {
     console.log(`Username changed from ${userA.userName} to `, changedUsername);
   } else {
-    // throw new Error("Username change unsuccessful")
-    console.log('changed: ', changedUsername, 'new: ', newUsername);
+    throw new Error('Username change unsuccessful');
   }
 
   await closeApp(device1, device2);

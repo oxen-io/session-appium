@@ -28,3 +28,4 @@ to do
 .env
 playwright.config.js
 test-results/
+output

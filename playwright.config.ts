@@ -11,16 +11,17 @@ export default defineConfig({
   reporter: [useSessionReporter ? ['./sessionReporter.ts'] : ['list']],
   testDir: './run/test/specs',
   testIgnore: '*.js',
-  outputDir: './tests/automation/test-results',
-  retries: 1,
+  // outputDir: './tests/automation/test-results',
+  retries: process.env.PLAYWRIGHT_RETRIES_COUNT
+    ? toNumber(process.env.PLAYWRIGHT_RETRIES_COUNT)
+    : 0,
   globalSetup: './globalSetup.ts',
-  // process.env.PLAYWRIGHT_RETRIES_COUNT
-  //   ? toNumber(process.env.PLAYWRIGHT_RETRIES_COUNT)
-  //   : 0,
   repeatEach: process.env.PLAYWRIGHT_REPEAT_COUNT
     ? toNumber(process.env.PLAYWRIGHT_REPEAT_COUNT)
     : 0,
-  workers: 1,
+  workers: process.env.PLAYWRIGHT_WORKERS_COUNT
+    ? toNumber(process.env.PLAYWRIGHT_WORKERS_COUNT)
+    : 0,
   reportSlowTests: null,
   fullyParallel: true, // otherwise, tests in the same file are not run in parallel
 });

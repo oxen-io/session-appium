@@ -1,5 +1,5 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { Username } from './locators';
+import { TickButton, Username } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppOnPlatformSingleDevice } from './utils/open_app';
@@ -25,20 +25,8 @@ async function tinyTest(platform: SupportedPlatformsType) {
   if (changedUsername === newUsername) {
     console.log('Username change successful');
   }
-  if (changedUsername === userA.userName) {
-    console.log('Username is still ', userA.userName);
-  }
-  if (changedUsername === 'Username') {
-    console.log('Username is not picking up text but using access id text', changedUsername);
-  } else {
-    console.log('Username is not found`');
-  }
   // select tick
-  if (platform === 'android') {
-    device.clickOnByAccessibilityID('Apply');
-  } else {
-    device.clickOnByAccessibilityID('Done');
-  }
+  await device.clickOnElementAll(new TickButton(device));
   // verify new username
 
   await closeApp(device);
