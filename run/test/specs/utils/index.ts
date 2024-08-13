@@ -1,13 +1,13 @@
 import { sleepFor } from './sleep_for';
-import { saveSessionIDIos, getAccountID } from './get_session_id';
+import { saveSessionIdIos, getAccountId } from './get_account_id';
 import { runOnlyOnIOS, runOnlyOnAndroid } from './run_on';
 
 import { clickOnCoordinates } from './click_by_coordinates';
 
 export {
   sleepFor,
-  saveSessionIDIos,
-  getAccountID,
+  saveSessionIdIos,
+  getAccountId,
   runOnlyOnIOS,
   runOnlyOnAndroid,
   clickOnCoordinates,

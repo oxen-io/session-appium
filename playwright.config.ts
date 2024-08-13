@@ -21,7 +21,7 @@ export default defineConfig({
     : 0,
   workers: process.env.PLAYWRIGHT_WORKERS_COUNT
     ? toNumber(process.env.PLAYWRIGHT_WORKERS_COUNT)
-    : 0,
+    : 1,
   reportSlowTests: null,
   fullyParallel: true, // otherwise, tests in the same file are not run in parallel
 });
