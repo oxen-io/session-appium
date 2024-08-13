@@ -1,4 +1,4 @@
-import { ExternalDriver } from "@appium/types/build/lib/driver";
+import { ExternalDriver } from '@appium/types/build/lib/driver';
 
 // typings comes from :
 //    node_modules/@appium/types/build/lib/driver.d.ts
@@ -13,10 +13,4 @@ export type AppiumNextDeviceType = {
 
   // not sure at all
   touchMove(x: number, y: number): Promise<void>;
-};
-
-export type AppiumNextElementType = {
-  value(arg0: string): unknown;
-  isSelected(): unknown;
-  ELEMENT: string;
 };

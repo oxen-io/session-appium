@@ -1,36 +1,32 @@
-import { androidIt, iosIt } from "../../types/sessionIt";
-import { InteractionPoints } from "../../types/testing";
-import { sleepFor, clickOnCoordinates } from "./utils";
-import { newUser } from "./utils/create_account";
-import { newContact } from "./utils/create_contact";
-import {
-  SupportedPlatformsType,
-  openAppTwoDevices,
-  closeApp,
-} from "./utils/open_app";
-import { runScriptAndLog } from "./utils/utilities";
+import { androidIt, iosIt } from '../../types/sessionIt';
+import { InteractionPoints } from '../../types/testing';
+import { sleepFor, clickOnCoordinates } from './utils';
+import { newUser } from './utils/create_account';
+import { newContact } from './utils/create_contact';
+import { SupportedPlatformsType, openAppTwoDevices, closeApp } from './utils/open_app';
+import { runScriptAndLog } from './utils/utilities';
 
-iosIt("Send document 1:1", sendDocumentIos);
-androidIt("Send document 1:1", sendDocumentAndroid);
+iosIt('Send document 1:1', sendDocumentIos);
+androidIt('Send document 1:1', sendDocumentAndroid);
 
 async function sendDocumentIos(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
+    newUser(device1, 'Alice', platform),
+    newUser(device2, 'Bob', platform),
   ]);
-  const testMessage = "Testing-document-1";
+  const testMessage = 'Testing-document-1';
   const replyMessage = `Replying to document from ${userA.userName}`;
-  const spongebobsBirthday = "199905010700.00";
+  const spongebobsBirthday = '199905010700.00';
   await newContact(platform, device1, userA, device2, userB);
 
-  await device1.clickOnByAccessibilityID("Attachments button");
+  await device1.clickOnByAccessibilityID('Attachments button');
   await sleepFor(100);
   await clickOnCoordinates(device1, InteractionPoints.DocumentKeyboardOpen);
-  await device1.modalPopup("Allow Full Access");
+  await device1.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
   const testDocument = await device1.doesElementExist({
-    strategy: "accessibility id",
-    selector: "test_file, pdf",
+    strategy: 'accessibility id',
+    selector: 'test_file, pdf',
     text: undefined,
     maxWait: 1000,
   });
@@ -48,29 +44,32 @@ async function sendDocumentIos(platform: SupportedPlatformsType) {
     );
   }
   await sleepFor(100);
-  await device1.clickOnByAccessibilityID("test_file, pdf");
+  await device1.clickOnByAccessibilityID('test_file, pdf');
   await sleepFor(500);
-  await device1.clickOnByAccessibilityID("Text input box");
-  await device1.inputText("accessibility id", "Text input box", testMessage);
-  await device1.clickOnByAccessibilityID("Send button");
-  await device2.clickOnByAccessibilityID("Untrusted attachment message");
+  await device1.clickOnByAccessibilityID('Text input box');
+  await device1.inputText(testMessage, {
+    strategy: 'accessibility id',
+    selector: 'Text input box',
+  });
+  await device1.clickOnByAccessibilityID('Send button');
+  await device2.clickOnByAccessibilityID('Untrusted attachment message');
   await sleepFor(500);
   // User B - Click on 'download'
-  await device2.clickOnByAccessibilityID("Download media");
+  await device2.clickOnByAccessibilityID('Download media');
 
   // Reply to message
 
   await device2.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
+    strategy: 'accessibility id',
+    selector: 'Message body',
     text: testMessage,
   });
   await device2.longPressMessage(testMessage);
-  await device2.clickOnByAccessibilityID("Reply to message");
+  await device2.clickOnByAccessibilityID('Reply to message');
   await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
+    strategy: 'accessibility id',
+    selector: 'Message body',
     text: replyMessage,
   });
   // Close app and server
@@ -81,24 +80,24 @@ async function sendDocumentAndroid(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
 
   const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
+    newUser(device1, 'Alice', platform),
+    newUser(device2, 'Bob', platform),
   ]);
   const replyMessage = `Replying to document from ${userA.userName}`;
   await newContact(platform, device1, userA, device2, userB);
   await device1.sendDocument(platform);
-  await device2.clickOnByAccessibilityID("Untrusted attachment message", 7000);
+  await device2.clickOnByAccessibilityID('Untrusted attachment message', 7000);
   await sleepFor(500);
   // User B - Click on 'download'
-  await device2.clickOnByAccessibilityID("Download media");
+  await device2.clickOnByAccessibilityID('Download media');
   // Reply to message
   // await sleepFor(5000);
-  await device2.longPress("Document");
-  await device2.clickOnByAccessibilityID("Reply to message");
+  await device2.longPress('Document');
+  await device2.clickOnByAccessibilityID('Reply to message');
   await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "Message body",
+    strategy: 'accessibility id',
+    selector: 'Message body',
     text: replyMessage,
   });
   // Close app and server

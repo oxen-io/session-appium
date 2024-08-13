@@ -1,7 +1,7 @@
-import { test } from "@playwright/test";
-import { SupportedPlatformsType } from "../test/specs/utils/open_app";
-import { DeviceWrapper } from "./DeviceWrapper";
-import { SetupData, User } from "./testing";
+import { test } from '@playwright/test';
+import { SupportedPlatformsType } from '../test/specs/utils/open_app';
+import { DeviceWrapper } from './DeviceWrapper';
+import { SetupData, User } from './testing';
 
 // async function itWithBufferHandling(testNameWithoutPlatform: string, platform: SupportedPlatformsType, testToRun: () => Promise<void>) {
 //   try {
@@ -26,7 +26,7 @@ export function androidIt(
   } else {
     test(testName, async () => {
       console.info(`\n\n==========> Running "${testName}"\n\n`);
-      await testToRun("android");
+      await testToRun('android');
     });
   }
 }
@@ -46,11 +46,9 @@ export function iosIt(
     test(testName, async () => {
       console.info(`\n\n==========> Running "${testName}"\n\n`);
       const startTime = Date.now();
-      await testToRun("ios");
+      await testToRun('ios');
       const endTime = Date.now();
-      console.info(
-        `\n\n==========> Finished "${testName}" in ${endTime - startTime}ms\n\n`
-      );
+      console.info(`\n\n==========> Finished "${testName}" in ${endTime - startTime}ms\n\n`);
     });
   }
 }
@@ -80,10 +78,10 @@ export function bothPlatformsIt(
   shouldSkip: boolean = false
 ) {
   // Define test for Android
-  mobileIt("android", title, testToRun, shouldSkip);
+  mobileIt('android', title, testToRun, shouldSkip);
 
   // Define test for iOS
-  mobileIt("ios", title, testToRun, shouldSkip);
+  mobileIt('ios', title, testToRun, shouldSkip);
 }
 
 // export function iosItWithSetup(

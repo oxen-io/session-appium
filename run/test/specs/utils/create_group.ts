@@ -1,8 +1,8 @@
-import { runOnlyOnAndroid, runOnlyOnIOS } from ".";
-import { DeviceWrapper } from "../../../types/DeviceWrapper";
-import { Group, GroupName, User } from "../../../types/testing";
-import { newContact } from "./create_contact";
-import { SupportedPlatformsType } from "./open_app";
+import { runOnlyOnAndroid, runOnlyOnIOS } from '.';
+import { DeviceWrapper } from '../../../types/DeviceWrapper';
+import { Group, GroupName, User } from '../../../types/testing';
+import { newContact } from './create_contact';
+import { SupportedPlatformsType } from './open_app';
 
 export const createGroup = async (
   platform: SupportedPlatformsType,
@@ -28,26 +28,26 @@ export const createGroup = async (
   // Exit conversation back to list
   await device3.navigateBack(platform);
   // Click plus button
-  await device1.clickOnByAccessibilityID("New conversation button");
+  await device1.clickOnByAccessibilityID('New conversation button');
   // Select Closed Group option
-  await device1.clickOnByAccessibilityID("Create group");
+  await device1.clickOnByAccessibilityID('Create group');
   // Type in group name
-  await device1.inputText("accessibility id", "Group name input", userName);
+  await device1.inputText(userName, { strategy: 'accessibility id', selector: 'Group name input' });
   // Select User B and User C
-  await device1.selectByText("Contact", userTwo.userName);
-  await device1.selectByText("Contact", userThree.userName);
+  await device1.selectByText('Contact', userTwo.userName);
+  await device1.selectByText('Contact', userThree.userName);
   // Select tick
-  await device1.clickOnByAccessibilityID("Create group");
+  await device1.clickOnByAccessibilityID('Create group');
   // Check for empty state on ios
   await runOnlyOnIOS(platform, () =>
     device1.waitForTextElementToBePresent({
-      strategy: "accessibility id",
-      selector: "Empty list",
+      strategy: 'accessibility id',
+      selector: 'Empty list',
       maxWait: 5000,
     })
   );
   await runOnlyOnAndroid(platform, () =>
-    device1.waitForControlMessageToBePresent("You created a new group.", 10000)
+    device1.waitForControlMessageToBePresent('You created a new group.', 10000)
   );
   // Send message from User A to group to verify all working
   await device1.sendMessage(userAMessage);

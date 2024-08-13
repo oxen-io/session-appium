@@ -1,31 +1,27 @@
-import { androidIt, iosIt } from "../../types/sessionIt";
-import { sleepFor } from "./utils";
-import { parseDataImage } from "./utils/check_colour";
-import { newUser } from "./utils/create_account";
-import {
-  SupportedPlatformsType,
-  closeApp,
-  openAppOnPlatformSingleDevice,
-} from "./utils/open_app";
-import { runScriptAndLog } from "./utils/utilities";
+import { androidIt, iosIt } from '../../types/sessionIt';
+import { sleepFor } from './utils';
+import { parseDataImage } from './utils/check_colour';
+import { newUser } from './utils/create_account';
+import { SupportedPlatformsType, closeApp, openAppOnPlatformSingleDevice } from './utils/open_app';
+import { runScriptAndLog } from './utils/utilities';
 
-iosIt("Change profile picture", changeProfilePictureiOS);
-androidIt("Change profile picture", changeProfilePictureAndroid);
+iosIt('Change profile picture', changeProfilePictureiOS);
+androidIt('Change profile picture', changeProfilePictureAndroid);
 
 async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
-  const spongebobsBirthday = "199805010700.00";
+  const spongebobsBirthday = '199805010700.00';
   // Create new user
-  await newUser(device, "Alice", platform);
+  await newUser(device, 'Alice', platform);
   // Click on settings/avatar
-  await device.clickOnByAccessibilityID("User settings");
+  await device.clickOnByAccessibilityID('User settings');
   await sleepFor(100);
-  await device.clickOnByAccessibilityID("User settings");
+  await device.clickOnByAccessibilityID('User settings');
   // await device.clickOnByAccessibilityID("Photo library");
-  await device.clickOnByAccessibilityID("Image picker");
-  await device.modalPopup("Allow Full Access");
+  await device.clickOnByAccessibilityID('Image picker');
+  await device.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
   const profilePicture = await device.doesElementExist({
-    strategy: "accessibility id",
+    strategy: 'accessibility id',
     selector: `Photo, 01 May 1998, 7:00 am`,
     maxWait: 2000,
   });
@@ -36,7 +32,7 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
 
     await runScriptAndLog(
       `xcrun simctl addmedia ${
-        (device as { udid?: string }).udid || ""
+        (device as { udid?: string }).udid || ''
       } 'run/test/specs/media/profile_picture.jpg'`,
       true
     );
@@ -45,20 +41,20 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
   // Click on Photo library
   await sleepFor(100);
   await device.clickOnByAccessibilityID(`Photo, 01 May 1998, 7:00 am`);
-  await device.clickOnByAccessibilityID("Done");
+  await device.clickOnByAccessibilityID('Done');
 
-  await device.clickOnByAccessibilityID("Save");
+  await device.clickOnByAccessibilityID('Save');
   // Take screenshot
   const el = await device.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "User settings",
+    strategy: 'accessibility id',
+    selector: 'User settings',
   });
   await sleepFor(3000);
   const base64 = await device.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
-  console.log("RGB Value of pixel is:", pixelColor);
-  if (pixelColor === "ff382e") {
-    console.log("Colour is correct");
+  console.log('RGB Value of pixel is:', pixelColor);
+  if (pixelColor === 'ff382e') {
+    console.log('Colour is correct');
   } else {
     console.log("Colour isn't ff382e, it is: ", pixelColor);
   }
@@ -67,41 +63,41 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
 
 async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
-  const spongebobsBirthday = "199905010700.00";
-  const pixelHexColour = "cbfeff";
+  const spongebobsBirthday = '199905010700.00';
+  const pixelHexColour = 'cbfeff';
   // Create new user
-  await newUser(device, "Alice", platform);
+  await newUser(device, 'Alice', platform);
   // Click on settings/avatar
-  await device.clickOnByAccessibilityID("User settings");
+  await device.clickOnByAccessibilityID('User settings');
   // Click on Profile picture
-  await device.clickOnByAccessibilityID("User settings");
+  await device.clickOnByAccessibilityID('User settings');
   // Click on Photo library
   await device.clickOnElementAll({
-    strategy: "accessibility id",
-    selector: "Upload",
+    strategy: 'accessibility id',
+    selector: 'Upload',
   });
   await device.clickOnElementById(
-    "com.android.permissioncontroller:id/permission_allow_foreground_only_button"
+    'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
   );
   await sleepFor(1000);
   await device.clickOnElementAll({
-    strategy: "id",
-    selector: "android:id/text1",
-    text: "Media",
+    strategy: 'id',
+    selector: 'android:id/text1',
+    text: 'Media',
   });
   await sleepFor(500);
   // TO FIX COULDNT FIND MORE OPTIONS
   await device.clickOnElementAll({
-    strategy: "accessibility id",
-    selector: "More options",
+    strategy: 'accessibility id',
+    selector: 'More options',
   });
   await device.clickOnElementAll({
-    strategy: "xpath",
+    strategy: 'xpath',
     selector: `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout`,
   });
   // Select file
   const profilePicture = await device.doesElementExist({
-    strategy: "accessibility id",
+    strategy: 'accessibility id',
     selector: `profile_picture.jpg, 27.75 kB, May 2, 1999`,
     maxWait: 5000,
   });
@@ -117,22 +113,20 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
     );
   }
   await device.clickOnElementAll({
-    strategy: "accessibility id",
-    selector: "profile_picture.jpg, 27.75 kB, May 2, 1999",
+    strategy: 'accessibility id',
+    selector: 'profile_picture.jpg, 27.75 kB, May 2, 1999',
   });
-  await device.clickOnElementById(
-    "network.loki.messenger:id/crop_image_menu_crop"
-  );
+  await device.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop');
   const el = await device.waitForTextElementToBePresent({
-    strategy: "accessibility id",
-    selector: "User settings",
+    strategy: 'accessibility id',
+    selector: 'User settings',
     maxWait: 10000,
   });
   const base64 = await device.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
-  console.log("RGB Value of pixel is:", pixelColor);
+  console.log('RGB Value of pixel is:', pixelColor);
   if (pixelColor === pixelHexColour) {
-    console.log("Colour is correct on device 1");
+    console.log('Colour is correct on device 1');
   } else {
     console.log("Colour isn't cbfeff, it is: ", pixelColor);
   }

@@ -1,54 +1,43 @@
-import { DISAPPEARING_TIMES } from "../../constants";
-import { androidIt, iosIt } from "../../types/sessionIt";
-import { DisappearActions } from "../../types/testing";
-import { sleepFor } from "./utils";
-import { newUser } from "./utils/create_account";
-import { newContact } from "./utils/create_contact";
-import {
-  SupportedPlatformsType,
-  openAppTwoDevices,
-  closeApp,
-} from "./utils/open_app";
-import { setDisappearingMessage } from "./utils/set_disappearing_messages";
+import { DISAPPEARING_TIMES } from '../../constants';
+import { androidIt, iosIt } from '../../types/sessionIt';
+import { DisappearActions } from '../../types/testing';
+import { sleepFor } from './utils';
+import { newUser } from './utils/create_account';
+import { newContact } from './utils/create_contact';
+import { SupportedPlatformsType, openAppTwoDevices, closeApp } from './utils/open_app';
+import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-iosIt("Disappearing image message 1:1", disappearingImageMessage1o1Ios);
-androidIt("Disappearing image message 1:1", disappearingImageMessage1o1Android);
+iosIt('Disappearing image message 1:1', disappearingImageMessage1o1Ios);
+androidIt('Disappearing image message 1:1', disappearingImageMessage1o1Android);
 
-async function disappearingImageMessage1o1Ios(
-  platform: SupportedPlatformsType
-) {
+async function disappearingImageMessage1o1Ios(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const testMessage = "Testing disappearing messages for images";
+  const testMessage = 'Testing disappearing messages for images';
   // Create user A and user B
   const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
+    newUser(device1, 'Alice', platform),
+    newUser(device2, 'Bob', platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(
-    platform,
-    device1,
-    ["1:1", "Disappear after read option"],
-    device2
-  );
+  await setDisappearingMessage(platform, device1, ['1:1', 'Disappear after read option'], device2);
   // await device1.navigateBack(platform);
 
   await sleepFor(500);
   await device1.sendImage(platform, testMessage);
-  await device2.clickOnByAccessibilityID("Untrusted attachment message");
+  await device2.clickOnByAccessibilityID('Untrusted attachment message');
   // User B - Click on 'download'
-  await device2.clickOnByAccessibilityID("Download media", 5000);
+  await device2.clickOnByAccessibilityID('Download media', 5000);
   await sleepFor(30000);
   await Promise.all([
     device1.hasElementBeenDeleted({
-      strategy: "accessibility id",
-      selector: "Message body",
+      strategy: 'accessibility id',
+      selector: 'Message body',
       maxWait: 1000,
       text: testMessage,
     }),
     device2.hasElementBeenDeleted({
-      strategy: "accessibility id",
-      selector: "Message body",
+      strategy: 'accessibility id',
+      selector: 'Message body',
       maxWait: 1000,
       text: testMessage,
     }),
@@ -56,25 +45,18 @@ async function disappearingImageMessage1o1Ios(
   await closeApp(device1, device2);
 }
 
-async function disappearingImageMessage1o1Android(
-  platform: SupportedPlatformsType
-) {
+async function disappearingImageMessage1o1Android(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const testMessage = "Testing disappearing messages for images";
-  const mode: DisappearActions = "sent";
+  const testMessage = 'Testing disappearing messages for images';
+  const mode: DisappearActions = 'sent';
   // Create user A and user B
   const [userA, userB] = await Promise.all([
-    newUser(device1, "Alice", platform),
-    newUser(device2, "Bob", platform),
+    newUser(device1, 'Alice', platform),
+    newUser(device2, 'Bob', platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
 
-  await setDisappearingMessage(
-    platform,
-    device1,
-    ["1:1", "Disappear after send option"],
-    device2
-  );
+  await setDisappearingMessage(platform, device1, ['1:1', 'Disappear after send option'], device2);
   // TODO FIX CONTROL MESSAGES ON ANDROID
   // await device2.disappearingControlMessage(
   //   `${userA.userName} has set messages to disappear ${time} after they have been ${mode}.`
@@ -86,25 +68,25 @@ async function disappearingImageMessage1o1Android(
   await sleepFor(30000);
   await device1.sendImage(platform, testMessage);
   await device2.clickOnElementAll({
-    strategy: "accessibility id",
-    selector: "Untrusted attachment message",
+    strategy: 'accessibility id',
+    selector: 'Untrusted attachment message',
   });
   await device2.clickOnElementAll({
-    strategy: "accessibility id",
-    selector: "Download media",
+    strategy: 'accessibility id',
+    selector: 'Download media',
   });
   await sleepFor(60000);
 
   await Promise.all([
     device1.hasElementBeenDeleted({
-      strategy: "accessibility id",
-      selector: "Message body",
+      strategy: 'accessibility id',
+      selector: 'Message body',
       maxWait: 1000,
       text: testMessage,
     }),
     device2.hasElementBeenDeleted({
-      strategy: "accessibility id",
-      selector: "Message body",
+      strategy: 'accessibility id',
+      selector: 'Message body',
       maxWait: 1000,
       text: testMessage,
     }),

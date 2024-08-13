@@ -1,7 +1,7 @@
-import PNG from "png-js";
+import PNG from 'png-js';
 
 export async function parseDataImage(base64: string) {
-  const buffer = Buffer.from(base64, "base64");
+  const buffer = Buffer.from(base64, 'base64');
 
   const reader = new PNG(buffer);
   const { height, width } = reader;
@@ -11,15 +11,15 @@ export async function parseDataImage(base64: string) {
   const pxDataStart = (width * middleY + middleX) * 3;
   const pxDataEnd = pxDataStart + 3;
 
-  const px = await new Promise<Buffer>((resolve) => {
-    reader.decodePixels((decodedPx) => {
+  const px = await new Promise<Buffer>(resolve => {
+    reader.decodePixels(decodedPx => {
       resolve(decodedPx);
     });
   });
 
   const middlePx = px.buffer.slice(pxDataStart, pxDataEnd);
-  // console.warn("middlePx RGB: ", Buffer.from(middlePx).toString("hex"));
-  const pixelColor = Buffer.from(middlePx).toString("hex");
-  // console.warn("Middle x:", middleX, "middleY:", middleY, "width:", width);
+  // console.info("middlePx RGB: ", Buffer.from(middlePx).toString("hex"));
+  const pixelColor = Buffer.from(middlePx).toString('hex');
+  // console.info("Middle x:", middleX, "middleY:", middleY, "width:", width);
   return pixelColor;
 }

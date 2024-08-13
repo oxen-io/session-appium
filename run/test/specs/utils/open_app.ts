@@ -3,31 +3,28 @@ import {
   androidCapabilities,
   getAndroidCapabilities,
   getAndroidUdid,
-} from "./capabilities_android";
-import { CapabilitiesIndexType, getIosCapabilities } from "./capabilities_ios";
-import { installAppToDeviceName, runScriptAndLog } from "./utilities";
+} from './capabilities_android';
+import { CapabilitiesIndexType, getIosCapabilities } from './capabilities_ios';
+import { installAppToDeviceName, runScriptAndLog } from './utilities';
 
-import * as androidDriver from "appium-uiautomator2-driver";
-import * as iosDriver from 'appium-xcuitest-driver';
+import AndroidUiautomator2Driver from 'appium-uiautomator2-driver';
+import XCUITestDriver, { XCUITestDriverOpts } from 'appium-xcuitest-driver/build/lib/driver';
 
-import { DriverOpts } from "appium/build/lib/appium";
-import { DeviceWrapper } from "../../../types/DeviceWrapper";
-import {
-  getAdbFullPath,
-  getAvdManagerFullPath,
-  getEmulatorFullPath,
-} from "./binaries";
-import { sleepFor } from "./sleep_for";
-import { compact } from "lodash";
-import { linkedDevice } from "./link_device";
-import { newUser } from "./create_account";
-import { User } from "../../../types/testing";
-import { newContact } from "./create_contact";
+import { DriverOpts } from 'appium/build/lib/appium';
+import { DeviceWrapper } from '../../../types/DeviceWrapper';
+import { getAdbFullPath, getAvdManagerFullPath, getEmulatorFullPath } from './binaries';
+import { sleepFor } from './sleep_for';
+import { compact } from 'lodash';
+import { linkedDevice } from './link_device';
+import { newUser } from './create_account';
+import { User } from '../../../types/testing';
+import { newContact } from './create_contact';
+import { cleanPermissions } from './before_test_setup';
 
 const APPIUM_PORT = 4728;
 export const APPIUM_IOS_PORT = 8110;
 
-export type SupportedPlatformsType = "android" | "ios";
+export type SupportedPlatformsType = 'android' | 'ios';
 
 /* ******************Command to run Appium Server: *************************************
 ./node_modules/.bin/appium server --use-drivers=uiautomator2,xcuitest --port 8110 --use-plugins=execute-driver --allow-cors
@@ -44,14 +41,12 @@ export const createBasicTestEnvironment = async (
   closeApp(): Promise<void>;
 }> => {
   const [device1, device2, device3] = await openAppMultipleDevices(platform, 3);
-  const userA = await linkedDevice(device1, device3, "Alice", platform);
-  const userB = await newUser(device2, "Bob", platform);
+  const userA = await linkedDevice(device1, device3, 'Alice', platform);
+  const userB = await newUser(device2, 'Bob', platform);
   await newContact(platform, device1, userA, device2, userB);
   const closeApp = async (): Promise<void> => {
-    await Promise.all([
-      compact([device1, device2, device3]).map((d) => d.deleteSession()),
-    ]);
-    console.info("sessions closed");
+    await Promise.all([compact([device1, device2, device3]).map(d => d.deleteSession())]);
+    console.info('sessions closed');
   };
   return {
     devices: [device1, device2, device3],
@@ -61,12 +56,10 @@ export const createBasicTestEnvironment = async (
   };
 };
 
-export const setUp1o1TestEnvironment = async (
-  platform: SupportedPlatformsType
-) => {
+export const setUp1o1TestEnvironment = async (platform: SupportedPlatformsType) => {
   const [device1, device2, device3] = await openAppMultipleDevices(platform, 3);
-  const userA = await linkedDevice(device1, device3, "Alice", platform);
-  const userB = await newUser(device2, "Bob", platform);
+  const userA = await linkedDevice(device1, device3, 'Alice', platform);
+  const userB = await newUser(device2, 'Bob', platform);
   await newContact(platform, device1, userA, device2, userB);
 
   return { device1, device2, device3, userA, userB };
@@ -85,7 +78,7 @@ export const openAppMultipleDevices = async (
   const apps = await Promise.all(devicePromises);
 
   //  Map the result to return only the device objects
-  return apps.map((app) => app.device);
+  return apps.map(app => app.device);
 };
 
 const openAppOnPlatform = async (
@@ -94,10 +87,8 @@ const openAppOnPlatform = async (
 ): Promise<{
   device: DeviceWrapper;
 }> => {
-  console.warn("starting capabilitiesIndex", capabilitiesIndex, platform);
-  return platform === "ios"
-    ? openiOSApp(capabilitiesIndex)
-    : openAndroidApp(capabilitiesIndex);
+  console.info('starting capabilitiesIndex', capabilitiesIndex, platform);
+  return platform === 'ios' ? openiOSApp(capabilitiesIndex) : openAndroidApp(capabilitiesIndex);
 };
 
 export const openAppOnPlatformSingleDevice = async (
@@ -167,7 +158,7 @@ export const openAppFourDevices = async (
 
 async function createAndroidEmulator(emulatorName: string) {
   const createCmd = `echo "no" | ${getAvdManagerFullPath()} create avd --name ${emulatorName} -k 'system-images;android-31;google_apis;arm64-v8a' --force --skin pixel_5`;
-  console.warn(createCmd);
+  console.info(createCmd);
   await runScriptAndLog(createCmd);
   return emulatorName;
 }
@@ -176,21 +167,16 @@ async function startAndroidEmulator(emulatorName: string) {
   await runScriptAndLog(`echo "hw.lcd.density=440" >> ~/.android/avd/${emulatorName}.avd/config.ini
   `);
   const startEmulatorCmd = `${getEmulatorFullPath()} @${emulatorName} -no-snapshot`;
-  console.warn(`${startEmulatorCmd} & ; disown`);
+  console.info(`${startEmulatorCmd} & ; disown`);
   await runScriptAndLog(
     startEmulatorCmd // -netdelay none -no-snapshot -wipe-data
   );
 }
 
 async function isEmulatorRunning(emulatorName: string) {
-  const failedWith = await runScriptAndLog(
-    `${getAdbFullPath()} -s ${emulatorName} get-state;`
-  );
+  const failedWith = await runScriptAndLog(`${getAdbFullPath()} -s ${emulatorName} get-state;`);
 
-  return (
-    !failedWith ||
-    !(failedWith.includes("error") || failedWith.includes("offline"))
-  );
+  return !failedWith || !(failedWith.includes('error') || failedWith.includes('offline'));
 }
 
 async function waitForEmulatorToBeRunning(emulatorName: string) {
@@ -203,8 +189,7 @@ async function waitForEmulatorToBeRunning(emulatorName: string) {
   } while (Date.now() - start < 25000 && !found);
 
   if (!found) {
-    throw new Error("timedout waiting for emulator to start");
-    return;
+    throw new Error('timedout waiting for emulator to start');
   }
 
   start = Date.now();
@@ -214,7 +199,7 @@ async function waitForEmulatorToBeRunning(emulatorName: string) {
       `${getAdbFullPath()} -s  "${emulatorName}" shell getprop sys.boot_completed;`
     );
 
-    found = bootedOrNah.includes("1");
+    found = bootedOrNah.includes('1');
 
     await sleepFor(500);
   } while (Date.now() - start < 25000 && !found);
@@ -229,35 +214,26 @@ const openAndroidApp = async (
 }> => {
   const targetName = getAndroidUdid(capabilitiesIndex);
   const actualCapabilitiesIndex =
-    capabilitiesIndex + 4 * parseInt(process.env.TEST_PARALLEL_INDEX || "0");
+    capabilitiesIndex + 4 * parseInt(process.env.TEST_PARALLEL_INDEX || '0');
   if (isNaN(actualCapabilitiesIndex)) {
-    console.warn(
-      "actualCapabilities worker is not a number",
-      actualCapabilitiesIndex
-    );
+    console.info('actualCapabilities worker is not a number', actualCapabilitiesIndex);
   } else {
-    console.warn("actualCapabilities worker", actualCapabilitiesIndex);
+    console.info('actualCapabilities worker', actualCapabilitiesIndex);
   }
   const emulatorAlreadyRunning = await isEmulatorRunning(targetName);
-  console.warn("emulatorAlreadyRunning", targetName, emulatorAlreadyRunning);
+  console.info('emulatorAlreadyRunning', targetName, emulatorAlreadyRunning);
   if (!emulatorAlreadyRunning) {
     await createAndroidEmulator(targetName);
     void startAndroidEmulator(targetName);
   }
   await waitForEmulatorToBeRunning(targetName);
-  console.log(targetName, " emulator booted");
+  console.log(targetName, ' emulator booted');
 
-  await installAppToDeviceName(
-    androidCapabilities.androidAppFullPath,
-    targetName
-  );
-  const driver = (androidDriver as any).AndroidUiautomator2Driver;
-  const capabilities = getAndroidCapabilities(
-    actualCapabilitiesIndex as CapabilitiesIndexType
-  );
+  await installAppToDeviceName(androidCapabilities.androidAppFullPath, targetName);
+  const capabilities = getAndroidCapabilities(actualCapabilitiesIndex as CapabilitiesIndexType);
   console.log(
     `Android App Full Path: ${
-      getAndroidCapabilities(capabilitiesIndex)["alwaysMatch"]["appium:app"]
+      getAndroidCapabilities(capabilitiesIndex)['alwaysMatch']['appium:app']
     }`
   );
 
@@ -265,7 +241,7 @@ const openAndroidApp = async (
     address: `http://localhost:${APPIUM_PORT}`,
   } as DriverOpts;
 
-  const device: DeviceWrapper = new driver(opts);
+  const device = new AndroidUiautomator2Driver(opts);
   const udid = getAndroidUdid(capabilitiesIndex);
   console.log(`udid: ${udid}`);
   const wrappedDevice = new DeviceWrapper(device, udid);
@@ -279,15 +255,15 @@ const openAndroidApp = async (
   await runScriptAndLog(`adb -s ${targetName} shell settings put global animator_duration_scale 0
     `);
 
-  console.warn("1");
+  console.info('1');
   await wrappedDevice.createSession(capabilities);
-  console.warn("2");
+  console.info('2');
   await (device as any).updateSettings({
     ignoreUnimportantViews: false,
     allowInvisibleElements: true,
     enableMultiWindows: true,
   });
-  console.warn("3");
+  console.info('3');
   return { device: wrappedDevice };
 };
 
@@ -296,27 +272,20 @@ const openiOSApp = async (
 ): Promise<{
   device: DeviceWrapper;
 }> => {
-  console.warn("openiOSApp");
+  console.info('openiOSApp');
 
   // Calculate the actual capabilities index for the current worker
   const actualCapabilitiesIndex =
-    capabilitiesIndex + 4 * parseInt(process.env.TEST_PARALLEL_INDEX || "0");
+    capabilitiesIndex + 4 * parseInt(process.env.TEST_PARALLEL_INDEX || '0');
 
-  const opts: DriverOpts = {
+  const opts: XCUITestDriverOpts = {
     address: `http://localhost:${APPIUM_PORT}`,
-  } as DriverOpts;
+  } as XCUITestDriverOpts;
 
-  const driver = (iosDriver as any).XCUITestDriver;
+  const capabilities = getIosCapabilities(actualCapabilitiesIndex as CapabilitiesIndexType);
+  const udid = capabilities.alwaysMatch['appium:udid'] as string;
 
-  const device: unknown = new driver(opts);
-  const capabilities = getIosCapabilities(
-    actualCapabilitiesIndex as CapabilitiesIndexType
-  );
-  const udid = capabilities.alwaysMatch["appium:udid"] as string;
-  const wrappedDevice = new DeviceWrapper(device, udid);
-
-  await wrappedDevice.createSession(capabilities);
-
+  const { device: wrappedDevice } = await cleanPermissions(opts, udid, capabilities);
   return { device: wrappedDevice };
 };
 
@@ -331,17 +300,10 @@ export const closeApp = async (
   device8?: DeviceWrapper
 ) => {
   await Promise.all(
-    compact([
-      device1,
-      device2,
-      device3,
-      device4,
-      device5,
-      device6,
-      device7,
-      device8,
-    ]).map((d) => d.deleteSession())
+    compact([device1, device2, device3, device4, device5, device6, device7, device8]).map(d =>
+      d.deleteSession()
+    )
   );
 
-  console.info("sessions closed");
+  console.info('sessions closed');
 };
