@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable import/no-import-module-exports */
 import { defineConfig } from '@playwright/test';
-import { isEmpty, toNumber } from 'lodash';
+import { toNumber } from 'lodash';
 
 const useSessionReporter = true;
 
@@ -15,7 +15,6 @@ export default defineConfig({
   retries: process.env.PLAYWRIGHT_RETRIES_COUNT
     ? toNumber(process.env.PLAYWRIGHT_RETRIES_COUNT)
     : 0,
-  globalSetup: './globalSetup.ts',
   repeatEach: process.env.PLAYWRIGHT_REPEAT_COUNT
     ? toNumber(process.env.PLAYWRIGHT_REPEAT_COUNT)
     : 0,

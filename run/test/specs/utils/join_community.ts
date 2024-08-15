@@ -1,5 +1,6 @@
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { SupportedPlatformsType } from './open_app';
+import { sleepFor } from './sleep_for';
 
 export const joinCommunity = async (
   platform: SupportedPlatformsType,

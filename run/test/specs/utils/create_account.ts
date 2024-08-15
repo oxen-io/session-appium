@@ -15,7 +15,7 @@ export const newUser = async (
     selector: 'Create account button',
   });
   // Click continue on session Id creation
-  await device.clickOnByAccessibilityID('Continue');
+  // await device.clickOnByAccessibilityID('Continue');
   // Input username
   await device.inputText(userName, {
     strategy: 'accessibility id',

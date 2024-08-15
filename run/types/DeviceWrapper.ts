@@ -375,6 +375,48 @@ export class DeviceWrapper {
       selector: 'Conversation list item',
       text: userName,
     });
+    const maxRetries = 3;
+    let attempt = 0;
+    let success = false;
+
+    while (attempt < maxRetries && !success) {
+      try {
+        const el = await this.waitForTextElementToBePresent({
+          strategy: 'accessibility id',
+          selector: 'Conversation list item',
+          text: userName,
+        });
+
+        if (!el) {
+          throw new Error(
+            `longPress on conversation list: ${userName} unsuccessful, couldn't find conversation`
+          );
+        }
+
+        await this.longClick(el, 3000);
+        const longPressSuccess = await this.waitForTextElementToBePresent({
+          strategy: 'accessibility id',
+          selector: 'Details',
+          maxWait: 1000,
+        });
+
+        if (longPressSuccess) {
+          console.log('LongClick successful');
+          success = true; // Exit the loop if successful
+        } else {
+          throw new Error(`longPress on conversation list: ${userName} unsuccessful`);
+        }
+      } catch (error) {
+        attempt++;
+        if (attempt >= maxRetries) {
+          throw new Error(
+            `Longpress on conversation: ${userName} unsuccessful after ${maxRetries} attempts, ${error}`
+          );
+        }
+        console.log(`Longpress attempt ${attempt} failed. Retrying...`);
+        await sleepFor(1000);
+      }
+    }
     await this.longClick(el, 3000);
   }
 
@@ -984,6 +1026,7 @@ export class DeviceWrapper {
   ) {
     let el: null | AppiumNextElementType = null;
     let locator: StrategyExtractionObj & { text?: string; maxWait?: number };
+
     if (args instanceof LocatorsInterface) {
       locator = args.build();
     } else {
@@ -993,9 +1036,11 @@ export class DeviceWrapper {
       };
     }
 
+    console.log('Locator being used:', locator);
+
     el = await this.waitForTextElementToBePresent({ ...locator });
     if (!el) {
-      throw new Error(`inputText: Did not find accessibilityId: ${locator} `);
+      throw new Error(`inputText: Did not find element with locator: ${JSON.stringify(locator)}`);
     }
 
     await this.setValueImmediate(textToInput, el.ELEMENT);

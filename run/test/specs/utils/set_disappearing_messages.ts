@@ -35,7 +35,7 @@ export const setDisappearingMessage = async (
     strategy: 'accessibility id',
     selector: timerDuration,
   });
-  await device.clickOnByAccessibilityID('Set button');
+  await device.clickOnElementAll({ strategy: 'accessibility id', selector: 'Set button' });
   await runOnlyOnIOS(platform, () => device.navigateBack(platform));
   await sleepFor(1000);
   if (device2) {

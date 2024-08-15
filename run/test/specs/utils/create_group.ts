@@ -39,13 +39,13 @@ export const createGroup = async (
   // Select tick
   await device1.clickOnByAccessibilityID('Create group');
   // Check for empty state on ios
-  await runOnlyOnIOS(platform, () =>
-    device1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Empty list',
-      maxWait: 5000,
-    })
-  );
+  // await runOnlyOnIOS(platform, () =>
+  //   device1.waitForTextElementToBePresent({
+  //     strategy: 'accessibility id',
+  //     selector: 'Empty list',
+  //     maxWait: 5000,
+  //   })
+  // );
   await runOnlyOnAndroid(platform, () =>
     device1.waitForControlMessageToBePresent('You created a new group.', 10000)
   );

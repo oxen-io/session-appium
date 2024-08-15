@@ -100,8 +100,9 @@ export class ReadReceiptsButton extends LocatorsInterface {
         } as const;
       case 'ios':
         return {
-          strategy: 'xpath',
-          selector: `//XCUIElementTypeSwitch[@name="Read Receipts, Send read receipts in one-to-one chats."]`,
+          strategy: 'id',
+          selector: `XCUIElementTypeSwitch`,
+          text: `Read Receipts, Show read receipts for all messages you send and receive.`,
         } as const;
     }
   }

@@ -22,8 +22,8 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   // Navigate back to conversation list
   await device1.navigateBack(platform);
   // on ios swipe left on conversation
-  await runOnlyOnAndroid(platform, () => device1.longPressConversation(userB.userName));
-  await runOnlyOnIOS(platform, () => device1.swipeLeft('Conversation list item', userB.userName));
+  await device1.longPressConversation(userB.userName);
+  console.warn(`Conversation has been longclicked`);
   await device1.clickOnByAccessibilityID('Block');
   await closeApp(device1, device2);
 }

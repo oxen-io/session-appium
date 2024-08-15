@@ -10,6 +10,10 @@ import type {
 import chalk from 'chalk';
 import { Dictionary, groupBy, isEmpty, mean, sortBy } from 'lodash';
 
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 type TestAndResult = { test: TestCase; result: TestResult };
 
 function sortByTitle(toSort: Dictionary<Array<TestAndResult>>) {
@@ -71,6 +75,7 @@ class SessionReporter implements Reporter {
   private countWorkers: number = 1;
 
   constructor() {
+    // console.warn('!isEmpty(process.env.PRINT_TEST_LOGS)', !isEmpty(process.env.PRINT_TEST_LOGS));
     this.printTestConsole = !isEmpty(process.env.PRINT_TEST_LOGS);
   }
 
@@ -105,8 +110,9 @@ class SessionReporter implements Reporter {
       console.info('stderr:');
       result.stderr.map(t => process.stderr.write(t.toString()));
 
+      const lastError = result.errors[result.errors.length - 1];
       console.info(
-        `test failed with "${result.error?.message}" \n\tvalue:${result.error?.value} \n\tsnippet:${result.error?.snippet} \n\tstack:${result.error?.stack}`
+        `test failed with "${lastError.message}" \n\tvalue:${lastError?.value} \n\tsnippet:${result.error?.snippet} \n\tstack:${lastError?.stack}`
       );
     } else {
       console.log(

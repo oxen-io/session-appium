@@ -6,6 +6,7 @@
     "removeComments": true,
     "noImplicitAny": true,
     "skipLibCheck": true,
+    "noEmit": true, // we don't need to build anything, playwright runs from the .ts file
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "strictPropertyInitialization": true,
@@ -13,7 +14,7 @@
     "esModuleInterop": true,
     "types": ["@wdio/types", "node"],
     "target": "es2019",
-    "outDir": "./output",
+    "outDir": "./dist",
     "rootDir": "./"
   }
 }

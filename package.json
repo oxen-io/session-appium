@@ -2,10 +2,9 @@
   "name": "session-appium",
   "version": "1.0.0",
   "scripts": {
-    "tsc": "yarn clean-tsc && tsc",
-    "clean-tsc": "find run/test/specs -type f -name '*.js' -delete",
-    "tsc-watch": "yarn clean-tsc && tsc -w",
-    "test": "npx playwright test --timeout 300000 ./run/test/specs/*.spec.js --grep ",
+    "tsc": "tsc",
+    "tsc-watch": "tsc -w",
+    "test": "npx playwright test --timeout 300000 ./run/test/specs/*.spec.ts --grep ",
     "test-no-retry": "_TESTING=1 npx playwright test --timeout 300000  ./run/test/specs/*.spec.ts --grep ",
     "test-one": "_TESTING=1 _FORCE_LOGS=0 npx playwright test --timeout 300000  ./run/test/**/*.spec.ts --grep",
     "test-ios": "_TESTING=1 npx playwright test --timeout 300000 ./run/test/**/*.spec.ts --grep ios",
