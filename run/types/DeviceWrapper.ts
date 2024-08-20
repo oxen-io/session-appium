@@ -394,6 +394,7 @@ export class DeviceWrapper {
         }
 
         await this.longClick(el, 3000);
+        await sleepFor(1000);
         const longPressSuccess = await this.waitForTextElementToBePresent({
           strategy: 'accessibility id',
           selector: 'Details',

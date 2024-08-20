@@ -112,7 +112,7 @@ class SessionReporter implements Reporter {
 
       const lastError = result.errors[result.errors.length - 1];
       console.info(
-        `test failed with "${lastError.message}" \n\tvalue:${lastError?.value} \n\tsnippet:${result.error?.snippet} \n\tstack:${lastError?.stack}`
+        `test failed with "${lastError.message}" \n\tvalue:${lastError?.value} \n\tsnippet:${lastError.snippet} \n\tstack:${lastError?.stack}`
       );
     } else {
       console.log(

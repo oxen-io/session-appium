@@ -83,22 +83,18 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   await device.clickOnElementAll({
     strategy: 'id',
     selector: 'android:id/text1',
-    text: 'Media',
+    text: 'Photos',
   });
   await sleepFor(500);
   // TO FIX COULDNT FIND MORE OPTIONS
   await device.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'More options',
-  });
-  await device.clickOnElementAll({
-    strategy: 'xpath',
-    selector: `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout`,
+    strategy: 'id',
+    selector: 'com.google.android.apps.photos:id/image',
   });
   // Select file
   const profilePicture = await device.doesElementExist({
     strategy: 'accessibility id',
-    selector: `profile_picture.jpg, 27.75 kB, May 2, 1999`,
+    selector: `Photo taken on May 2, 1999 7:00:00 AM`,
     maxWait: 5000,
   });
   // If no image, push file to device
@@ -108,14 +104,16 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
     );
 
     await runScriptAndLog(
-      `adb -s emulator-5554 push 'run/test/specs/media/profile_picture.jpg' /storage/emulated/0/Download`,
+      `adb -s emulator-5554 push 'run/test/specs/media/profile_picture.jpg' /sdcard/Download/`,
       true
     );
+    // Verifies that the file was successful downloaded to device
+    await runScriptAndLog(`adb -s emulator-5554 shell ls /sdcard/Download/`, true);
   }
-  await device.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'profile_picture.jpg, 27.75 kB, May 2, 1999',
-  });
+  // await device.clickOnElementAll({
+  //   strategy: 'accessibility id',
+  //   selector: 'Photo taken on May 2, 1999 7:00:00 AM',
+  // });
   await device.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop');
   const el = await device.waitForTextElementToBePresent({
     strategy: 'accessibility id',
