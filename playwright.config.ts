@@ -4,6 +4,7 @@ import { defineConfig } from '@playwright/test';
 import { toNumber } from 'lodash';
 
 const useSessionReporter = true;
+require('source-map-support').install = () => {};
 
 export default defineConfig({
   timeout: 350000,
