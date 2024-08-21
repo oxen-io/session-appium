@@ -25,6 +25,7 @@ import {
   User,
   XPath,
 } from './testing';
+import { getAdbFullPath } from '../test/specs/utils/binaries';
 
 export type Coordinates = {
   x: number;
@@ -418,7 +419,6 @@ export class DeviceWrapper {
         await sleepFor(1000);
       }
     }
-    await this.longClick(el, 3000);
   }
 
   public async pressAndHold(accessibilityId: AccessibilityId) {
@@ -1051,18 +1051,25 @@ export class DeviceWrapper {
     return this.toShared().getAttribute(attribute, elementId);
   }
 
-  public async disappearRadioButtonSelected(timeOption: DMTimeOption) {
-    try {
-      const radioButton = await this.findElementByXPath(`//*[./*[@name='${timeOption}']]/*[2]`);
-
-      const attr = await this.getAttribute('value', radioButton.ELEMENT);
-      if (attr === 'selected') {
-        console.log('Great success - default time is correct');
-      } else {
-        throw new Error('Dammit - default time was not correct');
-      }
-    } catch (e) {
-      console.log(`Couldn't find radioButton ${timeOption}`);
+  public async disappearRadioButtonSelectediOS(timeOption: DMTimeOption) {
+    const radioButton = await this.findElementByXPath(`//*[./*[@name='${timeOption}']]/*[2]`);
+    const attr = await this.getAttribute('value', radioButton.ELEMENT);
+    if (attr === 'selected') {
+      console.log('Great success - default time is correct');
+    } else {
+      throw new Error('Dammit - default time was not correct');
+    }
+  }
+  public async disappearRadioButtonSelectedAndroid(timeOption: DMTimeOption) {
+    const radioButton = await this.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: timeOption,
+    });
+    const attr = await this.getAttribute('selected', radioButton.ELEMENT);
+    if (attr) {
+      console.log('Great success - default time is correct');
+    } else {
+      throw new Error('Dammit - default time was not correct');
     }
   }
 
@@ -1129,7 +1136,7 @@ export class DeviceWrapper {
       });
       if (!testImage) {
         await runScriptAndLog(
-          `adb -s emulator-5554 push 'run/test/specs/media/test_image.jpg' /storage/emulated/0/Download`,
+          `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/test_image.jpg' /storage/emulated/0/Download`,
           true
         );
       }
@@ -1254,7 +1261,7 @@ export class DeviceWrapper {
     if (!testVideo) {
       // Adds video to downloads folder if it isn't already there
       await runScriptAndLog(
-        `adb -s emulator-5554 push 'run/test/specs/media/test_video.mp4' /storage/emulated/0/Download`,
+        `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/test_video.mp4' /storage/emulated/0/Download`,
         true
       );
     }
@@ -1295,7 +1302,7 @@ export class DeviceWrapper {
       });
       if (!testDocument) {
         await runScriptAndLog(
-          `adb -s emulator-5554 push 'run/test/specs/media/test_file.pdf' /storage/emulated/0/Download`,
+          `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/test_file.pdf' /storage/emulated/0/Download`,
           true
         );
       }

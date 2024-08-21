@@ -29,8 +29,11 @@ export const setDisappearingMessage = async (
     strategy: 'accessibility id',
     selector: DISAPPEARING_TIMES.ONE_DAY,
   });
-
-  await device.disappearRadioButtonSelected(DISAPPEARING_TIMES.ONE_DAY);
+  if (platform === 'ios') {
+    await device.disappearRadioButtonSelectediOS(DISAPPEARING_TIMES.ONE_DAY);
+  } else {
+    await device.disappearRadioButtonSelectedAndroid(DISAPPEARING_TIMES.ONE_DAY);
+  }
   await device.clickOnElementAll({
     strategy: 'accessibility id',
     selector: timerDuration,

@@ -28,8 +28,12 @@ export const newUser = async (
   await device.clickOnByAccessibilityID('Slow mode notifications button');
   // Select Continue to save notification settings
   await device.clickOnByAccessibilityID('Continue');
-  // Need to add Don't allow notifications dismiss here
-  await device.checkPermissions(`Allow`);
+  console.warn('about to look for Allow permission in 5s');
+  await sleepFor(5000);
+
+  await device.checkPermissions('Allow');
+  console.warn('lookedfor Allow permission');
+  await sleepFor(1000);
   // Click on 'continue' button to open recovery phrase modal
   await device.waitForTextElementToBePresent({
     strategy: 'accessibility id',
