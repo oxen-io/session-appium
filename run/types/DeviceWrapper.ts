@@ -772,7 +772,6 @@ export class DeviceWrapper {
           `${strategy}: '${selector}'`
         );
       }
-
       if (!el) {
         await sleepFor(waitPerLoop);
       }
@@ -1052,7 +1051,10 @@ export class DeviceWrapper {
   }
 
   public async disappearRadioButtonSelectediOS(timeOption: DMTimeOption) {
-    const radioButton = await this.findElementByXPath(`//*[./*[@name='${timeOption}']]/*[2]`);
+    const radioButton = await this.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: timeOption,
+    });
     const attr = await this.getAttribute('value', radioButton.ELEMENT);
     if (attr === 'selected') {
       console.log('Great success - default time is correct');
@@ -1339,6 +1341,26 @@ export class DeviceWrapper {
       });
       await this.clickOnByAccessibilityID('Send button');
     }
+  }
+
+  public async sendVoiceMessage(platform: SupportedPlatformsType) {
+    await this.longPress('New voice message');
+    if (platform === 'android') {
+      await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Continue' });
+      await this.clickOnElementAll({
+        strategy: 'id',
+        selector: 'com.android.permissioncontroller:id/permission_allow_foreground_only_button',
+        text: 'While using the app',
+      });
+    }
+    if (platform === 'ios') {
+      await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
+    }
+    await this.pressAndHold('New voice message');
+  }
+
+  public async uploadProfilePicture(platform: SupportedPlatformsType) {
+    //
   }
 
   public async getTimeFromDevice(platform: SupportedPlatformsType): Promise<string> {

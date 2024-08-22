@@ -18,7 +18,7 @@ export type GroupName =
   | 'Testing disappearing messages'
   | 'Group to test adding contact'
   | 'Disappear after send test'
-  | 'Testing voice messages in groups for disappearing messages'
+  | 'Testing voice'
   | 'Disappear after sent test';
 
 export type Group = {

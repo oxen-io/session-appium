@@ -1,9 +1,8 @@
-import { ANDROID_XPATHS } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
-import { SupportedPlatformsType, openAppTwoDevices, closeApp } from './utils/open_app';
+import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
 iosIt('Send voice message 1:1', sendVoiceMessageIos);
 androidIt('Send voice message 1:1', sendVoiceMessageAndroid);
@@ -53,11 +52,7 @@ async function sendVoiceMessageAndroid(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to voice message from ${userA.userName}`;
   await newContact(platform, device1, userA, device2, userB);
   // Select voice message button to activate recording state
-  await device1.longPress('New voice message');
-
-  await device1.clickOnByAccessibilityID('Continue');
-  await device1.clickOnElementXPath(ANDROID_XPATHS.VOICE_TOGGLE);
-  await device1.pressAndHold('New voice message');
+  await device1.sendVoiceMessage(platform);
   // await device1.waitForTextElementToBePresent("Voice message");
   await device2.clickOnByAccessibilityID('Untrusted attachment message');
   await sleepFor(200);

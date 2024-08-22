@@ -1,5 +1,6 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { sleepFor } from './utils';
+import { getAdbFullPath } from './utils/binaries';
 import { parseDataImage } from './utils/check_colour';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppOnPlatformSingleDevice } from './utils/open_app';
@@ -22,7 +23,7 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
   await device.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
   const profilePicture = await device.doesElementExist({
     strategy: 'accessibility id',
-    selector: `Photo, 01 May 1998, 7:00 am`,
+    selector: `profile_picture.jpg, 27.75 kB, May 1, 1999`,
     maxWait: 2000,
   });
   if (!profilePicture) {
@@ -40,7 +41,7 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
   // Click on Profile picture
   // Click on Photo library
   await sleepFor(100);
-  await device.clickOnByAccessibilityID(`Photo, 01 May 1998, 7:00 am`);
+  await device.clickOnByAccessibilityID(`profile_picture.jpg, 27.75 kB, May 1, 1999`);
   await device.clickOnByAccessibilityID('Done');
 
   await device.clickOnByAccessibilityID('Save');
@@ -83,18 +84,18 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   await device.clickOnElementAll({
     strategy: 'id',
     selector: 'android:id/text1',
-    text: 'Photos',
+    text: 'Files',
   });
   await sleepFor(500);
   // TO FIX COULDNT FIND MORE OPTIONS
-  await device.clickOnElementAll({
-    strategy: 'id',
-    selector: 'com.google.android.apps.photos:id/image',
-  });
+  // await device.clickOnElementAll({
+  //   strategy: 'id',
+  //   selector: 'com.google.android.apps.photos:id/image',
+  // });
   // Select file
   const profilePicture = await device.doesElementExist({
     strategy: 'accessibility id',
-    selector: `Photo taken on May 2, 1999 7:00:00 AM`,
+    selector: `profile_picture.jpg, 27.75 kB, May 1, 1999`,
     maxWait: 5000,
   });
   // If no image, push file to device
@@ -104,24 +105,27 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
     );
 
     await runScriptAndLog(
-      `adb -s emulator-5554 push 'run/test/specs/media/profile_picture.jpg' /sdcard/Download/`,
+      `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/profile_picture.jpg' /sdcard/Download/`,
       true
     );
     // Verifies that the file was successful downloaded to device
-    await runScriptAndLog(`adb -s emulator-5554 shell ls /sdcard/Download/`, true);
+    await runScriptAndLog(`${getAdbFullPath()} -s emulator-5554 shell ls /sdcard/Download/`, true);
   }
-  // await device.clickOnElementAll({
-  //   strategy: 'accessibility id',
-  //   selector: 'Photo taken on May 2, 1999 7:00:00 AM',
-  // });
+  await device.clickOnElementAll({
+    strategy: 'accessibility id',
+    selector: 'profile_picture.jpg, 27.75 kB, May 1, 1999',
+  });
   await device.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop');
   const el = await device.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'User settings',
     maxWait: 10000,
   });
+  // Waiting for the image to change in the UI
+  await sleepFor(1000);
   const base64 = await device.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
+  // console.log('base64 of image:', base64);
   console.log('RGB Value of pixel is:', pixelColor);
   if (pixelColor === pixelHexColour) {
     console.log('Colour is correct on device 1');

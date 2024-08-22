@@ -1,6 +1,7 @@
 import { ANDROID_XPATHS } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { sleepFor } from './utils';
+import { getAdbFullPath } from './utils/binaries';
 import { parseDataImage } from './utils/check_colour';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
@@ -122,7 +123,7 @@ async function avatarRestoredAndroid(platform: SupportedPlatformsType) {
     );
 
     await runScriptAndLog(
-      `adb -s emulator-5554 push 'run/test/specs/media/profile_picture.jpg' /storage/emulated/0/Download`,
+      `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/profile_picture.jpg' /storage/emulated/0/Download`,
       true
     );
     await device1.clickOnElementAll({

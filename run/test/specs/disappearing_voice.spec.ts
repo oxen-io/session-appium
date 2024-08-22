@@ -1,4 +1,3 @@
-import { ANDROID_XPATHS } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { DisappearActions } from '../../types/testing';
 import { sleepFor } from './utils';
@@ -65,10 +64,7 @@ async function disappearingVoiceMessage1o1Android(platform: SupportedPlatformsTy
   // );
   // Wait for control messages to disappear
   // await sleepFor(60000);
-  await device1.longPress('New voice message');
-  await device1.clickOnByAccessibilityID('Continue');
-  await device1.clickOnElementXPath(ANDROID_XPATHS.VOICE_TOGGLE);
-  await device1.pressAndHold('New voice message');
+  await device1.sendVoiceMessage(platform);
   // await device1.clickOnByAccessibilityID("OK");
   // await device1.pressAndHold("New voice message");
   await device1.waitForTextElementToBePresent({

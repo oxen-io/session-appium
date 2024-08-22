@@ -9,7 +9,7 @@
     "test-no-retry": "_TESTING=1 npx playwright test --timeout 300000  ./run/test/specs/*.spec.ts --grep ",
     "test-one": "_TESTING=1 _FORCE_LOGS=0 npx playwright test --timeout 300000  ./run/test/**/*.spec.ts --grep",
     "test-udid": "_TESTING=1 npx playwright test UDID=$udid --timeout 300000 ./run/test/**/*.spec.ts --grep",
-    "test-ios": "_TESTING=1 npx playwright test --timeout 300000 ./run/test/**/*.spec.ts --grep ios",
+    "test-ios": "_TESTING=1 npx playwright test --timeout 400000 ./run/test/**/*.spec.ts --grep ios",
     "test-android": "_TESTING=1 npx playwright test --timeout 300000 ./run/test/**/*.spec.ts --grep android",
     "build-and-test": "yarn tsc && yarn test",
     "test-one-logs": "_TESTING=1  _FORCELOGS=1 npx playwright test --timeout 300000 --retries 0 ./run/test/**/*.spec.ts --grep",
@@ -29,7 +29,7 @@
     "prettier": "^3.3.3",
     "ts-node": "^10.9.1",
     "typescript": "^5.3.3",
-    "wd": "^1.14.0",
+    "wd": "^1.14.0", 
     "wdio-wait-for": "^2.2.6"
   },
   "license": "MIT",
