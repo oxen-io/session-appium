@@ -26,7 +26,9 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   // "appium:isHeadless": true,
 } as AppiumXCUITestCapabilities;
 
+export const MAX_CAPABILITIES_INDEX = 7;
 export type CapabilitiesIndexType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+
 interface CustomW3CCapabilities extends W3CCapabilities {
   'appium:wdaLocalPort': number;
   'appium:udid': string;

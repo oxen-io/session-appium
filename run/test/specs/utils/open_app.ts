@@ -4,7 +4,11 @@ import {
   getAndroidCapabilities,
   getAndroidUdid,
 } from './capabilities_android';
-import { CapabilitiesIndexType, getIosCapabilities } from './capabilities_ios';
+import {
+  CapabilitiesIndexType,
+  getIosCapabilities,
+  MAX_CAPABILITIES_INDEX,
+} from './capabilities_ios';
 import { installAppToDeviceName, runScriptAndLog } from './utilities';
 
 import AndroidUiautomator2Driver from 'appium-uiautomator2-driver';
@@ -207,19 +211,36 @@ async function waitForEmulatorToBeRunning(emulatorName: string) {
   return found;
 }
 
+function capabilityIsValid(
+  actualCapabilitiesIndex: number
+): actualCapabilitiesIndex is CapabilitiesIndexType {
+  if (actualCapabilitiesIndex < 0 || actualCapabilitiesIndex > MAX_CAPABILITIES_INDEX) {
+    return false;
+  }
+  return true;
+}
+
 const openAndroidApp = async (
   capabilitiesIndex: CapabilitiesIndexType
 ): Promise<{
   device: DeviceWrapper;
 }> => {
-  const targetName = getAndroidUdid(capabilitiesIndex);
-  const actualCapabilitiesIndex =
-    capabilitiesIndex + 4 * parseInt(process.env.TEST_PARALLEL_INDEX || '0');
+  const parrallelIndex = process.env.TEST_PARALLEL_INDEX || '1';
+  console.info('process.env.TEST_PARALLEL_INDEX:', process.env.TEST_PARALLEL_INDEX, parrallelIndex);
+  const parrallelIndexNumber = parseInt(parrallelIndex);
+  const actualCapabilitiesIndex = capabilitiesIndex + 4 * parrallelIndexNumber;
+
+  if (!capabilityIsValid(actualCapabilitiesIndex)) {
+    throw new Error(`Invalid actual capability given: ${actualCapabilitiesIndex}`);
+  }
+
   if (isNaN(actualCapabilitiesIndex)) {
     console.info('actualCapabilities worker is not a number', actualCapabilitiesIndex);
   } else {
     console.info('actualCapabilities worker', actualCapabilitiesIndex);
   }
+  const targetName = getAndroidUdid(actualCapabilitiesIndex);
+
   const emulatorAlreadyRunning = await isEmulatorRunning(targetName);
   console.info('emulatorAlreadyRunning', targetName, emulatorAlreadyRunning);
   if (!emulatorAlreadyRunning) {
@@ -229,20 +250,22 @@ const openAndroidApp = async (
   await waitForEmulatorToBeRunning(targetName);
   console.log(targetName, ' emulator booted');
 
-  await installAppToDeviceName(androidCapabilities.androidAppFullPath, targetName);
-  const capabilities = getAndroidCapabilities(actualCapabilitiesIndex as CapabilitiesIndexType);
+  // await installAppToDeviceName(androidCapabilities.androidAppFullPath, targetName);
+  const capabilities = getAndroidCapabilities(actualCapabilitiesIndex);
   console.log(
     `Android App Full Path: ${
-      getAndroidCapabilities(capabilitiesIndex)['alwaysMatch']['appium:app']
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      getAndroidCapabilities(actualCapabilitiesIndex)['alwaysMatch']['appium:app'] as any
     }`
   );
+  console.info('capabilities', capabilities);
 
   const opts: DriverOpts = {
     address: `http://localhost:${APPIUM_PORT}`,
   } as DriverOpts;
 
   const device = new AndroidUiautomator2Driver(opts);
-  const udid = getAndroidUdid(capabilitiesIndex);
+  const udid = getAndroidUdid(actualCapabilitiesIndex);
   console.log(`udid: ${udid}`);
   const wrappedDevice = new DeviceWrapper(device, udid);
 
