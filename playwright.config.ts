@@ -1,5 +1,6 @@
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable import/no-import-module-exports */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 import { defineConfig } from '@playwright/test';
 import { toNumber } from 'lodash';
 

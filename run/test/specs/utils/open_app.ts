@@ -1,29 +1,21 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  androidCapabilities,
-  getAndroidCapabilities,
-  getAndroidUdid,
-} from './capabilities_android';
-import {
-  CapabilitiesIndexType,
-  getIosCapabilities,
-  MAX_CAPABILITIES_INDEX,
-} from './capabilities_ios';
-import { installAppToDeviceName, runScriptAndLog } from './utilities';
+import { getAndroidCapabilities, getAndroidUdid } from './capabilities_android';
+import { CapabilitiesIndexType, capabilityIsValid, getIosCapabilities } from './capabilities_ios';
+import { runScriptAndLog } from './utilities';
 
 import AndroidUiautomator2Driver from 'appium-uiautomator2-driver';
-import XCUITestDriver, { XCUITestDriverOpts } from 'appium-xcuitest-driver/build/lib/driver';
+import { XCUITestDriverOpts } from 'appium-xcuitest-driver/build/lib/driver';
 
 import { DriverOpts } from 'appium/build/lib/appium';
-import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { getAdbFullPath, getAvdManagerFullPath, getEmulatorFullPath } from './binaries';
-import { sleepFor } from './sleep_for';
 import { compact } from 'lodash';
-import { linkedDevice } from './link_device';
-import { newUser } from './create_account';
+import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User } from '../../../types/testing';
-import { newContact } from './create_contact';
 import { cleanPermissions } from './before_test_setup';
+import { getAdbFullPath, getAvdManagerFullPath, getEmulatorFullPath } from './binaries';
+import { newUser } from './create_account';
+import { newContact } from './create_contact';
+import { linkedDevice } from './link_device';
+import { sleepFor } from './sleep_for';
 
 const APPIUM_PORT = 4728;
 export const APPIUM_IOS_PORT = 8110;
@@ -210,7 +202,6 @@ async function waitForEmulatorToBeRunning(emulatorName: string) {
 
   return found;
 }
-
 
 const openAndroidApp = async (
   capabilitiesIndex: CapabilitiesIndexType

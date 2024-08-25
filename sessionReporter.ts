@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type {
   FullConfig,
   FullResult,
@@ -8,7 +9,7 @@ import type {
   TestResult,
 } from '@playwright/test/reporter';
 import chalk from 'chalk';
-import { Dictionary, groupBy, isEmpty, mean, sortBy } from 'lodash';
+import { Dictionary, groupBy, isString, mean, sortBy } from 'lodash';
 
 import dotenv from 'dotenv';
 
@@ -118,7 +119,7 @@ class SessionReporter implements Reporter {
 
       const lastError = result.errors[result.errors.length - 1];
       console.info(
-        `test failed with "${lastError?.message || 'unknown'}"\n\tsnippet:${lastError.snippet || 'unknown'} \n\tstack:${lastError?.stack || 'unknown'}`
+        `test failed with "${lastError?.message || 'unknown'}"\n\tsnippet:${lastError?.snippet || 'unknown'} \n\tstack:${lastError?.stack || 'unknown'}`
       );
     } else {
       console.log(
@@ -199,13 +200,17 @@ class SessionReporter implements Reporter {
 
   onStdOut?(chunk: string | Buffer, test: void | TestCase, _result: void | TestResult) {
     if (printOngoingTestLogs()) {
-      process.stdout.write(`"${test ? `${chalk.cyanBright(test.title)}` : ''}": ${chunk}`);
+      process.stdout.write(
+        `"${test ? `${chalk.cyanBright(test.title)}` : ''}": ${isString(chunk) ? chunk : chunk.toString('utf-8')}`
+      );
     }
   }
 
   onStdErr?(chunk: string | Buffer, test: void | TestCase, _result: void | TestResult) {
     if (printOngoingTestLogs()) {
-      process.stdout.write(`"${test ? `${chalk.cyanBright(test.title)}` : ''}":err: ${chunk}`);
+      process.stdout.write(
+        `"${test ? `${chalk.cyanBright(test.title)}` : ''}":err: ${isString(chunk) ? chunk : chunk.toString('utf-8')}`
+      );
     }
   }
 
