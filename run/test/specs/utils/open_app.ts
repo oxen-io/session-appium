@@ -211,14 +211,6 @@ async function waitForEmulatorToBeRunning(emulatorName: string) {
   return found;
 }
 
-function capabilityIsValid(
-  actualCapabilitiesIndex: number
-): actualCapabilitiesIndex is CapabilitiesIndexType {
-  if (actualCapabilitiesIndex < 0 || actualCapabilitiesIndex > MAX_CAPABILITIES_INDEX) {
-    return false;
-  }
-  return true;
-}
 
 const openAndroidApp = async (
   capabilitiesIndex: CapabilitiesIndexType
