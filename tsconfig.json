@@ -8,11 +8,12 @@
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-
     "strictPropertyInitialization": true,
     "strictNullChecks": true,
     "esModuleInterop": true,
-    "types": ["@wdio/types", "jest", "node"],
-    "target": "es2019"
+    "types": ["@wdio/types", "node"],
+    "target": "es2019",
+    "outDir": "./output",
+    "rootDir": "./"
   }
 }

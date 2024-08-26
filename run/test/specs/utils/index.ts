@@ -1,14 +1,14 @@
-import { sleepFor } from "./sleep_for";
-import { saveSessionIDIos, getSessionID } from "./get_session_id";
-import { runOnlyOnIOS, runOnlyOnAndroid } from "./run_on";
+import { sleepFor } from './sleep_for';
+import { saveSessionIdIos, getAccountId } from './get_account_id';
+import { runOnlyOnIOS, runOnlyOnAndroid } from './run_on';
 
-import { clickOnXAndYCoordinates } from "./click_by_coordinates";
+import { clickOnCoordinates } from './click_by_coordinates';
 
 export {
   sleepFor,
-  saveSessionIDIos,
-  getSessionID,
+  saveSessionIdIos,
+  getAccountId,
   runOnlyOnIOS,
   runOnlyOnAndroid,
-  clickOnXAndYCoordinates,
+  clickOnCoordinates,
 };
