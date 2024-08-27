@@ -101,7 +101,7 @@ export class ReadReceiptsButton extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: `Read Receipts - Switch`,
+          selector: 'Read Receipts - Switch',
         } as const;
     }
   }
