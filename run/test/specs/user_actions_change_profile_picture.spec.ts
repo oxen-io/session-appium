@@ -23,7 +23,7 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
   await device.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
   const profilePicture = await device.doesElementExist({
     strategy: 'accessibility id',
-    selector: `profile_picture.jpg, 27.75 kB, May 1, 1999`,
+    selector: `Photo, 01 May 1998, 7:00 am`,
     maxWait: 2000,
   });
   if (!profilePicture) {
@@ -41,7 +41,10 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
   // Click on Profile picture
   // Click on Photo library
   await sleepFor(100);
-  await device.clickOnByAccessibilityID(`profile_picture.jpg, 27.75 kB, May 1, 1999`);
+  await device.clickOnElementAll({
+    strategy: 'accessibility id',
+    selector: 'Photo, 01 May 1998, 7:00 am',
+  });
   await device.clickOnByAccessibilityID('Done');
 
   await device.clickOnByAccessibilityID('Save');

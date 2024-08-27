@@ -17,6 +17,8 @@ export const createGroup = async (
   const group: Group = { userName, userOne, userTwo, userThree };
 
   const userAMessage = `${userOne.userName} to ${userName}`;
+  const userBMessage = `${userTwo.userName} to ${userName}`;
+  const userCMessage = `${userThree.userName} to ${userName}`;
   // Create contact between User A and User B
   await newContact(platform, device1, userOne, device2, userTwo);
   await device1.navigateBack(platform);
@@ -51,10 +53,58 @@ export const createGroup = async (
   );
   // Send message from User A to group to verify all working
   await device1.sendMessage(userAMessage);
+  // Did the other devices receive UserA's message?
+  await Promise.all([
+    device2.clickOnElementAll({
+      strategy: 'accessibility id',
+      selector: 'Conversation list item',
+      text: group.userName,
+    }),
+    device3.clickOnElementAll({
+      strategy: 'accessibility id',
+      selector: 'Conversation list item',
+      text: group.userName,
+    }),
+  ]);
+  await Promise.all([
+    device2.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Message body',
+      text: userAMessage,
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Message body',
+      text: userAMessage,
+    }),
+  ]);
   // Send message from User B to group
-  await device2.sendMessageTo(userTwo, group);
+  await device2.sendMessage(userBMessage);
+  await Promise.all([
+    device1.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Message body',
+      text: userBMessage,
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Message body',
+      text: userBMessage,
+    }),
+  ]);
   // Send message to User C to group
-  await device3.sendMessageTo(userThree, group);
-
+  await device3.sendMessage(userCMessage);
+  await Promise.all([
+    device1.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Message body',
+      text: userCMessage,
+    }),
+    device2.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Message body',
+      text: userCMessage,
+    }),
+  ]);
   return { userName, userOne, userTwo, userThree };
 };

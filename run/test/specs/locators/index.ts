@@ -100,9 +100,8 @@ export class ReadReceiptsButton extends LocatorsInterface {
         } as const;
       case 'ios':
         return {
-          strategy: 'id',
-          selector: `XCUIElementTypeSwitch`,
-          text: `Read Receipts, Show read receipts for all messages you send and receive.`,
+          strategy: 'accessibility id',
+          selector: `Read Receipts - Switch`,
         } as const;
     }
   }
@@ -175,3 +174,21 @@ export class MediaMessage extends LocatorsInterface {
     }
   }
 }
+// Need to update test tags
+// export class BlockUser extends LocatorsInterface {
+//   public build(): StrategyExtractionObj {
+//     switch (this.platform) {
+//       case 'android':
+//         return {
+//           strategy: 'accessibility id',
+//           selector: 'Switch',
+//           text: 'Block',
+//         };
+//       case 'ios':
+//         return {
+//           strategy: 'accessibility id',
+//           selector: 'Block',
+//         };
+//     }
+//   }
+// }
