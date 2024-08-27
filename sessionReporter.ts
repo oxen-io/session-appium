@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type {
   FullConfig,
   FullResult,
@@ -8,7 +9,7 @@ import type {
   TestResult,
 } from '@playwright/test/reporter';
 import chalk from 'chalk';
-import { Dictionary, groupBy, isEmpty, mean, sortBy } from 'lodash';
+import { Dictionary, groupBy, isString, mean, sortBy } from 'lodash';
 
 import dotenv from 'dotenv';
 
@@ -67,17 +68,19 @@ function formatGroupedByResults(testAndResults: Array<TestAndResult>) {
   );
 }
 
-class SessionReporter implements Reporter {
-  private printTestConsole: boolean;
-  private startTime: number = 0;
-  private allTestsCount: number = 0;
-  private allResults: Array<TestAndResult> = [];
-  private countWorkers: number = 1;
+function printOngoingTestLogs() {
+  return process.env.PRINT_ONGOING_TEST_LOGS === '1';
+}
 
-  constructor() {
-    // console.warn('!isEmpty(process.env.PRINT_TEST_LOGS)', !isEmpty(process.env.PRINT_TEST_LOGS));
-    this.printTestConsole = !isEmpty(process.env.PRINT_TEST_LOGS);
-  }
+function printFailedTestLogs() {
+  return process.env.PRINT_FAILED_TEST_LOGS === '1';
+}
+
+class SessionReporter implements Reporter {
+  private startTime = 0;
+  private allTestsCount = 0;
+  private allResults: Array<TestAndResult> = [];
+  private countWorkers = 1;
 
   onBegin(config: FullConfig, suite: Suite) {
     this.allTestsCount = suite.allTests().length;
@@ -104,15 +107,19 @@ class SessionReporter implements Reporter {
           `\t\tFinished test "${test.title}": ${result.status} with stdout/stderr`
         )}`
       );
-      console.info(`stdout:`);
-      result.stdout.map(t => process.stdout.write(t.toString()));
+      if (printFailedTestLogs()) {
+        console.info(`stdout:`);
+        result.stdout.map(t => process.stdout.write(t.toString()));
 
-      console.info('stderr:');
-      result.stderr.map(t => process.stderr.write(t.toString()));
+        console.info('stderr:');
+        result.stderr.map(t => process.stderr.write(t.toString()));
+      } else {
+        console.info(`not printing stderr/stdout as PRINT_FAILED_TEST_LOGS is not '1'`);
+      }
 
       const lastError = result.errors[result.errors.length - 1];
       console.info(
-        `test failed with "${lastError.message}" \n\tvalue:${lastError?.value} \n\tsnippet:${lastError.snippet} \n\tstack:${lastError?.stack}`
+        `test failed with "${lastError?.message || 'unknown'}"\n\tsnippet:${lastError?.snippet || 'unknown'} \n\tstack:${lastError?.stack || 'unknown'}`
       );
     } else {
       console.log(
@@ -192,14 +199,18 @@ class SessionReporter implements Reporter {
   }
 
   onStdOut?(chunk: string | Buffer, test: void | TestCase, _result: void | TestResult) {
-    if (this.printTestConsole) {
-      process.stdout.write(`"${test ? `${chalk.cyanBright(test.title)}` : ''}": ${chunk}`);
+    if (printOngoingTestLogs()) {
+      process.stdout.write(
+        `"${test ? `${chalk.cyanBright(test.title)}` : ''}": ${isString(chunk) ? chunk : chunk.toString('utf-8')}`
+      );
     }
   }
 
   onStdErr?(chunk: string | Buffer, test: void | TestCase, _result: void | TestResult) {
-    if (this.printTestConsole) {
-      process.stdout.write(`"${test ? `${chalk.cyanBright(test.title)}` : ''}":err: ${chunk}`);
+    if (printOngoingTestLogs()) {
+      process.stdout.write(
+        `"${test ? `${chalk.cyanBright(test.title)}` : ''}":err: ${isString(chunk) ? chunk : chunk.toString('utf-8')}`
+      );
     }
   }
 

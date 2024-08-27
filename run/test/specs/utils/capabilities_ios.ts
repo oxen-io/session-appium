@@ -1,6 +1,7 @@
 import { AppiumXCUITestCapabilities } from '@wdio/types/build/Capabilities';
 import { W3CCapabilities } from '@wdio/types/build/Capabilities';
 import dotenv from 'dotenv';
+import { IntRange } from '../../../types/RangeType';
 dotenv.config();
 const iosPathPrefix = process.env.IOS_APP_PATH_PREFIX;
 
@@ -26,7 +27,18 @@ const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   // "appium:isHeadless": true,
 } as AppiumXCUITestCapabilities;
 
-export type CapabilitiesIndexType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+const MAX_CAPABILITIES_INDEX = 8;
+export type CapabilitiesIndexType = IntRange<0, typeof MAX_CAPABILITIES_INDEX>;
+
+export function capabilityIsValid(
+  capabilitiesIndex: number
+): capabilitiesIndex is CapabilitiesIndexType {
+  if (capabilitiesIndex < 0 || capabilitiesIndex > MAX_CAPABILITIES_INDEX) {
+    return false;
+  }
+  return true;
+}
+
 interface CustomW3CCapabilities extends W3CCapabilities {
   'appium:wdaLocalPort': number;
   'appium:udid': string;
