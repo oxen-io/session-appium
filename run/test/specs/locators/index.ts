@@ -174,3 +174,21 @@ export class MediaMessage extends LocatorsInterface {
     }
   }
 }
+// Need to update test tags
+// export class BlockUser extends LocatorsInterface {
+//   public build(): StrategyExtractionObj {
+//     switch (this.platform) {
+//       case 'android':
+//         return {
+//           strategy: 'accessibility id',
+//           selector: 'Switch',
+//           text: 'Block',
+//         };
+//       case 'ios':
+//         return {
+//           strategy: 'accessibility id',
+//           selector: 'Block',
+//         };
+//     }
+//   }
+// }

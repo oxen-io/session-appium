@@ -26,7 +26,9 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
   // Click on three dots (settings)
   await device1.clickOnByAccessibilityID('More options');
   // Select Block option
-  await runOnlyOnIOS(platform, () => device1.clickOnByAccessibilityID('Block'));
+  await runOnlyOnIOS(platform, () =>
+    device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Switch', text: 'Block' })
+  );
   // Wait for menu to be clickable (Android)
   await sleepFor(500);
   await runOnlyOnAndroid(platform, () =>
