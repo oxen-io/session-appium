@@ -133,6 +133,7 @@ export type XPath =
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.ScrollView/androidx.viewpager.widget.ViewPager/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.FrameLayout[1]`
   | `//XCUIElementTypeAlert//*//XCUIElementTypeButton`
   | `(//XCUIElementTypeImage[@name="gif cell"])[1]`;
+
 export type AccessibilityId =
   | 'Create account button'
   | 'Account ID'
@@ -225,6 +226,7 @@ export type AccessibilityId =
   | 'Delete'
   | 'Block message request'
   | 'Block'
+  | 'Switch'
   | 'Unblock'
   | 'Confirm block'
   | 'Blocked contacts'
@@ -305,8 +307,21 @@ export type AccessibilityId =
   | '1 week'
   | '2 weeks'
   | 'Off'
+  | '5 seconds - Radio'
+  | '10 seconds - Radio'
+  | '30 seconds - Radio'
+  | '1 minute - Radio'
+  | '5 minutes - Radio'
+  | '30 minutes - Radio'
+  | '1 hour - Radio'
+  | '12 hours - Radio'
+  | '1 day - Radio'
+  | '1 week - Radio'
+  | '2 weeks - Radio'
+  | 'Off - Radio'
   | 'Loading animation'
   | 'Recovery password container'
   | 'Copy button'
   | 'space'
-  | 'Recovery password input';
+  | 'Recovery password input'
+  | 'Read Receipts - Switch';

@@ -11,6 +11,7 @@ import {
 } from '../../run/test/specs/locators';
 import { IOS_XPATHS } from '../constants';
 import { clickOnCoordinates, sleepFor } from '../test/specs/utils';
+import { getAdbFullPath } from '../test/specs/utils/binaries';
 import { SupportedPlatformsType } from '../test/specs/utils/open_app';
 import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/specs/utils/utilities';
 import {
@@ -25,7 +26,6 @@ import {
   User,
   XPath,
 } from './testing';
-import { getAdbFullPath } from '../test/specs/utils/binaries';
 
 export type Coordinates = {
   x: number;
@@ -985,6 +985,7 @@ export class DeviceWrapper {
     console.log(`${sender.userName} + " sent message to ${receiver.userName}`);
     await this.sendMessage(message);
     console.log(`Message received by ${receiver.userName} from ${sender.userName}`);
+    return message;
   }
 
   public async replyToMessage(user: User, body: string) {
@@ -1053,7 +1054,7 @@ export class DeviceWrapper {
   public async disappearRadioButtonSelectediOS(timeOption: DMTimeOption) {
     const radioButton = await this.waitForTextElementToBePresent({
       strategy: 'accessibility id',
-      selector: timeOption,
+      selector: `${timeOption} - Radio`,
     });
     const attr = await this.getAttribute('value', radioButton.ELEMENT);
     if (attr === 'selected') {
