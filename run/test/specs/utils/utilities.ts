@@ -1,6 +1,5 @@
 import { pick } from 'lodash';
 import * as util from 'util';
-import { sleepFor } from '.';
 import { getAdbFullPath } from './binaries';
 
 import { exec as execNotPromised } from 'child_process';
@@ -52,25 +51,24 @@ export const installAppToDeviceName = async (appFullPath: string, emulatorName: 
   }
   // If needing logs uncomment this
   // await runScriptAndLog(`emulator -avd ${emulatorName}`, true);
-  const start = Date.now();
   const adb = getAdbFullPath();
 
-  await runScriptAndLog(`${adb} -s ${emulatorName} uninstall io.appium.uiautomator2.server`);
-  await runScriptAndLog(`${adb} -s ${emulatorName} uninstall io.appium.uiautomator2.server.test`);
-  await runScriptAndLog(`${adb} -s ${emulatorName} uninstall io.appium.unlock`);
-  await runScriptAndLog(`${adb} -s ${emulatorName} uninstall io.appium.settings`);
-  await runScriptAndLog(
-    `${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-debug-androidTest.apk`
-  );
-  await runScriptAndLog(
-    `${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-v4.27.0.apk`
-  );
-  await sleepFor(100);
-  await runScriptAndLog(
-    `${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/io.appium.settings/apks/settings_apk-debug.apk`
-  );
-  await sleepFor(100);
-  await runScriptAndLog(`${adb} -s ${emulatorName} install -g -t ${appFullPath}`);
+  // await runScriptAndLog(`${adb} -s ${emulatorName} uninstall io.appium.uiautomator2.server`);
+  // await runScriptAndLog(`${adb} -s ${emulatorName} uninstall io.appium.uiautomator2.server.test`);
+  // await runScriptAndLog(`${adb} -s ${emulatorName} uninstall io.appium.unlock`);
+  // await runScriptAndLog(`${adb} -s ${emulatorName} uninstall io.appium.settings`);
+  // await runScriptAndLog(
+  //   `${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-debug-androidTest.apk`
+  // );
+  // await runScriptAndLog(
+  //   `${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/appium-uiautomator2-server/apks/appium-uiautomator2-server-v4.27.0.apk`
+  // );
+  // await sleepFor(100);
+  // await runScriptAndLog(
+  //   `${adb} -s ${emulatorName} install -g ./node_modules/appium/node_modules/io.appium.settings/apks/settings_apk-debug.apk`
+  // );
+  // await sleepFor(100);
+  await runScriptAndLog(`${adb} -s ${emulatorName} install -g -t ${appFullPath}`, true);
 };
 
 export const isDeviceIOS = (device: unknown) => {
