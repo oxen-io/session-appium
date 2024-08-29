@@ -47,7 +47,7 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   await sleepFor(1000);
   const base64 = await device.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
-  // console.log('base64 of image:', base64);
+
   console.log('RGB Value of pixel is:', pixelColor);
   if (pixelColor === pixelHexColour) {
     console.log('Colour is correct on device 1');
