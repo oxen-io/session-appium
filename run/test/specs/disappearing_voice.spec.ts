@@ -1,4 +1,3 @@
-import { ANDROID_XPATHS } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { DisappearActions } from '../../types/testing';
 import { sleepFor } from './utils';
@@ -20,10 +19,7 @@ async function disappearingVoiceMessage1o1Ios(platform: SupportedPlatformsType) 
   await newContact(platform, device1, userA, device2, userB);
   await setDisappearingMessage(platform, device1, ['1:1', 'Disappear after read option'], device2);
   // await device1.navigateBack(platform);
-  await device1.longPress('New voice message');
-  await device1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
-  // await device1.clickOnByAccessibilityID("OK");
-  await device1.pressAndHold('New voice message');
+  await device1.sendVoiceMessage();
   await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Voice message',
@@ -65,10 +61,7 @@ async function disappearingVoiceMessage1o1Android(platform: SupportedPlatformsTy
   // );
   // Wait for control messages to disappear
   // await sleepFor(60000);
-  await device1.longPress('New voice message');
-  await device1.clickOnByAccessibilityID('Continue');
-  await device1.clickOnElementXPath(ANDROID_XPATHS.VOICE_TOGGLE);
-  await device1.pressAndHold('New voice message');
+  await device1.sendVoiceMessage();
   // await device1.clickOnByAccessibilityID("OK");
   // await device1.pressAndHold("New voice message");
   await device1.waitForTextElementToBePresent({

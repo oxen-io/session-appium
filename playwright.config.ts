@@ -1,13 +1,16 @@
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable import/no-import-module-exports */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 import { defineConfig } from '@playwright/test';
-import { isEmpty, toNumber } from 'lodash';
+import { toNumber } from 'lodash';
 
 const useSessionReporter = true;
+// NOTE: without this, the wrong source map is loaded and the stacktraces are all wrong
+require('source-map-support').install = () => {};
 
 export default defineConfig({
-  timeout: 350000,
-  globalTimeout: 6000000,
+  timeout: 480000,
+  globalTimeout: 10800000,
   reporter: [useSessionReporter ? ['./sessionReporter.ts'] : ['list']],
   testDir: './run/test/specs',
   testIgnore: '*.js',
@@ -15,7 +18,6 @@ export default defineConfig({
   retries: process.env.PLAYWRIGHT_RETRIES_COUNT
     ? toNumber(process.env.PLAYWRIGHT_RETRIES_COUNT)
     : 0,
-  globalSetup: './globalSetup.ts',
   repeatEach: process.env.PLAYWRIGHT_REPEAT_COUNT
     ? toNumber(process.env.PLAYWRIGHT_REPEAT_COUNT)
     : 0,

@@ -1,25 +1,21 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  androidCapabilities,
-  getAndroidCapabilities,
-  getAndroidUdid,
-} from './capabilities_android';
-import { CapabilitiesIndexType, getIosCapabilities } from './capabilities_ios';
-import { installAppToDeviceName, runScriptAndLog } from './utilities';
+import { getAndroidCapabilities, getAndroidUdid } from './capabilities_android';
+import { CapabilitiesIndexType, capabilityIsValid, getIosCapabilities } from './capabilities_ios';
+import { runScriptAndLog } from './utilities';
 
 import AndroidUiautomator2Driver from 'appium-uiautomator2-driver';
-import XCUITestDriver, { XCUITestDriverOpts } from 'appium-xcuitest-driver/build/lib/driver';
+import { XCUITestDriverOpts } from 'appium-xcuitest-driver/build/lib/driver';
 
 import { DriverOpts } from 'appium/build/lib/appium';
-import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { getAdbFullPath, getAvdManagerFullPath, getEmulatorFullPath } from './binaries';
-import { sleepFor } from './sleep_for';
 import { compact } from 'lodash';
-import { linkedDevice } from './link_device';
-import { newUser } from './create_account';
+import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User } from '../../../types/testing';
-import { newContact } from './create_contact';
 import { cleanPermissions } from './before_test_setup';
+import { getAdbFullPath, getAvdManagerFullPath, getEmulatorFullPath } from './binaries';
+import { newUser } from './create_account';
+import { newContact } from './create_contact';
+import { linkedDevice } from './link_device';
+import { sleepFor } from './sleep_for';
 
 const APPIUM_PORT = 4728;
 export const APPIUM_IOS_PORT = 8110;
@@ -212,14 +208,22 @@ const openAndroidApp = async (
 ): Promise<{
   device: DeviceWrapper;
 }> => {
-  const targetName = getAndroidUdid(capabilitiesIndex);
-  const actualCapabilitiesIndex =
-    capabilitiesIndex + 4 * parseInt(process.env.TEST_PARALLEL_INDEX || '0');
+  const parrallelIndex = process.env.TEST_PARALLEL_INDEX || '1';
+  console.info('process.env.TEST_PARALLEL_INDEX:', process.env.TEST_PARALLEL_INDEX, parrallelIndex);
+  const parrallelIndexNumber = parseInt(parrallelIndex);
+  const actualCapabilitiesIndex = capabilitiesIndex + 4 * parrallelIndexNumber;
+
+  if (!capabilityIsValid(actualCapabilitiesIndex)) {
+    throw new Error(`Invalid actual capability given: ${actualCapabilitiesIndex}`);
+  }
+
   if (isNaN(actualCapabilitiesIndex)) {
     console.info('actualCapabilities worker is not a number', actualCapabilitiesIndex);
   } else {
     console.info('actualCapabilities worker', actualCapabilitiesIndex);
   }
+  const targetName = getAndroidUdid(actualCapabilitiesIndex);
+
   const emulatorAlreadyRunning = await isEmulatorRunning(targetName);
   console.info('emulatorAlreadyRunning', targetName, emulatorAlreadyRunning);
   if (!emulatorAlreadyRunning) {
@@ -229,41 +233,40 @@ const openAndroidApp = async (
   await waitForEmulatorToBeRunning(targetName);
   console.log(targetName, ' emulator booted');
 
-  await installAppToDeviceName(androidCapabilities.androidAppFullPath, targetName);
-  const capabilities = getAndroidCapabilities(actualCapabilitiesIndex as CapabilitiesIndexType);
+  const capabilities = getAndroidCapabilities(actualCapabilitiesIndex);
   console.log(
     `Android App Full Path: ${
-      getAndroidCapabilities(capabilitiesIndex)['alwaysMatch']['appium:app']
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      getAndroidCapabilities(actualCapabilitiesIndex)['alwaysMatch']['appium:app'] as any
     }`
   );
+  console.info('capabilities', capabilities);
 
   const opts: DriverOpts = {
     address: `http://localhost:${APPIUM_PORT}`,
   } as DriverOpts;
 
   const device = new AndroidUiautomator2Driver(opts);
-  const udid = getAndroidUdid(capabilitiesIndex);
+  const udid = getAndroidUdid(actualCapabilitiesIndex);
   console.log(`udid: ${udid}`);
   const wrappedDevice = new DeviceWrapper(device, udid);
 
-  await runScriptAndLog(`adb -s ${targetName} shell settings put global heads_up_notifications_enabled 0
+  await runScriptAndLog(`${getAdbFullPath()} -s ${targetName} shell settings put global heads_up_notifications_enabled 0
     `);
-  await runScriptAndLog(`adb -s ${targetName} shell settings put global window_animation_scale 0
+  await runScriptAndLog(`${getAdbFullPath()} -s ${targetName} shell settings put global window_animation_scale 0
     `);
-  await runScriptAndLog(`adb -s ${targetName} shell settings put global transition_animation_scale 0
+  await runScriptAndLog(`${getAdbFullPath()} -s ${targetName} shell settings put global transition_animation_scale 0
     `);
-  await runScriptAndLog(`adb -s ${targetName} shell settings put global animator_duration_scale 0
+  await runScriptAndLog(`${getAdbFullPath()} -s ${targetName} shell settings put global animator_duration_scale 0
     `);
 
-  console.info('1');
   await wrappedDevice.createSession(capabilities);
-  console.info('2');
+
   await (device as any).updateSettings({
     ignoreUnimportantViews: false,
     allowInvisibleElements: true,
     enableMultiWindows: true,
   });
-  console.info('3');
   return { device: wrappedDevice };
 };
 

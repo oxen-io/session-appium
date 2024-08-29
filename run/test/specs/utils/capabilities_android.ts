@@ -3,10 +3,9 @@ import {
   AppiumCapabilities,
   W3CCapabilities,
 } from '@wdio/types/build/Capabilities';
-// import { W3CCapabilities } from "appium/build/lib/appium";
-import { isNil, isString } from 'lodash';
-import { CapabilitiesIndexType } from './capabilities_ios';
 import dotenv from 'dotenv';
+import { isString } from 'lodash';
+import { CapabilitiesIndexType } from './capabilities_ios';
 dotenv.config();
 // Access the environment variable
 const androidPathPrefix = process.env.ANDROID_APP_PATH_PREFIX;

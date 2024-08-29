@@ -29,13 +29,22 @@ export const setDisappearingMessage = async (
     strategy: 'accessibility id',
     selector: DISAPPEARING_TIMES.ONE_DAY,
   });
+  if (platform === 'ios' && timerType === 'Disappear after read option') {
+    if (enforcedType === '1:1' || enforcedType === 'Note to Self') {
+      await device.disappearRadioButtonSelectediOS(DISAPPEARING_TIMES.TWELVE_HOURS);
+      await device.disappearRadioButtonSelectediOS(DISAPPEARING_TIMES.OFF);
+    } else {
+      await device.disappearRadioButtonSelectediOS(DISAPPEARING_TIMES.ONE_DAY);
+    }
+  } else {
+    await device.disappearRadioButtonSelectedAndroid(DISAPPEARING_TIMES.ONE_DAY);
+  }
 
-  await device.disappearRadioButtonSelected(DISAPPEARING_TIMES.ONE_DAY);
   await device.clickOnElementAll({
     strategy: 'accessibility id',
     selector: timerDuration,
   });
-  await device.clickOnByAccessibilityID('Set button');
+  await device.clickOnElementAll({ strategy: 'accessibility id', selector: 'Set button' });
   await runOnlyOnIOS(platform, () => device.navigateBack(platform));
   await sleepFor(1000);
   if (device2) {

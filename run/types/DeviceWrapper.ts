@@ -3,14 +3,17 @@ import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
 import { XCUITestDriver } from 'appium-xcuitest-driver/build/lib/driver';
 import { isArray, isEmpty } from 'lodash';
 import {
+  ChangeProfilePictureButton,
   ExitUserProfile,
   FirstGif,
+  ImagePermissionsModalAllow,
   LocatorsInterface,
   PrivacyButton,
   ReadReceiptsButton,
 } from '../../run/test/specs/locators';
 import { IOS_XPATHS } from '../constants';
 import { clickOnCoordinates, sleepFor } from '../test/specs/utils';
+import { getAdbFullPath } from '../test/specs/utils/binaries';
 import { SupportedPlatformsType } from '../test/specs/utils/open_app';
 import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/specs/utils/utilities';
 import {
@@ -375,7 +378,49 @@ export class DeviceWrapper {
       selector: 'Conversation list item',
       text: userName,
     });
-    await this.longClick(el, 3000);
+    const maxRetries = 3;
+    let attempt = 0;
+    let success = false;
+
+    while (attempt < maxRetries && !success) {
+      try {
+        const el = await this.waitForTextElementToBePresent({
+          strategy: 'accessibility id',
+          selector: 'Conversation list item',
+          text: userName,
+        });
+
+        if (!el) {
+          throw new Error(
+            `longPress on conversation list: ${userName} unsuccessful, couldn't find conversation`
+          );
+        }
+
+        await this.longClick(el, 3000);
+        await sleepFor(1000);
+        const longPressSuccess = await this.waitForTextElementToBePresent({
+          strategy: 'accessibility id',
+          selector: 'Details',
+          maxWait: 1000,
+        });
+
+        if (longPressSuccess) {
+          console.log('LongClick successful');
+          success = true; // Exit the loop if successful
+        } else {
+          throw new Error(`longPress on conversation list: ${userName} unsuccessful`);
+        }
+      } catch (error) {
+        attempt++;
+        if (attempt >= maxRetries) {
+          throw new Error(
+            `Longpress on conversation: ${userName} unsuccessful after ${maxRetries} attempts, ${error}`
+          );
+        }
+        console.log(`Longpress attempt ${attempt} failed. Retrying...`);
+        await sleepFor(1000);
+      }
+    }
   }
 
   public async pressAndHold(accessibilityId: AccessibilityId) {
@@ -729,7 +774,6 @@ export class DeviceWrapper {
           `${strategy}: '${selector}'`
         );
       }
-
       if (!el) {
         await sleepFor(waitPerLoop);
       }
@@ -943,6 +987,7 @@ export class DeviceWrapper {
     console.log(`${sender.userName} + " sent message to ${receiver.userName}`);
     await this.sendMessage(message);
     console.log(`Message received by ${receiver.userName} from ${sender.userName}`);
+    return message;
   }
 
   public async replyToMessage(user: User, body: string) {
@@ -984,6 +1029,7 @@ export class DeviceWrapper {
   ) {
     let el: null | AppiumNextElementType = null;
     let locator: StrategyExtractionObj & { text?: string; maxWait?: number };
+
     if (args instanceof LocatorsInterface) {
       locator = args.build();
     } else {
@@ -993,9 +1039,11 @@ export class DeviceWrapper {
       };
     }
 
+    console.log('Locator being used:', locator);
+
     el = await this.waitForTextElementToBePresent({ ...locator });
     if (!el) {
-      throw new Error(`inputText: Did not find accessibilityId: ${locator} `);
+      throw new Error(`inputText: Did not find element with locator: ${JSON.stringify(locator)}`);
     }
 
     await this.setValueImmediate(textToInput, el.ELEMENT);
@@ -1005,18 +1053,28 @@ export class DeviceWrapper {
     return this.toShared().getAttribute(attribute, elementId);
   }
 
-  public async disappearRadioButtonSelected(timeOption: DMTimeOption) {
-    try {
-      const radioButton = await this.findElementByXPath(`//*[./*[@name='${timeOption}']]/*[2]`);
-
-      const attr = await this.getAttribute('value', radioButton.ELEMENT);
-      if (attr === 'selected') {
-        console.log('Great success - default time is correct');
-      } else {
-        throw new Error('Dammit - default time was not correct');
-      }
-    } catch (e) {
-      console.log(`Couldn't find radioButton ${timeOption}`);
+  public async disappearRadioButtonSelectediOS(timeOption: DMTimeOption) {
+    const radioButton = await this.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: `${timeOption} - Radio`,
+    });
+    const attr = await this.getAttribute('value', radioButton.ELEMENT);
+    if (attr === 'selected') {
+      console.log('Great success - default time is correct');
+    } else {
+      throw new Error('Dammit - default time was not correct');
+    }
+  }
+  public async disappearRadioButtonSelectedAndroid(timeOption: DMTimeOption) {
+    const radioButton = await this.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: timeOption,
+    });
+    const attr = await this.getAttribute('selected', radioButton.ELEMENT);
+    if (attr) {
+      console.log('Great success - default time is correct');
+    } else {
+      throw new Error('Dammit - default time was not correct');
     }
   }
 
@@ -1083,7 +1141,7 @@ export class DeviceWrapper {
       });
       if (!testImage) {
         await runScriptAndLog(
-          `adb -s emulator-5554 push 'run/test/specs/media/test_image.jpg' /storage/emulated/0/Download`,
+          `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/test_image.jpg' /storage/emulated/0/Download`,
           true
         );
       }
@@ -1208,7 +1266,7 @@ export class DeviceWrapper {
     if (!testVideo) {
       // Adds video to downloads folder if it isn't already there
       await runScriptAndLog(
-        `adb -s emulator-5554 push 'run/test/specs/media/test_video.mp4' /storage/emulated/0/Download`,
+        `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/test_video.mp4' /storage/emulated/0/Download`,
         true
       );
     }
@@ -1249,7 +1307,7 @@ export class DeviceWrapper {
       });
       if (!testDocument) {
         await runScriptAndLog(
-          `adb -s emulator-5554 push 'run/test/specs/media/test_file.pdf' /storage/emulated/0/Download`,
+          `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/test_file.pdf' /storage/emulated/0/Download`,
           true
         );
       }
@@ -1285,6 +1343,93 @@ export class DeviceWrapper {
         selector: 'Text input box',
       });
       await this.clickOnByAccessibilityID('Send button');
+    }
+  }
+
+  public async sendVoiceMessage() {
+    await this.longPress('New voice message');
+    if (this.isAndroid()) {
+      await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Continue' });
+      await this.clickOnElementAll({
+        strategy: 'id',
+        selector: 'com.android.permissioncontroller:id/permission_allow_foreground_only_button',
+        text: 'While using the app',
+      });
+    } else if (this.isIOS()) {
+      await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
+    }
+    await this.pressAndHold('New voice message');
+  }
+
+  public async uploadProfilePicture() {
+    const spongebobsBirthday = '199805010700.00';
+    await this.clickOnByAccessibilityID('User settings');
+    // Click on Profile picture
+    await this.clickOnByAccessibilityID('User settings');
+    await this.clickOnElementAll(new ChangeProfilePictureButton(this));
+    if (this.isIOS()) {
+      await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
+      const profilePicture = await this.doesElementExist({
+        strategy: 'accessibility id',
+        selector: `Photo, 01 May 1998, 7:00 am`,
+        maxWait: 2000,
+      });
+      if (!profilePicture) {
+        await runScriptAndLog(
+          `touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/profile_picture.jpg'`
+        );
+
+        await runScriptAndLog(
+          `xcrun simctl addmedia ${
+            (this as { udid?: string }).udid || ''
+          } 'run/test/specs/media/profile_picture.jpg'`,
+          true
+        );
+      }
+      await sleepFor(100);
+      await this.clickOnElementAll({
+        strategy: 'accessibility id',
+        selector: 'Photo, 01 May 1998, 7:00 am',
+      });
+      await this.clickOnByAccessibilityID('Done');
+
+      await this.clickOnByAccessibilityID('Save');
+    } else if (this.isAndroid()) {
+      await this.clickOnElementAll(new ImagePermissionsModalAllow(this));
+      await sleepFor(1000);
+      await this.clickOnElementAll({
+        strategy: 'id',
+        selector: 'android:id/text1',
+        text: 'Files',
+      });
+      await sleepFor(500);
+      // Select file
+      const profilePicture = await this.doesElementExist({
+        strategy: 'accessibility id',
+        selector: `profile_picture.jpg, 27.75 kB, May 1, 1999`,
+        maxWait: 5000,
+      });
+      // If no image, push file to this
+      if (!profilePicture) {
+        await runScriptAndLog(
+          `touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/profile_picture.jpg'`
+        );
+
+        await runScriptAndLog(
+          `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/profile_picture.jpg' /sdcard/Download/`,
+          true
+        );
+        // Verifies that the file was successful downloaded to this
+        // await runScriptAndLog(
+        //   `${getAdbFullPath()} -s emulator-5554 shell ls /sdcard/Download/`,
+        //   true
+        // );
+      }
+      await this.clickOnElementAll({
+        strategy: 'accessibility id',
+        selector: 'profile_picture.jpg, 27.75 kB, May 1, 1999',
+      });
+      await this.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop');
     }
   }
 

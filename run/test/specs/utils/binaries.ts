@@ -1,3 +1,4 @@
+import { existsSync } from 'fs';
 import { join } from 'path';
 
 export const getAndroidBinariesRoot = () => {
@@ -8,11 +9,16 @@ export const getAndroidBinariesRoot = () => {
 };
 
 export const getAdbFullPath = () => {
-  if (!process.env.APPIUM_ADB_FULL_PATH) {
+  const fromEnv = process.env.APPIUM_ADB_FULL_PATH;
+  if (!fromEnv) {
     throw new Error('env variable `APPIUM_ADB_FULL_PATH` needs to be set');
   }
 
-  return process.env.APPIUM_ADB_FULL_PATH;
+  if (!existsSync(fromEnv)) {
+    throw new Error('adb does not exist at: ' + fromEnv);
+  }
+
+  return fromEnv;
 };
 
 export const getEmulatorFullPath = () => {
