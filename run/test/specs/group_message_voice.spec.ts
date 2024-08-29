@@ -1,4 +1,3 @@
-import { ANDROID_XPATHS } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
