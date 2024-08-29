@@ -1,5 +1,5 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { DisappearModes } from '../../types/testing';
+import { DisappearModes, DMTimeOption } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -20,13 +20,14 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
   ]);
   const testMessage = 'Checking disappear after read is working';
   const mode: DisappearModes = 'read';
+  const time: DMTimeOption = '30 seconds';
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // Click conversation options menu (three dots)
   await setDisappearingMessage(
     platform,
     device1,
-    ['1:1', `Disappear after ${mode} option`],
+    ['1:1', `Disappear after ${mode} option`, time],
     device2
   );
   // Check control message is correct on device 2
@@ -39,7 +40,7 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
     //   `You set messages to disappear ${time} after they have been ${mode}.`
     // );
   } else {
-    `${userA.userName} has set messages to disappear 30 seconds after they have been ${mode}.`;
+    `${userA.userName} has set messages to disappear ${time} after they have been ${mode}.`;
   }
   // Send message to verify that deletion is working
   await device1.sendMessage(testMessage);
