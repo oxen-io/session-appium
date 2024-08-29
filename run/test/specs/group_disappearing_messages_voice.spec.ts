@@ -26,19 +26,7 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   await setDisappearingMessage(platform, device1, ['Group', 'Disappear after send option']);
   // await device1.navigateBack(platform);
-  await device1.longPress('New voice message');
-  if (platform === 'android') {
-    await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Continue' });
-    await device1.clickOnElementAll({
-      strategy: 'id',
-      selector: 'com.android.permissioncontroller:id/permission_allow_foreground_only_button',
-      text: 'While using the app',
-    });
-  }
-  if (platform === 'ios') {
-    await device1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
-  }
-  await device1.pressAndHold('New voice message');
+  await device1.sendVoiceMessage();
   await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Voice message',

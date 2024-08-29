@@ -1,4 +1,5 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
+import { ApplyChanges } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
@@ -53,7 +54,7 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   // Click done/apply
   await device1.clickOnByAccessibilityID('Accept name change');
 
-  await device1.clickOnByAccessibilityID('Apply changes');
+  await device1.clickOnElementAll(new ApplyChanges(device1));
   // If ios click back to match android (which goes back to conversation screen)
   // Check config message for changed name (different on ios and android)
   // Config message on ios is "Title is now blah"
@@ -94,7 +95,7 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   await device1.inputText(newGroupName, { strategy: 'accessibility id', selector: 'Group name' });
   // Click done/apply
   await device1.clickOnByAccessibilityID('Accept name change');
-  await device1.clickOnElementById('network.loki.messenger:id/action_apply');
+  await device1.clickOnElementAll(new ApplyChanges(device1));
   // Check config message for changed name (different on ios and android)
   // Config on Android is "You renamed the group to blah"
   await device1.waitForControlMessageToBePresent(`You renamed the group to ${newGroupName}`);

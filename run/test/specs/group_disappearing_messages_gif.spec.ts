@@ -8,8 +8,6 @@ import { setDisappearingMessage } from './utils/set_disappearing_messages';
 iosIt('Disappearing GIF to group', disappearingGifMessageGroup);
 androidIt('Disappearing GIF to group', disappearingGifMessageGroup);
 
-// bothPlatformsIt("Send disappearing GIF to group", disappearingGifMessageGroup);
-
 async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
   const testGroupName = 'Disappear after sent test';
   const testMessage = "Testing disappearing messages for GIF's";
