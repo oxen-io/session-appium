@@ -89,7 +89,8 @@ export class DeviceWrapper {
   }
 
   public async getCssProperty(name: string, elementId: string): Promise<string> {
-    return this.toShared().getCssProperty(name, elementId);
+    const cssProp: string = await this.toShared().getCssProperty(name, elementId);
+    return cssProp;
   }
 
   public async scroll(start: Coordinates, end: Coordinates, duration: number): Promise<void> {
@@ -173,7 +174,8 @@ export class DeviceWrapper {
 
   // Session management
   public async createSession(caps: W3CCapabilities): Promise<[string, Record<string, any>]> {
-    return this.toShared().createSession(caps);
+    const createSession: string = await this.toShared().createSession(caps);
+    return [createSession, caps];
   }
 
   public async deleteSession(): Promise<void> {
@@ -338,6 +340,7 @@ export class DeviceWrapper {
           strategy: 'accessibility id',
           selector: 'Message body',
           text: textToLookFor,
+          maxWait: 1000,
         });
 
         if (!el) {
@@ -363,7 +366,7 @@ export class DeviceWrapper {
         attempt++;
         if (attempt >= maxRetries) {
           throw new Error(
-            `Longpress on message: ${textToLookFor} unsuccessful after ${maxRetries} attempts, ${error}`
+            `Longpress on message: ${textToLookFor} unsuccessful after ${maxRetries} attempts, ${error as string}`
           );
         }
         console.log(`Longpress attempt ${attempt} failed. Retrying...`);
@@ -373,11 +376,6 @@ export class DeviceWrapper {
   }
 
   public async longPressConversation(userName: string) {
-    const el = await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Conversation list item',
-      text: userName,
-    });
     const maxRetries = 3;
     let attempt = 0;
     let success = false;
@@ -411,14 +409,15 @@ export class DeviceWrapper {
           throw new Error(`longPress on conversation list: ${userName} unsuccessful`);
         }
       } catch (error) {
-        attempt++;
-        if (attempt >= maxRetries) {
-          throw new Error(
-            `Longpress on conversation: ${userName} unsuccessful after ${maxRetries} attempts, ${error}`
-          );
-        }
         console.log(`Longpress attempt ${attempt} failed. Retrying...`);
+        attempt++;
         await sleepFor(1000);
+        if (attempt >= maxRetries) {
+          if (error instanceof Error) {
+            error.message = `Longpress on conversation: ${userName} unsuccessful after ${maxRetries} attempts, ${error.message}`;
+          }
+          throw error;
+        }
       }
     }
   }
@@ -474,7 +473,7 @@ export class DeviceWrapper {
 
     el = await this.waitForTextElementToBePresent({ ...locator });
 
-    let maxRetries = 3;
+    const maxRetries = 3;
     let retries = 0;
     let success = false;
 
@@ -780,11 +779,18 @@ export class DeviceWrapper {
       currentWait += waitPerLoop;
 
       if (currentWait >= maxWaitMSec) {
-        console.log('Waited too long');
-        throw new Error(`Waited for too long looking for '${selector}' and '${text}`);
+        if (text) {
+          throw new Error(`Waited for too long looking for '${selector}' and '${text}`);
+        } else {
+          throw new Error(`Waited for too long looking for '${selector}'`);
+        }
+      }
+      if (text) {
+        console.log(`'${selector}' and '${text}' has been found`);
+      } else {
+        console.log(`'${selector}' has been found`);
       }
     }
-    console.log(`'${selector}' and '${text}' has been found`);
     return el;
   }
 
@@ -922,7 +928,7 @@ export class DeviceWrapper {
       strategy: 'accessibility id',
       selector: 'Message sent status: Sending',
     });
-    let failedStatus = await this.waitForTextElementToBePresent({
+    const failedStatus = await this.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message sent status: Failed to send',
     });
@@ -997,6 +1003,7 @@ export class DeviceWrapper {
     const longPressSuccess = await this.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Reply to message',
+      maxWait: 1000,
     });
     if (longPressSuccess) {
       await this.clickOnByAccessibilityID('Reply to message');
@@ -1324,14 +1331,14 @@ export class DeviceWrapper {
   public async sendGIF(message: string) {
     await this.clickOnByAccessibilityID('Attachments button');
     if (this.isAndroid()) {
-      this.clickOnElementAll({ strategy: 'accessibility id', selector: 'GIF button' });
+      await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'GIF button' });
     }
     if (this.isIOS()) {
       const keyboard = await this.isKeyboardVisible();
       if (keyboard) {
         await clickOnCoordinates(this, InteractionPoints.GifButtonKeyboardOpen);
       } else {
-        clickOnCoordinates(this, InteractionPoints.GifButtonKeyboardClosed);
+        await clickOnCoordinates(this, InteractionPoints.GifButtonKeyboardClosed);
       }
     }
     await this.clickOnByAccessibilityID('Continue', 5000);
@@ -1371,6 +1378,7 @@ export class DeviceWrapper {
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
       const profilePicture = await this.doesElementExist({
         strategy: 'accessibility id',
+        // eslint-disable-next-line no-irregular-whitespace
         selector: `Photo, 01 May 1998, 7:00 am`,
         maxWait: 2000,
       });
@@ -1436,8 +1444,8 @@ export class DeviceWrapper {
   public async getTimeFromDevice(platform: SupportedPlatformsType): Promise<string> {
     let timeString = '';
     try {
-      let time = await this.getDeviceTime(platform);
-      timeString = await time.toString();
+      const time = await this.getDeviceTime(platform);
+      timeString = time.toString();
       console.log(`Device time: ${timeString}`);
     } catch (e) {
       console.log(`Couldn't get time from device`);
@@ -1580,7 +1588,7 @@ export class DeviceWrapper {
       });
 
       if (permissions) {
-        this.clickOnElementAll({
+        await this.clickOnElementAll({
           strategy: 'id',
           selector: 'com.android.permissioncontroller:id/permission_deny_button',
         });
@@ -1630,10 +1638,7 @@ export class DeviceWrapper {
     return (this.device as any).updateSettings(details);
   }
 
-  public async modalPopup(
-    args: { maxWait?: number } & StrategyExtractionObj,
-    maxWait: number = 1000
-  ) {
+  public async modalPopup(args: { maxWait?: number } & StrategyExtractionObj, maxWait = 1000) {
     if (!this.isIOS()) {
       throw new Error('Not an ios device');
     }

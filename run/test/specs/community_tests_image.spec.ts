@@ -67,5 +67,5 @@ async function sendImageCommunityAndroid(platform: SupportedPlatformsType) {
     text: replyMessage,
   });
 
-  closeApp(device1, device2);
+  await closeApp(device1, device2);
 }

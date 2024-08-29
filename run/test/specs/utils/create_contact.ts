@@ -13,10 +13,8 @@ export const newContact = async (
   await device1.sendNewMessage(Bob, `${Alice.userName} to ${Bob.userName}`);
   // Click on message request folder
   await sleepFor(100);
-  await retryRequest('Message requests banner', platform, device1, device2);
+  await retryMsgSentForBanner(platform, device1, device2, 30000);
   await device2.clickOnByAccessibilityID('Message requests banner');
-  // Select message from User A
-  await retryRequest('Message request', platform, device1, device2);
   await device2.clickOnByAccessibilityID('Message request');
   await runOnlyOnAndroid(platform, () =>
     device2.clickOnByAccessibilityID('Accept message request')
@@ -30,40 +28,40 @@ export const newContact = async (
   return { Alice, Bob, device1, device2 };
 };
 
-export const retryRequest = async (
-  requestType: 'Message requests banner' | 'Message request',
+const retryMsgSentForBanner = async (
   platform: SupportedPlatformsType,
   device1: DeviceWrapper,
   device2: DeviceWrapper,
-  timeout: number = 10000
+  timeout: number
 ) => {
   const startTime = Date.now();
   let messageRequest: boolean | null = false;
-  if (platform === 'ios') {
-    while (!messageRequest && Date.now() - startTime < timeout) {
-      const element = await device2.doesElementExist({
-        strategy: 'accessibility id',
-        selector: requestType,
-        maxWait: 1000,
-      });
+  if (platform !== 'ios') {
+    console.log('not ios: retry functionality not needed');
+    return;
+  }
 
-      messageRequest = element !== null;
+  while (!messageRequest && Date.now() - startTime < timeout) {
+    const element = await device2.doesElementExist({
+      strategy: 'accessibility id',
+      selector: 'Message requests banner',
+      maxWait: 5000,
+    });
 
-      if (!messageRequest) {
-        await device1.sendMessage('Retry');
-        console.log(`Retrying message request`);
-        await sleepFor(1000);
-      } else {
-        console.log('Found message request: No need for retry');
-      }
-    }
+    messageRequest = element !== null;
 
     if (!messageRequest) {
-      throw new Error(
-        'Message request did not appear within the timeout period: This is a common race condition on iOS.'
-      );
+      await device1.sendMessage('Retry');
+      console.log(`Retrying message request`);
+      await sleepFor(50000);
+    } else {
+      console.log('Found message request: No need for retry');
     }
-  } else {
-    console.log('Android: retry functionality not needed');
+  }
+
+  if (!messageRequest) {
+    throw new Error(
+      'Message request did not appear within the timeout period: This is a common race condition on iOS.'
+    );
   }
 };

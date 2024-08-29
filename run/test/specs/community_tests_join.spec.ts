@@ -30,5 +30,5 @@ async function joinCommunityTest(platform: SupportedPlatformsType) {
   await device1.sendMessage(testMessage);
   await device2.scrollToBottom(platform);
   await device2.replyToMessage(userA, testMessage);
-  closeApp(device1, device2);
+  await closeApp(device1, device2);
 }
