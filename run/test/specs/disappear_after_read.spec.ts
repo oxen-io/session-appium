@@ -9,8 +9,6 @@ import { setDisappearingMessage } from './utils/set_disappearing_messages';
 iosIt('Disappear after read', disappearAfterRead);
 androidIt('Disappear after read', disappearAfterRead);
 
-// bothPlatformsIt("Disappear after read", disappearAfterRead);
-
 async function disappearAfterRead(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and user B
@@ -31,16 +29,13 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
     device2
   );
   // Check control message is correct on device 2
+  await device2.disappearingControlMessage(
+    `${userA.userName} has set messages to disappear ${time} after they have been ${mode}.`
+  );
   if (platform === 'android') {
-    console.log(`Android has broken control messages: ignoring`);
-    // await device2.disappearingControlMessage(
-    //   `${userA.userName} has set messages to disappear ${time} after they have been ${mode}.`
-    // );
-    // await device2.disappearingControlMessage(
-    //   `You set messages to disappear ${time} after they have been ${mode}.`
-    // );
-  } else {
-    `${userA.userName} has set messages to disappear ${time} after they have been ${mode}.`;
+    await device2.disappearingControlMessage(
+      `You set messages to disappear ${time} after they have been ${mode}.`
+    );
   }
   // Send message to verify that deletion is working
   await device1.sendMessage(testMessage);

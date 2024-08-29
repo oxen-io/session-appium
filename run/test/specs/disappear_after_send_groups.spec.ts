@@ -1,5 +1,5 @@
 import { androidIt, bothPlatformsIt, iosIt } from '../../types/sessionIt';
-import { DisappearActions } from '../../types/testing';
+import { DisappearActions, DMTimeOption } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
@@ -13,6 +13,7 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   const testGroupName = 'Disappear after send test';
   const testMessage = 'Testing disappear after sent in groups';
   const controlMode: DisappearActions = 'sent';
+  const time: DMTimeOption = '30 seconds';
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
@@ -26,18 +27,17 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   await setDisappearingMessage(platform, device1, ['Group', `Disappear after send option`]);
   // await runOnlyOnIOS(platform, () => device1.navigateBack(platform));
   // Check control message
-  await console.log(`Control message not working on Android: ignoring`);
-  // await Promise.all([
-  //   device1.disappearingControlMessage(
-  //     `You set messages to disappear ${time} after they have been ${controlMode}.`
-  //   ),
-  //   device2.disappearingControlMessage(
-  //     `${userA.userName} has set messages to disappear ${time} after they have been ${controlMode}.`
-  //   ),
-  //   device3.disappearingControlMessage(
-  //     `${userA.userName} has set messages to disappear ${time} after they have been ${controlMode}.`
-  //   ),
-  // ]);
+  await Promise.all([
+    device1.disappearingControlMessage(
+      `You set messages to disappear ${time} after they have been ${controlMode}.`
+    ),
+    device2.disappearingControlMessage(
+      `${userA.userName} has set messages to disappear ${time} after they have been ${controlMode}.`
+    ),
+    device3.disappearingControlMessage(
+      `${userA.userName} has set messages to disappear ${time} after they have been ${controlMode}.`
+    ),
+  ]);
   // Send message to verify deletion
   await device1.sendMessage(testMessage);
   await Promise.all([
