@@ -250,7 +250,7 @@ export type AccessibilityId =
   | 'Photo, May 01, 1999, 7:00 AM'
   | 'profile_picture.jpg, 27.75 kB, May 2, 1999'
   | 'profile_picture.jpg, 27.75 kB, May 1, 1999'
-  | `Photo taken on May 2, 1999 7:00:00 AM`
+  | 'Photo taken on May 2, 1999 7:00:00 AM'
   | 'Photo, 01 May 1998, 7:00 am'
   | '1967-05-05 21:00:00 +0000'
   | '1988-09-08 21:00:00 +0000'
@@ -295,18 +295,7 @@ export type AccessibilityId =
   | 'Follow Setting'
   | 'Set'
   | 'Allow Full Access'
-  | '5 seconds'
-  | '10 seconds'
-  | '30 seconds'
-  | '1 minute'
-  | '5 minutes'
-  | '30 minutes'
-  | '1 hour'
-  | '12 hours'
-  | '1 day'
-  | '1 week'
-  | '2 weeks'
-  | 'Off'
+  | DMTimeOption
   | `${DMTimeOption} - Radio`
   | 'Loading animation'
   | 'Recovery password container'
