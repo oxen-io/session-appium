@@ -1,3 +1,4 @@
+import { LocatorsInterface } from '../test/specs/locators';
 import { DeviceWrapper } from './DeviceWrapper';
 
 export type User = {
@@ -226,7 +227,7 @@ export type AccessibilityId =
   | 'Delete'
   | 'Block message request'
   | 'Block'
-  | 'Switch'
+  | 'Block This User - Switch'
   | 'Unblock'
   | 'Confirm block'
   | 'Blocked contacts'

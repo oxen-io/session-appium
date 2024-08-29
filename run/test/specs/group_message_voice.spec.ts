@@ -1,4 +1,3 @@
-import { ANDROID_XPATHS } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
@@ -20,7 +19,7 @@ async function sendVoiceMessageGroupiOS(platform: SupportedPlatformsType) {
   // Create contact between User A and User B
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   const replyMessage = `Replying to voice message from ${userA.userName} in ${testGroupName}`;
-  await device1.sendVoiceMessage(platform);
+  await device1.sendVoiceMessage();
 
   await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
@@ -66,7 +65,7 @@ async function sendVoiceMessageGroupAndroid(platform: SupportedPlatformsType) {
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   const replyMessage = `Replying to voice message from ${userA.userName} in ${testGroupName}`;
   // Select voice message button to activate recording state
-  await device1.sendVoiceMessage(platform);
+  await device1.sendVoiceMessage();
   // Check device 2 and 3 for voice message from user A
   await Promise.all([
     device2.waitForTextElementToBePresent({

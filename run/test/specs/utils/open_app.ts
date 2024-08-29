@@ -233,7 +233,6 @@ const openAndroidApp = async (
   await waitForEmulatorToBeRunning(targetName);
   console.log(targetName, ' emulator booted');
 
-  // await installAppToDeviceName(androidCapabilities.androidAppFullPath, targetName);
   const capabilities = getAndroidCapabilities(actualCapabilitiesIndex);
   console.log(
     `Android App Full Path: ${
@@ -261,15 +260,13 @@ const openAndroidApp = async (
   await runScriptAndLog(`${getAdbFullPath()} -s ${targetName} shell settings put global animator_duration_scale 0
     `);
 
-  // console.info('1');
   await wrappedDevice.createSession(capabilities);
-  // console.info('2');
+
   await (device as any).updateSettings({
     ignoreUnimportantViews: false,
     allowInvisibleElements: true,
     enableMultiWindows: true,
   });
-  // console.info('3');
   return { device: wrappedDevice };
 };
 

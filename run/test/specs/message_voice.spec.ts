@@ -52,7 +52,7 @@ async function sendVoiceMessageAndroid(platform: SupportedPlatformsType) {
   const replyMessage = `Replying to voice message from ${userA.userName}`;
   await newContact(platform, device1, userA, device2, userB);
   // Select voice message button to activate recording state
-  await device1.sendVoiceMessage(platform);
+  await device1.sendVoiceMessage();
   // await device1.waitForTextElementToBePresent("Voice message");
   await device2.clickOnByAccessibilityID('Untrusted attachment message');
   await sleepFor(200);

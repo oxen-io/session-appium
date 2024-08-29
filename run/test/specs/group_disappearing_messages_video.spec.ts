@@ -8,11 +8,6 @@ import { setDisappearingMessage } from './utils/set_disappearing_messages';
 iosIt('Disappearing video to group', disappearingVideoMessageGroup);
 androidIt('Disappearing video to group', disappearingVideoMessageGroup);
 
-// bothPlatformsIt(
-//   "Send disappearing video to group",
-//   disappearingVideoMessageGroup
-// );
-
 async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
   const testMessage = 'Testing disappearing messages for videos';
   // const bestDayOfYear = `198809090700.00`;
@@ -26,7 +21,6 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
   ]);
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   await setDisappearingMessage(platform, device1, ['Group', 'Disappear after send option']);
-  // await device1.navigateBack(platform);
   switch (platform) {
     case 'ios': {
       await device1.sendVideoiOS(testMessage);

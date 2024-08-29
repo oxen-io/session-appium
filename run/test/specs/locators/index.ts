@@ -174,21 +174,50 @@ export class MediaMessage extends LocatorsInterface {
     }
   }
 }
-// Need to update test tags
-// export class BlockUser extends LocatorsInterface {
-//   public build(): StrategyExtractionObj {
-//     switch (this.platform) {
-//       case 'android':
-//         return {
-//           strategy: 'accessibility id',
-//           selector: 'Switch',
-//           text: 'Block',
-//         };
-//       case 'ios':
-//         return {
-//           strategy: 'accessibility id',
-//           selector: 'Block',
-//         };
-//     }
-//   }
-// }
+export class BlockUser extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Block This User - Switch',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Block',
+        };
+    }
+  }
+}
+
+export class ChangeProfilePictureButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Upload',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Image picker',
+        };
+    }
+  }
+}
+
+export class ImagePermissionsModalAllow extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'com.android.permissioncontroller:id/permission_allow_foreground_only_button',
+        };
+      case 'ios':
+        return { strategy: 'accessibility id', selector: 'Allow Full Access' };
+    }
+  }
+}

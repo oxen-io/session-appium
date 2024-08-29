@@ -3,8 +3,10 @@ import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
 import { XCUITestDriver } from 'appium-xcuitest-driver/build/lib/driver';
 import { isArray, isEmpty } from 'lodash';
 import {
+  ChangeProfilePictureButton,
   ExitUserProfile,
   FirstGif,
+  ImagePermissionsModalAllow,
   LocatorsInterface,
   PrivacyButton,
   ReadReceiptsButton,
@@ -1344,24 +1346,91 @@ export class DeviceWrapper {
     }
   }
 
-  public async sendVoiceMessage(platform: SupportedPlatformsType) {
+  public async sendVoiceMessage() {
     await this.longPress('New voice message');
-    if (platform === 'android') {
+    if (this.isAndroid()) {
       await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Continue' });
       await this.clickOnElementAll({
         strategy: 'id',
         selector: 'com.android.permissioncontroller:id/permission_allow_foreground_only_button',
         text: 'While using the app',
       });
-    }
-    if (platform === 'ios') {
+    } else if (this.isIOS()) {
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
     }
     await this.pressAndHold('New voice message');
   }
 
-  public async uploadProfilePicture(platform: SupportedPlatformsType) {
-    //
+  public async uploadProfilePicture() {
+    const spongebobsBirthday = '199805010700.00';
+    await this.clickOnByAccessibilityID('User settings');
+    // Click on Profile picture
+    await this.clickOnByAccessibilityID('User settings');
+    await this.clickOnElementAll(new ChangeProfilePictureButton(this));
+    if (this.isIOS()) {
+      await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
+      const profilePicture = await this.doesElementExist({
+        strategy: 'accessibility id',
+        selector: `Photo, 01 May 1998, 7:00 am`,
+        maxWait: 2000,
+      });
+      if (!profilePicture) {
+        await runScriptAndLog(
+          `touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/profile_picture.jpg'`
+        );
+
+        await runScriptAndLog(
+          `xcrun simctl addmedia ${
+            (this as { udid?: string }).udid || ''
+          } 'run/test/specs/media/profile_picture.jpg'`,
+          true
+        );
+      }
+      await sleepFor(100);
+      await this.clickOnElementAll({
+        strategy: 'accessibility id',
+        selector: 'Photo, 01 May 1998, 7:00 am',
+      });
+      await this.clickOnByAccessibilityID('Done');
+
+      await this.clickOnByAccessibilityID('Save');
+    } else if (this.isAndroid()) {
+      await this.clickOnElementAll(new ImagePermissionsModalAllow(this));
+      await sleepFor(1000);
+      await this.clickOnElementAll({
+        strategy: 'id',
+        selector: 'android:id/text1',
+        text: 'Files',
+      });
+      await sleepFor(500);
+      // Select file
+      const profilePicture = await this.doesElementExist({
+        strategy: 'accessibility id',
+        selector: `profile_picture.jpg, 27.75 kB, May 1, 1999`,
+        maxWait: 5000,
+      });
+      // If no image, push file to this
+      if (!profilePicture) {
+        await runScriptAndLog(
+          `touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/profile_picture.jpg'`
+        );
+
+        await runScriptAndLog(
+          `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/profile_picture.jpg' /sdcard/Download/`,
+          true
+        );
+        // Verifies that the file was successful downloaded to this
+        // await runScriptAndLog(
+        //   `${getAdbFullPath()} -s emulator-5554 shell ls /sdcard/Download/`,
+        //   true
+        // );
+      }
+      await this.clickOnElementAll({
+        strategy: 'accessibility id',
+        selector: 'profile_picture.jpg, 27.75 kB, May 1, 1999',
+      });
+      await this.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop');
+    }
   }
 
   public async getTimeFromDevice(platform: SupportedPlatformsType): Promise<string> {

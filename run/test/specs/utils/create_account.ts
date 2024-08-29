@@ -28,6 +28,7 @@ export const newUser = async (
   await device.clickOnByAccessibilityID('Slow mode notifications button');
   // Select Continue to save notification settings
   await device.clickOnByAccessibilityID('Continue');
+  // TODO need to retry check every 1s for 5s
   console.warn('about to look for Allow permission in 5s');
   await sleepFor(5000);
 

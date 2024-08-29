@@ -5,11 +5,12 @@ import { defineConfig } from '@playwright/test';
 import { toNumber } from 'lodash';
 
 const useSessionReporter = true;
+// NOTE: without this, the wrong source map is loaded and the stacktraces are all wrong
 require('source-map-support').install = () => {};
 
 export default defineConfig({
-  timeout: 750000,
-  globalTimeout: 30000000,
+  timeout: 480000,
+  globalTimeout: 10800000,
   reporter: [useSessionReporter ? ['./sessionReporter.ts'] : ['list']],
   testDir: './run/test/specs',
   testIgnore: '*.js',
