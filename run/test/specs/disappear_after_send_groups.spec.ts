@@ -1,13 +1,12 @@
-import { androidIt, bothPlatformsIt, iosIt } from '../../types/sessionIt';
+import { androidIt, iosIt } from '../../types/sessionIt';
 import { DisappearActions, DMTimeOption } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
-import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
+import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 iosIt('Disappear after send groups', disappearAfterSendGroups);
 androidIt('Disappear after send groups', disappearAfterSendGroups);
-// bothPlatformsIt("Disappear after send groups", disappearAfterSendGroups);
 
 async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   const testGroupName = 'Disappear after send test';
@@ -24,7 +23,7 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   // Create contact between User A and User B
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
 
-  await setDisappearingMessage(platform, device1, ['Group', `Disappear after send option`]);
+  await setDisappearingMessage(platform, device1, ['Group', `Disappear after send option`, time]);
   // await runOnlyOnIOS(platform, () => device1.navigateBack(platform));
   // Check control message
   await Promise.all([
