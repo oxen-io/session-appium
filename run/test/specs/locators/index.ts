@@ -221,3 +221,90 @@ export class ImagePermissionsModalAllow extends LocatorsInterface {
     }
   }
 }
+
+export class JoinCommunityOption extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Join community button',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Join Community',
+        };
+    }
+  }
+}
+
+export class JoinCommunityButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Join community button',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Join',
+        };
+    }
+  }
+}
+
+export class CommunityInput extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Community input',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Enter Community URL',
+        };
+    }
+  }
+}
+
+export class InviteContacts extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Add members',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Invite Contacts',
+        };
+    }
+  }
+}
+
+// export class EmptyGroupMessage extends LocatorsInterface {
+//   public build(): StrategyExtractionObj {
+//     switch (this.platform) {
+//       case 'android':
+//         return {
+//           strategy: 'accessibility id',
+//           selector: 'Control message',
+//           text:
+//           `You have no messages from ${string}. Send a message to start the conversation!`
+//         };
+//       case 'ios':
+//         return {
+//           strategy: 'accessibility id',
+//           selector: 'Empty list',
+//         };
+//     }
+//   }
+// }

@@ -37,7 +37,6 @@ export type ActionSequence = {
   actions: string;
 };
 
-type Action = Coordinates & { type: 'pointer'; duration?: number };
 type AppiumNextElementType = { ELEMENT: string };
 
 export class DeviceWrapper {
@@ -142,13 +141,7 @@ export class DeviceWrapper {
     await this.toShared().performActions(actions);
   }
 
-  public async tap(xCoOrdinates: number, yCoOrdinates: number, duration?: number): Promise<void> {
-    const action: Action = {
-      type: 'pointer',
-      x: xCoOrdinates,
-      y: yCoOrdinates,
-      duration,
-    };
+  public async tap(xCoOrdinates: number, yCoOrdinates: number): Promise<void> {
     if (this.isIOS()) {
       await this.toIOS().mobileTap(xCoOrdinates, yCoOrdinates);
       return;
@@ -318,10 +311,11 @@ export class DeviceWrapper {
     await this.click(el.ELEMENT);
   }
 
-  public async longPress(accessibilityId: AccessibilityId) {
+  public async longPress(accessibilityId: AccessibilityId, text?: string) {
     const el = await this.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: accessibilityId,
+      text,
     });
     if (!el) {
       throw new Error(`longPress: Could not find accessibilityId: ${accessibilityId}`);
@@ -1286,8 +1280,8 @@ export class DeviceWrapper {
     });
   }
 
-  public async sendDocument(platform: SupportedPlatformsType) {
-    if (platform === 'android') {
+  public async sendDocument() {
+    if (this.isAndroid()) {
       await this.clickOnByAccessibilityID('Attachments button');
       await this.clickOnByAccessibilityID('Documents folder');
       await this.clickOnByAccessibilityID('Continue');
@@ -1326,6 +1320,42 @@ export class DeviceWrapper {
         maxWait: 50000,
       });
     }
+    if (this.isIOS()) {
+      const testMessage = 'Testing-document-1';
+      const spongebobsBirthday = '199905010700.00';
+      await this.clickOnByAccessibilityID('Attachments button');
+      await sleepFor(100);
+      await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardOpen);
+      await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
+      const testDocument = await this.doesElementExist({
+        strategy: 'accessibility id',
+        selector: 'test_file, pdf',
+        text: undefined,
+        maxWait: 1000,
+      });
+
+      if (!testDocument) {
+        await runScriptAndLog(
+          `touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/test_file.pdf'`
+        );
+
+        await runScriptAndLog(
+          `xcrun simctl addmedia
+            ${this.udid || ''}
+          } 'run/test/specs/media/test_file.pdf'`,
+          true
+        );
+      }
+      await sleepFor(100);
+      await this.clickOnByAccessibilityID('test_file, pdf');
+      await sleepFor(500);
+      await this.clickOnByAccessibilityID('Text input box');
+      await this.inputText(testMessage, {
+        strategy: 'accessibility id',
+        selector: 'Text input box',
+      });
+      await this.clickOnByAccessibilityID('Send button');
+    }
   }
 
   public async sendGIF(message: string) {
@@ -1362,10 +1392,10 @@ export class DeviceWrapper {
         selector: 'com.android.permissioncontroller:id/permission_allow_foreground_only_button',
         text: 'While using the app',
       });
+      await this.pressAndHold('New voice message');
     } else if (this.isIOS()) {
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
     }
-    await this.pressAndHold('New voice message');
   }
 
   public async uploadProfilePicture() {

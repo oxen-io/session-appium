@@ -1,5 +1,5 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
-import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
+import { androidIt } from '../../types/sessionIt';
+import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';

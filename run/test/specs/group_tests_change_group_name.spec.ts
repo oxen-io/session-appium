@@ -38,9 +38,7 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   });
   await device1.clickOnByAccessibilityID('Accept name change');
   // Alert should pop up 'Please enter group name', click ok
-  // If ios click ok / If Android go to next step
-
-  await device1.clickOnByAccessibilityID('OK');
+  await device1.clickOnByAccessibilityID('Okay');
   // Delete empty space
   await device1.clickOnByAccessibilityID('Cancel');
 
@@ -58,7 +56,7 @@ async function changeGroupNameIos(platform: SupportedPlatformsType) {
   // If ios click back to match android (which goes back to conversation screen)
   // Check config message for changed name (different on ios and android)
   // Config message on ios is "Title is now blah"
-  await device1.waitForControlMessageToBePresent(`Title is now '${newGroupName}'.`);
+  await device1.waitForControlMessageToBePresent(`Group name is now ${newGroupName}.`);
   // Config on Android is "You renamed the group to blah"
 
   await closeApp(device1, device2, device3);
@@ -87,8 +85,6 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
 
   // Click on current group name
   await device1.clickOnByAccessibilityID('Group name');
-  // Alert should pop up 'Please enter group name', click ok
-  // If ios click ok / If Android go to next step
   // Enter new group name
   await device1.clickOnByAccessibilityID('Group name');
 
@@ -98,7 +94,7 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   await device1.clickOnElementAll(new ApplyChanges(device1));
   // Check config message for changed name (different on ios and android)
   // Config on Android is "You renamed the group to blah"
-  await device1.waitForControlMessageToBePresent(`You renamed the group to ${newGroupName}`);
+  await device1.waitForControlMessageToBePresent(`Group name is now ${newGroupName}.`);
 
   await closeApp(device1, device2, device3);
 }

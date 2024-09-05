@@ -1,8 +1,8 @@
-import { androidIt, bothPlatformsIt, iosIt } from '../../types/sessionIt';
+import { androidIt, iosIt } from '../../types/sessionIt';
 import { DisappearActions, DMTimeOption } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
-import { SupportedPlatformsType, closeApp, openAppOnPlatformSingleDevice } from './utils/open_app';
+import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
 iosIt('Disappear after send note to self', disappearAfterSendNoteToSelf);

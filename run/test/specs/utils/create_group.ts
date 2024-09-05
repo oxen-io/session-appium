@@ -1,4 +1,3 @@
-import { runOnlyOnAndroid, runOnlyOnIOS } from '.';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { Group, GroupName, User } from '../../../types/testing';
 import { newContact } from './create_contact';
@@ -41,17 +40,20 @@ export const createGroup = async (
   // Select tick
   await device1.clickOnByAccessibilityID('Create group');
   // Check for empty state on ios
-  // await runOnlyOnIOS(platform, () =>
-  //   device1.waitForTextElementToBePresent({
-  //     strategy: 'accessibility id',
-  //     selector: 'Empty list',
-  //     maxWait: 5000,
-  //   })
-  // );
-  await runOnlyOnAndroid(platform, () =>
-    device1.waitForControlMessageToBePresent('You created a new group.', 10000)
-  );
-  // Send message from User A to group to verify all working
+  if (platform === 'ios') {
+    await device1.waitForLoadingOnboarding();
+    await device1.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Empty list',
+      maxWait: 5000,
+    });
+  }
+  if (platform === 'android') {
+    await device1.waitForControlMessageToBePresent(
+      `You have no messages from ${group.userName}. Send a message to start the conversation!`,
+      10000
+    );
+  } // Send message from User A to group to verify all working
   await device1.sendMessage(userAMessage);
   // Did the other devices receive UserA's message?
   await Promise.all([

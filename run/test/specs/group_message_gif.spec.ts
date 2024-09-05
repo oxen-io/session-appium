@@ -60,10 +60,16 @@ async function sendGifGroupAndroid(platform: SupportedPlatformsType) {
   ]);
   // Create contact between User A and User B
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
+  const testMessage = 'Testing-GIF-1';
   const replyMessage = `Replying to GIF from ${userA.userName}`;
   // Click on attachments button
-  await device1.sendGIF('Test message with GIF');
+  await device1.sendGIF(testMessage);
   // Reply to message
+  await device2.waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Media message',
+    maxWait: 10000,
+  });
   await device3.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Media message',

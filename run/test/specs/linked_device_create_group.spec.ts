@@ -47,7 +47,7 @@ async function linkedGroupiOS(platform: SupportedPlatformsType) {
   // If ios click back to match android (which goes back to conversation screen)
   // Check config message for changed name (different on ios and android)
   // Config message on ios is "Title is now blah"
-  await device1.waitForControlMessageToBePresent(`Title is now '${newGroupName}'.`);
+  await device1.waitForControlMessageToBePresent(`Group name is now ${newGroupName}.`);
 
   // Wait 5 seconds for name to update
   await sleepFor(5000);
@@ -59,9 +59,9 @@ async function linkedGroupiOS(platform: SupportedPlatformsType) {
   });
 
   await Promise.all([
-    device2.waitForControlMessageToBePresent(`Title is now '${newGroupName}'.`),
-    device3.waitForControlMessageToBePresent(`Title is now '${newGroupName}'.`),
-    device4.waitForControlMessageToBePresent(`Title is now '${newGroupName}'.`),
+    device2.waitForControlMessageToBePresent(`Group name is now ${newGroupName}.`),
+    device3.waitForControlMessageToBePresent(`Group name is now ${newGroupName}.`),
+    device4.waitForControlMessageToBePresent(`Group name is now ${newGroupName}.`),
   ]);
 
   // control on Linked device: Android is "You renamed the group to blah"
@@ -104,7 +104,7 @@ async function linkedGroupAndroid(platform: SupportedPlatformsType) {
   // If ios click back to match android (which goes back to conversation screen)
   // Check config message for changed name (different on ios and android)
   // Config message on ios is "Title is now blah"
-  await device1.waitForControlMessageToBePresent(`You renamed the group to ${newGroupName}`);
+  await device1.waitForControlMessageToBePresent(`Group name is now ${newGroupName}.`);
 
   // Wait 5 seconds for name to update
   await sleepFor(5000);
@@ -115,13 +115,9 @@ async function linkedGroupAndroid(platform: SupportedPlatformsType) {
     text: newGroupName,
   });
   await Promise.all([
-    device4.waitForControlMessageToBePresent(`You renamed the group to ${newGroupName}`),
-    device2.waitForControlMessageToBePresent(
-      `${userA.userName} renamed the group to: ${newGroupName}`
-    ),
-    device3.waitForControlMessageToBePresent(
-      `${userA.userName} renamed the group to: ${newGroupName}`
-    ),
+    device4.waitForControlMessageToBePresent(`Group name is now ${newGroupName}.`),
+    device2.waitForControlMessageToBePresent(`Group name is now ${newGroupName}.`),
+    device3.waitForControlMessageToBePresent(`Group name is now ${newGroupName}.`),
   ]);
   // control on Linked device: Android is "You renamed the group to blah"
   await closeApp(device1, device2, device3, device4);

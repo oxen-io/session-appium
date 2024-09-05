@@ -1,10 +1,8 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { InteractionPoints } from '../../types/testing';
-import { sleepFor, clickOnCoordinates } from './utils';
+import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
-import { SupportedPlatformsType, openAppTwoDevices, closeApp } from './utils/open_app';
-import { runScriptAndLog } from './utils/utilities';
+import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
 iosIt('Send document 1:1', sendDocumentIos);
 androidIt('Send document 1:1', sendDocumentAndroid);
@@ -17,41 +15,9 @@ async function sendDocumentIos(platform: SupportedPlatformsType) {
   ]);
   const testMessage = 'Testing-document-1';
   const replyMessage = `Replying to document from ${userA.userName}`;
-  const spongebobsBirthday = '199905010700.00';
   await newContact(platform, device1, userA, device2, userB);
 
-  await device1.clickOnByAccessibilityID('Attachments button');
-  await sleepFor(100);
-  await clickOnCoordinates(device1, InteractionPoints.DocumentKeyboardOpen);
-  await device1.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
-  const testDocument = await device1.doesElementExist({
-    strategy: 'accessibility id',
-    selector: 'test_file, pdf',
-    text: undefined,
-    maxWait: 1000,
-  });
-
-  if (!testDocument) {
-    await runScriptAndLog(
-      `touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/test_file.pdf'`
-    );
-
-    await runScriptAndLog(
-      `xcrun simctl addmedia ${
-        (device1 as { udid?: string }).udid
-      } 'run/test/specs/media/test_file.pdf'`,
-      true
-    );
-  }
-  await sleepFor(100);
-  await device1.clickOnByAccessibilityID('test_file, pdf');
-  await sleepFor(500);
-  await device1.clickOnByAccessibilityID('Text input box');
-  await device1.inputText(testMessage, {
-    strategy: 'accessibility id',
-    selector: 'Text input box',
-  });
-  await device1.clickOnByAccessibilityID('Send button');
+  await device1.sendDocument();
   await device2.clickOnByAccessibilityID('Untrusted attachment message');
   await sleepFor(500);
   // User B - Click on 'download'
@@ -85,7 +51,7 @@ async function sendDocumentAndroid(platform: SupportedPlatformsType) {
   ]);
   const replyMessage = `Replying to document from ${userA.userName}`;
   await newContact(platform, device1, userA, device2, userB);
-  await device1.sendDocument(platform);
+  await device1.sendDocument();
   await device2.clickOnByAccessibilityID('Untrusted attachment message', 7000);
   await sleepFor(500);
   // User B - Click on 'download'

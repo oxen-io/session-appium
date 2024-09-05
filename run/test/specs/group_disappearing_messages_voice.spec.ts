@@ -1,5 +1,6 @@
+import { DISAPPEARING_TIMES } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { GroupName } from '../../types/testing';
+import { DMTimeOption, GroupName } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
@@ -9,14 +10,11 @@ import { setDisappearingMessage } from './utils/set_disappearing_messages';
 iosIt('Disappearing voice message to group', disappearingVoiceMessageGroup);
 androidIt('Disappearing voice message to group', disappearingVoiceMessageGroup);
 
-// bothPlatformsIt(
-//   "Send disappearing voice message to group",
-//   disappearingVoiceMessageGroup
-// );
-
 async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   const testGroupName: GroupName = 'Testing voice';
+  const time: DMTimeOption = DISAPPEARING_TIMES.THIRTY_SECONDS;
+  const timerType = 'Disappear after send option';
   // Create user A and user B
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, 'Alice', platform),
@@ -24,8 +22,7 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
     newUser(device3, 'Charlie', platform),
   ]);
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
-  await setDisappearingMessage(platform, device1, ['Group', 'Disappear after send option']);
-  // await device1.navigateBack(platform);
+  await setDisappearingMessage(platform, device1, ['Group', timerType, time]);
   await device1.sendVoiceMessage();
   await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',

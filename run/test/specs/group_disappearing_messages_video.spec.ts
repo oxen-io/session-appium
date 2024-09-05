@@ -1,5 +1,7 @@
+import { DISAPPEARING_TIMES } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { sleepFor } from './utils';
+import { DMTimeOption } from '../../types/testing';
+import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
@@ -8,9 +10,11 @@ import { setDisappearingMessage } from './utils/set_disappearing_messages';
 iosIt('Disappearing video to group', disappearingVideoMessageGroup);
 androidIt('Disappearing video to group', disappearingVideoMessageGroup);
 
+const time: DMTimeOption = DISAPPEARING_TIMES.THIRTY_SECONDS;
+const timerType = 'Disappear after send option';
+
 async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
   const testMessage = 'Testing disappearing messages for videos';
-  // const bestDayOfYear = `198809090700.00`;
   const testGroupName = 'Test group';
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create user A and user B
@@ -20,15 +24,9 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
     newUser(device3, 'Charlie', platform),
   ]);
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
-  await setDisappearingMessage(platform, device1, ['Group', 'Disappear after send option']);
-  switch (platform) {
-    case 'ios': {
-      await device1.sendVideoiOS(testMessage);
-    }
-    case 'android': {
-      await device1.sendVideoAndroid();
-    }
-  }
+  await setDisappearingMessage(platform, device1, ['Group', timerType, time]);
+  await runOnlyOnIOS(platform, () => device1.sendVideoiOS(testMessage));
+  await runOnlyOnAndroid(platform, () => device1.sendVideoAndroid());
   await sleepFor(30000);
   await Promise.all([
     device1.hasElementBeenDeleted({

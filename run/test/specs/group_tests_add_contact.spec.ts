@@ -1,5 +1,5 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { ApplyChanges, EditGroup } from './locators';
+import { ApplyChanges, EditGroup, InviteContacts } from './locators';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -47,7 +47,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   await device1.clickOnElementAll(new EditGroup(device1));
   await sleepFor(1000);
   // Add contact to group
-  await device1.clickOnByAccessibilityID('Add members');
+  await device1.clickOnElementAll(new InviteContacts(device1));
   // Select new user
   const addedContact = await device1.clickOnElementAll({
     strategy: 'accessibility id',
@@ -56,7 +56,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   });
   if (!addedContact && platform === 'android') {
     await device1.navigateBack(platform);
-    await device1.clickOnByAccessibilityID('Add members');
+    await device1.clickOnElementAll(new InviteContacts(device1));
     await device1.selectByText('Contact', userD.userName);
   }
   // Click done/apply
@@ -64,20 +64,24 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   // Click done/apply again
   await sleepFor(1000);
   await device1.clickOnElementAll(new ApplyChanges(device1));
-  // Check config message
-  await runOnlyOnIOS(platform, () =>
-    device1.waitForControlMessageToBePresent(`${userD.userName} joined the group.`)
-  );
-  await runOnlyOnAndroid(platform, () =>
-    device1.waitForControlMessageToBePresent(`You added ${userD.userName} to the group.`)
-  );
+  // Check control message
+  await Promise.all([
+    device1.waitForControlMessageToBePresent(`${userD.userName} joined the group.`),
+    device2.waitForControlMessageToBePresent(`${userD.userName} joined the group.`),
+    device3.waitForControlMessageToBePresent(`${userD.userName} joined the group.`),
+  ]);
   // Exit to conversation list
   await device4.navigateBack(platform);
   // Select group conversation in list
   await device4.selectByText('Conversation list item', group.userName);
-  // Check control message
+  // Check control message on device 2 and 3
+  // Check for control message on device 4 (iOS doesn't support You)
   await runOnlyOnIOS(platform, () =>
     device4.waitForControlMessageToBePresent(`${userD.userName} joined the group.`)
   );
+  await runOnlyOnAndroid(platform, () =>
+    device4.waitForControlMessageToBePresent(`You joined the group.`)
+  );
+
   await closeApp(device1, device2, device3, device4);
 }

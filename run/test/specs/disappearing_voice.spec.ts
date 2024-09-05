@@ -1,5 +1,6 @@
+import { DISAPPEARING_TIMES } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { DisappearActions } from '../../types/testing';
+import { DisappearActions, DMTimeOption } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -9,6 +10,9 @@ import { setDisappearingMessage } from './utils/set_disappearing_messages';
 iosIt('Disappearing voice message 1:1', disappearingVoiceMessage1o1Ios);
 androidIt('Disappearing voice message 1:1', disappearingVoiceMessage1o1Android);
 
+const time: DMTimeOption = DISAPPEARING_TIMES.THIRTY_SECONDS;
+const timerType = 'Disappear after send option';
+
 async function disappearingVoiceMessage1o1Ios(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and user B
@@ -17,8 +21,7 @@ async function disappearingVoiceMessage1o1Ios(platform: SupportedPlatformsType) 
     newUser(device2, 'Bob', platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(platform, device1, ['1:1', 'Disappear after read option'], device2);
-  // await device1.navigateBack(platform);
+  await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
   await device1.sendVoiceMessage();
   await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
@@ -49,21 +52,9 @@ async function disappearingVoiceMessage1o1Android(platform: SupportedPlatformsTy
     newUser(device1, 'Alice', platform),
     newUser(device2, 'Bob', platform),
   ]);
-  const controlMode: DisappearActions = 'sent';
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(platform, device1, ['1:1', 'Disappear after send option'], device2);
-  // TODO FIX
-  // await device2.disappearingControlMessage(
-  //   `${userA.userName} has set messages to disappear ${time} after they have been ${controlMode}.`
-  // );
-  // await device2.disappearingControlMessage(
-  //   `You set messages to disappear ${time} after they have been ${controlMode}.`
-  // );
-  // Wait for control messages to disappear
-  // await sleepFor(60000);
+  await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
   await device1.sendVoiceMessage();
-  // await device1.clickOnByAccessibilityID("OK");
-  // await device1.pressAndHold("New voice message");
   await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Voice message',

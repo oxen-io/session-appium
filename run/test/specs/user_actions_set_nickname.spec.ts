@@ -45,7 +45,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   // Empty username input
   await device1.deleteText({ strategy: 'accessibility id', selector: 'Username' });
   await device1.inputText(' ', { strategy: 'accessibility id', selector: 'Username' });
-  await await device1.clickOnByAccessibilityID('Done');
+  await device1.clickOnByAccessibilityID('Done');
   // Check in conversation header
   await device1.navigateBack(platform);
   // await sleepFor(500);

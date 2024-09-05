@@ -13,6 +13,8 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   const testMessage = 'Testing disappearing messages for images';
   const testGroupName = 'Test group';
+  const time: DMTimeOption = DISAPPEARING_TIMES.THIRTY_SECONDS;
+  const timerType = 'Disappear after send option';
   // Create user A and user B
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, 'Alice', platform),
@@ -21,7 +23,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   ]);
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
 
-  await setDisappearingMessage(platform, device1, ['Group', 'Disappear after send option']);
+  await setDisappearingMessage(platform, device1, ['Group', timerType, time]);
   // await device1.navigateBack(platform);
   await device1.sendImage(platform, testMessage);
   await Promise.all([
@@ -36,6 +38,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
       text: testMessage,
     }),
   ]);
+  // Wait for 30 seconds
   await sleepFor(30000);
   await Promise.all([
     device1.hasElementBeenDeleted({

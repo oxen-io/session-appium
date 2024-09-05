@@ -22,8 +22,8 @@ async function joinCommunityTest(platform: SupportedPlatformsType) {
   ]);
   await newContact(platform, device1, userA, device2, userB);
   await Promise.all([device1.navigateBack(platform), device2.navigateBack(platform)]);
-  await joinCommunity(platform, device1, testCommunityLink, testCommunityName);
-  await joinCommunity(platform, device2, testCommunityLink, testCommunityName);
+  await joinCommunity(device1, testCommunityLink, testCommunityName);
+  await joinCommunity(device2, testCommunityLink, testCommunityName);
   if (platform === 'ios') {
     await device1.scrollToBottom(platform);
   }

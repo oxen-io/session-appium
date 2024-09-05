@@ -87,14 +87,17 @@ export type StrategyExtractionObj =
   | {
       strategy: Extract<Strategy, 'id' | 'class name'>;
       selector: string;
+      text?: string;
     }
   | {
       strategy: Extract<Strategy, 'accessibility id'>;
       selector: AccessibilityId;
+      text?: string;
     }
   | {
       strategy: Extract<Strategy, 'xpath'>;
       selector: XPath;
+      text?: string;
     }
   | {
       strategy: Extract<Strategy, 'DMTimeOption'>;
@@ -115,11 +118,10 @@ export type ControlMessage =
   | 'You created a new group.'
   | `${string} has left the group.`
   | `${string} left the group.`
-  | `${string} renamed the group to: ${string}`
-  | `Title is now '${string}'.`
-  | `You renamed the group to ${string}`
   | `${string} joined the group.`
-  | `You added ${string} to the group.`;
+  | `You added ${string} to the group.`
+  | `You have no messages from ${string}. Send a message to start the conversation!`
+  | `Group name is now ${string}.`;
 
 export type XPath =
   | `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout`
@@ -200,12 +202,13 @@ export type AccessibilityId =
   | 'Edit group'
   | 'Group name text field'
   | 'OK'
+  | 'Okay'
   | 'Cancel'
   | 'Apply changes'
   | 'Apply'
   | 'Conversation list item'
+  | 'Invite Contacts'
   | 'Add members'
-  | 'Add Members'
   | 'Done'
   | 'Control message'
   | 'Configuration message'
