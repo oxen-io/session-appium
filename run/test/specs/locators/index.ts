@@ -100,8 +100,8 @@ export class ReadReceiptsButton extends LocatorsInterface {
         } as const;
       case 'ios':
         return {
-          strategy: 'xpath',
-          selector: `//XCUIElementTypeSwitch[@name="Read Receipts, Send read receipts in one-to-one chats."]`,
+          strategy: 'accessibility id',
+          selector: 'Read Receipts - Switch',
         } as const;
     }
   }
@@ -171,6 +171,53 @@ export class MediaMessage extends LocatorsInterface {
           strategy: 'class name',
           selector: 'XCUIElementTypeImage',
         };
+    }
+  }
+}
+export class BlockUser extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Block This User - Switch',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Block',
+        };
+    }
+  }
+}
+
+export class ChangeProfilePictureButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Upload',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Image picker',
+        };
+    }
+  }
+}
+
+export class ImagePermissionsModalAllow extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'com.android.permissioncontroller:id/permission_allow_foreground_only_button',
+        };
+      case 'ios':
+        return { strategy: 'accessibility id', selector: 'Allow Full Access' };
     }
   }
 }

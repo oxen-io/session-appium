@@ -9,8 +9,8 @@ export const ANDROID_XPATHS: { [key: string]: XPath } = {
 
 export const IOS_XPATHS: { [key: string]: XPath } = {
   VIDEO_TOGGLE: `//XCUIElementTypeStaticText[@name="Videos"]`,
-  FIRST_GIF: `(//XCUIElementTypeImage[@name="gif cell"])[1]`
-}
+  FIRST_GIF: `(//XCUIElementTypeImage[@name="gif cell"])[1]`,
+};
 
 export const DISAPPEARING_TIMES: { [key: string]: DMTimeOption } = {
   FIVE_SECONDS: '5 seconds',
@@ -20,6 +20,7 @@ export const DISAPPEARING_TIMES: { [key: string]: DMTimeOption } = {
   FIVE_MINUTES: '5 minutes',
   THIRTY_MINUTES: '30 minutes',
   ONE_HOUR: '1 hour',
+  TWELVE_HOURS: '12 hours',
   ONE_DAY: '1 day',
   ONE_WEEK: '1 week',
   OFF: 'Off',

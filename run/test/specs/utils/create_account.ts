@@ -15,7 +15,7 @@ export const newUser = async (
     selector: 'Create account button',
   });
   // Click continue on session Id creation
-  await device.clickOnByAccessibilityID('Continue');
+  // await device.clickOnByAccessibilityID('Continue');
   // Input username
   await device.inputText(userName, {
     strategy: 'accessibility id',
@@ -28,8 +28,13 @@ export const newUser = async (
   await device.clickOnByAccessibilityID('Slow mode notifications button');
   // Select Continue to save notification settings
   await device.clickOnByAccessibilityID('Continue');
-  // Need to add Don't allow notifications dismiss here
-  await device.checkPermissions(`Allow`);
+  // TODO need to retry check every 1s for 5s
+  console.warn('about to look for Allow permission in 5s');
+  await sleepFor(5000);
+
+  await device.checkPermissions('Allow');
+  console.warn('lookedfor Allow permission');
+  await sleepFor(1000);
   // Click on 'continue' button to open recovery phrase modal
   await device.waitForTextElementToBePresent({
     strategy: 'accessibility id',

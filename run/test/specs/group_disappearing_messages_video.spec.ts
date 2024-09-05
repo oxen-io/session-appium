@@ -5,13 +5,8 @@ import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-iosIt('Disappearing message video group', disappearingVideoMessageGroup);
-androidIt('Disappearing message video group', disappearingVideoMessageGroup);
-
-// bothPlatformsIt(
-//   "Send disappearing video to group",
-//   disappearingVideoMessageGroup
-// );
+iosIt('Disappearing video to group', disappearingVideoMessageGroup);
+androidIt('Disappearing video to group', disappearingVideoMessageGroup);
 
 async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
   const testMessage = 'Testing disappearing messages for videos';
@@ -26,9 +21,15 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
   ]);
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   await setDisappearingMessage(platform, device1, ['Group', 'Disappear after send option']);
-  // await device1.navigateBack(platform);
-  await device1.sendVideoiOS(testMessage);
-  await sleepFor(10000);
+  switch (platform) {
+    case 'ios': {
+      await device1.sendVideoiOS(testMessage);
+    }
+    case 'android': {
+      await device1.sendVideoAndroid();
+    }
+  }
+  await sleepFor(30000);
   await Promise.all([
     device1.hasElementBeenDeleted({
       strategy: 'accessibility id',

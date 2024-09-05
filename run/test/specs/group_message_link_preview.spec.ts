@@ -105,17 +105,17 @@ async function sendLinkGroupAndroid(platform: SupportedPlatformsType) {
   });
   await device2.longPressMessage(testLink);
   await device2.clickOnByAccessibilityID('Reply to message');
-  await device2.sendMessage(`${userA.userName} message reply`);
+  const replyMessage = await device2.sendMessage(`${userA.userName} message reply`);
   await Promise.all([
     device1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message body',
-      text: `${userB.userName} message reply`,
+      text: replyMessage,
     }),
     device3.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message body',
-      text: `${userB.userName} message reply`,
+      text: replyMessage,
     }),
   ]);
   await closeApp(device1, device2, device3);

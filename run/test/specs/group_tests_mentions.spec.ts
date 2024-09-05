@@ -24,7 +24,7 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message body',
-    text: '@You',
+    text: `@You`,
   });
   // await device2.findMessageWithBody(`@You`);
   // Bob to Select User C

@@ -16,7 +16,7 @@ androidIt('Disappearing voice message to group', disappearingVoiceMessageGroup);
 
 async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  const testGroupName: GroupName = 'Testing voice messages in groups for disappearing messages';
+  const testGroupName: GroupName = 'Testing voice';
   // Create user A and user B
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, 'Alice', platform),
@@ -26,9 +26,7 @@ async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   await setDisappearingMessage(platform, device1, ['Group', 'Disappear after send option']);
   // await device1.navigateBack(platform);
-  await device1.longPress('New voice message');
-  await device1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
-  await device1.pressAndHold('New voice message');
+  await device1.sendVoiceMessage();
   await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Voice message',

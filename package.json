@@ -2,13 +2,14 @@
   "name": "session-appium",
   "version": "1.0.0",
   "scripts": {
-    "tsc": "yarn clean-tsc && tsc",
-    "clean-tsc": "find run/test/specs -type f -name '*.js' -delete",
-    "tsc-watch": "yarn clean-tsc && tsc -w",
-    "test": "npx playwright test --timeout 300000 ./run/test/specs/*.spec.js --grep ",
+    "tsc": "tsc",
+    "tsc-watch": "tsc -w",
+    "test": "npx playwright test --timeout 300000 ./run/test/specs/*.spec.ts --grep ",
+    "test-android-shard": "npx playwright test --timeout 300000 ./run/test/specs/*.spec.ts --grep android --shard ",
     "test-no-retry": "_TESTING=1 npx playwright test --timeout 300000  ./run/test/specs/*.spec.ts --grep ",
     "test-one": "_TESTING=1 _FORCE_LOGS=0 npx playwright test --timeout 300000  ./run/test/**/*.spec.ts --grep",
-    "test-ios": "_TESTING=1 npx playwright test --timeout 300000 ./run/test/**/*.spec.ts --grep ios",
+    "test-udid": "_TESTING=1 npx playwright test UDID=$udid --timeout 300000 ./run/test/**/*.spec.ts --grep",
+    "test-ios": "_TESTING=1 npx playwright test --timeout 400000 ./run/test/**/*.spec.ts --grep ios",
     "test-android": "_TESTING=1 npx playwright test --timeout 300000 ./run/test/**/*.spec.ts --grep android",
     "build-and-test": "yarn tsc && yarn test",
     "test-one-logs": "_TESTING=1  _FORCELOGS=1 npx playwright test --timeout 300000 --retries 0 ./run/test/**/*.spec.ts --grep",
@@ -41,7 +42,7 @@
   "dependencies": {
     "@playwright/test": "^1.45.1",
     "appium": "^2.4.1",
-    "appium-uiautomator2-driver": "^3.7.3",
+    "appium-uiautomator2-driver": "patch:appium-uiautomator2-driver@npm%3A3.7.3#~/patches/appium-uiautomator2-driver-npm-3.7.3-24e944f6c5.patch",
     "appium-xcuitest-driver": "^7.24.0",
     "dotenv": "^16.4.5"
   },

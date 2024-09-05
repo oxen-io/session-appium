@@ -6,8 +6,8 @@ import { createGroup } from './utils/create_group';
 import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-iosIt('Send disappearing link to group', disappearingLinkMessageGroup);
-androidIt('Send disappearing link to group', disappearingLinkMessageGroup);
+iosIt('Disappearing link to group', disappearingLinkMessageGroup);
+androidIt('Disappearing link to group', disappearingLinkMessageGroup);
 
 // bothPlatformsIt(
 //   "Send disappearing link to group",
@@ -32,13 +32,18 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'Message input box',
   });
+  if (platform === 'android') {
+    await device1.clickOnByAccessibilityID('Enable');
+  }
   await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Message sent status: Sent',
     maxWait: 20000,
   });
+  if (platform === 'ios') {
+    await device1.clickOnByAccessibilityID('Enable');
+  }
   // Accept dialog for link preview
-  await device1.clickOnByAccessibilityID('Enable');
   // No preview on first send
   await device1.clickOnByAccessibilityID('Send message button');
   // Send again for image
@@ -61,8 +66,8 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
       text: testLink,
     }),
   ]);
-  // Wait for 10 seconds to disappear
-  await sleepFor(10000);
+  // Wait for 30 seconds to disappear
+  await sleepFor(30000);
   await Promise.all([
     device1.hasElementBeenDeleted({
       strategy: 'accessibility id',

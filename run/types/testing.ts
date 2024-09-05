@@ -1,3 +1,4 @@
+import { LocatorsInterface } from '../test/specs/locators';
 import { DeviceWrapper } from './DeviceWrapper';
 
 export type User = {
@@ -18,7 +19,7 @@ export type GroupName =
   | 'Testing disappearing messages'
   | 'Group to test adding contact'
   | 'Disappear after send test'
-  | 'Testing voice messages in groups for disappearing messages'
+  | 'Testing voice'
   | 'Disappear after sent test';
 
 export type Group = {
@@ -133,6 +134,7 @@ export type XPath =
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.ScrollView/androidx.viewpager.widget.ViewPager/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.FrameLayout[1]`
   | `//XCUIElementTypeAlert//*//XCUIElementTypeButton`
   | `(//XCUIElementTypeImage[@name="gif cell"])[1]`;
+
 export type AccessibilityId =
   | 'Create account button'
   | 'Account ID'
@@ -225,6 +227,7 @@ export type AccessibilityId =
   | 'Delete'
   | 'Block message request'
   | 'Block'
+  | 'Block This User - Switch'
   | 'Unblock'
   | 'Confirm block'
   | 'Blocked contacts'
@@ -247,7 +250,7 @@ export type AccessibilityId =
   | 'Photo, May 01, 1999, 7:00 AM'
   | 'profile_picture.jpg, 27.75 kB, May 2, 1999'
   | 'profile_picture.jpg, 27.75 kB, May 1, 1999'
-  | 'Photo taken on May 2, 1999, 7:00:00 AM'
+  | 'Photo taken on May 2, 1999 7:00:00 AM'
   | 'Photo, 01 May 1998, 7:00 am'
   | '1967-05-05 21:00:00 +0000'
   | '1988-09-08 21:00:00 +0000'
@@ -292,20 +295,11 @@ export type AccessibilityId =
   | 'Follow Setting'
   | 'Set'
   | 'Allow Full Access'
-  | '5 seconds'
-  | '10 seconds'
-  | '30 seconds'
-  | '1 minute'
-  | '5 minutes'
-  | '30 minutes'
-  | '1 hour'
-  | '12 hours'
-  | '1 day'
-  | '1 week'
-  | '2 weeks'
-  | 'Off'
+  | DMTimeOption
+  | `${DMTimeOption} - Radio`
   | 'Loading animation'
   | 'Recovery password container'
   | 'Copy button'
   | 'space'
-  | 'Recovery password input';
+  | 'Recovery password input'
+  | 'Read Receipts - Switch';
