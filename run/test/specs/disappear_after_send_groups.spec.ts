@@ -1,5 +1,6 @@
+import { localize } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { DisappearActions, DMTimeOption } from '../../types/testing';
+import { DisappearActions, DisappearingControlMessage, DMTimeOption } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
@@ -25,16 +26,25 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
 
   await setDisappearingMessage(platform, device1, ['Group', `Disappear after send option`, time]);
   // await runOnlyOnIOS(platform, () => device1.navigateBack(platform));
-  // Check control message
+  // Get correct control message for You setting disappearing messages
+  const disappearingMessagesSetYou = localize('disappearingMessagesSetYou')
+    .withArgs({ time, disappearing_messages_type: controlMode })
+    .strip()
+    .toString();
+  // Get correct control message for userA setting disappearing messages
+  const disappearingMessagesSetControl = localize('disappearingMessagesSet')
+    .withArgs({ name: userA.userName, time, disappearing_messages_type: controlMode })
+    .strip()
+    .toString();
+  // Check control message is correct on device 2
+
   await Promise.all([
-    device1.disappearingControlMessage(
-      `You set messages to disappear ${time} after they have been ${controlMode}.`
-    ),
+    device1.disappearingControlMessage(disappearingMessagesSetYou as DisappearingControlMessage),
     device2.disappearingControlMessage(
-      `${userA.userName} has set messages to disappear ${time} after they have been ${controlMode}.`
+      disappearingMessagesSetControl as DisappearingControlMessage
     ),
     device3.disappearingControlMessage(
-      `${userA.userName} has set messages to disappear ${time} after they have been ${controlMode}.`
+      disappearingMessagesSetControl as DisappearingControlMessage
     ),
   ]);
   // Send message to verify deletion
