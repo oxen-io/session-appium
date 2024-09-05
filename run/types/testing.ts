@@ -88,14 +88,17 @@ export type StrategyExtractionObj =
   | {
       strategy: Extract<Strategy, 'id' | 'class name'>;
       selector: string;
+      text?: string;
     }
   | {
       strategy: Extract<Strategy, 'accessibility id'>;
       selector: AccessibilityId;
+      text?: string;
     }
   | {
       strategy: Extract<Strategy, 'xpath'>;
       selector: XPath;
+      text?: string;
     }
   | {
       strategy: Extract<Strategy, 'DMTimeOption'>;
