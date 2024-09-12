@@ -1,13 +1,14 @@
+import { localize } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
+import { AccessibilityId } from '../../types/testing';
+import { DeclineMessageRequestButton } from './locators';
+import { runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
 iosIt('Decline message request', declineRequest);
 androidIt('Decline message request', declineRequest);
-
-// bothPlatformsIt("Decline message request", declineRequest);
 
 async function declineRequest(platform: SupportedPlatformsType) {
   // Check 'decline' button
@@ -29,14 +30,11 @@ async function declineRequest(platform: SupportedPlatformsType) {
     selector: 'Message request',
   });
   // Click on decline button
-  await runOnlyOnIOS(platform, () => device2.clickOnByAccessibilityID('Delete message request'));
-  await runOnlyOnAndroid(platform, () =>
-    device2.clickOnByAccessibilityID('Decline message request')
-  );
+  await device2.clickOnElementAll(new DeclineMessageRequestButton(device2));
   // Are you sure you want to delete message request only for ios
   await sleepFor(3000);
+  // TODO add check modal
   await runOnlyOnIOS(platform, () => device2.clickOnByAccessibilityID('Confirm delete'));
-
   // Navigate back to home page
   await sleepFor(100);
   await device2.navigateBack(platform);
@@ -45,9 +43,11 @@ async function declineRequest(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'New conversation button',
   });
+  // "messageRequestsNonePending": "No pending message requests",
+  const messageRequestsNonePending = localize('messageRequestsNonePending').strip().toString();
   await device3.waitForTextElementToBePresent({
     strategy: 'accessibility id',
-    selector: 'No pending message requests',
+    selector: messageRequestsNonePending as AccessibilityId,
   });
   // Close app
   await closeApp(device1, device2, device3);

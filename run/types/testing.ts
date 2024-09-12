@@ -121,7 +121,11 @@ export type ControlMessage =
   | `${string} joined the group.`
   | `You added ${string} to the group.`
   | `You have no messages from ${string}. Send a message to start the conversation!`
-  | `Group name is now ${string}.`;
+  | `Group name is now ${string}.`
+  | 'You will be able to send voice messages and attachments once the recipient has approved this message request.'
+  | 'Sending a message to this user will automatically accept their message request and reveal your Account ID.'
+  | 'Your message request has been accepted.'
+  | `You have accepted the message request from ${string}.`;
 
 export type XPath =
   | `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout`
@@ -142,6 +146,7 @@ export type AccessibilityId =
   | 'Session ID generated'
   | 'Session id input box'
   | 'Enter display name'
+  | 'Display name'
   | 'Continue'
   | 'Slow mode notifications button'
   | 'Continue with settings'

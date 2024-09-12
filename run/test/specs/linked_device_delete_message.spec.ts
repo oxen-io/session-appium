@@ -1,5 +1,5 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { runOnlyOnAndroid, runOnlyOnIOS } from './utils';
+import { DeleteMessageConfirmation } from './locators';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
@@ -7,8 +7,6 @@ import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/o
 
 iosIt('Deleted message linked device', deletedMessageLinkedDevice);
 androidIt('Deleted message linked device', deletedMessageLinkedDevice);
-
-// bothPlatformsIt("Deleted message linked device", deletedMessageLinkedDevice);
 
 async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
@@ -37,11 +35,7 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
   // Select delete
   await device1.clickOnByAccessibilityID('Delete message');
   // Select delete for everyone
-  await runOnlyOnAndroid(platform, () => device1.clickOnByAccessibilityID('Delete just for me'));
-  await runOnlyOnIOS(platform, () => device1.clickOnByAccessibilityID('Delete for me'));
-
-  // await waitForLoadingAnimation(device1);
-
+  await device1.clickOnElementAll(new DeleteMessageConfirmation(device1));
   // Check linked device for deleted message
   await device1.hasTextElementBeenDeleted('Message body', sentMessage);
   // Close app

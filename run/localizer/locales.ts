@@ -2,7 +2,6 @@
 // To make changes, modify the corresponding JSON file and re-run the script.
 
 export const en = {
-  'Notifications - Muted': 'notificationsHeaderMute',
   about: 'About',
   accept: 'Accept',
   accountIDCopy: 'Copy Account ID',
@@ -163,7 +162,7 @@ export const en = {
   callsMissed: 'Missed Call',
   callsMissedCallFrom: 'Missed call from {name}',
   callsNotificationsRequired:
-    'Voice and Video Calls require notifications to be enabled in your device system settings. ',
+    'Voice and Video Calls require notifications to be enabled in your device system settings.',
   callsPermissionsRequired: 'Call Permissions Required',
   callsPermissionsRequiredDescription:
     'You can enable the "Voice and Video Calls" permission in Privacy Settings.',
@@ -349,11 +348,15 @@ export const en = {
   disappearingMessagesDescription: 'This setting applies to everyone in this conversation.',
   disappearingMessagesDescription1:
     'This setting applies to messages you send in this conversation.',
+  disappearingMessagesDescriptionGroup:
+    'This setting applies to everyone in this conversation.<br/>Only group admins can change this setting.',
   disappearingMessagesDisappear: 'Disappear After {disappearing_messages_type} - {time}',
   disappearingMessagesDisappearAfterRead: 'Disappear After Read',
   disappearingMessagesDisappearAfterReadDescription: 'Messages delete after they have been read.',
+  disappearingMessagesDisappearAfterReadState: 'Disappear After Read - {time}',
   disappearingMessagesDisappearAfterSend: 'Disappear After Send',
   disappearingMessagesDisappearAfterSendDescription: 'Messages delete after they have been sent.',
+  disappearingMessagesDisappearAfterSendState: 'Disappear After Send - {time}',
   disappearingMessagesFollowSetting: 'Follow Setting',
   disappearingMessagesFollowSettingOff:
     'Messages you send will no longer disappear. Are you sure you want to turn <b>off</b> disappearing messages?',
@@ -459,9 +462,9 @@ export const en = {
   groupInviteYouAndMoreNew: '<b>You</b> and <b>{count} others</b> were invited to join the group.',
   groupInviteYouAndOtherNew: '<b>You</b> and <b>{other_name}</b> were invited to join the group.',
   groupLeave: 'Leave Group',
-  groupLeaveDescription: 'Are you sure you want to leave {group_name}?',
+  groupLeaveDescription: 'Are you sure you want to leave <b>{group_name}</b>?',
   groupLeaveDescriptionAdmin:
-    'Are you sure you want to leave {group_name}? This will deactivate the group for all members.',
+    'Are you sure you want to leave <b>{group_name}</b>?<br/><br/>This will remove all members and delete all group content.',
   groupLeaveErrorFailed: 'Failed to leave {group_name}',
   groupLegacyBanner:
     'Groups have been upgraded, create a new group to upgrade. Old group functionality will be degraded from {date}.',
@@ -487,7 +490,7 @@ export const en = {
   groupNameEnter: 'Enter a group name',
   groupNameEnterPlease: 'Please enter a group name.',
   groupNameEnterShorter: 'Please enter a shorter group name.',
-  groupNameNew: 'Group name is now {group_name}. ',
+  groupNameNew: 'Group name is now {group_name}.',
   groupNameUpdated: 'Group name updated.',
   groupNoMessages:
     'You have no messages from <b>{group_name}</b>. Send a message to start the conversation!',
@@ -617,7 +620,7 @@ export const en = {
     'Sending a message to this user will automatically accept their message request and reveal your Account ID.',
   messageRequestsAccepted: 'Your message request has been accepted.',
   messageRequestsClearAllExplanation:
-    'Are you sure you want to clear all message and group invites?',
+    'Are you sure you want to clear all message requests and group invites?',
   messageRequestsCommunities: 'Community Message Requests',
   messageRequestsCommunitiesDescription: 'Allow message requests from Community conversations.',
   messageRequestsDelete: 'Are you sure you want to delete this message request?',
@@ -640,9 +643,9 @@ export const en = {
   minimize: 'Minimize',
   next: 'Next',
   nicknameDescription:
-    'Choose a nickname for {name}. This will appear to you in your one-to-one and group conversations.',
+    'Choose a nickname for <b>{name}</b>. This will appear to you in your one-to-one and group conversations.',
   nicknameEnter: 'Enter nickname',
-  nicknameRemove: 'Remove nickname',
+  nicknameRemove: 'Remove Nickname',
   nicknameSet: 'Set Nickname',
   no: 'No',
   noSuggestions: 'No Suggestions',
@@ -666,6 +669,7 @@ export const en = {
   notificationsGoToDevice: 'Go to device notification settings',
   notificationsHeaderAllMessages: 'Notifications - All',
   notificationsHeaderMentionsOnly: 'Notifications - Mentions Only',
+  notificationsHeaderMute: 'Notifications - Muted',
   notificationsIosGroup: '{name} to {conversation_name}',
   notificationsIosRestart: 'You may have received messages while your {device} was restarting.',
   notificationsLedColor: 'LED color',
@@ -742,9 +746,13 @@ export const en = {
   passwordSet: 'Set Password',
   passwordSetDescription: 'Your password has been set. Please keep it safe.',
   paste: 'Paste',
+  permissionMusicAudioDenied:
+    '{app_name} needs music and audio access in order to send files, music and audio, but it has been permanently denied. Tap Settings -> Permissions, and turn "Music and audio" on.',
   permissionsAppleMusic: '{app_name} needs to use Apple Music to play media attachments.',
   permissionsAutoUpdate: 'Auto Update',
   permissionsAutoUpdateDescription: 'Automatically check for updates on startup.',
+  permissionsCameraDenied:
+    '{app_name} needs camera access to take photos and videos, but it has been permanently denied. Tap Settings -> Permissions, and turn "Camera" on.',
   permissionsFaceId: 'The screen lock feature on {app_name} uses Face ID.',
   permissionsKeepInSystemTray: 'Keep in System Tray',
   permissionsKeepInSystemTrayDescription:
@@ -753,15 +761,17 @@ export const en = {
     '{app_name} needs photo library access to continue. You can enable access in the iOS settings.',
   permissionsMicrophone: 'Microphone',
   permissionsMicrophoneAccessRequired:
-    '{app_name} needs microphone access to send audio messages, but it has been permanently denied. Please continue to app settings, select "Permissions", and enable "Microphone".',
+    '{app_name} needs microphone access to make calls and send audio messages, but it has been permanently denied. Tap settings -> Permissions, and turn "Microphone" on.',
   permissionsMicrophoneAccessRequiredDesktop:
     "You can enable microphone access in {app_name}'s privacy settings",
   permissionsMicrophoneAccessRequiredIos:
     '{app_name} needs microphone access to make calls and record audio messages.',
   permissionsMicrophoneDescription: 'Allow access to microphone.',
-  permissionsRequired: 'Permission required',
+  permissionsMusicAudio:
+    '{app_name} needs music and audio access in order to send files, music and audio.',
+  permissionsRequired: 'Permission Required',
   permissionsStorageDenied:
-    '{app_name} needs storage access so you can send and save attachments. Tap Settings -> Permissions, and turn "Files and media" on.',
+    '{app_name} needs photo library access so you can send photos and videos, but it has been permanently denied. Tap Settings -> Permissions, and turn "Photos and videos" on.',
   permissionsStorageDeniedLegacy:
     '{app_name} needs storage access so you can send and save attachments. Tap Settings -> Permissions, and turn "Storage" on.',
   permissionsStorageSave: '{app_name} needs storage access to save attachments and media.',
@@ -897,7 +907,7 @@ export const en = {
   updateErrorDescription:
     '{app_name} failed to update. Please go to {session_download_url} and install the new version manually, then contact our Help Center to let us know about this problem.',
   updateNewVersion: 'A new version of {app_name} is available, tap to update',
-  updateNewVersionDescription: 'A new version of {app_name} is available. ',
+  updateNewVersionDescription: 'A new version of {app_name} is available.',
   updateReleaseNotes: 'Go to Release Notes',
   updateSession: '{app_name} Update',
   updateVersion: 'Version {version}',

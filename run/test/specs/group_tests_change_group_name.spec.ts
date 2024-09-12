@@ -1,5 +1,5 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { ApplyChanges } from './locators';
+import { ApplyChanges, EditGroup, EditGroupName } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
@@ -81,14 +81,14 @@ async function changeGroupNameAndroid(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID('More options');
   // Click on Edit group option
   await sleepFor(1000);
-  await device1.clickOnTextElementById(`network.loki.messenger:id/title`, 'Edit group');
+  await device1.clickOnElementAll(new EditGroup(device1));
 
   // Click on current group name
   await device1.clickOnByAccessibilityID('Group name');
   // Enter new group name
   await device1.clickOnByAccessibilityID('Group name');
 
-  await device1.inputText(newGroupName, { strategy: 'accessibility id', selector: 'Group name' });
+  await device1.inputText(newGroupName, new EditGroupName(device1));
   // Click done/apply
   await device1.clickOnByAccessibilityID('Accept name change');
   await device1.clickOnElementAll(new ApplyChanges(device1));

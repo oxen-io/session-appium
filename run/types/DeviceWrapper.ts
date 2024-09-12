@@ -1181,7 +1181,7 @@ export class DeviceWrapper {
     });
     await this.inputText(message, {
       strategy: 'accessibility id',
-      selector: 'Message composition',
+      selector: 'New direct message',
     });
     await this.clickOnByAccessibilityID('Send');
   }
@@ -1394,7 +1394,9 @@ export class DeviceWrapper {
       });
       await this.pressAndHold('New voice message');
     } else if (this.isIOS()) {
+      await this.pressAndHold('New voice message');
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
+      await this.pressAndHold('New voice message');
     }
   }
 
@@ -1457,11 +1459,6 @@ export class DeviceWrapper {
           `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/profile_picture.jpg' /sdcard/Download/`,
           true
         );
-        // Verifies that the file was successful downloaded to this
-        // await runScriptAndLog(
-        //   `${getAdbFullPath()} -s emulator-5554 shell ls /sdcard/Download/`,
-        //   true
-        // );
       }
       await this.clickOnElementAll({
         strategy: 'accessibility id',

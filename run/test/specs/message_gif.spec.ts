@@ -42,6 +42,7 @@ async function sendGifAndroid(platform: SupportedPlatformsType) {
   // Test sending a video
   // open devices and server
   const { device1, device2 } = await openAppTwoDevices(platform);
+  const testMessage = 'Test message with GIF';
   // create user a and user b
   const [userA, userB] = await Promise.all([
     newUser(device1, 'Alice', platform),
@@ -51,8 +52,7 @@ async function sendGifAndroid(platform: SupportedPlatformsType) {
   // create contact
   await newContact(platform, device1, userA, device2, userB);
   // Click on attachments button
-  await device1.sendGIF('Test message with GIF');
-
+  await device1.sendGIF(testMessage);
   // Check if the 'Tap to download media' config appears
   // Click on config
   await device2.clickOnByAccessibilityID('Untrusted attachment message', 9000);

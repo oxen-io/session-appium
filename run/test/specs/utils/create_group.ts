@@ -1,5 +1,6 @@
+import { localize } from '../../../localizer/i18n/localizedString';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { Group, GroupName, User } from '../../../types/testing';
+import { ControlMessage, Group, GroupName, User } from '../../../types/testing';
 import { newContact } from './create_contact';
 import { SupportedPlatformsType } from './open_app';
 
@@ -40,22 +41,7 @@ export const createGroup = async (
   // Select tick
   await device1.clickOnByAccessibilityID('Create group');
   // Check for empty state on ios
-  if (platform === 'ios') {
-    await device1.waitForLoadingOnboarding();
-    await device1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Empty list',
-      maxWait: 5000,
-    });
-  }
-  if (platform === 'android') {
-    await device1.waitForControlMessageToBePresent(
-      `You have no messages from ${group.userName}. Send a message to start the conversation!`,
-      10000
-    );
-  } // Send message from User A to group to verify all working
-  await device1.sendMessage(userAMessage);
-  // Did the other devices receive UserA's message?
+  // Enter group chat on device 2 and 3
   await Promise.all([
     device2.clickOnElementAll({
       strategy: 'accessibility id',
@@ -68,6 +54,43 @@ export const createGroup = async (
       text: group.userName,
     }),
   ]);
+  if (platform === 'ios') {
+    await device1.waitForLoadingOnboarding();
+    await Promise.all([
+      device1.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: 'Empty list',
+        maxWait: 5000,
+      }),
+      device2.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: 'Empty list',
+        maxWait: 5000,
+      }),
+      device3.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: 'Empty list',
+        maxWait: 5000,
+      }),
+    ]);
+  }
+  // TODO: need to change once Android have updated their control messages
+  const groupNoMessages = localize('groupNoMessages')
+    .withArgs({ group_name: group.userName })
+    .strip()
+    .toString();
+  if (platform === 'android') {
+    await device1.waitForControlMessageToBePresent(groupNoMessages as ControlMessage);
+    const groupInviteYou = localize('groupInviteYou').strip().toString();
+    // Check control message 'You joined the group'
+    await Promise.all([
+      device2.waitForControlMessageToBePresent(groupInviteYou as ControlMessage),
+      device3.waitForControlMessageToBePresent(groupInviteYou as ControlMessage),
+    ]);
+  }
+  // Send message from User A to group to verify all working
+  await device1.sendMessage(userAMessage);
+  // Did the other devices receive UserA's message?
   await Promise.all([
     device2.waitForTextElementToBePresent({
       strategy: 'accessibility id',

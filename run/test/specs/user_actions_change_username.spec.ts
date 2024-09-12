@@ -1,12 +1,13 @@
-import { bothPlatformsIt } from '../../types/sessionIt';
-import { sleepFor, runOnlyOnAndroid, runOnlyOnIOS } from './utils';
+import { androidIt, iosIt } from '../../types/sessionIt';
+import { ExitUserProfile, TickButton, UsernameInput, UsernameSettings } from './locators';
+import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
-import { SupportedPlatformsType, openAppOnPlatformSingleDevice, closeApp } from './utils/open_app';
-import { ApplyChanges, ExitUserProfile, TickButton, Username } from './locators';
+import { SupportedPlatformsType, closeApp, openAppOnPlatformSingleDevice } from './utils/open_app';
 
-bothPlatformsIt('Change username', changeUsername);
+iosIt('Change username', changeUsernameiOS);
+androidIt('Change username', changeUsernameAndroid);
 
-async function changeUsername(platform: SupportedPlatformsType) {
+async function changeUsernameiOS(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
 
   const userA = await newUser(device, 'Alice', platform);
@@ -14,27 +15,27 @@ async function changeUsername(platform: SupportedPlatformsType) {
   // click on settings/profile avatar
   await device.clickOnByAccessibilityID('User settings');
   // select username
-  await device.clickOnByAccessibilityID('Username');
+  await device.clickOnElementAll(new UsernameSettings(device));
   // type in new username
   await sleepFor(100);
-  await device.deleteText(new Username(device));
-  await device.inputText(newUsername, new Username(device));
+  await device.deleteText(new UsernameInput(device));
+  await device.inputText(newUsername, new UsernameInput(device));
   await device.clickOnElementAll(new TickButton(device));
-  const changedUsername = await device.grabTextFromAccessibilityId('Username');
+
+  const username = await device.waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Username',
+    text: newUsername,
+  });
+
+  const changedUsername = await device.getTextFromElement(username);
   console.log('Changed username', changedUsername);
   if (changedUsername === newUsername) {
     console.log('Username change successful');
   }
   if (changedUsername === userA.userName) {
-    console.log('Username is still ', userA.userName);
+    throw new Error('Username change unsuccessful');
   }
-  if (changedUsername === 'Username') {
-    console.log('Username is not picking up text but using access id text', changedUsername);
-  } else {
-    console.log('Username is not found`');
-  }
-  // select tick
-
   await device.clickOnElementAll(new ExitUserProfile(device));
   await device.clickOnElementAll({
     strategy: 'accessibility id',
@@ -45,5 +46,47 @@ async function changeUsername(platform: SupportedPlatformsType) {
     selector: 'Username',
     text: newUsername,
   });
+  await closeApp(device);
+}
+
+async function changeUsernameAndroid(platform: SupportedPlatformsType) {
+  const { device } = await openAppOnPlatformSingleDevice(platform);
+
+  const userA = await newUser(device, 'Alice', platform);
+  const newUsername = 'Alice in chains';
+  // click on settings/profile avatar
+  await device.clickOnByAccessibilityID('User settings');
+  // select username
+  await device.clickOnElementAll(new UsernameSettings(device));
+  // type in new username
+  await sleepFor(100);
+  await device.deleteText(new UsernameInput(device));
+  await device.inputText(newUsername, new UsernameInput(device));
+  await device.clickOnElementAll(new TickButton(device));
+  const username = await device.waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Display name',
+    text: newUsername,
+  });
+  const changedUsername = await device.getTextFromElement(username);
+  console.log('Changed username', changedUsername);
+  if (changedUsername === newUsername) {
+    console.log('Username change successful');
+  }
+  if (changedUsername === userA.userName) {
+    throw new Error('Username change unsuccessful');
+  }
+  await device.clickOnElementAll(new ExitUserProfile(device));
+  await device.clickOnElementAll({
+    strategy: 'accessibility id',
+    selector: 'User settings',
+  });
+
+  await device.waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Display name',
+    text: newUsername,
+  });
+
   await closeApp(device);
 }

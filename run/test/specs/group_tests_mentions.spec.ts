@@ -6,8 +6,6 @@ import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/o
 iosIt('Mentions for groups', mentionsForGroups);
 androidIt('Mentions for groups', mentionsForGroups);
 
-// bothPlatformsIt("Mentions for groups", mentionsForGroups);
-
 async function mentionsForGroups(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
