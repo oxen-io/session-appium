@@ -79,7 +79,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Select username to edit
   await device1.clickOnByAccessibilityID('Edit user nickname');
   // Type in nickname
-  await device1.inputText(nickName, { strategy: 'accessibility id', selector: 'Username' });
+  await device1.inputText(nickName, { strategy: 'accessibility id', selector: 'Display name' });
   // Click on tick button
   await device1.clickOnByAccessibilityID('Apply');
   // CLick out of pop up
@@ -102,7 +102,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Click on username to edit
   await device1.clickOnByAccessibilityID('Edit user nickname');
   // Click apply without entering new nickname
-  await device1.clickOnElementAll(new TickButton(device1));
+  await device1.clickOnByAccessibilityID('Apply');
   // Click out of pop up
   await device1.back();
   // Enter conversation to verify change

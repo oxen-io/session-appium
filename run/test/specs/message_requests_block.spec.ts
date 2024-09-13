@@ -1,6 +1,6 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { BlockedContactsSettings, BlockUserConfirmation } from './locators';
-import { sleepFor } from './utils';
+import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
 import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
@@ -49,18 +49,14 @@ async function blockedRequest(platform: SupportedPlatformsType) {
   await sleepFor(5000);
   await device2.hasTextElementBeenDeleted('Message body', blockedMessage);
   // Check that user is on Blocked User list in Settings
-  await device1.navigateBack(platform);
   if (platform === 'ios') {
-    await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'User settings' });
-    await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' });
-    await device1.clickOnElementAll(new BlockedContactsSettings(device1));
-    await device1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Contact',
-      text: userB.userName,
+    await device2.clickOnElementAll({ strategy: 'accessibility id', selector: 'User settings' });
+    await device2.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' });
+    await device2.clickOnElementAll(new BlockedContactsSettings(device2));
+    await device2.waitForTextElementToBePresent({
+      strategy: 'xpath',
+      selector: `//XCUIElementTypeCell[@name="${userA.userName}"]`,
     });
-  } else {
-    console.warn('Blocked contacts not available on Android');
   }
   // Close app
   await closeApp(device1, device2, device3);

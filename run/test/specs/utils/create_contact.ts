@@ -1,6 +1,7 @@
 import { runOnlyOnAndroid, sleepFor } from '.';
+import { localize } from '../../../localizer/i18n/localizedString';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { User } from '../../../types/testing';
+import { ControlMessage, User } from '../../../types/testing';
 import { SupportedPlatformsType } from './open_app';
 
 export const newContact = async (
@@ -22,6 +23,9 @@ export const newContact = async (
   // Type into message input box
   await device2.sendMessage(`Reply-message-${Bob.userName}-to-${Alice.userName}`);
   // Verify config message states message request was accepted
+  // "messageRequestsAccepted": "Your message request has been accepted.",
+  const messageRequestsAccepted = localize('messageRequestsAccepted').strip().toString();
+  await device1.waitForControlMessageToBePresent(messageRequestsAccepted as ControlMessage);
   await device1.waitForControlMessageToBePresent('Your message request has been accepted.');
 
   console.info(`${Alice.userName} and ${Bob.userName} are now contacts`);

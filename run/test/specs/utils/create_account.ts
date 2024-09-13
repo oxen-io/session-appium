@@ -1,6 +1,7 @@
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from '.';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User, Username } from '../../../types/testing';
+import { ExitUserProfile, RevealRecoveryPhraseButton } from '../locators';
 import { SupportedPlatformsType } from './open_app';
 
 export const newUser = async (
@@ -14,8 +15,6 @@ export const newUser = async (
     strategy: 'accessibility id',
     selector: 'Create account button',
   });
-  // Click continue on session Id creation
-  // await device.clickOnByAccessibilityID('Continue');
   // Input username
   await device.inputText(userName, {
     strategy: 'accessibility id',
@@ -40,13 +39,7 @@ export const newUser = async (
     strategy: 'accessibility id',
     selector: 'Reveal recovery phrase button',
   });
-  await runOnlyOnIOS(platform, () => device.clickOnByAccessibilityID('Continue'));
-  await runOnlyOnAndroid(platform, () =>
-    device.clickOnElementAll({
-      strategy: 'accessibility id',
-      selector: 'Reveal recovery phrase button',
-    })
-  );
+  await device.clickOnElementAll(new RevealRecoveryPhraseButton(device));
   //Save recovery passwprd
   await device.clickOnByAccessibilityID('Recovery password container');
   await runOnlyOnAndroid(platform, () => device.clickOnByAccessibilityID('Copy button'));
@@ -57,12 +50,6 @@ export const newUser = async (
   await device.navigateBack(platform);
   await device.clickOnByAccessibilityID('User settings');
   const accountID = await device.grabTextFromAccessibilityId('Account ID');
-  await runOnlyOnAndroid(platform, () => device.navigateBack(platform));
-  await runOnlyOnIOS(platform, () =>
-    device.clickOnElementAll({
-      strategy: 'accessibility id',
-      selector: 'Close button',
-    })
-  );
+  await device.clickOnElementAll(new ExitUserProfile(device));
   return { userName, accountID, recoveryPhrase };
 };

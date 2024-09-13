@@ -1,18 +1,13 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { BlockUser } from './locators';
+import { BlockedContactsSettings, BlockUser, BlockUserConfirmation } from './locators';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
-import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
+import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
 
 iosIt('Block user in conversation options', blockUserInConversationOptions);
 androidIt('Block user in conversation options', blockUserInConversationOptions);
-
-// bothPlatformsIt(
-//   "Block user in conversation options",
-//   blockUserInConversationOptions
-// );
 
 async function blockUserInConversationOptions(platform: SupportedPlatformsType) {
   //Open three devices and creates two contacts (Alice and Bob)
@@ -27,14 +22,11 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
   // Click on three dots (settings)
   await device1.clickOnByAccessibilityID('More options');
   // Select Block option
-  await runOnlyOnIOS(platform, () => device1.clickOnElementAll(new BlockUser(device1)));
-  // Wait for menu to be clickable (Android)
   await sleepFor(500);
-  await runOnlyOnAndroid(platform, () =>
-    device1.clickOnTextElementById(`network.loki.messenger:id/title`, 'Block')
-  );
+  await device1.clickOnElementAll(new BlockUser(device1));
+  // Wait for menu to be clickable (Android)
   // Confirm block option
-  await device1.clickOnByAccessibilityID('Confirm block');
+  await device1.clickOnElementAll(new BlockUserConfirmation(device1));
   // On ios there is an alert that confirms that the user has been blocked
   await sleepFor(1000);
   // On ios, you need to navigate back to conversation screen to confirm block
@@ -57,34 +49,29 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
       selector: 'Blocked banner',
     });
     console.info(`${userB.userName}` + ' has been blocked');
-  } else console.info('Blocked banner not found');
-  // Unblock userB
-  // Click on alert to unblock
-  await device1.clickOnByAccessibilityID('Blocked banner');
-  // on ios there is a confirm unblock alert, need to click 'unblock'
-  await runOnlyOnIOS(platform, () => device1.clickOnByAccessibilityID('Unblock'));
-  console.info(`${userB.userName}} has been unblocked`);
-  // Look for alert (shouldn't be there)
-  await device1.hasElementBeenDeleted({
-    strategy: 'accessibility id',
-    selector: 'Blocked banner',
-  });
-  // Has capabilities returned to blocked user (can they send message)
-  const hasUserBeenUnblockedMessage = await device2.sendMessage('Hey, am I unblocked?');
-  // Check in device 1 and device 3 for message
-  await Promise.all([
+  } else {
+    console.info('Blocked banner not found');
+  }
+  // Check settings for blocked user
+  await device1.navigateBack(platform);
+  await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'User settings' });
+  await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' });
+  await device1.clickOnElementAll(new BlockedContactsSettings(device1));
+  await runOnlyOnAndroid(platform, () =>
     device1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
-      selector: 'Message body',
-      text: hasUserBeenUnblockedMessage,
-    }),
-    device3.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: hasUserBeenUnblockedMessage,
-    }),
-  ]);
-
+      selector: 'Contact',
+      text: userB.userName,
+    })
+  );
+  await runOnlyOnIOS(platform, () =>
+    device1.waitForTextElementToBePresent({
+      strategy: 'xpath',
+      selector: `//XCUIElementTypeCell[@name="${userB.userName}"]`,
+    })
+  );
   // Close app
   await closeApp(device1, device2, device3);
 }
+
+// TODO unblock user

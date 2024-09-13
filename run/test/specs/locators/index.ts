@@ -113,7 +113,7 @@ export class ReadReceiptsButton extends LocatorsInterface {
         return {
           strategy: 'id',
           selector: 'android:id/summary',
-          text: 'Send read receipts in one-to-one chats.',
+          text: 'Show read receipts for all messages you send and receive.',
         } as const;
       case 'ios':
         return {
@@ -211,15 +211,16 @@ export class MediaMessage extends LocatorsInterface {
 export class BlockUser extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
-      case 'android':
+      case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Block This User - Switch',
         };
-      case 'ios':
+      case 'android':
         return {
-          strategy: 'accessibility id',
-          selector: 'Block',
+          strategy: 'id',
+          selector: `network.loki.messenger:id/title`,
+          text: 'Block',
         };
     }
   }
@@ -312,9 +313,8 @@ export class InviteContacts extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: `network.loki.messenger:id/title`,
-          text: 'Invite Contacts',
+          strategy: 'accessibility id',
+          selector: 'Invite Contacts',
         };
       case 'ios':
         return {
@@ -463,6 +463,23 @@ export class DeleteMesssageRequestConfirmation extends LocatorsInterface {
   }
 }
 
+export class RevealRecoveryPhraseButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Reveal recovery phrase button',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Continue',
+        };
+    }
+  }
+}
+
 // TODO update StrategyExtractionObj to include Locator class
 // export class PendingMessageRequestControlMessage extends LocatorsInterface {
 //   public build(): StrategyExtractionObj {
@@ -497,6 +514,24 @@ export class DeleteMesssageRequestConfirmation extends LocatorsInterface {
 //           strategy: 'id',
 //           selector: 'network.loki.messenger:id/sendAcceptsTextView',
 //           text: 'Sending a message to this user will automatically accept their message request and reveal your Account ID.',
+//         };
+//     }
+//   }
+// }
+
+// export class MessageReadStatus extends LocatorsInterface {
+//   public build(): StrategyExtractionObj {
+//     switch (this.platform) {
+//       case 'android':
+//         return {
+//           strategy: 'id',
+//           selector: 'network.loki.messenger:id/messageStatusTextView',
+//           text: 'Read',
+//         };
+//       case 'ios':
+//         return {
+//           strategy: 'accessibility id',
+//           selector: 'Message sent status: Read',
 //         };
 //     }
 //   }

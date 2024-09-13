@@ -1394,7 +1394,7 @@ export class DeviceWrapper {
       });
       await this.pressAndHold('New voice message');
     } else if (this.isIOS()) {
-      await this.pressAndHold('New voice message');
+      // await this.pressAndHold('New voice message');
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
       await this.pressAndHold('New voice message');
     }

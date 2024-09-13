@@ -138,7 +138,8 @@ export type XPath =
   | `//XCUIElementTypeSwitch[@name="Read Receipts, Send read receipts in one-to-one chats."]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.ScrollView/androidx.viewpager.widget.ViewPager/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.FrameLayout[1]`
   | `//XCUIElementTypeAlert//*//XCUIElementTypeButton`
-  | `(//XCUIElementTypeImage[@name="gif cell"])[1]`;
+  | `(//XCUIElementTypeImage[@name="gif cell"])[1]`
+  | `//XCUIElementTypeCell[@name="${string}"]`;
 
 export type AccessibilityId =
   | 'Create account button'

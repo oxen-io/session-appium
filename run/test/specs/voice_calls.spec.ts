@@ -3,6 +3,9 @@ import { androidIt, iosIt } from '../../types/sessionIt';
 import { newUser } from './utils/create_account';
 import { runOnlyOnAndroid, sleepFor } from './utils/index';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { localize } from '../../localizer/i18n/localizedString';
+import { ControlMessage } from '../../types/testing';
+import { ExitUserProfile } from './locators';
 
 test.describe('Calls test', () => {
   androidIt('Voice calls', voiceCallAndroid, true);
@@ -33,6 +36,9 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   await device2.sendMessage(`Reply-message-${userB.userName}-to-${userA.userName}`);
 
   // Verify config message states message request was accepted
+  // "messageRequestsAccepted": "Your message request has been accepted.",
+  const messageRequestsAccepted = localize('messageRequestsAccepted').strip().toString();
+  await device1.waitForControlMessageToBePresent(messageRequestsAccepted as ControlMessage);
   await device1.waitForControlMessageToBePresent('Your message request has been accepted.');
   // Phone icon should appear now that conversation has been approved
   await device1.clickOnByAccessibilityID('Call');
@@ -51,7 +57,7 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   });
   await device1.clickOnByAccessibilityID('Continue');
   // Navigate back to conversation
-  await device1.clickOnByAccessibilityID('Close button');
+  await device1.clickOnElementAll(new ExitUserProfile(device1));
   await device1.clickOnByAccessibilityID('Call');
   // Need to allow microphone access
   await device1.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
@@ -92,8 +98,18 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   // Hang up
   await device1.clickOnByAccessibilityID('End call button');
   // Check for control messages on both devices
-  await device1.waitForControlMessageToBePresent(`You called ${userB.userName}`);
-  await device2.waitForControlMessageToBePresent(`${userA.userName} called you`);
+  // "callsYouCalled": "You called {name}",
+  const callsYouCalled = localize('callsYouCalled')
+    .withArgs({ name: userB.userName })
+    .strip()
+    .toString();
+  await device1.waitForControlMessageToBePresent(callsYouCalled as ControlMessage);
+  // "callsYouCalled": "You called {name}",
+  const callsCalledYou = localize('callsCalledYou')
+    .withArgs({ name: userB.userName })
+    .strip()
+    .toString();
+  await device2.waitForControlMessageToBePresent(callsCalledYou as ControlMessage);
   // Excellent
   await closeApp(device1, device2);
 }
