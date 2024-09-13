@@ -28,13 +28,12 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
   await runOnlyOnAndroid(platform, () =>
     device3.clickOnTextElementById(`network.loki.messenger:id/title`, 'Leave group')
   );
-
   await runOnlyOnIOS(platform, () => device3.clickOnByAccessibilityID('Leave group'));
   await runOnlyOnIOS(platform, () => device3.clickOnByAccessibilityID('Leave'));
   await runOnlyOnAndroid(platform, () =>
     device3.clickOnElementAll({ strategy: 'accessibility id', selector: 'Yes' })
   );
-  await device3.navigateBack(platform);
+  await runOnlyOnAndroid(platform, () => device3.navigateBack(platform));
   // Check for control message
   await sleepFor(5000);
   await runOnlyOnIOS(platform, () =>
