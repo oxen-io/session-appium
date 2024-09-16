@@ -177,15 +177,16 @@ export class MediaMessage extends LocatorsInterface {
 export class BlockUser extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
-      case 'android':
+      case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Block This User - Switch',
         };
-      case 'ios':
+      case 'android':
         return {
-          strategy: 'accessibility id',
-          selector: 'Block',
+          strategy: 'id',
+          selector: `network.loki.messenger:id/title`,
+          text: 'Block',
         };
     }
   }

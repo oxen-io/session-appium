@@ -1,5 +1,5 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { sleepFor } from './utils';
+import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
@@ -21,14 +21,8 @@ async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {
   ]);
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   await setDisappearingMessage(platform, device1, ['Group', 'Disappear after send option']);
-  switch (platform) {
-    case 'ios': {
-      await device1.sendVideoiOS(testMessage);
-    }
-    case 'android': {
-      await device1.sendVideoAndroid();
-    }
-  }
+  await runOnlyOnIOS(platform, () => device1.sendVideoiOS(testMessage));
+  await runOnlyOnAndroid(platform, () => device1.sendVideoAndroid());
   await sleepFor(30000);
   await Promise.all([
     device1.hasElementBeenDeleted({
