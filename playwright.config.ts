@@ -22,7 +22,7 @@ export default defineConfig({
   repeatEach: process.env.PLAYWRIGHT_REPEAT_COUNT
     ? toNumber(process.env.PLAYWRIGHT_REPEAT_COUNT)
     : 0,
-  workers: 2,
+  workers: 1,
   // process.env.PLAYWRIGHT_WORKERS_COUNT
   //   ? toNumber(process.env.PLAYWRIGHT_WORKERS_COUNT)
   //   : 1,

@@ -1163,7 +1163,7 @@ export class DeviceWrapper {
     await this.clickOnByAccessibilityID('Attachments button');
     await sleepFor(100);
     await this.clickOnByAccessibilityID('Images folder');
-    await this.clickOnByAccessibilityID('Continue');
+    // await this.clickOnByAccessibilityID('Continue');
     await this.clickOnElementAll({
       strategy: 'id',
       selector: 'com.android.permissioncontroller:id/permission_allow_all_button',

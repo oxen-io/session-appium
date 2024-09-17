@@ -81,11 +81,11 @@ export const createGroup = async (
     .toString();
   if (platform === 'android') {
     await device1.waitForControlMessageToBePresent(groupNoMessages as ControlMessage);
-    const groupInviteYou = localize('groupInviteYou').strip().toString();
+    const legacyGroupMemberYouNew = localize('legacyGroupMemberYouNew').strip().toString();
     // Check control message 'You joined the group'
     await Promise.all([
-      device2.waitForControlMessageToBePresent(groupInviteYou as ControlMessage),
-      device3.waitForControlMessageToBePresent(groupInviteYou as ControlMessage),
+      device2.waitForControlMessageToBePresent(legacyGroupMemberYouNew as ControlMessage),
+      device3.waitForControlMessageToBePresent(legacyGroupMemberYouNew as ControlMessage),
     ]);
   }
   // Send message from User A to group to verify all working
