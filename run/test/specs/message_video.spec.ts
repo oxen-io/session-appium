@@ -52,7 +52,6 @@ async function sendVideoAndroid(platform: SupportedPlatformsType) {
     newUser(device1, 'Alice', platform),
     newUser(device2, 'Bob', platform),
   ]);
-  const testMessage = 'Testing-video-1';
   const replyMessage = `Replying to video from ${userA.userName}`;
   // create contact
   await newContact(platform, device1, userA, device2, userB);

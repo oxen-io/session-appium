@@ -7,8 +7,6 @@ import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/o
 iosIt('Unsent message syncs', unSendMessageLinkedDevice);
 androidIt('Unsent message syncs', unSendMessageLinkedDevice);
 
-// bothPlatformsIt("Unsent message syncs", unSendMessageLinkedDevice);
-
 async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
 
@@ -26,7 +24,11 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'Conversation list item',
   });
-  await device3.selectByText('Conversation list item', userB.userName);
+  await device3.clickOnElementAll({
+    strategy: 'accessibility id',
+    selector: 'Conversation list item',
+    text: userB.userName,
+  });
   // Find message
   await device3.findMessageWithBody(sentMessage);
   // Select message on device 1, long press
@@ -35,9 +37,6 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID('Delete message');
   // Select delete for everyone
   await device1.clickOnByAccessibilityID('Delete for everyone');
-
-  // await waitForLoadingAnimation(device1);
-
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Deleted message',

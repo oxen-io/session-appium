@@ -1,11 +1,12 @@
+import { localize } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
+import { ControlMessage } from '../../types/testing';
+import { runOnlyOnAndroid, runOnlyOnIOS } from './utils';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
 iosIt('Accept message request with text', acceptRequestWithText);
 androidIt('Accept message request with text', acceptRequestWithText);
-
-// bothPlatformsIt("Accept message request with text", acceptRequestWithText);
 
 async function acceptRequestWithText(platform: SupportedPlatformsType) {
   // Check accept request by sending text message
@@ -15,17 +16,85 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
     newUser(device1, 'Alice', platform),
     newUser(device2, 'Bob', platform),
   ]);
+  const testMessage = `${userA.userName} to ${userB.userName}`;
   // Send message from Alice to Bob
-  await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
+  await device1.clickOnByAccessibilityID('New conversation button');
+  // Select direct message option
+  await device1.clickOnByAccessibilityID('New direct message');
+  // Enter User B's session ID into input box
+  await device1.inputText(userB.accountID, {
+    strategy: 'accessibility id',
+    selector: 'Session id input box',
+  });
+  // Click next
+  await device1.scrollDown();
+  await device1.clickOnByAccessibilityID('Next');
+  //messageRequestPendingDescription: "You will be able to send voice messages and attachments once the recipient has approved this message request."
+  const messageRequestPendingDescription = localize('messageRequestPendingDescription')
+    .strip()
+    .toString();
+  await runOnlyOnIOS(platform, () =>
+    device1.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Control message',
+      text: messageRequestPendingDescription,
+    })
+  );
+  await runOnlyOnAndroid(platform, () =>
+    device1.waitForTextElementToBePresent({
+      strategy: 'id',
+      selector: 'network.loki.messenger:id/textSendAfterApproval',
+      text: messageRequestPendingDescription,
+    })
+  );
+  await device1.inputText(testMessage, {
+    strategy: 'accessibility id',
+    selector: 'Message input box',
+  });
+  // Click send
+  await device1.clickOnElementAll({
+    strategy: 'accessibility id',
+    selector: 'Send message button',
+  });
+  // Wait for tick
+  await device1.waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: `Message sent status: Sent`,
+    maxWait: 50000,
+  });
   // Wait for banner to appear
   // Bob clicks on message request banner
   await device2.clickOnByAccessibilityID('Message requests banner');
   // Bob clicks on request conversation item
   await device2.clickOnByAccessibilityID('Message request');
+  // Check control message warning of sending message request reply
+  // "messageRequestsAcceptDescription": "Sending a message to this user will automatically accept their message request and reveal your Account ID."
+  const messageRequestsAcceptDescription = localize('messageRequestsAcceptDescription')
+    .strip()
+    .toString();
+  await runOnlyOnIOS(platform, () =>
+    device2.waitForControlMessageToBePresent(messageRequestsAcceptDescription as ControlMessage)
+  );
+  await runOnlyOnAndroid(platform, () =>
+    device2.waitForTextElementToBePresent({
+      strategy: 'id',
+      selector: 'network.loki.messenger:id/sendAcceptsTextView',
+      text: messageRequestsAcceptDescription,
+    })
+  );
   // Send message from Bob to Alice
   await device2.sendMessage(`${userB.userName} to ${userA.userName}`);
-  // Check config
-  await device1.waitForControlMessageToBePresent('Your message request has been accepted.');
+  // Check control message for message request acceptance
+  // "messageRequestsAccepted": "Your message request has been accepted.",
+  const messageRequestsAccepted = localize('messageRequestsAccepted').strip().toString();
+  const messageRequestYouHaveAccepted = localize('messageRequestYouHaveAccepted')
+    .withArgs({ name: userA.userName })
+    .strip()
+    .toString();
+  await Promise.all([
+    device1.waitForControlMessageToBePresent(messageRequestsAccepted as ControlMessage),
+    device2.waitForControlMessageToBePresent(messageRequestYouHaveAccepted as ControlMessage),
+  ]);
   // Close app
   await closeApp(device1, device2);
 }

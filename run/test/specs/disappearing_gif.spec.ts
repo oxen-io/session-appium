@@ -1,14 +1,18 @@
+import { DISAPPEARING_TIMES } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { DisappearActions, DisappearModes, InteractionPoints } from '../../types/testing';
-import { FirstGif } from './locators';
-import { clickOnCoordinates, sleepFor } from './utils';
+import { DMTimeOption } from '../../types/testing';
+import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
 iosIt('Disappearing GIF message 1:1', disappearingGifMessage1o1Ios);
 androidIt('Disappearing GIF message 1:1', disappearingGifMessage1o1Android);
+
+const time: DMTimeOption = DISAPPEARING_TIMES.THIRTY_SECONDS;
+const timerType = 'Disappear after send option';
+const testMessage = "Testing disappearing messages for GIF's";
 
 async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
@@ -19,9 +23,8 @@ async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType) {
     newUser(device2, 'Bob', platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(platform, device1, ['1:1', 'Disappear after read option'], device2);
+  await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
   // await device1.navigateBack(platform);
-
   // Click on attachments button
   await device1.sendGIF(testMessage);
   // Check if the 'Tap to download media' config appears
@@ -50,29 +53,14 @@ async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType) {
 
 async function disappearingGifMessage1o1Android(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const controlMode: DisappearActions = 'sent';
-  const mode: DisappearModes = 'send';
-  const testMessage = "Testing disappearing messages for GIF's";
+
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, 'Alice', platform),
     newUser(device2, 'Bob', platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(
-    platform,
-    device1,
-    ['1:1', `Disappear after ${mode} option`],
-    device2
-  ); // Wait for control messages to disappear before sending image (to check if the control messages are interfering with finding the untrusted attachment message)
-  // TODO FIX
-  // await device2.disappearingControlMessage(
-  //   `${userA.userName} has set messages to disappear ${time} after they have been ${controlMode}.`
-  // );
-  // await device2.disappearingControlMessage(
-  //   `You set messages to disappear ${time} after they have been ${controlMode}.`
-  // );
-  // await sleepFor(60000);
+  await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2); // Wait for control messages to disappear before sending image (to check if the control messages are interfering with finding the untrusted attachment message)
   // Click on attachments button
   await device1.sendGIF(testMessage);
   // Check if the 'Tap to download media' config appears
@@ -80,18 +68,32 @@ async function disappearingGifMessage1o1Android(platform: SupportedPlatformsType
   await device2.clickOnByAccessibilityID('Untrusted attachment message');
   // Click on 'download'
   await device2.clickOnByAccessibilityID('Download media');
+  await Promise.all([
+    device1.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Media message',
+      maxWait: 1000,
+    }),
+    device2.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Media message',
+      maxWait: 1000,
+    }),
+  ]);
   // Wait for 30 seconds (time)
   await sleepFor(30000);
   // Check if GIF has been deleted on both devices
-  await device1.hasElementBeenDeleted({
-    strategy: 'accessibility id',
-    selector: 'Media message',
-    maxWait: 1000,
-  });
-  await device2.hasElementBeenDeleted({
-    strategy: 'accessibility id',
-    selector: 'Media message',
-    maxWait: 1000,
-  });
+  await Promise.all([
+    device1.hasElementBeenDeleted({
+      strategy: 'accessibility id',
+      selector: 'Media message',
+      maxWait: 1000,
+    }),
+    device2.hasElementBeenDeleted({
+      strategy: 'accessibility id',
+      selector: 'Media message',
+      maxWait: 1000,
+    }),
+  ]);
   await closeApp(device1, device2);
 }

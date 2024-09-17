@@ -32,6 +32,7 @@ export const setDisappearingMessage = async (
   if (platform === 'ios' && timerType === 'Disappear after read option') {
     if (enforcedType === '1:1' || enforcedType === 'Note to Self') {
       await device.disappearRadioButtonSelectediOS(DISAPPEARING_TIMES.TWELVE_HOURS);
+
     } else {
       await device.disappearRadioButtonSelectediOS(DISAPPEARING_TIMES.ONE_DAY);
     }

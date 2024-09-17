@@ -37,7 +37,6 @@ export type ActionSequence = {
   actions: string;
 };
 
-type Action = Coordinates & { type: 'pointer'; duration?: number };
 type AppiumNextElementType = { ELEMENT: string };
 
 export class DeviceWrapper {
@@ -89,7 +88,8 @@ export class DeviceWrapper {
   }
 
   public async getCssProperty(name: string, elementId: string): Promise<string> {
-    return this.toShared().getCssProperty(name, elementId);
+    const cssProp: string = await this.toShared().getCssProperty(name, elementId);
+    return cssProp;
   }
 
   public async scroll(start: Coordinates, end: Coordinates, duration: number): Promise<void> {
@@ -141,13 +141,7 @@ export class DeviceWrapper {
     await this.toShared().performActions(actions);
   }
 
-  public async tap(xCoOrdinates: number, yCoOrdinates: number, duration?: number): Promise<void> {
-    const action: Action = {
-      type: 'pointer',
-      x: xCoOrdinates,
-      y: yCoOrdinates,
-      duration,
-    };
+  public async tap(xCoOrdinates: number, yCoOrdinates: number): Promise<void> {
     if (this.isIOS()) {
       await this.toIOS().mobileTap(xCoOrdinates, yCoOrdinates);
       return;
@@ -173,7 +167,8 @@ export class DeviceWrapper {
 
   // Session management
   public async createSession(caps: W3CCapabilities): Promise<[string, Record<string, any>]> {
-    return this.toShared().createSession(caps);
+    const createSession: string = await this.toShared().createSession(caps);
+    return [createSession, caps];
   }
 
   public async deleteSession(): Promise<void> {
@@ -316,10 +311,11 @@ export class DeviceWrapper {
     await this.click(el.ELEMENT);
   }
 
-  public async longPress(accessibilityId: AccessibilityId) {
+  public async longPress(accessibilityId: AccessibilityId, text?: string) {
     const el = await this.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: accessibilityId,
+      text,
     });
     if (!el) {
       throw new Error(`longPress: Could not find accessibilityId: ${accessibilityId}`);
@@ -338,6 +334,7 @@ export class DeviceWrapper {
           strategy: 'accessibility id',
           selector: 'Message body',
           text: textToLookFor,
+          maxWait: 1000,
         });
 
         if (!el) {
@@ -363,7 +360,7 @@ export class DeviceWrapper {
         attempt++;
         if (attempt >= maxRetries) {
           throw new Error(
-            `Longpress on message: ${textToLookFor} unsuccessful after ${maxRetries} attempts, ${error}`
+            `Longpress on message: ${textToLookFor} unsuccessful after ${maxRetries} attempts, ${error as string}`
           );
         }
         console.log(`Longpress attempt ${attempt} failed. Retrying...`);
@@ -373,11 +370,6 @@ export class DeviceWrapper {
   }
 
   public async longPressConversation(userName: string) {
-    const el = await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Conversation list item',
-      text: userName,
-    });
     const maxRetries = 3;
     let attempt = 0;
     let success = false;
@@ -411,14 +403,15 @@ export class DeviceWrapper {
           throw new Error(`longPress on conversation list: ${userName} unsuccessful`);
         }
       } catch (error) {
-        attempt++;
-        if (attempt >= maxRetries) {
-          throw new Error(
-            `Longpress on conversation: ${userName} unsuccessful after ${maxRetries} attempts, ${error}`
-          );
-        }
         console.log(`Longpress attempt ${attempt} failed. Retrying...`);
+        attempt++;
         await sleepFor(1000);
+        if (attempt >= maxRetries) {
+          if (error instanceof Error) {
+            error.message = `Longpress on conversation: ${userName} unsuccessful after ${maxRetries} attempts, ${error.message}`;
+          }
+          throw error;
+        }
       }
     }
   }
@@ -474,7 +467,7 @@ export class DeviceWrapper {
 
     el = await this.waitForTextElementToBePresent({ ...locator });
 
-    let maxRetries = 3;
+    const maxRetries = 3;
     let retries = 0;
     let success = false;
 
@@ -780,11 +773,18 @@ export class DeviceWrapper {
       currentWait += waitPerLoop;
 
       if (currentWait >= maxWaitMSec) {
-        console.log('Waited too long');
-        throw new Error(`Waited for too long looking for '${selector}' and '${text}`);
+        if (text) {
+          throw new Error(`Waited for too long looking for '${selector}' and '${text}`);
+        } else {
+          throw new Error(`Waited for too long looking for '${selector}'`);
+        }
+      }
+      if (text) {
+        console.log(`'${selector}' and '${text}' has been found`);
+      } else {
+        console.log(`'${selector}' has been found`);
       }
     }
-    console.log(`'${selector}' and '${text}' has been found`);
     return el;
   }
 
@@ -922,7 +922,7 @@ export class DeviceWrapper {
       strategy: 'accessibility id',
       selector: 'Message sent status: Sending',
     });
-    let failedStatus = await this.waitForTextElementToBePresent({
+    const failedStatus = await this.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Message sent status: Failed to send',
     });
@@ -997,6 +997,7 @@ export class DeviceWrapper {
     const longPressSuccess = await this.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Reply to message',
+      maxWait: 1000,
     });
     if (longPressSuccess) {
       await this.clickOnByAccessibilityID('Reply to message');
@@ -1162,7 +1163,7 @@ export class DeviceWrapper {
     await this.clickOnByAccessibilityID('Attachments button');
     await sleepFor(100);
     await this.clickOnByAccessibilityID('Images folder');
-    await this.clickOnByAccessibilityID('Continue');
+    // await this.clickOnByAccessibilityID('Continue');
     await this.clickOnElementAll({
       strategy: 'id',
       selector: 'com.android.permissioncontroller:id/permission_allow_all_button',
@@ -1180,7 +1181,7 @@ export class DeviceWrapper {
     });
     await this.inputText(message, {
       strategy: 'accessibility id',
-      selector: 'Message composition',
+      selector: 'New direct message',
     });
     await this.clickOnByAccessibilityID('Send');
   }
@@ -1279,8 +1280,8 @@ export class DeviceWrapper {
     });
   }
 
-  public async sendDocument(platform: SupportedPlatformsType) {
-    if (platform === 'android') {
+  public async sendDocument() {
+    if (this.isAndroid()) {
       await this.clickOnByAccessibilityID('Attachments button');
       await this.clickOnByAccessibilityID('Documents folder');
       await this.clickOnByAccessibilityID('Continue');
@@ -1319,19 +1320,55 @@ export class DeviceWrapper {
         maxWait: 50000,
       });
     }
+    if (this.isIOS()) {
+      const testMessage = 'Testing-document-1';
+      const spongebobsBirthday = '199905010700.00';
+      await this.clickOnByAccessibilityID('Attachments button');
+      await sleepFor(100);
+      await clickOnCoordinates(this, InteractionPoints.DocumentKeyboardOpen);
+      await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
+      const testDocument = await this.doesElementExist({
+        strategy: 'accessibility id',
+        selector: 'test_file, pdf',
+        text: undefined,
+        maxWait: 1000,
+      });
+
+      if (!testDocument) {
+        await runScriptAndLog(
+          `touch -a -m -t ${spongebobsBirthday} 'run/test/specs/media/test_file.pdf'`
+        );
+
+        await runScriptAndLog(
+          `xcrun simctl addmedia
+            ${this.udid || ''}
+          } 'run/test/specs/media/test_file.pdf'`,
+          true
+        );
+      }
+      await sleepFor(100);
+      await this.clickOnByAccessibilityID('test_file, pdf');
+      await sleepFor(500);
+      await this.clickOnByAccessibilityID('Text input box');
+      await this.inputText(testMessage, {
+        strategy: 'accessibility id',
+        selector: 'Text input box',
+      });
+      await this.clickOnByAccessibilityID('Send button');
+    }
   }
 
   public async sendGIF(message: string) {
     await this.clickOnByAccessibilityID('Attachments button');
     if (this.isAndroid()) {
-      this.clickOnElementAll({ strategy: 'accessibility id', selector: 'GIF button' });
+      await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'GIF button' });
     }
     if (this.isIOS()) {
       const keyboard = await this.isKeyboardVisible();
       if (keyboard) {
         await clickOnCoordinates(this, InteractionPoints.GifButtonKeyboardOpen);
       } else {
-        clickOnCoordinates(this, InteractionPoints.GifButtonKeyboardClosed);
+        await clickOnCoordinates(this, InteractionPoints.GifButtonKeyboardClosed);
       }
     }
     await this.clickOnByAccessibilityID('Continue', 5000);
@@ -1347,18 +1384,51 @@ export class DeviceWrapper {
   }
 
   public async sendVoiceMessage() {
+    const maxRetries = 3;
+    let attempt = 0;
     await this.longPress('New voice message');
     if (this.isAndroid()) {
-      await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Continue' });
+      // await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Continue' });
       await this.clickOnElementAll({
         strategy: 'id',
         selector: 'com.android.permissioncontroller:id/permission_allow_foreground_only_button',
         text: 'While using the app',
       });
+      try {
+        const el = await this.doesElementExist({
+          strategy: 'accessibility id',
+          selector: 'New voice message',
+        });
+        if (!el) {
+          throw new Error(`longPress on voice message unsuccessful, couldn't find message`);
+        }
+        await this.pressAndHold('New voice message');
+        const longPressSuccess = await this.doesElementExist({
+          strategy: 'accessibility id',
+          selector: 'Reply to message',
+          maxWait: 1000,
+        });
+
+        if (longPressSuccess) {
+          console.log('LongClick successful'); // Exit the loop if successful
+        } else {
+          throw new Error(`longPress on voice message unsuccessful`);
+        }
+      } catch (error) {
+        attempt++;
+        if (attempt >= maxRetries) {
+          throw new Error(
+            `Longpress on on voice message unsuccessful after ${maxRetries} attempts, ${error as string}`
+          );
+        }
+        console.log(`Longpress attempt ${attempt} failed. Retrying...`);
+        await sleepFor(1000);
+      }
     } else if (this.isIOS()) {
+      // await this.pressAndHold('New voice message');
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });
+      await this.pressAndHold('New voice message');
     }
-    await this.pressAndHold('New voice message');
   }
 
   public async uploadProfilePicture() {
@@ -1371,6 +1441,7 @@ export class DeviceWrapper {
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
       const profilePicture = await this.doesElementExist({
         strategy: 'accessibility id',
+        // eslint-disable-next-line no-irregular-whitespace
         selector: `Photo, 01 May 1998, 7:00 am`,
         maxWait: 2000,
       });
@@ -1419,11 +1490,6 @@ export class DeviceWrapper {
           `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/profile_picture.jpg' /sdcard/Download/`,
           true
         );
-        // Verifies that the file was successful downloaded to this
-        // await runScriptAndLog(
-        //   `${getAdbFullPath()} -s emulator-5554 shell ls /sdcard/Download/`,
-        //   true
-        // );
       }
       await this.clickOnElementAll({
         strategy: 'accessibility id',
@@ -1436,8 +1502,8 @@ export class DeviceWrapper {
   public async getTimeFromDevice(platform: SupportedPlatformsType): Promise<string> {
     let timeString = '';
     try {
-      let time = await this.getDeviceTime(platform);
-      timeString = await time.toString();
+      const time = await this.getDeviceTime(platform);
+      timeString = time.toString();
       console.log(`Device time: ${timeString}`);
     } catch (e) {
       console.log(`Couldn't get time from device`);
@@ -1580,7 +1646,7 @@ export class DeviceWrapper {
       });
 
       if (permissions) {
-        this.clickOnElementAll({
+        await this.clickOnElementAll({
           strategy: 'id',
           selector: 'com.android.permissioncontroller:id/permission_deny_button',
         });
@@ -1630,10 +1696,7 @@ export class DeviceWrapper {
     return (this.device as any).updateSettings(details);
   }
 
-  public async modalPopup(
-    args: { maxWait?: number } & StrategyExtractionObj,
-    maxWait: number = 1000
-  ) {
+  public async modalPopup(args: { maxWait?: number } & StrategyExtractionObj, maxWait = 1000) {
     if (!this.isIOS()) {
       throw new Error('Not an ios device');
     }

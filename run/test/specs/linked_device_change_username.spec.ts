@@ -1,39 +1,112 @@
-import { bothPlatformsIt } from '../../types/sessionIt';
-import { ApplyChanges, TickButton, Username } from './locators';
-import { sleepFor, runOnlyOnAndroid, runOnlyOnIOS } from './utils';
+import { androidIt, iosIt } from '../../types/sessionIt';
+import { ExitUserProfile, TickButton, UsernameInput, UsernameSettings } from './locators';
+import { sleepFor } from './utils';
 import { linkedDevice } from './utils/link_device';
-import { SupportedPlatformsType, openAppTwoDevices, closeApp } from './utils/open_app';
+import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-bothPlatformsIt('Change username linked device', changeUsernameLinkedDevice);
+iosIt('Change username linked device', changeUsernameLinkediOS);
+androidIt('Change username linked device', changeUsernameLinkedAndroid);
 
-async function changeUsernameLinkedDevice(platform: SupportedPlatformsType) {
-  // Open server and two devices
+async function changeUsernameLinkediOS(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const newUsername = 'Alice in chains';
-  // link device
+
   const userA = await linkedDevice(device1, device2, 'Alice', platform);
-  // Change username on device 1
-  await device1.clickOnByAccessibilityID('User settings');
-  // Select username
-  await device1.clickOnByAccessibilityID('Username');
+  const newUsername = 'Alice in chains';
+  // click on settings/profile avatar
+  await Promise.all([
+    device1.clickOnByAccessibilityID('User settings'),
+    device2.clickOnByAccessibilityID('User settings'),
+  ]);
+  // select username
+  await device1.clickOnElementAll(new UsernameSettings(device1));
+  // type in new username
   await sleepFor(100);
-  await device1.deleteText(new Username(device1));
-  await device1.inputText(newUsername, new Username(device1));
-  // Select apply
+  await device1.deleteText(new UsernameInput(device1));
+  await device1.inputText(newUsername, new UsernameInput(device1));
   await device1.clickOnElementAll(new TickButton(device1));
-  // Check on linked device if name has updated
-  await device2.clickOnByAccessibilityID('User settings');
-  await runOnlyOnAndroid(platform, () => device2.navigateBack(platform));
-  await sleepFor(1000);
-  await runOnlyOnAndroid(platform, () => device2.clickOnByAccessibilityID('User settings'));
-  const changedUsername = await device2.grabTextFromAccessibilityId('Username');
-  console.log('Username is now: ', changedUsername);
-  await sleepFor(100);
+
+  const username = await device1.waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Username',
+    text: newUsername,
+  });
+
+  const changedUsername = await device1.getTextFromElement(username);
+  console.log('Changed username', changedUsername);
   if (changedUsername === newUsername) {
-    console.log(`Username changed from ${userA.userName} to `, changedUsername);
-  } else {
+    console.log('Username change successful');
+  }
+  if (changedUsername === userA.userName) {
     throw new Error('Username change unsuccessful');
   }
+  await device1.clickOnElementAll(new ExitUserProfile(device1));
+  await device1.clickOnElementAll({
+    strategy: 'accessibility id',
+    selector: 'User settings',
+  });
+  await Promise.all([
+    device1.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Username',
+      text: newUsername,
+    }),
+    device2.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Username',
+      text: newUsername,
+    }),
+  ]);
+  await closeApp(device1, device2);
+}
+
+async function changeUsernameLinkedAndroid(platform: SupportedPlatformsType) {
+  const { device1, device2 } = await openAppTwoDevices(platform);
+
+  const userA = await linkedDevice(device1, device2, 'Alice', platform);
+  const newUsername = 'Alice in chains';
+  // click on settings/profile avatar
+  await Promise.all([
+    device1.clickOnByAccessibilityID('User settings'),
+    device2.clickOnByAccessibilityID('User settings'),
+  ]);
+  // select username
+  await device1.clickOnElementAll(new UsernameSettings(device1));
+  // type in new username
+  await sleepFor(100);
+  await device1.deleteText(new UsernameInput(device1));
+  await device1.inputText(newUsername, new UsernameInput(device1));
+  await device1.clickOnElementAll(new TickButton(device1));
+  const username = await device1.waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Display name',
+    text: newUsername,
+  });
+  const changedUsername = await device1.getTextFromElement(username);
+  console.log('Changed username', changedUsername);
+  if (changedUsername === newUsername) {
+    console.log('Username change successful');
+  }
+  if (changedUsername === userA.userName) {
+    throw new Error('Username change unsuccessful');
+  }
+  await device1.clickOnElementAll(new ExitUserProfile(device1));
+  await device1.clickOnElementAll({
+    strategy: 'accessibility id',
+    selector: 'User settings',
+  });
+
+  await Promise.all([
+    device1.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Display name',
+      text: newUsername,
+    }),
+    device2.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Display name',
+      text: newUsername,
+    }),
+  ]);
 
   await closeApp(device1, device2);
 }

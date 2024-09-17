@@ -27,7 +27,5 @@ async function checkPerformance(platform: SupportedPlatformsType) {
   console.log(timesArray);
 }
 
-// Media saved notification
-// Send all message types in communities
 
 // yarn test-describe --grep "Message checks ios"

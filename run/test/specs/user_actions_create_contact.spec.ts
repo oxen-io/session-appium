@@ -7,13 +7,7 @@ import { SupportedPlatformsType, closeApp, openAppMultipleDevices } from './util
 iosIt('Create contact ios', createContact);
 androidIt('Create contact android', createContact);
 
-// bothPlatformsIt("Create contact ios", createContact);
-
 async function createContact(platform: SupportedPlatformsType) {
-  // first we want to install the app on each device with our custom call to run it
-  // const testEnv = await createBasicTestEnvironment(platform);
-  // const [device1, device3] = testEnv.devices;
-  // const userB = testEnv.Bob;
   const [device1, device2, device3] = await openAppMultipleDevices(platform, 3);
   const userA = await linkedDevice(device1, device3, 'Alice', platform);
   const userB = await newUser(device2, 'Bob', platform);
