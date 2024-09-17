@@ -1,6 +1,6 @@
 import { localize } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { AccessibilityId, ControlMessage } from '../../types/testing';
+import { ControlMessage } from '../../types/testing';
 import { ApplyChanges, EditGroup, InviteContacts } from './locators';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';

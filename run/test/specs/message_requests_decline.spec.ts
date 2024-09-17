@@ -1,7 +1,7 @@
 import { localize } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { AccessibilityId } from '../../types/testing';
-import { DeclineMessageRequestButton } from './locators';
+import { DeclineMessageRequestButton, DeleteMesssageRequestConfirmation } from './locators';
 import { runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
@@ -34,7 +34,7 @@ async function declineRequest(platform: SupportedPlatformsType) {
   // Are you sure you want to delete message request only for ios
   await sleepFor(3000);
   // TODO add check modal
-  await runOnlyOnIOS(platform, () => device2.clickOnByAccessibilityID('Confirm delete'));
+  await device2.clickOnElementAll(new DeleteMesssageRequestConfirmation(device2));
   // Navigate back to home page
   await sleepFor(100);
   await device2.navigateBack(platform);

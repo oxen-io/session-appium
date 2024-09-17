@@ -1384,15 +1384,46 @@ export class DeviceWrapper {
   }
 
   public async sendVoiceMessage() {
+    const maxRetries = 3;
+    let attempt = 0;
     await this.longPress('New voice message');
     if (this.isAndroid()) {
-      await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Continue' });
+      // await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Continue' });
       await this.clickOnElementAll({
         strategy: 'id',
         selector: 'com.android.permissioncontroller:id/permission_allow_foreground_only_button',
         text: 'While using the app',
       });
-      await this.pressAndHold('New voice message');
+      try {
+        const el = await this.doesElementExist({
+          strategy: 'accessibility id',
+          selector: 'New voice message',
+        });
+        if (!el) {
+          throw new Error(`longPress on voice message unsuccessful, couldn't find message`);
+        }
+        await this.pressAndHold('New voice message');
+        const longPressSuccess = await this.doesElementExist({
+          strategy: 'accessibility id',
+          selector: 'Reply to message',
+          maxWait: 1000,
+        });
+
+        if (longPressSuccess) {
+          console.log('LongClick successful'); // Exit the loop if successful
+        } else {
+          throw new Error(`longPress on voice message unsuccessful`);
+        }
+      } catch (error) {
+        attempt++;
+        if (attempt >= maxRetries) {
+          throw new Error(
+            `Longpress on on voice message unsuccessful after ${maxRetries} attempts, ${error as string}`
+          );
+        }
+        console.log(`Longpress attempt ${attempt} failed. Retrying...`);
+        await sleepFor(1000);
+      }
     } else if (this.isIOS()) {
       // await this.pressAndHold('New voice message');
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow' });

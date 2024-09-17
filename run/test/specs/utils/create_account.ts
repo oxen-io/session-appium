@@ -1,4 +1,4 @@
-import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from '.';
+import { runOnlyOnAndroid, sleepFor } from '.';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User, Username } from '../../../types/testing';
 import { ExitUserProfile, RevealRecoveryPhraseButton } from '../locators';

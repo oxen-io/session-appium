@@ -29,10 +29,8 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
   await device3.clickOnByAccessibilityID('More options');
   await sleepFor(1000);
   await device3.clickOnElementAll(new LeaveGroup(device3));
-  await runOnlyOnIOS(platform, () => device3.clickOnByAccessibilityID('Leave'));
-  await runOnlyOnAndroid(platform, () =>
-    device3.clickOnElementAll({ strategy: 'accessibility id', selector: 'Yes' })
-  );
+  await device3.clickOnByAccessibilityID('Leave');
+
   await runOnlyOnAndroid(platform, () => device3.navigateBack(platform));
   // Check for control message
   await sleepFor(5000);

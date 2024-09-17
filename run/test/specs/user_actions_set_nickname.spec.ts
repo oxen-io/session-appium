@@ -1,9 +1,8 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { TickButton } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
-import { SupportedPlatformsType, openAppTwoDevices, closeApp } from './utils/open_app';
+import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
 iosIt('Set nickname', setNicknameIos);
 androidIt('Set nickname', setNicknameAndroid);

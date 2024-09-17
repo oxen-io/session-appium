@@ -12,10 +12,10 @@ test.describe('Community tests', () => {
 
 async function sendImageCommunityiOS(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const testCommunityLink = `https://chat.lokinet.dev/testing-all-the-things?public_key=1d7e7f92b1ed3643855c98ecac02fc7274033a3467653f047d6e433540c03f17`;
-  const testCommunityName = `Testing All The Things!`;
-  const testMessage = 'Testing sending images to communities';
-  const testImageMessage = `Image message + ${new Date().getTime()}`;
+  // const testCommunityLink = `https://chat.lokinet.dev/testing-all-the-things?public_key=1d7e7f92b1ed3643855c98ecac02fc7274033a3467653f047d6e433540c03f17`;
+  // const testCommunityName = `Testing All The Things!`;
+  // const testMessage = 'Testing sending images to communities';
+  // const testImageMessage = `Image message + ${new Date().getTime()}`;
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, 'Alice', platform),
