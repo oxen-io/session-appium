@@ -310,4 +310,5 @@ export type AccessibilityId =
   | 'Copy button'
   | 'space'
   | 'Recovery password input'
-  | 'Read Receipts - Switch';
+  | 'Read Receipts - Switch'
+  | 'Error message';

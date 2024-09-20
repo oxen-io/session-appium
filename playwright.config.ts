@@ -15,7 +15,7 @@ export default defineConfig({
   testDir: './run/test/specs',
   testIgnore: '*.js',
   // outputDir: './tests/automation/test-results',
-  retries: 1,
+  retries: 0,
   // process.env.PLAYWRIGHT_RETRIES_COUNT
   //   ? toNumber(process.env.PLAYWRIGHT_RETRIES_COUNT)
   //   : 0,

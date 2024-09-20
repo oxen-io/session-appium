@@ -15,7 +15,7 @@ console.log(`iOS app full path: ${iosAppFullPath}`);
 const sharediOSCapabilities: AppiumXCUITestCapabilities = {
   'appium:app': iosAppFullPath,
   'appium:platformName': 'iOS',
-  'appium:platformVersion': '17.2',
+  'appium:platformVersion': '17.5',
   'appium:deviceName': 'iPhone 15 Pro Max',
   'appium:automationName': 'XCUITest',
   'appium:bundleId': 'com.loki-project.loki-messenger',
