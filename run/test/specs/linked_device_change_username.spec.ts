@@ -94,6 +94,12 @@ async function changeUsernameLinkedAndroid(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'User settings',
   });
+  
+  await device2.clickOnElementAll(new ExitUserProfile(device2));
+  await device2.clickOnElementAll({
+    strategy: 'accessibility id',
+    selector: 'User settings',
+  });
 
   await device2.clickOnElementAll(new ExitUserProfile(device2));
   await device2.clickOnElementAll({
