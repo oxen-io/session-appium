@@ -1,15 +1,12 @@
+import { W3CCapabilities } from '@wdio/types/build/Capabilities';
 import XCUITestDriver, { XCUITestDriverOpts } from 'appium-xcuitest-driver/build/lib/driver';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { User } from '../../../types/testing';
-import { openAppThreeDevices } from './open_app';
 import { runScriptAndLog } from './utilities';
-import { CapabilitiesIndexType } from './capabilities_ios';
-import { W3CCapabilities } from '@wdio/types/build/Capabilities';
 
-export const beforeTestSetupGroup = async (device: DeviceWrapper) => {
-  // const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  // return { device1, device2, device3 };
-};
+// export const beforeTestSetupGroup = async (device: DeviceWrapper) => {
+//   // const { device1, device2, device3 } = await openAppThreeDevices(platform);
+//   // return { device1, device2, device3 };
+// };
 
 export const cleanPermissions = async (
   opts: XCUITestDriverOpts,
@@ -34,6 +31,7 @@ export const cleanPermissions = async (
       });
       // This is to check if the app is already open, sometimes when dismissing the modal, the app closes
       await runScriptAndLog(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `xcrun simctl privacy ${udid} reset all ${capabilities['appium:bundleId' as keyof W3CCapabilities]}`,
         true
       );

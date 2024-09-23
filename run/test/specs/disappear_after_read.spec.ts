@@ -3,7 +3,8 @@ import { DisappearModes, DMTimeOption } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
-import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+import { checkDisappearingControlMessage } from './utils/disappearing_control_messages';
+import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
 iosIt('Disappear after read', disappearAfterRead);
@@ -29,14 +30,7 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
     device2
   );
   // Check control message is correct on device 2
-  await device2.disappearingControlMessage(
-    `${userA.userName} has set messages to disappear ${time} after they have been ${mode}.`
-  );
-  if (platform === 'android') {
-    await device2.disappearingControlMessage(
-      `You set messages to disappear ${time} after they have been ${mode}.`
-    );
-  }
+  await checkDisappearingControlMessage(platform, userA, userB, device1, device2, time, mode);
   // Send message to verify that deletion is working
   await device1.sendMessage(testMessage);
   // Need function to read message

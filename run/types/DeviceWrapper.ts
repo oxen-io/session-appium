@@ -1464,7 +1464,7 @@ export class DeviceWrapper {
       });
       await this.clickOnByAccessibilityID('Done');
 
-      await this.clickOnByAccessibilityID('Save');
+      // await this.clickOnByAccessibilityID('Save');
     } else if (this.isAndroid()) {
       await this.clickOnElementAll(new ImagePermissionsModalAllow(this));
       await sleepFor(1000);
@@ -1497,6 +1497,7 @@ export class DeviceWrapper {
       });
       await this.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop');
     }
+    await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Save' });
   }
 
   public async getTimeFromDevice(platform: SupportedPlatformsType): Promise<string> {

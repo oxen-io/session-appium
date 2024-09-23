@@ -9,6 +9,7 @@ import {
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
+import { checkDisappearingControlMessage } from './utils/disappearing_control_messages';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
@@ -36,22 +37,14 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
     device2
   );
   // Get control message based on key from json file
-  const disappearingMessagesSetControl = localize('disappearingMessagesSet')
-    .withArgs({ name: userA.userName, time, disappearing_messages_type: controlMode })
-    .strip()
-    .toString();
-  // Check control message is correct on device 2
-  await device2.disappearingControlMessage(
-    disappearingMessagesSetControl as DisappearingControlMessage
-  );
-  // Get control message based on key from json file
-  const disappearingMessagesSetYou = localize('disappearingMessagesSetYou')
-    .withArgs({ time, disappearing_messages_type: controlMode })
-    .strip()
-    .toString();
-  // Check control message is correct on device 1
-  await device1.disappearingControlMessage(
-    disappearingMessagesSetYou as DisappearingControlMessage
+  await checkDisappearingControlMessage(
+    platform,
+    userA,
+    userB,
+    device1,
+    device2,
+    time,
+    controlMode
   );
   // Send message to verify that deletion is working
   await device1.sendMessage(testMessage);

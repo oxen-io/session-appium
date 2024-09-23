@@ -231,7 +231,7 @@ export class ChangeProfilePictureButton extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
+          strategy: 'id',
           selector: 'Image picker',
         };
       case 'ios':
@@ -308,7 +308,7 @@ export class CommunityInput extends LocatorsInterface {
   }
 }
 
-export class InviteContacts extends LocatorsInterface {
+export class InviteContactsButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
@@ -316,6 +316,23 @@ export class InviteContacts extends LocatorsInterface {
           strategy: 'id',
           selector: 'network.loki.messenger:id/title',
           text: 'Invite Contacts',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Invite Contacts',
+        };
+    }
+  }
+}
+
+export class InviteContactsMenuItem extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Invite Contacts',
         };
       case 'ios':
         return {
