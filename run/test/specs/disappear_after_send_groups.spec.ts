@@ -25,7 +25,6 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
 
   await setDisappearingMessage(platform, device1, ['Group', `Disappear after send option`, time]);
-  // await runOnlyOnIOS(platform, () => device1.navigateBack(platform));
   // Get correct control message for You setting disappearing messages
   const disappearingMessagesSetYou = localize('disappearingMessagesSetYou')
     .withArgs({ time, disappearing_messages_type: controlMode })
@@ -37,7 +36,6 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
     .strip()
     .toString();
   // Check control message is correct on device 2
-
   await Promise.all([
     device1.disappearingControlMessage(disappearingMessagesSetYou as DisappearingControlMessage),
     device2.disappearingControlMessage(
@@ -61,7 +59,7 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
       text: testMessage,
     }),
   ]);
-  // Wait for 10 or 30 seconds
+  // Wait for 30 seconds
   await sleepFor(30000);
   // Check for test messages (should be deleted)
   await Promise.all([

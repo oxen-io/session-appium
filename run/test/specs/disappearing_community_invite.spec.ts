@@ -1,6 +1,6 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { DMTimeOption } from '../../types/testing';
-import { InviteContacts } from './locators';
+import { InviteContactsMenuItem } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -33,7 +33,7 @@ async function disappearingCommunityInviteMessage1o1Ios(platform: SupportedPlatf
   await joinCommunity(device1, communityLink, communityName);
   await device1.clickOnByAccessibilityID('More options');
   await sleepFor(1000);
-  await device1.clickOnElementAll(new InviteContacts(device1));
+  await device1.clickOnElementAll(new InviteContactsMenuItem(device1));
   await device1.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'Contact',
@@ -79,7 +79,7 @@ async function disappearingCommunityInviteMessage1o1Android(platform: SupportedP
   await device1.navigateBack(platform);
   await joinCommunity(device1, communityLink, communityName);
   await device1.clickOnByAccessibilityID('More options');
-  await device1.clickOnElementAll(new InviteContacts(device1));
+  await device1.clickOnElementAll(new InviteContactsMenuItem(device1));
   await device1.clickOnElementByText({
     strategy: 'accessibility id',
     selector: 'Contact',
