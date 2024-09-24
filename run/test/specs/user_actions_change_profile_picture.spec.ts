@@ -3,6 +3,7 @@ import { sleepFor } from './utils';
 import { parseDataImage } from './utils/check_colour';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppOnPlatformSingleDevice } from './utils/open_app';
+import fs from 'fs';
 
 iosIt('Change profile picture', changeProfilePictureiOS);
 androidIt('Change profile picture', changeProfilePictureAndroid);
@@ -33,7 +34,7 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
 
 async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
-  const pixelHexColour = 'cbfeff';
+  const pixelHexColour = '04cbfe';
   // Create new user
   await newUser(device, 'Alice', platform);
   // Click on settings/avatar
@@ -44,14 +45,15 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
     maxWait: 10000,
   });
   // Waiting for the image to change in the UI
-  await sleepFor(1000);
+  await sleepFor(10000);
   const base64 = await device.getElementScreenshot(el.ELEMENT);
+  fs.writeFileSync('screenshot.png', base64, 'base64');
   const pixelColor = await parseDataImage(base64);
-  console.log('RGB Value of pixel is:', pixelColor);
+  console.log('Hex value of pixel is:', pixelColor);
   if (pixelColor === pixelHexColour) {
-    console.log('Colour is correct on device 1');
+    console.log('Colour is correct');
   } else {
-    console.log("Colour isn't cbfeff, it is: ", pixelColor);
+    throw new Error("Colour isn't 04cbfe, it is: " + pixelColor);
   }
   await closeApp(device);
 }
