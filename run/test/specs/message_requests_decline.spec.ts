@@ -2,7 +2,7 @@ import { localize } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { AccessibilityId } from '../../types/testing';
 import { DeclineMessageRequestButton, DeleteMesssageRequestConfirmation } from './locators';
-import { runOnlyOnIOS, sleepFor } from './utils';
+import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';

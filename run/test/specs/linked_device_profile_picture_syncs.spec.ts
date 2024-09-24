@@ -1,9 +1,8 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { sleepFor } from './utils';
+import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { parseDataImage } from './utils/check_colour';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
-
 iosIt('Avatar restored', avatarRestored);
 androidIt('Avatar restored', avatarRestored);
 
@@ -20,19 +19,20 @@ async function avatarRestored(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'User settings',
   });
-  await sleepFor(5000);
-
+  await device2.clickOnByAccessibilityID('User settings');
+  await runOnlyOnIOS(platform, () => device1.waitForLoadingOnboarding());
+  await runOnlyOnAndroid(platform, () => sleepFor(10000));
   const base64 = await device1.getElementScreenshot(el.ELEMENT);
   const pixelColor = await parseDataImage(base64);
+  // console.log('Base64 value is', base64);
   console.log('RGB Value of pixel is:', pixelColor);
   if (pixelColor === pixelHexColour) {
-    console.log('Colour is correct');
+    console.log('Device1: Colour is correct');
   } else {
-    throw new Error("Colour isn't 04cbfe, it is: " + pixelColor);
+    throw new Error("Device1: Colour isn't 04cbfe, it is: " + pixelColor);
   }
   console.log('Now checking avatar on linked device');
   // Check avatar on device 2
-  await device2.clickOnByAccessibilityID('User settings');
   const el2 = await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'User settings',
@@ -41,9 +41,9 @@ async function avatarRestored(platform: SupportedPlatformsType) {
   const base64A = await device2.getElementScreenshot(el2.ELEMENT);
   const pixelColorLinked = await parseDataImage(base64A);
   if (pixelColorLinked === pixelHexColour) {
-    console.log('Colour is correct on linked device');
+    console.log('Device 2: Colour is correct on linked device');
   } else {
-    console.log("Colour isn't 04cbfe, it is: ", pixelColorLinked);
+    console.log("Device 2: Colour isn't 04cbfe, it is: ", pixelColorLinked);
   }
   await closeApp(device1, device2);
 }
