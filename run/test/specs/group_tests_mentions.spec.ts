@@ -28,11 +28,11 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
   // Bob to Select User C
   await device2.mentionContact(platform, userC);
   // Check Charlies device(3) for correct format
-  await device3.findMessageWithBody(`@You `);
+  await device3.findMessageWithBody(`@You`);
   //  Check User A format works
   await device3.mentionContact(platform, userA);
   // Check device 1 that correct format is shown (Alice's device)
-  await device1.findMessageWithBody(`@You `);
+  await device1.findMessageWithBody(`@You`);
   // Close app
   await closeApp(device1, device2, device3);
 }
