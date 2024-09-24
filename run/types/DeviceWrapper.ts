@@ -595,8 +595,10 @@ export class DeviceWrapper {
     if (elements && elements.length) {
       const matching = await this.findAsync(elements, async e => {
         const text = await this.getTextFromElement(e);
-        // console.info(`text ${text} lookigfor ${textToLookFor}`);
-
+        // console.info(`text ${text} lookingfor ${textToLookFor}`);
+        if (text.toLocaleLowerCase().includes(textToLookFor.toLocaleLowerCase())) {
+          console.info(`Text found to include ${textToLookFor}`);
+        }
         return Boolean(text && text.toLowerCase() === textToLookFor.toLowerCase());
       });
 
