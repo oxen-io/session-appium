@@ -3,21 +3,19 @@ import * as onboarding from '../locators/onboarding';
 import { openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 import { localize } from '../../../localizer/i18n/localizedString';
 
-iosIt('Onboarding no seed', onboardingNoSeed);
-androidIt('Onboarding no seed', onboardingNoSeed);
+iosIt('Onboarding wrong seed', onboardingIncorrectSeed);
+androidIt('Onboarding wrong seed', onboardingIncorrectSeed);
 
-// checking that we're not trying to test with a non-empty name
-const emptySeed = ''
-if (emptySeed.length > 0) {
-  throw new Error ('The emptySeed string is not empty but it must be.')
-}
-// the expected error is 'Recovery Password not long enough' which is represented by the following localized string
-const expectedError = localize('recoveryPasswordErrorMessageShort').strip().toString();
+// the seed phrase is too long and we expect to get the generic error 
+const wrongSeed = 'ruby bakery illness push rift reef nabbing bawled hope ruby silk lobster hope ruby ruby ruby'
+// the expected error is 'Please check your recovery password' which is represented by the following localized string
+const expectedError = localize('recoveryPasswordErrorMessageGeneric').strip().toString();
 
-async function onboardingNoSeed(platform: SupportedPlatformsType) {
+
+async function onboardingIncorrectSeed(platform: SupportedPlatformsType) {
     const { device } = await openAppOnPlatformSingleDevice(platform);
     await device.clickOnElementAll(new onboarding.AccountRestoreButton(device));
-    await device.inputText(emptySeed, new onboarding.SeedPhraseInput(device));
+    await device.inputText(wrongSeed, new onboarding.SeedPhraseInput(device));
     // Trigger the validation by pressing Continue
     await device.clickOnElementAll(new onboarding.ContinueButton(device));
     if (platform === 'ios') {
@@ -29,7 +27,7 @@ async function onboardingNoSeed(platform: SupportedPlatformsType) {
         const errorMessage = await device.getTextFromElement(error);
         console.log(`The error message is "${errorMessage}"`);
         console.log(`The expected error is "${expectedError}"`);
-        // Compare the fetched string with the expected string
+    // Compare the fetched string with the expected string
         if (errorMessage ===  expectedError) {
             console.log('The observed error message matches the expected');
         }

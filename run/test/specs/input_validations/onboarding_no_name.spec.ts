@@ -9,8 +9,11 @@ androidIt('Onboarding no name', onboardingNoName);
 // checking that we're not trying to test with a non-empty name
 const emptyName = '';
 if (emptyName.length > 0) {
-  throw new Error ('The emptyName string is not empty but it must be.')
+  throw new Error ('The emptyName string is not empty but it must be.');
 }
+// the expected error is 'Please enter a display name' which is represented by the following localized string
+const expectedError = localize('displayNameErrorDescription').strip().toString();
+
 
 async function onboardingNoName(platform:SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
@@ -25,10 +28,9 @@ async function onboardingNoName(platform:SupportedPlatformsType) {
     // Wait for, and fetch the error text on Android
     const error = await device.waitForTextElementToBePresent(new onboarding.ErrorMessage(device).build());
     const errorMessage = await device.getTextFromElement(error);
+    console.log(`The error message is "${errorMessage}"`);
+    console.log(`The expected error is "${expectedError}"`);
     // Compare the fetched text with the expected 'Please enter a display name' string
-    console.log('The error message is ' + errorMessage)
-    const expectedError = localize('displayNameErrorDescription').strip().toString();
-    console.log('The expected error is ' + expectedError)
     if (errorMessage ===  expectedError) {
       console.log('The observed error message matches the expected');
     }

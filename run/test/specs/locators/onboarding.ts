@@ -1,25 +1,6 @@
 import { LocatorsInterface } from "./index";
 
-// SPLASH SCREEN 
-export class CreateAccountButton extends LocatorsInterface {
-    public build() {
-        return {
-            strategy: 'accessibility id',
-            selector: 'Create account button',
-        } as const;
-    }
-}
-
-export class AccountRestoreButton extends LocatorsInterface {
-    public build() {
-        return {
-            strategy: 'accessibility id',
-            selector: 'Restore your session button',
-        } as const;
-    }
-}
-
-// SHARED ELEMENTS 
+// SHARED LOCATORS 
 
 export class ContinueButton extends LocatorsInterface {
     public build() {
@@ -35,6 +16,25 @@ export class ErrorMessage extends LocatorsInterface {
         return {
             strategy: 'accessibility id',
             selector: 'Error message',
+        } as const;
+    }
+}
+
+// SPLASH SCREEN 
+export class CreateAccountButton extends LocatorsInterface {
+    public build() {
+        return {
+            strategy: 'accessibility id',
+            selector: 'Create account button',
+        } as const;
+    }
+}
+
+export class AccountRestoreButton extends LocatorsInterface {
+    public build() {
+        return {
+            strategy: 'accessibility id',
+            selector: 'Restore your session button',
         } as const;
     }
 }
@@ -61,4 +61,13 @@ export class SeedPhraseInput extends LocatorsInterface {
     }
 }
 
+// MESSAGE NOTIFICATIONS
 
+export class SlowModeRadio extends LocatorsInterface {
+    public build() {
+        return {
+            strategy: 'accessibility id',
+            selector: 'Slow mode notifications button',
+        } as const;
+    }
+}

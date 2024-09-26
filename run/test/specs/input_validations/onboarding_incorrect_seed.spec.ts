@@ -8,6 +8,8 @@ androidIt('Onboarding incorrect seed', onboardingIncorrectSeed);
 
 // in this case we use the word 'zork' which is not on the mnemonic word list
 const incorrectSeed = 'ruby bakery illness push rift reef nabbing bawled hope zork silk lobster hope'
+// the expected error is 'Some words are incorrect' which is represented by the following localized string
+const expectedError = localize('recoveryPasswordErrorMessageIncorrect').strip().toString();
 
 async function onboardingIncorrectSeed(platform: SupportedPlatformsType) {
     const { device } = await openAppOnPlatformSingleDevice(platform);
@@ -22,11 +24,9 @@ async function onboardingIncorrectSeed(platform: SupportedPlatformsType) {
         // Wait for, and fetch the error message on Android
         const error = await device.waitForTextElementToBePresent(new onboarding.ErrorMessage(device).build());
         const errorMessage = await device.getTextFromElement(error);
-        // Compare the fetched string with the expected string
-        console.log('The error message is ' + errorMessage);
-        // expect the 'Some words are incorrect' error
-        const expectedError = localize('recoveryPasswordErrorMessageIncorrect').strip().toString();
-        console.log('The expected error is ' + expectedError);
+        console.log(`The error message is "${errorMessage}"`);
+        console.log(`The expected error is "${expectedError}"`);
+         // Compare the fetched string with the expected string
         if (errorMessage ===  expectedError) {
             console.log('The observed error message matches the expected');
         }
