@@ -25,3 +25,12 @@ export const DISAPPEARING_TIMES: { [key: string]: DMTimeOption } = {
   ONE_WEEK: '1 week',
   OFF: 'Off',
 };
+
+export const MODAL_DESCRIPTIONS: { [key: string]: string } = {
+  HIDE_RECOVERY_PASSWORD:
+    'Without your recovery password, you cannot load your account on new devices. We strongly recommend you save your recovery password in a safe and secure place before continuing.',
+};
+
+export const MODAL_HEADINGS: { [key: string]: string } = {
+  HIDE_RECOVERY_PASSWORD: 'Hide Recovery Password Permanently',
+};

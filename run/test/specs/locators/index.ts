@@ -498,6 +498,42 @@ export class RevealRecoveryPhraseButton extends LocatorsInterface {
   }
 }
 
+export class HideRecoveryPasswordModalHeading extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'class name',
+          selector: 'android.widget.TextView',
+          text: 'Hide Recovery Password Permanently',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Hide Recovery Password Permanently',
+        };
+    }
+  }
+}
+
+// export class HideRecoveryPasswordModalDescription extends LocatorsInterface {
+//   public build(): StrategyExtractionObj {
+//     switch (this.platform) {
+//       case 'android':
+//         return {
+//           strategy: 'class name',
+//           selector: 'android.widget.TextView',
+//           text: 'Without your recovery password, you cannot load your account on new devices. We strongly recommend you save your recovery password in a safe and secure place before continuing.',
+//         };
+//       case 'ios':
+//         return {
+//           strategy: 'accessibility id',
+//           selector: 'Without your recovery password, you cannot load your account on new devices. We strongly recommend you save your recovery password in a safe and secure place before continuing.',
+//         };
+//     }
+//   }
+// }
+
 // TODO update StrategyExtractionObj to include Locator class
 // export class PendingMessageRequestControlMessage extends LocatorsInterface {
 //   public build(): StrategyExtractionObj {

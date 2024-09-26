@@ -1,4 +1,3 @@
-import { LocatorsInterface } from '../test/specs/locators';
 import { DeviceWrapper } from './DeviceWrapper';
 
 export type User = {
@@ -126,6 +125,10 @@ export type ControlMessage =
   | `Group name is now ${string}.`
   | 'You will be able to send voice messages and attachments once the recipient has approved this message request.'
   | 'Sending a message to this user will automatically accept their message request and reveal your Account ID.';
+
+export type ModalStrings =
+  
+  | 'Hide Recovery Password Permanently';
 
 export type XPath =
   | `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout`
@@ -310,4 +313,7 @@ export type AccessibilityId =
   | 'Copy button'
   | 'space'
   | 'Recovery password input'
-  | 'Read Receipts - Switch';
+  | 'Read Receipts - Switch'
+  | 'Recovery password menu item'
+  | 'Hide recovery password button'
+  | 'Hide Recovery Password Permanently';

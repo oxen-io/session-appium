@@ -239,7 +239,7 @@ export class DeviceWrapper {
   }
 
   public async clickOnElementAll(
-    args: ({ text?: string; maxWait?: number } & StrategyExtractionObj) | LocatorsInterface
+    args: { text?: string; maxWait?: number } & (StrategyExtractionObj | LocatorsInterface)
   ) {
     let el: null | AppiumNextElementType = null;
     let locator: StrategyExtractionObj & { text?: string; maxWait?: number };
@@ -737,34 +737,45 @@ export class DeviceWrapper {
   }
   // WAIT FOR FUNCTIONS
 
-  public async waitForTextElementToBePresent({
-    strategy,
-    selector,
-    text,
-    maxWait,
-  }: {
-    text?: string;
-    maxWait?: number;
-  } & StrategyExtractionObj): Promise<AppiumNextElementType> {
+  public async waitForTextElementToBePresent(
+    args: {
+      text?: string;
+      maxWait?: number;
+    } & (StrategyExtractionObj | LocatorsInterface)
+  ): Promise<AppiumNextElementType> {
     let el: null | AppiumNextElementType = null;
+    let locator: StrategyExtractionObj & { text?: string; maxWait?: number };
+
+    const { text, maxWait } = args;
+
+    if (args instanceof LocatorsInterface) {
+      locator = args.build();
+    } else {
+      locator = args as StrategyExtractionObj & {
+        text?: string;
+        maxWait?: number;
+      };
+    }
     const maxWaitMSec: number = typeof maxWait === 'number' ? maxWait : 60000;
     let currentWait = 0;
     const waitPerLoop = 100;
     while (el === null) {
       try {
         if (text) {
-          console.log(`Waiting for ${strategy}: '${selector}' to be present with ${text}`);
-          const els = await this.findElements(strategy, selector);
+          console.log(
+            `Waiting for ${locator.strategy}: '${locator.selector}' to be present with ${text}`
+          );
+          const els = await this.findElements(locator.strategy, locator.selector);
           el = await this.findMatchingTextInElementArray(els, text);
         } else {
-          console.log(`Waiting for '${strategy}' and '${selector}' to be present`);
-          el = await this.findElement(strategy, selector);
+          console.log(`Waiting for '${locator.strategy}' and '${locator.selector}' to be present`);
+          el = await this.findElement(locator.strategy, locator.selector);
         }
       } catch (e: any) {
         console.info(
           'waitForTextElementToBePresent threw: ',
           e.message,
-          `${strategy}: '${selector}'`
+          `${locator.strategy}: '${locator.selector}'`
         );
       }
       if (!el) {
@@ -774,15 +785,15 @@ export class DeviceWrapper {
 
       if (currentWait >= maxWaitMSec) {
         if (text) {
-          throw new Error(`Waited for too long looking for '${selector}' and '${text}`);
+          throw new Error(`Waited for too long looking for '${locator.selector}' and '${text}`);
         } else {
-          throw new Error(`Waited for too long looking for '${selector}'`);
+          throw new Error(`Waited for too long looking for '${locator.selector}'`);
         }
       }
       if (text) {
-        console.log(`'${selector}' and '${text}' has been found`);
+        console.log(`'${locator.selector}' and '${text}' has been found`);
       } else {
-        console.log(`'${selector}' has been found`);
+        console.log(`'${locator.selector}' has been found`);
       }
     }
     return el;
@@ -845,6 +856,7 @@ export class DeviceWrapper {
     console.log(`Control message ${text} has been found`);
     return el;
   }
+
   // TODO
   public async waitForLoadingMedia() {
     let loadingAnimation: AppiumNextElementType | null = null;
