@@ -1,4 +1,3 @@
-import { LocatorsInterface } from '../test/specs/locators';
 import { DeviceWrapper } from './DeviceWrapper';
 
 export type User = {

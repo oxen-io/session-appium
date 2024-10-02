@@ -296,3 +296,7 @@ export function localizeFromOld<T extends TokenString<LocalizerDictionary>>(
 ) {
   return new LocalizedStringBuilder<LocalizerDictionary, T>(token).withArgs(args);
 }
+
+export function englishStrippedStri<T extends TokenString<LocalizerDictionary>>(token: T) {
+  return localize(token).strip().forceEnglish();
+}

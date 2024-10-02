@@ -1,5 +1,5 @@
+import { DISAPPEARING_TIMES } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { DMTimeOption } from '../../types/testing';
 import { InviteContactsMenuItem } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -16,7 +16,7 @@ androidIt(
 
 const communityLink = `https://chat.lokinet.dev/testing-all-the-things?public_key=1d7e7f92b1ed3643855c98ecac02fc7274033a3467653f047d6e433540c03f17`;
 const communityName = 'Testing All The Things!';
-const time: DMTimeOption = '30 seconds';
+const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
 
 async function disappearingCommunityInviteMessage1o1Ios(platform: SupportedPlatformsType) {

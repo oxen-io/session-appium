@@ -1,4 +1,4 @@
-import { localize } from '../../localizer/i18n/localizedString';
+import { englishStrippedStri } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { ControlMessage } from '../../types/testing';
 import { LeaveGroupButton } from './locators';
@@ -29,9 +29,8 @@ async function leaveGroup(platform: SupportedPlatformsType) {
   await device3.clickOnByAccessibilityID('Leave');
   await device3.navigateBack(platform);
   // Check for control message
-  const groupMemberLeft = localize('groupMemberLeft')
+  const groupMemberLeft = englishStrippedStri('groupMemberLeft')
     .withArgs({ name: userC.userName })
-    .strip()
     .toString();
 
   await device1.waitForControlMessageToBePresent(groupMemberLeft as ControlMessage);

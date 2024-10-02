@@ -1,4 +1,4 @@
-import { localize } from '../../../localizer/i18n/localizedString';
+import { englishStrippedStri } from '../../../localizer/i18n/localizedString';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import {
   DisappearActions,
@@ -19,18 +19,15 @@ export const checkDisappearingControlMessage = async (
 ) => {
   // Two control messages to check - You have set and other user has set
   // "disappearingMessagesSet": "<b>{name}</b> has set messages to disappear {time} after they have been {disappearing_messages_type}.",
-  const disappearingMessagesSetUserA = localize('disappearingMessagesSet')
+  const disappearingMessagesSetUserA = englishStrippedStri('disappearingMessagesSet')
     .withArgs({ name: userA.userName, time, disappearing_messages_type: mode })
-    .strip()
     .toString();
-  const disappearingMessagesSetUserB = localize('disappearingMessagesSet')
+  const disappearingMessagesSetUserB = englishStrippedStri('disappearingMessagesSet')
     .withArgs({ name: userB.userName, time, disappearing_messages_type: mode })
-    .strip()
     .toString();
   // "disappearingMessagesSetYou": "<b>You</b> set messages to disappear {time} after they have been {disappearing_messages_type}.",
-  const disappearingMessagesSetYou = localize('disappearingMessagesSetYou')
+  const disappearingMessagesSetYou = englishStrippedStri('disappearingMessagesSetYou')
     .withArgs({ time, disappearing_messages_type: mode })
-    .strip()
     .toString();
   // Check device 1
   if (platform === 'android') {

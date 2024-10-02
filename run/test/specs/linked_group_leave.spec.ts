@@ -1,4 +1,4 @@
-import { localize } from '../../localizer/i18n/localizedString';
+import { englishStrippedStri } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { ControlMessage } from '../../types/testing';
 import { LeaveGroup } from './locators';
@@ -38,9 +38,8 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
     device4.hasTextElementBeenDeleted('Conversation list item', testGroupName)
   );
   // Create control message for user leaving group
-  const groupMemberLeft = localize('groupMemberLeft')
+  const groupMemberLeft = englishStrippedStri('groupMemberLeft')
     .withArgs({ name: userC.userName })
-    .strip()
     .toString();
 
   await Promise.all([
