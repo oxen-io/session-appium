@@ -1,6 +1,5 @@
 import { DISAPPEARING_TIMES } from '../../constants';
 import { iosIt } from '../../types/sessionIt';
-import { DMTimeOption } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
@@ -13,7 +12,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   const testMessage = 'Testing disappearing messages for images';
   const testGroupName = 'Test group';
-  const time: DMTimeOption = DISAPPEARING_TIMES.THIRTY_SECONDS;
+  const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   const timerType = 'Disappear after send option';
   // Create user A and user B
   const [userA, userB, userC] = await Promise.all([

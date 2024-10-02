@@ -3,7 +3,6 @@ import { sleepFor } from './utils';
 import { parseDataImage } from './utils/check_colour';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppOnPlatformSingleDevice } from './utils/open_app';
-import fs from 'fs';
 
 iosIt('Change profile picture', changeProfilePictureiOS);
 androidIt('Change profile picture', changeProfilePictureAndroid);
@@ -47,7 +46,6 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   // Waiting for the image to change in the UI
   await sleepFor(10000);
   const base64 = await device.getElementScreenshot(el.ELEMENT);
-  fs.writeFileSync('screenshot.png', base64, 'base64');
   const pixelColor = await parseDataImage(base64);
   console.log('Hex value of pixel is:', pixelColor);
   if (pixelColor === pixelHexColour) {

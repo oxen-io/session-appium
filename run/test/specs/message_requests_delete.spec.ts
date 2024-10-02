@@ -1,10 +1,10 @@
-import { localize } from '../../localizer/i18n/localizedString';
+import { englishStrippedStri } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { AccessibilityId } from '../../types/testing';
 import { DeleteMessageRequestButton, DeleteMesssageRequestConfirmation } from './locators';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
-import { SupportedPlatformsType, openAppTwoDevices, closeApp } from './utils/open_app';
+import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
 iosIt('Delete message request', deleteRequest);
 androidIt('Delete message request', deleteRequest);
@@ -27,7 +27,7 @@ async function deleteRequest(platform: SupportedPlatformsType) {
   await sleepFor(1000);
   await device2.clickOnElementAll(new DeleteMesssageRequestConfirmation(device2));
   // "messageRequestsNonePending": "No pending message requests",
-  const messageRequestsNonePending = localize('messageRequestsNonePending').strip().toString();
+  const messageRequestsNonePending = englishStrippedStri('messageRequestsNonePending').toString();
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: messageRequestsNonePending as AccessibilityId,

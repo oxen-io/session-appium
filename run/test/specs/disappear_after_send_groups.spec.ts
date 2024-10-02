@@ -1,6 +1,7 @@
-import { localize } from '../../localizer/i18n/localizedString';
+import { DISAPPEARING_TIMES } from '../../constants';
+import { englishStrippedStri } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { DisappearActions, DisappearingControlMessage, DMTimeOption } from '../../types/testing';
+import { DisappearActions, DisappearingControlMessage } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
@@ -13,7 +14,7 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   const testGroupName = 'Disappear after send test';
   const testMessage = 'Testing disappear after sent in groups';
   const controlMode: DisappearActions = 'sent';
-  const time: DMTimeOption = '30 seconds';
+  const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
@@ -26,14 +27,12 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
 
   await setDisappearingMessage(platform, device1, ['Group', `Disappear after send option`, time]);
   // Get correct control message for You setting disappearing messages
-  const disappearingMessagesSetYou = localize('disappearingMessagesSetYou')
+  const disappearingMessagesSetYou = englishStrippedStri('disappearingMessagesSetYou')
     .withArgs({ time, disappearing_messages_type: controlMode })
-    .strip()
     .toString();
   // Get correct control message for userA setting disappearing messages
-  const disappearingMessagesSetControl = localize('disappearingMessagesSet')
+  const disappearingMessagesSetControl = englishStrippedStri('disappearingMessagesSet')
     .withArgs({ name: userA.userName, time, disappearing_messages_type: controlMode })
-    .strip()
     .toString();
   // Check control message is correct on device 2
   await Promise.all([
