@@ -1,11 +1,6 @@
-import { localize } from '../../localizer/i18n/localizedString';
+import { DISAPPEARING_TIMES } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import {
-  DMTimeOption,
-  DisappearActions,
-  DisappearModes,
-  DisappearingControlMessage,
-} from '../../types/testing';
+import { DisappearActions, DisappearModes } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -26,7 +21,7 @@ async function disappearAfterSend(platform: SupportedPlatformsType) {
   const mode: DisappearModes = 'send';
   const testMessage = `Checking disappear after ${mode} is working`;
   const controlMode: DisappearActions = 'sent';
-  const time: DMTimeOption = '30 seconds';
+  const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // Select disappearing messages option

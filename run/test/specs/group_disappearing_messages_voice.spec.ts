@@ -1,6 +1,6 @@
 import { DISAPPEARING_TIMES } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { DMTimeOption, GroupName } from '../../types/testing';
+import { GroupName } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
@@ -13,7 +13,7 @@ androidIt('Disappearing voice message to group', disappearingVoiceMessageGroup);
 async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   const testGroupName: GroupName = 'Testing voice';
-  const time: DMTimeOption = DISAPPEARING_TIMES.THIRTY_SECONDS;
+  const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   const timerType = 'Disappear after send option';
   // Create user A and user B
   const [userA, userB, userC] = await Promise.all([

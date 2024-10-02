@@ -1,6 +1,5 @@
 import { DISAPPEARING_TIMES } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { DMTimeOption } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -10,7 +9,7 @@ import { setDisappearingMessage } from './utils/set_disappearing_messages';
 iosIt('Disappearing GIF message 1:1', disappearingGifMessage1o1Ios);
 androidIt('Disappearing GIF message 1:1', disappearingGifMessage1o1Android);
 
-const time: DMTimeOption = DISAPPEARING_TIMES.THIRTY_SECONDS;
+const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
 const testMessage = "Testing disappearing messages for GIF's";
 
@@ -60,7 +59,9 @@ async function disappearingGifMessage1o1Android(platform: SupportedPlatformsType
     newUser(device2, 'Bob', platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2); // Wait for control messages to disappear before sending image (to check if the control messages are interfering with finding the untrusted attachment message)
+  await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
+  // Wait for control messages to disappear before sending image
+  // (to check if the control messages are interfering with finding the untrusted attachment message)
   // Click on attachments button
   await device1.sendGIF(testMessage);
   // Check if the 'Tap to download media' config appears

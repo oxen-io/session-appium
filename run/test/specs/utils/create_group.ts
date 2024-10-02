@@ -1,4 +1,4 @@
-import { localize } from '../../../localizer/i18n/localizedString';
+import { englishStrippedStri } from '../../../localizer/i18n/localizedString';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { ControlMessage, Group, GroupName, User } from '../../../types/testing';
 import { newContact } from './create_contact';
@@ -75,13 +75,12 @@ export const createGroup = async (
     ]);
   }
   // TODO: need to change once Android have updated their control messages
-  const groupNoMessages = localize('groupNoMessages')
+  const groupNoMessages = englishStrippedStri('groupNoMessages')
     .withArgs({ group_name: group.userName })
-    .strip()
     .toString();
   if (platform === 'android') {
     await device1.waitForControlMessageToBePresent(groupNoMessages as ControlMessage);
-    const legacyGroupMemberYouNew = localize('legacyGroupMemberYouNew').strip().toString();
+    const legacyGroupMemberYouNew = englishStrippedStri('legacyGroupMemberYouNew').toString();
     // Check control message 'You joined the group'
     await Promise.all([
       device2.waitForControlMessageToBePresent(legacyGroupMemberYouNew as ControlMessage),

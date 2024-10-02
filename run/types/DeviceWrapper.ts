@@ -87,11 +87,6 @@ export class DeviceWrapper {
     return this.toShared().getElementRect(elementId);
   }
 
-  public async getCssProperty(name: string, elementId: string): Promise<string> {
-    const cssProp: string = await this.toShared().getCssProperty(name, elementId);
-    return cssProp;
-  }
-
   public async scroll(start: Coordinates, end: Coordinates, duration: number): Promise<void> {
     const actions = [
       {
@@ -1465,8 +1460,6 @@ export class DeviceWrapper {
         selector: 'Photo, 01 May 1998, 7:00 am',
       });
       await this.clickOnByAccessibilityID('Done');
-
-      // await this.clickOnByAccessibilityID('Save');
     } else if (this.isAndroid()) {
       await this.clickOnElementAll(new ImagePermissionsModalAllow(this));
       await sleepFor(1000);
