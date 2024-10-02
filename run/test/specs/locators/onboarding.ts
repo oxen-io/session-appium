@@ -54,12 +54,20 @@ export class DisplayNameInput extends LocatorsInterface {
 
 export class SeedPhraseInput extends LocatorsInterface {
     public build() {
-        return {
-            strategy: 'accessibility id',
-            selector: this.isIos() ? 'Recovery password input' : 'Recovery phrase input',
-        } as const;
+        switch (this.platform) {  
+            case 'android':  
+                return {  
+                    strategy: 'accessibility id',  
+                    selector: 'Recovery phrase input',  
+                  } as const;  
+            case 'ios':  
+                return {  
+                    strategy: 'accessibility id',  
+                    selector: 'Recovery password input',  
+                  } as const;  
+              }  
+        } 
     }
-}
 
 // MESSAGE NOTIFICATIONS
 
