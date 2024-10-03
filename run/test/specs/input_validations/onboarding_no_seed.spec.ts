@@ -11,12 +11,12 @@ const emptySeed = '';
 const expectedError = localize('recoveryPasswordErrorMessageShort').strip().toString();
 
 async function onboardingNoSeed(platform: SupportedPlatformsType) {
+    const { device } = await openAppOnPlatformSingleDevice(platform);
+    await device.clickOnElementAll(new AccountRestoreButton(device));
     // this check is to avoid false positives
     if (emptySeed.length > 0) {
         throw new Error ('The emptySeed string is not empty but it must be.')
     }
-    const { device } = await openAppOnPlatformSingleDevice(platform);
-    await device.clickOnElementAll(new AccountRestoreButton(device));
     await device.inputText(emptySeed, new SeedPhraseInput(device));
     // Trigger the validation by pressing Continue
     await device.clickOnElementAll(new ContinueButton(device));

@@ -12,12 +12,12 @@ const tooLongName = 'One morning, when Gregor Samsa woke from troubled dreams, h
 const expectedError = localize('displayNameErrorDescriptionShorter').strip().toString();
 
 async function onboardingLongName(platform:SupportedPlatformsType) {
+  const { device } = await openAppOnPlatformSingleDevice(platform);
+  await device.clickOnElementAll(new CreateAccountButton(device));
   // this check is to avoid false positives 
   if (tooLongName.length <= 100) {  
     throw new Error ('The string to test the display name length check is too short. It is only ' + tooLongName.length + ' characters long but needs to be >100. ');
   }
-  const { device } = await openAppOnPlatformSingleDevice(platform);
-  await device.clickOnElementAll(new CreateAccountButton(device));
   await device.inputText(tooLongName, new DisplayNameInput(device));
   // Trigger the validation by pressing Continue
   await device.clickOnElementAll(new ContinueButton(device));
