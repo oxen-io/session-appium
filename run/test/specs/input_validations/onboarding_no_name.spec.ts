@@ -11,6 +11,10 @@ const emptyName = '';
 const expectedError = localize('displayNameErrorDescription').strip().toString();
 
 async function onboardingNoName(platform:SupportedPlatformsType) {
+  // this check is to avoid false positives
+  if (emptyName.length > 0) {
+    throw new Error ('The emptyName string is not empty but it must be.')
+  }
   const { device } = await openAppOnPlatformSingleDevice(platform);
   await device.clickOnElementAll(new CreateAccountButton(device));
   await device.inputText(emptyName, new DisplayNameInput(device));
