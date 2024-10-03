@@ -1,6 +1,6 @@
 import { englishStrippedStri } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { ControlMessage } from '../../types/testing';
+import { ControlMessage, USERNAME } from '../../types/testing';
 import { ApplyChanges, EditGroup, EditGroupName } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -14,11 +14,11 @@ androidIt('Create group and change name syncs', linkedGroup);
 async function linkedGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3, device4 } = await openAppFourDevices(platform);
 
-  const userA = await linkedDevice(device1, device2, 'Alice', platform);
+  const userA = await linkedDevice(device1, device2, USERNAME.ALICE, platform);
 
   const [userB, userC] = await Promise.all([
-    newUser(device3, 'Bob', platform),
-    newUser(device4, 'Charlie', platform),
+    newUser(device3, USERNAME.BOB, platform),
+    newUser(device4, USERNAME.CHARLIE, platform),
   ]);
   const testGroupName = 'Linked device group';
   const newGroupName = 'New group name';

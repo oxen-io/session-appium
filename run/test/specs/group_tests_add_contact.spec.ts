@@ -1,6 +1,6 @@
 import { englishStrippedStri } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { ControlMessage } from '../../types/testing';
+import { ControlMessage, USERNAME } from '../../types/testing';
 import { ApplyChanges, EditGroup, InviteContactsButton, InviteContactsMenuItem } from './locators';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -17,9 +17,9 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3, device4 } = await openAppFourDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
-    newUser(device1, 'Alice', platform),
-    newUser(device2, 'Bob', platform),
-    newUser(device3, 'Charlie', platform),
+    newUser(device1, USERNAME.ALICE, platform),
+    newUser(device2, USERNAME.BOB, platform),
+    newUser(device3, USERNAME.CHARLIE, platform),
   ]);
   const testGroupName = 'Group to test adding contact';
   const group = await createGroup(
@@ -32,7 +32,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     userC,
     testGroupName
   );
-  const userD = await newUser(device4, 'Dracula', platform);
+  const userD = await newUser(device4, USERNAME.DRACULA, platform);
   await device1.navigateBack(platform);
   await newContact(platform, device1, userA, device4, userD);
   // Exit to conversation list

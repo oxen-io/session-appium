@@ -1,4 +1,5 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
+import { USERNAME } from '../../types/testing';
 import { DeleteMessageConfirmation } from './locators';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -11,9 +12,9 @@ androidIt('Deleted message linked device', deletedMessageLinkedDevice);
 async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
 
-  const userA = await linkedDevice(device1, device3, 'Alice', platform);
+  const userA = await linkedDevice(device1, device3, USERNAME.ALICE, platform);
 
-  const userB = await newUser(device2, 'Bob', platform);
+  const userB = await newUser(device2, USERNAME.BOB, platform);
 
   await newContact(platform, device1, userA, device2, userB);
   // Send message from user a to user b

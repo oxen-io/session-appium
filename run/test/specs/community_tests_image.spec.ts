@@ -1,5 +1,6 @@
 import { testCommunityLink, testCommunityName } from '../../constants/community';
 import { androidIt, iosIt } from '../../types/sessionIt';
+import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { joinCommunity } from './utils/join_community';
@@ -17,8 +18,8 @@ async function sendImageCommunityiOS(platform: SupportedPlatformsType) {
   const testImageMessage = `Image message + ${new Date().getTime()}`;
   // Create user A and user B
   const [userA, userB] = await Promise.all([
-    newUser(device1, 'Alice', platform),
-    newUser(device2, 'Bob', platform),
+    newUser(device1, USERNAME.ALICE, platform),
+    newUser(device2, USERNAME.BOB, platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
   await Promise.all([device1.navigateBack(platform), device2.navigateBack(platform)]);
@@ -37,8 +38,8 @@ async function sendImageCommunityAndroid(platform: SupportedPlatformsType) {
   const testMessage = `Testing sending images to communities + ${time}`;
   // Create user A and user B
   const [userA, userB] = await Promise.all([
-    newUser(device1, 'Alice', platform),
-    newUser(device2, 'Bob', platform),
+    newUser(device1, USERNAME.ALICE, platform),
+    newUser(device2, USERNAME.BOB, platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
   const replyMessage = `Replying to image from ${userA.userName} in community ${testCommunityName} + ${time}`;

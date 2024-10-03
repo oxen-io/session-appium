@@ -1,6 +1,7 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
+import { USERNAME } from '../../types/testing';
 import { BlockedContactsSettings, BlockUserConfirmation } from './locators';
-import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
+import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
 import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
@@ -13,8 +14,8 @@ androidIt('Block message request', blockedRequest);
 async function blockedRequest(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
 
-  const userA = await newUser(device1, 'Alice', platform);
-  const userB = await linkedDevice(device2, device3, 'Bob', platform);
+  const userA = await newUser(device1, USERNAME.ALICE, platform);
+  const userB = await linkedDevice(device2, device3, USERNAME.BOB, platform);
   // Send message from Alice to Bob
   await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
   // Wait for banner to appear

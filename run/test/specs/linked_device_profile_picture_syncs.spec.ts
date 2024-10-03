@@ -1,4 +1,5 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
+import { USERNAME } from '../../types/testing';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { parseDataImage } from './utils/check_colour';
 import { linkedDevice } from './utils/link_device';
@@ -9,7 +10,7 @@ androidIt('Avatar restored', avatarRestored);
 async function avatarRestored(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const pixelHexColour = '04cbfe';
-  await linkedDevice(device1, device2, 'Alice', platform);
+  await linkedDevice(device1, device2, USERNAME.ALICE, platform);
   await device1.uploadProfilePicture();
   await sleepFor(5000);
   // Wait for change

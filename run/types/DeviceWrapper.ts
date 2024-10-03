@@ -22,11 +22,13 @@ import {
   DMTimeOption,
   DisappearingControlMessage,
   Group,
+  Id,
   InteractionPoints,
   Strategy,
   StrategyExtractionObj,
   User,
   XPath,
+  isDisappearingControlMessage,
 } from './testing';
 
 export type Coordinates = {
@@ -276,13 +278,13 @@ export class DeviceWrapper {
     await this.click(el.ELEMENT);
   }
 
-  public async clickOnElementById(id: string) {
+  public async clickOnElementById(id: Id) {
     await this.waitForTextElementToBePresent({ strategy: 'id', selector: id });
     const el = await this.findElement('id', id);
     await this.click(el.ELEMENT);
   }
 
-  public async clickOnTextElementById(id: string, text: string) {
+  public async clickOnTextElementById(id: Id, text: string) {
     const el = await this.findTextElementArrayById(id, text);
     await this.waitForTextElementToBePresent({
       strategy: 'id',
@@ -552,7 +554,7 @@ export class DeviceWrapper {
   }
 
   public async findTextElementArrayById(
-    id: string,
+    id: Id,
     textToLookFor: string
   ): Promise<AppiumNextElementType> {
     const elementArray = await this.findElements('id', id);
@@ -826,9 +828,13 @@ export class DeviceWrapper {
   }
 
   public async disappearingControlMessage(
-    text: DisappearingControlMessage,
+    text: string,
     maxWait?: number
   ): Promise<AppiumNextElementType> {
+    if (!isDisappearingControlMessage(text)) {
+      throw new Error(`Text is not a localized string: ${text}`);
+    }
+
     let el: null | AppiumNextElementType = null;
     const maxWaitMSec: number = typeof maxWait === 'number' ? maxWait : 15000;
     let currentWait = 0;
@@ -985,13 +991,13 @@ export class DeviceWrapper {
     await this.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Conversation list item',
-      text: receiver.userName,
+      text: String(receiver.userName),
     });
     await sleepFor(100);
     await this.clickOnElementAll({
       strategy: 'accessibility id',
       selector: 'Conversation list item',
-      text: receiver.userName,
+      text: String(receiver.userName),
     });
     console.log(`${sender.userName} + " sent message to ${receiver.userName}`);
     await this.sendMessage(message);

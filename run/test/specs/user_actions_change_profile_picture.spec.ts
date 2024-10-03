@@ -1,4 +1,5 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
+import { USERNAME } from '../../types/testing';
 import { sleepFor } from './utils';
 import { parseDataImage } from './utils/check_colour';
 import { newUser } from './utils/create_account';
@@ -11,7 +12,7 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
   const pixelHexColour = '04cbfe';
   // Create new user
-  await newUser(device, 'Alice', platform);
+  await newUser(device, USERNAME.ALICE, platform);
   // Click on settings/avatar
   await device.uploadProfilePicture();
   // Take screenshot
@@ -35,7 +36,7 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
   const pixelHexColour = '04cbfe';
   // Create new user
-  await newUser(device, 'Alice', platform);
+  await newUser(device, USERNAME.ALICE, platform);
   // Click on settings/avatar
   await device.uploadProfilePicture();
   const el = await device.waitForTextElementToBePresent({

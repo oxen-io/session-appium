@@ -1,4 +1,5 @@
 import { androidIt } from '../../types/sessionIt';
+import { USERNAME } from '../../types/testing';
 import { BlockUserConfirmation } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -15,8 +16,8 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   // Create Alice
   // Create Bob
   const [userA, userB] = await Promise.all([
-    newUser(device1, 'Alice', platform),
-    newUser(device2, 'Bob', platform),
+    newUser(device1, USERNAME.ALICE, platform),
+    newUser(device2, USERNAME.BOB, platform),
   ]);
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
