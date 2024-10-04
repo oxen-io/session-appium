@@ -1618,10 +1618,18 @@ export class DeviceWrapper {
 
   public async scrollToBottom(platform: SupportedPlatformsType) {
     if (platform === 'android') {
-      await this.clickOnElementAll({
+      const scrollButton = await this.doesElementExist({
         strategy: 'id',
         selector: 'network.loki.messenger:id/scrollToBottomButton',
       });
+      if (scrollButton) {
+        await this.clickOnElementAll({
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/scrollToBottomButton',
+        });
+      } else {
+        console.info('Scroll button not visible');
+      }
     } else {
       await this.clickOnElementAll({
         strategy: 'accessibility id',

@@ -1,4 +1,4 @@
-import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from '.';
+import { sleepFor } from '.';
 import { newUser } from './create_account';
 import { SupportedPlatformsType } from './open_app';
 
