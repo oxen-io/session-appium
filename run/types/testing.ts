@@ -69,7 +69,7 @@ enum DISAPPEARING_ACTIONS {
   SENT = 'sent',
 }
 
-enum DISAPPEARING_TIMES {
+export enum DISAPPEARING_TIMES {
   FIVE_SECONDS = '5 seconds',
   TEN_SECONDS = '10 seconds',
   THIRTY_SECONDS = '30 seconds',
@@ -81,37 +81,18 @@ enum DISAPPEARING_TIMES {
   ONE_DAY = '1 day',
   ONE_WEEK = '1 week',
   TWO_WEEKS = '2 weeks',
-  OFF = 'Off',
 }
-
-/** @deprecated delete me at some point */
-const dMTimeOptions = [
-  '5 seconds',
-  '10 seconds',
-  '30 seconds',
-  '1 minute',
-  '5 minutes',
-  '30 minutes',
-  '1 hour',
-  '12 hours',
-  '1 day',
-  '1 week',
-  '2 weeks',
-  'Off',
-] as const;
-
-export type DMTimeOption = (typeof dMTimeOptions)[number];
 
 export type DisappearOpts1o1 = [
   '1:1',
   `Disappear after ${DisappearModes} option` | `Disappear after ${DisappearModes} option`,
-  DMTimeOption?,
+  DISAPPEARING_TIMES,
 ];
 
 export type DisappearOptsGroup = [
   'Group' | 'Note to Self',
   `Disappear after ${DisappearModes} option`,
-  DMTimeOption?,
+  DISAPPEARING_TIMES,
 ];
 
 export type MergedOptions = DisappearOpts1o1 | DisappearOptsGroup;
@@ -139,13 +120,13 @@ export type StrategyExtractionObj =
     }
   | {
       strategy: Extract<Strategy, 'DMTimeOption'>;
-      selector: DMTimeOption;
+      selector: DISAPPEARING_TIMES;
     };
 
 /** @see {@link en.disappearingMessagesSetYou} */
 const disappearingMessagesSetYou = Object.values(DISAPPEARING_ACTIONS).flatMap(action =>
   Object.values(DISAPPEARING_TIMES).map(
-    time => `You set messages to disappear ${action} after they have been ${time}.` as const
+    time => `You set messages to disappear ${time} after they have been ${action}.` as const
   )
 );
 
@@ -153,7 +134,8 @@ const disappearingMessagesSetYou = Object.values(DISAPPEARING_ACTIONS).flatMap(a
 const disappearingMessagesTurnedOffYou =
   'You turned off disappearing messages. Messages you send will no longer disappear.' as const;
 
-const disappearingMessagesTurnedOffYouGroup = 'You turned off disappearing messages.';
+/** @see {@link en.disappearingMessagesTurnedOffYouGroup} */
+const disappearingMessagesTurnedOffYouGroup = 'You turned off disappearing messages.' as const;
 
 /** @see {@link en.disappearingMessagesSet} */
 const disappearingMessagesSet = Object.values(DISAPPEARING_ACTIONS).flatMap(action =>
@@ -171,19 +153,20 @@ const disappearingMessagesTurnedOff = Object.values(USERNAME).map(
     `${name} has turned disappearing messages off. Messages they send will no longer disappear.` as const
 );
 
-const disappearingControlMessage = [
+const disappearingControlMessages = [
   ...disappearingMessagesSetYou,
-  ...disappearingMessagesTurnedOffYou,
-  ...disappearingMessagesTurnedOffYouGroup,
+  disappearingMessagesTurnedOffYou,
+  disappearingMessagesTurnedOffYouGroup,
   ...disappearingMessagesSet,
   ...disappearingMessagesTurnedOff,
-];
+] as const;
 
-export type DisappearingControlMessage = (typeof disappearingControlMessage)[number];
+export type DisappearingControlMessage = (typeof disappearingControlMessages)[number];
 
 export const isDisappearingControlMessage = (
   message: string
-): message is DisappearingControlMessage => message in disappearingControlMessage;
+): message is DisappearingControlMessage =>
+  disappearingControlMessages.includes(message as DisappearingControlMessage);
 
 export type ControlMessage =
   | 'Your message request has been accepted.'
@@ -206,7 +189,7 @@ export type ModalStrings = 'Hide Recovery Password Permanently';
 export type XPath =
   | `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout`
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.TabHost/android.widget.LinearLayout/android.widget.FrameLayout/androidx.viewpager.widget.ViewPager/android.widget.RelativeLayout/android.widget.GridView/android.widget.LinearLayout/android.widget.LinearLayout[2]`
-  | `//*[./*[@name='${DMTimeOption}']]/*[2]`
+  | `//*[./*[@name='${DISAPPEARING_TIMES}']]/*[2]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.FrameLayout[2]/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout[5]/android.widget.RelativeLayout/android.widget.TextView[2]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.ScrollView/androidx.viewpager.widget.ViewPager/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.FrameLayout[1]/android.widget.ImageView`
   | `//XCUIElementTypeStaticText[@name="Videos"]`
@@ -380,8 +363,9 @@ export type AccessibilityId =
   | 'Follow Setting'
   | 'Set'
   | 'Allow Full Access'
-  | DMTimeOption
-  | `${DMTimeOption} - Radio`
+  | DISAPPEARING_TIMES
+  | 'Off'
+  | `${DISAPPEARING_TIMES} - Radio`
   | 'Loading animation'
   | 'Recovery password container'
   | 'Copy button'

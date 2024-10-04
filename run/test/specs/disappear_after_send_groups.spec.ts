@@ -1,7 +1,6 @@
-import { DISAPPEARING_TIMES } from '../../constants';
 import { englishStrippedStri } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { DisappearActions, USERNAME } from '../../types/testing';
+import { DisappearActions, DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
@@ -34,7 +33,7 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   const disappearingMessagesSetControl = englishStrippedStri('disappearingMessagesSet')
     .withArgs({ name: userA.userName, time, disappearing_messages_type: controlMode })
     .toString();
-  // Check control message is correct on device 2
+  // Check control message is correct on device 1, 2 and 3
   await Promise.all([
     device1.disappearingControlMessage(disappearingMessagesSetYou),
     device2.disappearingControlMessage(disappearingMessagesSetControl),

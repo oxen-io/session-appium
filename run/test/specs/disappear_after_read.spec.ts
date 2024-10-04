@@ -1,6 +1,6 @@
-import { DISAPPEARING_TIMES } from '../../constants';
+
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { DisappearModes, USERNAME } from '../../types/testing';
+import { DISAPPEARING_TIMES, DisappearModes, USERNAME } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';

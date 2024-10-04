@@ -1,6 +1,6 @@
 import { englishStrippedStri } from '../../../localizer/i18n/localizedString';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { DisappearActions, DMTimeOption, User } from '../../../types/testing';
+import { DisappearActions, DISAPPEARING_TIMES, User } from '../../../types/testing';
 import { SupportedPlatformsType } from './open_app';
 
 export const checkDisappearingControlMessage = async (
@@ -9,7 +9,7 @@ export const checkDisappearingControlMessage = async (
   userB: User,
   device1: DeviceWrapper,
   device2: DeviceWrapper,
-  time: DMTimeOption,
+  time: DISAPPEARING_TIMES,
   mode: DisappearActions
 ) => {
   // Two control messages to check - You have set and other user has set

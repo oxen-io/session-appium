@@ -1,4 +1,4 @@
-import { DMTimeOption, XPath } from '../types/testing';
+import { XPath } from '../types/testing';
 
 export const ANDROID_XPATHS: { [key: string]: XPath } = {
   PRIVACY_TOGGLE: `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.FrameLayout[2]/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout[5]/android.widget.RelativeLayout/android.widget.TextView[2]`,
@@ -11,27 +11,4 @@ export const ANDROID_XPATHS: { [key: string]: XPath } = {
 export const IOS_XPATHS: { [key: string]: XPath } = {
   VIDEO_TOGGLE: `//XCUIElementTypeStaticText[@name="Videos"]`,
   FIRST_GIF: `(//XCUIElementTypeImage[@name="gif cell"])[1]`,
-};
-
-export const DISAPPEARING_TIMES: { [key: string]: DMTimeOption } = {
-  FIVE_SECONDS: '5 seconds',
-  TEN_SECONDS: '10 seconds',
-  THIRTY_SECONDS: '30 seconds',
-  ONE_MINUTE: '1 minute',
-  FIVE_MINUTES: '5 minutes',
-  THIRTY_MINUTES: '30 minutes',
-  ONE_HOUR: '1 hour',
-  TWELVE_HOURS: '12 hours',
-  ONE_DAY: '1 day',
-  ONE_WEEK: '1 week',
-  OFF: 'Off',
-};
-
-export const MODAL_DESCRIPTIONS: { [key: string]: string } = {
-  HIDE_RECOVERY_PASSWORD:
-    'Without your recovery password, you cannot load your account on new devices. We strongly recommend you save your recovery password in a safe and secure place before continuing.',
-};
-
-export const MODAL_HEADINGS: { [key: string]: string } = {
-  HIDE_RECOVERY_PASSWORD: 'Hide Recovery Password Permanently',
 };

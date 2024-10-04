@@ -19,7 +19,7 @@ import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/specs/uti
 import {
   AccessibilityId,
   ControlMessage,
-  DMTimeOption,
+  DISAPPEARING_TIMES,
   DisappearingControlMessage,
   Group,
   Id,
@@ -831,7 +831,7 @@ export class DeviceWrapper {
     text: string,
     maxWait?: number
   ): Promise<AppiumNextElementType> {
-    if (!isDisappearingControlMessage(text)) {
+    if (!isDisappearingControlMessage(text.trim())) {
       throw new Error(`Text is not a localized string: ${text}`);
     }
 
@@ -1069,28 +1069,32 @@ export class DeviceWrapper {
     return this.toShared().getAttribute(attribute, elementId);
   }
 
-  public async disappearRadioButtonSelectediOS(timeOption: DMTimeOption) {
-    const radioButton = await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: `${timeOption} - Radio`,
-    });
-    const attr = await this.getAttribute('value', radioButton.ELEMENT);
-    if (attr === 'selected') {
-      console.log('Great success - default time is correct');
+  public async disappearRadioButtonSelected(
+    platform: SupportedPlatformsType,
+    timeOption: DISAPPEARING_TIMES
+  ) {
+    if (platform === 'ios') {
+      const radioButton = await this.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: `${timeOption} - Radio`,
+      });
+      const attr = await this.getAttribute('value', radioButton.ELEMENT);
+      if (attr === 'selected') {
+        console.log('Great success - default time is correct');
+      } else {
+        throw new Error('Dammit - default time was not correct');
+      }
     } else {
-      throw new Error('Dammit - default time was not correct');
-    }
-  }
-  public async disappearRadioButtonSelectedAndroid(timeOption: DMTimeOption) {
-    const radioButton = await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: timeOption,
-    });
-    const attr = await this.getAttribute('selected', radioButton.ELEMENT);
-    if (attr) {
-      console.log('Great success - default time is correct');
-    } else {
-      throw new Error('Dammit - default time was not correct');
+      const radioButton = await this.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: timeOption,
+      });
+      const attr = await this.getAttribute('selected', radioButton.ELEMENT);
+      if (attr) {
+        console.log('Great success - default time is correct');
+      } else {
+        throw new Error('Dammit - default time was not correct');
+      }
     }
   }
 

@@ -1,6 +1,5 @@
-import { DISAPPEARING_TIMES } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { GROUPNAME, USERNAME } from '../../types/testing';
+import { DISAPPEARING_TIMES, GROUPNAME, USERNAME } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
