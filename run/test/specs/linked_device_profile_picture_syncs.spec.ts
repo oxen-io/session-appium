@@ -39,13 +39,13 @@ async function avatarRestored(platform: SupportedPlatformsType) {
   }
   console.log('Now checking avatar on linked device');
   // Check avatar on device 2
+  await sleepFor(3000);
+  await device2.clickOnElementAll(new ExitUserProfile(device2));
+  await device2.clickOnByAccessibilityID('User settings');
   const profilePictureLinked = await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'User settings',
   });
-  await sleepFor(3000);
-  await device2.clickOnElementAll(new ExitUserProfile(device2));
-  await device2.clickOnByAccessibilityID('User settings');
   const base64A = await device2.getElementScreenshot(profilePictureLinked.ELEMENT);
   const actualPixelColorLinked = await parseDataImage(base64A);
   if (actualPixelColorLinked === expectedPixelHexColour) {
