@@ -10,6 +10,7 @@ import {
   LocatorsInterface,
   PrivacyButton,
   ReadReceiptsButton,
+  SaveProfilePictureButton,
 } from '../../run/test/specs/locators';
 import { IOS_XPATHS } from '../constants';
 import { clickOnCoordinates, sleepFor } from '../test/specs/utils';
@@ -1492,7 +1493,7 @@ export class DeviceWrapper {
       });
       await this.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop');
     }
-    await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Save' });
+    await this.clickOnElementAll(new SaveProfilePictureButton(this));
   }
 
   public async getTimeFromDevice(platform: SupportedPlatformsType): Promise<string> {

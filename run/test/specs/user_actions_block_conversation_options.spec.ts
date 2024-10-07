@@ -1,5 +1,5 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { BlockedContactsSettings, BlockUser, BlockUserConfirmation } from './locators';
+import { BlockedContactsSettings, BlockUser, BlockUserConfirmationModal } from './locators';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -26,7 +26,7 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
   await device1.clickOnElementAll(new BlockUser(device1));
   // Wait for menu to be clickable (Android)
   // Confirm block option
-  await device1.clickOnElementAll(new BlockUserConfirmation(device1));
+  await device1.clickOnElementAll(new BlockUserConfirmationModal(device1));
   // On ios there is an alert that confirms that the user has been blocked
   await sleepFor(1000);
   // On ios, you need to navigate back to conversation screen to confirm block

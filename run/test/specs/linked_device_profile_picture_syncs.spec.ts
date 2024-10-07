@@ -1,4 +1,5 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
+import { ExitUserProfile } from './locators';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { parseDataImage } from './utils/check_colour';
 import { linkedDevice } from './utils/link_device';
@@ -8,7 +9,7 @@ androidIt('Avatar restored', avatarRestored);
 
 async function avatarRestored(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const pixelHexColour = '04cbfe';
+  const pixelHexColour = 'cbfeff';
   await linkedDevice(device1, device2, 'Alice', platform);
   await device1.uploadProfilePicture();
   await sleepFor(5000);
@@ -29,7 +30,7 @@ async function avatarRestored(platform: SupportedPlatformsType) {
   if (pixelColor === pixelHexColour) {
     console.log('Device1: Colour is correct');
   } else {
-    throw new Error("Device1: Colour isn't 04cbfe, it is: " + pixelColor);
+    throw new Error("Device1: Colour isn't cbfeff, it is: " + pixelColor);
   }
   console.log('Now checking avatar on linked device');
   // Check avatar on device 2
@@ -38,12 +39,14 @@ async function avatarRestored(platform: SupportedPlatformsType) {
     selector: 'User settings',
   });
   await sleepFor(3000);
+  await device2.clickOnElementAll(new ExitUserProfile(device2));
+  await device2.clickOnByAccessibilityID('User settings');
   const base64A = await device2.getElementScreenshot(el2.ELEMENT);
   const pixelColorLinked = await parseDataImage(base64A);
   if (pixelColorLinked === pixelHexColour) {
     console.log('Device 2: Colour is correct on linked device');
   } else {
-    console.log("Device 2: Colour isn't 04cbfe, it is: ", pixelColorLinked);
+    throw new Error("Device1: Colour isn't cbfeff, it is: " + pixelColor);
   }
   await closeApp(device1, device2);
 }

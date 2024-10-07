@@ -11,6 +11,10 @@ import type {
 import chalk from 'chalk';
 import { Dictionary, groupBy, isString, mean, sortBy } from 'lodash';
 
+// import dotenv from 'dotenv';
+
+// dotenv.config();
+
 type TestAndResult = { test: TestCase; result: TestResult };
 
 function sortByTitle(toSort: Dictionary<Array<TestAndResult>>) {

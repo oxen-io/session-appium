@@ -1,6 +1,7 @@
 import { DISAPPEARING_TIMES } from '../../../constants';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { ConversationType, MergedOptions } from '../../../types/testing';
+import { SetDisappearMessagesButton } from '../locators';
 import { SupportedPlatformsType } from './open_app';
 import { runOnlyOnAndroid, runOnlyOnIOS } from './run_on';
 import { sleepFor } from './sleep_for';
@@ -32,7 +33,6 @@ export const setDisappearingMessage = async (
   if (platform === 'ios' && timerType === 'Disappear after read option') {
     if (enforcedType === '1:1' || enforcedType === 'Note to Self') {
       await device.disappearRadioButtonSelectediOS(DISAPPEARING_TIMES.TWELVE_HOURS);
-
     } else {
       await device.disappearRadioButtonSelectediOS(DISAPPEARING_TIMES.ONE_DAY);
     }
@@ -53,9 +53,6 @@ export const setDisappearingMessage = async (
       selector: 'Follow setting',
     });
     await sleepFor(500);
-    await device2.clickOnElementAll({
-      strategy: 'accessibility id',
-      selector: 'Set button',
-    });
+    await device2.clickOnElementAll(new SetDisappearMessagesButton(device2));
   }
 };

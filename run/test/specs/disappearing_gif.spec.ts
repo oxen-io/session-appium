@@ -1,5 +1,6 @@
 import { DISAPPEARING_TIMES } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
+import { DownloadMediaButton } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -68,7 +69,7 @@ async function disappearingGifMessage1o1Android(platform: SupportedPlatformsType
   // Click on config
   await device2.clickOnByAccessibilityID('Untrusted attachment message');
   // Click on 'download'
-  await device2.clickOnByAccessibilityID('Download media');
+  await device2.clickOnElementAll(new DownloadMediaButton(device2));
   await Promise.all([
     device1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
