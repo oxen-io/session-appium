@@ -1749,6 +1749,10 @@ export class DeviceWrapper {
     return;
   }
 
+  // public async checkModalStrings(platform: SupportedPlatformsType) {
+
+  // }
+
   /* === all the utilities function ===  */
   public isIOS(): boolean {
     return isDeviceIOS(this.device);

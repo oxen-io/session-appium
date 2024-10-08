@@ -40,12 +40,12 @@ export class ContinueButton extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Continue button',
+          selector: 'Continue',
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Continue button',
+          selector: 'Continue',
         } as const;
     }
   }

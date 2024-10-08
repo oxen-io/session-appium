@@ -377,12 +377,14 @@ export type AccessibilityId =
   | 'Hide Recovery Password Permanently'
   | 'Modal heading'
   | 'Modal description'
-  | 'Continue button';
+  | 'Continue'
+  | 'Yes';
 
 export type Id =
   | 'Modal heading'
   | 'Modal description'
-  | 'Continue button'
+  | 'Continue'
+  | 'Yes'
   | 'android:id/summary'
   | 'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
   | 'com.android.permissioncontroller:id/permission_deny_button'
