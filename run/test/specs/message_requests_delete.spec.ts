@@ -1,13 +1,12 @@
 import { localize } from '../../localizer/i18n/localizedString';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { AccessibilityId } from '../../types/testing';
 import { DeleteMessageRequestButton, DeleteMesssageRequestConfirmation } from './locators';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, openAppTwoDevices, closeApp } from './utils/open_app';
 
-iosIt('Delete message request', deleteRequest);
-androidIt('Delete message request', deleteRequest);
+bothPlatformsIt('Delete message request', 'high', deleteRequest);
 
 async function deleteRequest(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

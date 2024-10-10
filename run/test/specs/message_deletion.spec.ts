@@ -1,11 +1,10 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { DeleteMessageConfirmation } from './locators';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, openAppTwoDevices, closeApp } from './utils/open_app';
 
-iosIt('Delete message', deleteMessage);
-androidIt('Delete message', deleteMessage);
+bothPlatformsIt('Delete message', 'high', deleteMessage);
 
 async function deleteMessage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

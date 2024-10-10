@@ -1,10 +1,9 @@
-import { androidIt, iosIt } from '../../../types/sessionIt';
+import { bothPlatformsIt } from '../../../types/sessionIt';
 import { AccountRestoreButton, SeedPhraseInput, ContinueButton, ErrorMessage} from '../locators/onboarding';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 import { localize } from '../../../localizer/i18n/localizedString';
 
-iosIt('Onboarding no seed', onboardingNoSeed);
-androidIt('Onboarding no seed', onboardingNoSeed);
+bothPlatformsIt('Onboarding no seed', 'low', onboardingNoSeed);
 
 const emptySeed = '';
 // the expected error is 'Recovery Password not long enough' which is represented by the following localized string

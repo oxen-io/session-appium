@@ -1,10 +1,10 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { parseDataImage } from './utils/check_colour';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
-iosIt('Avatar restored', avatarRestored);
-androidIt('Avatar restored', avatarRestored);
+
+bothPlatformsIt('Avatar restored', 'medium', avatarRestored);
 
 async function avatarRestored(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

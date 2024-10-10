@@ -1,5 +1,5 @@
 import { localize } from '../../localizer/i18n/localizedString';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { ControlMessage } from '../../types/testing';
 import { LeaveGroupButton } from './locators';
 import { newUser } from './utils/create_account';
@@ -7,8 +7,7 @@ import { createGroup } from './utils/create_group';
 import { sleepFor } from './utils/index';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-iosIt('Leave group', leaveGroup);
-androidIt('Leave group', leaveGroup);
+bothPlatformsIt('Leave group', 'high', leaveGroup);
 
 async function leaveGroup(platform: SupportedPlatformsType) {
   const testGroupName = 'Leave group';

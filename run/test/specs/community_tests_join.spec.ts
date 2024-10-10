@@ -1,14 +1,10 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { joinCommunity } from './utils/join_community';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
-import { test } from '@playwright/test';
 
-test.describe('Community tests', () => {
-  iosIt('Join community test', joinCommunityTest);
-  androidIt('Join community test', joinCommunityTest);
-});
+bothPlatformsIt('Join community test', 'high', joinCommunityTest);
 
 async function joinCommunityTest(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

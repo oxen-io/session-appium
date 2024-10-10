@@ -3,8 +3,8 @@ import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-iosIt('Send long message to group', sendLongMessageGroupiOS);
-androidIt('Send long message to group', sendLongMessageGroupAndroid);
+iosIt('Send long message to group', 'low', sendLongMessageGroupiOS);
+androidIt('Send long message to group', 'low', sendLongMessageGroupAndroid);
 
 async function sendLongMessageGroupiOS(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';

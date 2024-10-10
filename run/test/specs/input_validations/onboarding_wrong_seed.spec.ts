@@ -1,10 +1,9 @@
-import { androidIt, iosIt } from '../../../types/sessionIt';
+import { bothPlatformsIt } from '../../../types/sessionIt';
 import { AccountRestoreButton, SeedPhraseInput, ContinueButton, ErrorMessage } from '../locators/onboarding';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 import { localize } from '../../../localizer/i18n/localizedString';
 
-iosIt('Onboarding wrong seed', onboardingIncorrectSeed);
-androidIt('Onboarding wrong seed', onboardingIncorrectSeed);
+bothPlatformsIt('Onboarding wrong seed', 'low', onboardingIncorrectSeed);
 
 // the seed phrase is too long but contains only valid mnemonics which triggers the generic error 
 const wrongSeed = 'ruby bakery illness push rift reef nabbing bawled hope ruby silk lobster hope ruby ruby ruby'

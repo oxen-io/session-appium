@@ -1,4 +1,3 @@
-import { test } from '@playwright/test';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { newUser } from './utils/create_account';
 import { runOnlyOnAndroid, sleepFor } from './utils/index';
@@ -7,10 +6,9 @@ import { localize } from '../../localizer/i18n/localizedString';
 import { ControlMessage } from '../../types/testing';
 import { ExitUserProfile } from './locators';
 
-test.describe('Calls test', () => {
-  androidIt('Voice calls', voiceCallAndroid, true);
-  iosIt('Voice calls', voiceCallIos, true);
-});
+androidIt('Voice calls', 'high', voiceCallAndroid, true);
+iosIt('Voice calls', 'high', voiceCallIos, true);
+
 async function voiceCallIos(platform: SupportedPlatformsType) {
   // Open app
   const { device1, device2 } = await openAppTwoDevices(platform);

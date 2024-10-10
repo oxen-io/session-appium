@@ -4,8 +4,8 @@ import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-iosIt('Send GIF to group', sendGifGroupiOS);
-androidIt('Send GIF to group', sendGifGroupAndroid);
+iosIt('Send GIF to group', 'medium', sendGifGroupiOS);
+androidIt('Send GIF to group', 'medium', sendGifGroupAndroid);
 
 async function sendGifGroupiOS(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';

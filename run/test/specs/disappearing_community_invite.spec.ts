@@ -8,11 +8,8 @@ import { joinCommunity } from './utils/join_community';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-iosIt('Disappearing community invite message 1o1', disappearingCommunityInviteMessage1o1Ios);
-androidIt(
-  'Disappearing community invite message 1o1',
-  disappearingCommunityInviteMessage1o1Android
-);
+iosIt('Disappearing community invite message 1o1', 'low', disappearingCommunityInviteMessage1o1Ios);
+androidIt('Disappearing community invite message 1o1', 'low', disappearingCommunityInviteMessage1o1Android);
 
 const communityLink = `https://chat.lokinet.dev/testing-all-the-things?public_key=1d7e7f92b1ed3643855c98ecac02fc7274033a3467653f047d6e433540c03f17`;
 const communityName = 'Testing All The Things!';

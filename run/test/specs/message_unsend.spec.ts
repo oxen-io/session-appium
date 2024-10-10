@@ -1,10 +1,9 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, openAppTwoDevices, closeApp } from './utils/open_app';
 
-iosIt('Unsend message', unsendMessage);
-androidIt('Unsend message', unsendMessage);
+bothPlatformsIt('Unsend message', 'medium', unsendMessage);
 
 async function unsendMessage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

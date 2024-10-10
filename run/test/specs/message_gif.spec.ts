@@ -4,8 +4,8 @@ import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-iosIt('Send GIF 1:1', sendGifIos);
-androidIt('Send GIF 1:1', sendGifAndroid);
+iosIt('Send GIF 1:1', 'medium', sendGifIos);
+androidIt('Send GIF 1:1', 'medium', sendGifAndroid);
 
 async function sendGifIos(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

@@ -1,10 +1,9 @@
-import { androidIt, iosIt } from '../../../types/sessionIt';
+import { bothPlatformsIt } from '../../../types/sessionIt';
 import { CreateAccountButton, DisplayNameInput, ContinueButton, ErrorMessage} from '../locators/onboarding';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 import { localize } from '../../../localizer/i18n/localizedString';
 
-iosIt('Onboarding no name', onboardingNoName);
-androidIt('Onboarding no name', onboardingNoName);
+bothPlatformsIt('Onboarding no name', 'low', onboardingNoName);
 
 const emptyName = '';
 // the expected error is 'Please enter a display name' which is represented by the following localized string

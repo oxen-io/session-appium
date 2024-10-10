@@ -1,5 +1,5 @@
 import { localize } from '../../localizer/i18n/localizedString';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import {
   DMTimeOption,
   DisappearActions,
@@ -13,8 +13,7 @@ import { checkDisappearingControlMessage } from './utils/disappearing_control_me
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-iosIt('Disappear after send', disappearAfterSend);
-androidIt('Disappear after send', disappearAfterSend);
+bothPlatformsIt('Disappear after send', 'high', disappearAfterSend);
 
 async function disappearAfterSend(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

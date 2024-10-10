@@ -4,8 +4,8 @@ import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, openAppTwoDevices, closeApp } from './utils/open_app';
 
-iosIt('Send link 1:1', sendLinkIos);
-androidIt('Send link 1:1', sendLinkAndroid);
+iosIt('Send link 1:1', 'high', sendLinkIos);
+androidIt('Send link 1:1', 'high', sendLinkAndroid);
 
 async function sendLinkIos(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

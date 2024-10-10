@@ -1,5 +1,5 @@
 import { DISAPPEARING_TIMES } from '../../constants';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { DMTimeOption, GroupName } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -7,8 +7,7 @@ import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-iosIt('Disappearing voice message to group', disappearingVoiceMessageGroup);
-androidIt('Disappearing voice message to group', disappearingVoiceMessageGroup);
+bothPlatformsIt('Disappearing voice message to group', 'low', disappearingVoiceMessageGroup);
 
 async function disappearingVoiceMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);

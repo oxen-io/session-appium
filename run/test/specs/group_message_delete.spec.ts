@@ -3,8 +3,8 @@ import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-iosIt('Delete message in group', deleteMessageGroupiOS);
-androidIt('Delete message in group', deleteMessageGroupAndroid);
+iosIt('Delete message in group', 'medium', deleteMessageGroupiOS);
+androidIt('Delete message in group', 'medium', deleteMessageGroupAndroid);
 
 async function deleteMessageGroupiOS(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';

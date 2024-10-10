@@ -62,7 +62,7 @@ function mobileIt(
   testToRun: (platform: SupportedPlatformsType) => Promise<void>,
   shouldSkip: boolean = false
 ) {
-  const testName = `${title} ${platform} @${testRisk}-risk `;
+  const testName = `${title} ${platform} @${testRisk}-risk`;
   if (shouldSkip) {
     test.skip(testName, async () => {
       console.info(`\n\n==========> Skipping "${testName}"\n\n`);

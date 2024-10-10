@@ -4,8 +4,8 @@ import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-iosIt('Send document to group', sendDocumentGroupiOS);
-androidIt('Send document to group', sendDocumentGroupAndroid);
+iosIt('Send document to group', 'high', sendDocumentGroupiOS);
+androidIt('Send document to group', 'high', sendDocumentGroupAndroid);
 
 async function sendDocumentGroupiOS(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';

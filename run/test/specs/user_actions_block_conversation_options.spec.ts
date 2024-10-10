@@ -1,4 +1,4 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { BlockedContactsSettings, BlockUser, BlockUserConfirmation } from './locators';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -6,8 +6,7 @@ import { newContact } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
 import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
 
-iosIt('Block user in conversation options', blockUserInConversationOptions);
-androidIt('Block user in conversation options', blockUserInConversationOptions);
+bothPlatformsIt('Block user in conversation options', 'high', blockUserInConversationOptions);
 
 async function blockUserInConversationOptions(platform: SupportedPlatformsType) {
   //Open three devices and creates two contacts (Alice and Bob)

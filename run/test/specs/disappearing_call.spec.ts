@@ -1,4 +1,3 @@
-import { test } from '@playwright/test';
 import { DISAPPEARING_TIMES } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { DMTimeOption } from '../../types/testing';
@@ -8,10 +7,8 @@ import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, openAppTwoDevices, closeApp } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-test.describe('Disappearing call test', () => {
-  iosIt('Disappearing call message 1o1', disappearingCallMessage1o1Ios, true);
-  androidIt('Disappearing call message 1o1', disappearingCallMessage1o1Android, true);
-});
+iosIt('Disappearing call message 1o1', 'low', disappearingCallMessage1o1Ios, true);
+androidIt('Disappearing call message 1o1', 'low', disappearingCallMessage1o1Android, true);
 
 async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

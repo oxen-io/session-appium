@@ -1,12 +1,11 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { DisappearActions, DMTimeOption } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-iosIt('Disappear after send note to self', disappearAfterSendNoteToSelf);
-androidIt('Disappear after send note to self', disappearAfterSendNoteToSelf);
+bothPlatformsIt('Disappear after send note to self', 'medium', disappearAfterSendNoteToSelf);
 
 async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);

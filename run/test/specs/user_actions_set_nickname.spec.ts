@@ -1,11 +1,11 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { androidIt, bothPlatformsIt, iosIt } from '../../types/sessionIt';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-iosIt('Set nickname', setNicknameIos);
-androidIt('Set nickname', setNicknameAndroid);
+iosIt('Create nickname', 'high', setNicknameIos);
+androidIt('Create nickname', 'high', setNicknameAndroid);
 
 async function setNicknameIos(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

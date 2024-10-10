@@ -5,8 +5,8 @@ import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, openAppThreeDevices, closeApp } from './utils/open_app';
 
-iosIt('Change group name', changeGroupNameIos);
-androidIt('Change group name', changeGroupNameAndroid);
+iosIt('Change group name', 'medium', changeGroupNameIos);
+androidIt('Change group name', 'medium', changeGroupNameAndroid);
 
 async function changeGroupNameIos(platform: SupportedPlatformsType) {
   const testGroupName = 'Test group';

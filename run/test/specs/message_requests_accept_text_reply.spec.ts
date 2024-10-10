@@ -1,12 +1,11 @@
 import { localize } from '../../localizer/i18n/localizedString';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { ControlMessage } from '../../types/testing';
 import { runOnlyOnAndroid, runOnlyOnIOS } from './utils';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-iosIt('Accept message request with text', acceptRequestWithText);
-androidIt('Accept message request with text', acceptRequestWithText);
+bothPlatformsIt('Accept message request with text', 'high', acceptRequestWithText);
 
 async function acceptRequestWithText(platform: SupportedPlatformsType) {
   // Check accept request by sending text message

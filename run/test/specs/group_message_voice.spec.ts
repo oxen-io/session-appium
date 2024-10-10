@@ -3,8 +3,8 @@ import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-iosIt('Send voice message to group', sendVoiceMessageGroupiOS);
-androidIt('Send voice message to group', sendVoiceMessageGroupAndroid);
+iosIt('Send voice message to group', 'high', sendVoiceMessageGroupiOS);
+androidIt('Send voice message to group', 'high', sendVoiceMessageGroupAndroid);
 
 async function sendVoiceMessageGroupiOS(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';

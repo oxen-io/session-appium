@@ -1,14 +1,11 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { BlockedContactsSettings, BlockUserConfirmation } from './locators';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
 import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
 
-iosIt('Block message request', blockedRequest);
-androidIt('Block message request', blockedRequest);
-
-// bothPlatformsIt("Block message request", blockedRequest);
+bothPlatformsIt("Block message request", 'high', blockedRequest);
 
 async function blockedRequest(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);

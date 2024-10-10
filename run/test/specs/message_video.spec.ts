@@ -4,8 +4,8 @@ import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-iosIt('Send video 1:1', sendVideoIos);
-androidIt('Send video 1:1', sendVideoAndroid);
+iosIt('Send video 1:1', 'medium', sendVideoIos);
+androidIt('Send video 1:1', 'medium', sendVideoAndroid);
 
 async function sendVideoIos(platform: SupportedPlatformsType) {
   // Test sending a video
