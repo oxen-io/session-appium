@@ -312,3 +312,9 @@ export type AccessibilityId =
   | 'Recovery password input'
   | 'Read Receipts - Switch'
   | 'Error message';
+
+export type testRisk = 
+  | 'high' 
+  | 'medium' 
+  | 'low' 
+  | 'undefined';
