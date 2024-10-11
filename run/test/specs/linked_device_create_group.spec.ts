@@ -1,6 +1,6 @@
 import { englishStrippedStri } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { ControlMessage, USERNAME } from '../../types/testing';
+import { USERNAME } from '../../types/testing';
 import { ApplyChanges, EditGroup, EditGroupName } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -50,7 +50,7 @@ async function linkedGroup(platform: SupportedPlatformsType) {
     .withArgs({ group_name: newGroupName })
     .toString();
   // Config message is "Group now is now {group_name}"
-  await device1.waitForControlMessageToBePresent(groupNameNew as ControlMessage);
+  await device1.waitForControlMessageToBePresent(groupNameNew);
 
   // Wait 5 seconds for name to update
   await sleepFor(5000);
@@ -62,9 +62,9 @@ async function linkedGroup(platform: SupportedPlatformsType) {
   });
 
   await Promise.all([
-    device2.waitForControlMessageToBePresent(groupNameNew as ControlMessage),
-    device3.waitForControlMessageToBePresent(groupNameNew as ControlMessage),
-    device4.waitForControlMessageToBePresent(groupNameNew as ControlMessage),
+    device2.waitForControlMessageToBePresent(groupNameNew),
+    device3.waitForControlMessageToBePresent(groupNameNew),
+    device4.waitForControlMessageToBePresent(groupNameNew),
   ]);
 
   await closeApp(device1, device2, device3, device4);

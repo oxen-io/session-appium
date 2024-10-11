@@ -1,6 +1,6 @@
 import { englishStrippedStri } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { ControlMessage, USERNAME } from '../../types/testing';
+import { USERNAME } from '../../types/testing';
 import { LeaveGroup } from './locators';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -43,8 +43,8 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
     .toString();
 
   await Promise.all([
-    device2.waitForControlMessageToBePresent(groupMemberLeft as ControlMessage),
-    device1.waitForControlMessageToBePresent(groupMemberLeft as ControlMessage),
+    device2.waitForControlMessageToBePresent(groupMemberLeft),
+    device1.waitForControlMessageToBePresent(groupMemberLeft),
   ]);
 
   await closeApp(device1, device2, device3, device4);

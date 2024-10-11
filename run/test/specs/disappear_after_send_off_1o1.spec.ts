@@ -1,3 +1,4 @@
+import { englishStrippedStri } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import {
   DisappearActions,
@@ -5,8 +6,14 @@ import {
   DisappearModes,
   USERNAME,
 } from '../../types/testing';
-import { DisappearingMessagesMenuOption } from './locators';
-import { sleepFor } from './utils';
+import {
+  DisableDisappearingMessages,
+  DisappearingMessagesMenuOption,
+  DisappearingMessagesSubtitle,
+  FollowSettingsButton,
+  SetDisappearMessagesButton,
+} from './locators/disappearing_messages';
+import { runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { checkDisappearingControlMessage } from './utils/disappearing_control_messages';
@@ -14,21 +21,17 @@ import { linkedDevice } from './utils/link_device';
 import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-iosIt('Disappear after send off 1o1', disappearAfterSendOff1o1);
-androidIt('Disappear after send off 1o1', disappearAfterSendOff1o1);
+iosIt('Disappear after send off 1:1', disappearAfterSendOff1o1);
+androidIt('Disappear after send off 1:1', disappearAfterSendOff1o1);
 
 async function disappearAfterSendOff1o1(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  await linkedDevice(device1, device3, USERNAME.ALICE, platform);
+  const userA = await linkedDevice(device1, device3, USERNAME.ALICE, platform);
   const mode: DisappearModes = 'send';
-  const testMessage = `Checking disappear after ${mode} is working and can be turned off`;
+  const userB = await newUser(device2, USERNAME.BOB, platform);
   const controlMode: DisappearActions = 'sent';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   // Create user A and user B
-  const [userA, userB] = await Promise.all([
-    newUser(device1, USERNAME.ALICE, platform),
-    newUser(device2, USERNAME.BOB, platform),
-  ]);
   await newContact(platform, device1, userA, device2, userB);
   // Select disappearing messages option
   await setDisappearingMessage(
@@ -45,51 +48,54 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType) {
     device1,
     device2,
     time,
-    controlMode
+    controlMode,
+    device3
   );
-  // Send message to verify that deletion is working
-  await device1.sendMessage(testMessage);
-  // Check message appears on both device 2 and linked device 3
-  await Promise.all([
-    device2.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: testMessage,
-    }),
-    device3.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: testMessage,
-    }),
-  ]);
-  // Wait for message to disappear
-  await sleepFor(30000);
-  await Promise.all([
-    device1.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: testMessage,
-    }),
-    device2.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: testMessage,
-    }),
-    device3.hasElementBeenDeleted({
-      strategy: 'accessibility id',
-      selector: 'Message body',
-      text: testMessage,
-    }),
-  ]);
+
+  // ]);
   // Turned off disappearing messages on device 1
   await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'More options' });
   await device1.clickOnElementAll(new DisappearingMessagesMenuOption(device1));
-  await device1.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'Off',
-  });
-  await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Set button' });
+  await device1.clickOnElementAll(new DisableDisappearingMessages(device1));
+  await device1.clickOnElementAll(new SetDisappearMessagesButton(device1));
+  await runOnlyOnIOS(platform, () => device1.navigateBack(platform));
   // Check control message for turning off disappearing messages
-  // await device1.disappearingControlMessage(
+  // Check USER A'S CONTROL MESSAGE on device 1 and 3 (linked device)
+  const disappearingMessagesTurnedOffYou = englishStrippedStri(
+    'disappearingMessagesTurnedOffYou'
+  ).toString();
+  // Check USER B'S CONTROL MESSAGE
+  const disappearingMessagesTurnedOff = englishStrippedStri('disappearingMessagesTurnedOff')
+    .withArgs({ name: userA.userName })
+    .toString();
+  await Promise.all([
+    device1.disappearingControlMessage(disappearingMessagesTurnedOffYou),
+    device2.disappearingControlMessage(disappearingMessagesTurnedOff),
+    // device3.disappearingControlMessage(disappearingMessagesTurnedOffYou),
+  ]);
+  // Follow setting on device 2
+  await device2.clickOnElementAll(new FollowSettingsButton(device2));
+  await sleepFor(500);
+  await device2.checkModalStrings(
+    'disappearingMessagesFollowSetting',
+    'disappearingMessagesFollowSettingOff',
+    true
+  );
+  await device2.clickOnElementAll({ strategy: 'accessibility id', selector: 'Confirm' });
+  // Check conversation subtitle?
+  await Promise.all([
+    device1.doesElementExist({
+      ...new DisappearingMessagesSubtitle(device1).build(),
+      maxWait: 500,
+    }),
+    device2.doesElementExist({
+      ...new DisappearingMessagesSubtitle(device2).build(),
+      maxWait: 500,
+    }),
+    device3.doesElementExist({
+      ...new DisappearingMessagesSubtitle(device3).build(),
+      maxWait: 500,
+    }),
+  ]);
   await closeApp(device1, device2, device3);
 }

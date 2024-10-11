@@ -10,7 +10,8 @@ export const checkDisappearingControlMessage = async (
   device1: DeviceWrapper,
   device2: DeviceWrapper,
   time: DISAPPEARING_TIMES,
-  mode: DisappearActions
+  mode: DisappearActions,
+  linkedDevice?: DeviceWrapper
 ) => {
   // Two control messages to check - You have set and other user has set
   // "disappearingMessagesSet": "<b>{name}</b> has set messages to disappear {time} after they have been {disappearing_messages_type}.",
@@ -41,5 +42,17 @@ export const checkDisappearingControlMessage = async (
       device1.disappearingControlMessage(disappearingMessagesSetYou),
       device2.disappearingControlMessage(disappearingMessagesSetUserA),
     ]);
+  }
+  // Check if control messages are syncing from both user A and user B
+  if (linkedDevice && platform === 'android') {
+    await linkedDevice.clickOnElementAll({
+      strategy: 'accessibility id',
+      selector: 'Conversation list item',
+      text: userB.userName,
+    });
+    await linkedDevice.disappearingControlMessage(disappearingMessagesSetYou);
+    await linkedDevice.disappearingControlMessage(disappearingMessagesSetUserB);
+  } else if (linkedDevice && platform === 'ios') {
+    console.log('Control message syncing is not supported on iOS');
   }
 };

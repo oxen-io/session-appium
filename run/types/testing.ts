@@ -64,11 +64,6 @@ export type ConversationType = '1:1' | 'Group' | 'Community' | 'Note to Self';
 export type DisappearModes = 'read' | 'send';
 export type DisappearActions = 'read' | 'sent';
 
-enum DISAPPEARING_ACTIONS {
-  READ = 'read',
-  SENT = 'sent',
-}
-
 export enum DISAPPEARING_TIMES {
   FIVE_SECONDS = '5 seconds',
   TEN_SECONDS = '10 seconds',
@@ -122,69 +117,6 @@ export type StrategyExtractionObj =
       strategy: Extract<Strategy, 'DMTimeOption'>;
       selector: DISAPPEARING_TIMES;
     };
-
-/** @see {@link en.disappearingMessagesSetYou} */
-const disappearingMessagesSetYou = Object.values(DISAPPEARING_ACTIONS).flatMap(action =>
-  Object.values(DISAPPEARING_TIMES).map(
-    time => `You set messages to disappear ${time} after they have been ${action}.` as const
-  )
-);
-
-/** @see {@link en.disappearingMessagesTurnedOffYou} */
-const disappearingMessagesTurnedOffYou =
-  'You turned off disappearing messages. Messages you send will no longer disappear.' as const;
-
-/** @see {@link en.disappearingMessagesTurnedOffYouGroup} */
-const disappearingMessagesTurnedOffYouGroup = 'You turned off disappearing messages.' as const;
-
-/** @see {@link en.disappearingMessagesSet} */
-const disappearingMessagesSet = Object.values(DISAPPEARING_ACTIONS).flatMap(action =>
-  Object.values(DISAPPEARING_TIMES).flatMap(time =>
-    Object.values(USERNAME).map(
-      name =>
-        `${name} has set messages to disappear ${time} after they have been ${action}.` as const
-    )
-  )
-);
-
-/** @see {@link en.disappearingMessagesTurnedOff} */
-const disappearingMessagesTurnedOff = Object.values(USERNAME).map(
-  name =>
-    `${name} has turned disappearing messages off. Messages they send will no longer disappear.` as const
-);
-
-const disappearingControlMessages = [
-  ...disappearingMessagesSetYou,
-  disappearingMessagesTurnedOffYou,
-  disappearingMessagesTurnedOffYouGroup,
-  ...disappearingMessagesSet,
-  ...disappearingMessagesTurnedOff,
-] as const;
-
-export type DisappearingControlMessage = (typeof disappearingControlMessages)[number];
-
-export const isDisappearingControlMessage = (
-  message: string
-): message is DisappearingControlMessage =>
-  disappearingControlMessages.includes(message as DisappearingControlMessage);
-
-export type ControlMessage =
-  | 'Your message request has been accepted.'
-  | `You have accepted the message request from ${USERNAME}.`
-  | `${USERNAME} called you`
-  | `Called ${USERNAME}`
-  | `You called ${USERNAME}`
-  | 'You created a new group.'
-  | `${USERNAME} has left the group.`
-  | `${USERNAME} left the group.`
-  | `${USERNAME} joined the group.`
-  | `You added ${USERNAME} to the group.`
-  | `You have no messages from ${string}. Send a message to start the conversation!`
-  | `Group name is now ${string}.`
-  | 'You will be able to send voice messages and attachments once the recipient has approved this message request.'
-  | 'Sending a message to this user will automatically accept their message request and reveal your Account ID.';
-
-export type ModalStrings = 'Hide Recovery Password Permanently';
 
 export type XPath =
   | `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout`
@@ -360,7 +292,6 @@ export type AccessibilityId =
   | 'Conversation header name'
   | 'Invite'
   | 'Follow setting'
-  | 'Follow Setting'
   | 'Set'
   | 'Allow Full Access'
   | DISAPPEARING_TIMES
@@ -378,7 +309,10 @@ export type AccessibilityId =
   | 'Modal heading'
   | 'Modal description'
   | 'Continue'
-  | 'Yes';
+  | 'Yes'
+  | 'Disappearing messages type and time'
+  | 'Confirm'
+  | 'Delete';
 
 export type Id =
   | 'Modal heading'

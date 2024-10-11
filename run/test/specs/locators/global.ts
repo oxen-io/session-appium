@@ -50,3 +50,20 @@ export class ContinueButton extends LocatorsInterface {
     }
   }
 }
+
+export class DeleteContactModalConfirm extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Yes',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Delete',
+        } as const;
+    }
+  }
+}

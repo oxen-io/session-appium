@@ -1,6 +1,6 @@
 import { englishStrippedStri } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { ControlMessage, USERNAME } from '../../types/testing';
+import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
@@ -34,8 +34,8 @@ async function acceptRequest(platform: SupportedPlatformsType) {
     .withArgs({ name: userA.userName })
     .toString();
   await Promise.all([
-    device1.waitForControlMessageToBePresent(messageRequestsAccepted as ControlMessage),
-    device2.waitForControlMessageToBePresent(messageRequestYouHaveAccepted as ControlMessage),
+    device1.waitForControlMessageToBePresent(messageRequestsAccepted),
+    device2.waitForControlMessageToBePresent(messageRequestYouHaveAccepted),
   ]);
   // Check conversation list for new contact (user A)
   await device2.navigateBack(platform);

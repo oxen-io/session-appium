@@ -1,6 +1,6 @@
 import { englishStrippedStri } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { ControlMessage, USERNAME } from '../../types/testing';
+import { USERNAME } from '../../types/testing';
 import { LeaveGroupButton } from './locators';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
@@ -33,8 +33,8 @@ async function leaveGroup(platform: SupportedPlatformsType) {
     .withArgs({ name: userC.userName })
     .toString();
 
-  await device1.waitForControlMessageToBePresent(groupMemberLeft as ControlMessage);
-  await device2.waitForControlMessageToBePresent(groupMemberLeft as ControlMessage);
+  await device1.waitForControlMessageToBePresent(groupMemberLeft);
+  await device2.waitForControlMessageToBePresent(groupMemberLeft);
 
   // Check device 3 that group has disappeared
   await device3.hasElementBeenDeleted({

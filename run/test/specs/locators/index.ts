@@ -498,23 +498,7 @@ export class RevealRecoveryPhraseButton extends LocatorsInterface {
   }
 }
 
-export class DisappearingMessagesMenuOption extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'id',
-          selector: `network.loki.messenger:id/title`,
-          text: 'Disappearing messages',
-        };
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Disappearing Messages',
-        };
-    }
-  }
-}
+
 
 // TODO update StrategyExtractionObj to include Locator class
 // export class PendingMessageRequestControlMessage extends LocatorsInterface {

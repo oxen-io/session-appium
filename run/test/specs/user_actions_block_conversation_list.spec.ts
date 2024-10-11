@@ -8,8 +8,6 @@ import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/ope
 
 androidIt('Block user in conversation list', blockUserInConversationList);
 
-// bothPlatformsIt("Block user in conversation list", blockUserInConversationList);
-
 async function blockUserInConversationList(platform: SupportedPlatformsType) {
   // Open App
   const { device1, device2 } = await openAppTwoDevices(platform);
