@@ -1,5 +1,6 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import { DeleteContactModalConfirm } from './locators/global';
 import { runOnlyOnAndroid, runOnlyOnIOS } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -35,17 +36,19 @@ async function deleteContact(platform: SupportedPlatformsType) {
   await runOnlyOnAndroid(platform, () => device1.longPressConversation(userB.userName));
   await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Delete' });
   // await device1.checkModalStrings('conversationsDelete', 'conversationsDeleteDescription');
-  await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Delete' });
+  await device1.clickOnElementAll(new DeleteContactModalConfirm(device1));
   await Promise.all([
     device1.doesElementExist({
       strategy: 'accessibility id',
       selector: 'Conversation list item',
       text: userB.userName,
+      maxWait: 500,
     }),
     device3.doesElementExist({
       strategy: 'accessibility id',
       selector: 'Conversation list item',
       text: userB.userName,
+      maxWait: 500,
     }),
   ]);
 }
