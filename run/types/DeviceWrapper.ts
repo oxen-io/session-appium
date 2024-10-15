@@ -35,6 +35,7 @@ import {
   USERNAME,
   XPath,
 } from './testing';
+import { SaveProfilePictureButton } from '../test/specs/locators/settings';
 
 export type Coordinates = {
   x: number;
@@ -1511,7 +1512,7 @@ export class DeviceWrapper {
       // Select file
       const profilePicture = await this.doesElementExist({
         strategy: 'accessibility id',
-        selector: `profile_picture.jpg, 27.75 kB, May 1, 1999`,
+        selector: `profile_picture.jpg, 27.75 kB, May 1, 1998`,
         maxWait: 5000,
       });
       // If no image, push file to this
@@ -1524,14 +1525,20 @@ export class DeviceWrapper {
           `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/profile_picture.jpg' /sdcard/Download/`,
           true
         );
+        await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Show roots' });
+        await this.clickOnElementAll({
+          strategy: 'id',
+          selector: 'android:id/title',
+          text: 'Downloads',
+        });
       }
       await this.clickOnElementAll({
         strategy: 'accessibility id',
-        selector: 'profile_picture.jpg, 27.75 kB, May 1, 1999',
+        selector: 'profile_picture.jpg, 27.75 kB, May 1, 1998',
       });
       await this.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop');
     }
-    await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Save' });
+    await this.clickOnElementAll(new SaveProfilePictureButton(this));
   }
 
   public async getTimeFromDevice(platform: SupportedPlatformsType): Promise<string> {

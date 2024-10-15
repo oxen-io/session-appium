@@ -250,6 +250,7 @@ export type AccessibilityId =
   | 'Photo, May 01, 1999, 7:00 AM'
   | 'profile_picture.jpg, 27.75 kB, May 2, 1999'
   | 'profile_picture.jpg, 27.75 kB, May 1, 1999'
+  | 'profile_picture.jpg, 27.75 kB, May 1, 1998'
   | 'Photo taken on May 2, 1999 7:00:00 AM'
   | 'Photo, 01 May 1998, 7:00 am'
   | '1967-05-05 21:00:00 +0000'
@@ -343,4 +344,5 @@ export type Id =
   | 'network.loki.messenger:id/linkPreviewView'
   | 'network.loki.messenger:id/openGroupTitleTextView'
   | 'Image picker'
-  | 'network.loki.messenger:id/action_apply';
+  | 'network.loki.messenger:id/action_apply'
+  | 'Save';

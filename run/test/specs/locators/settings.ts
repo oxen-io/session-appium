@@ -60,3 +60,20 @@ export class RecoveryPasswordMenuItem extends LocatorsInterface {
     }
   }
 }
+
+export class SaveProfilePictureButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'Save',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Save',
+        } as const;
+    }
+  }
+}
