@@ -1,5 +1,6 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
+import { DownloadMediaButton } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -27,7 +28,7 @@ async function disappearingVoiceMessage1o1Ios(platform: SupportedPlatformsType) 
     selector: 'Voice message',
   });
   await device2.clickOnByAccessibilityID('Untrusted attachment message', 5000);
-  await device2.clickOnByAccessibilityID('Download');
+  await device2.clickOnElementAll(new DownloadMediaButton(device2));
   await sleepFor(30000);
   await Promise.all([
     device1.hasElementBeenDeleted({
@@ -59,7 +60,7 @@ async function disappearingVoiceMessage1o1Android(platform: SupportedPlatformsTy
     selector: 'Voice message',
   });
   await device2.clickOnByAccessibilityID('Untrusted attachment message');
-  await device2.clickOnByAccessibilityID('Download media');
+  await device2.clickOnElementAll(new DownloadMediaButton(device2));
   await sleepFor(30000);
   await device1.hasElementBeenDeleted({
     strategy: 'accessibility id',

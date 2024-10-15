@@ -1,6 +1,6 @@
 import { androidIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { BlockUserConfirmation } from './locators';
+import { BlockUserConfirmationModal } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -25,7 +25,7 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   await device1.longPressConversation(userB.userName);
   await sleepFor(1000);
   await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Block' });
-  await device1.clickOnElementAll(new BlockUserConfirmation(device1));
+  await device1.clickOnElementAll(new BlockUserConfirmationModal(device1));
   await device1.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'Conversation list item',

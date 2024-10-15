@@ -1,6 +1,6 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { BlockedContactsSettings, BlockUserConfirmation } from './locators';
+import { BlockedContactsSettings, BlockUserConfirmationModal } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
@@ -38,7 +38,7 @@ async function blockedRequest(platform: SupportedPlatformsType) {
   //   strategy: 'accessibility id',
   //   selector: 'Block message request',
   // });
-  await device2.clickOnElementAll(new BlockUserConfirmation(device1));
+  await device2.clickOnElementAll(new BlockUserConfirmationModal(device1));
   const blockedMessage = `"${userA.userName} to ${userB.userName} - shouldn't get through"`;
   await device1.sendMessage(blockedMessage);
   await device2.navigateBack(platform);

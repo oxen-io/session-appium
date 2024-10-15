@@ -10,6 +10,7 @@ import {
   LocatorsInterface,
   PrivacyButton,
   ReadReceiptsButton,
+  SaveProfilePictureButton,
 } from '../../run/test/specs/locators';
 import { IOS_XPATHS } from '../constants';
 import {
