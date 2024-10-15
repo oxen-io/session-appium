@@ -10,14 +10,9 @@ import {
   LocatorsInterface,
   PrivacyButton,
   ReadReceiptsButton,
-  SaveProfilePictureButton,
 } from '../../run/test/specs/locators';
 import { IOS_XPATHS } from '../constants';
-import {
-  englishStrippedStri,
-  StringArgsRecord,
-  TokenString,
-} from '../localizer/i18n/localizedString';
+import { englishStrippedStri, TokenString } from '../localizer/i18n/localizedString';
 import { LocalizerDictionary } from '../localizer/Localizer';
 import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
 import { clickOnCoordinates, sleepFor } from '../test/specs/utils';
@@ -33,7 +28,6 @@ import {
   Strategy,
   StrategyExtractionObj,
   User,
-  USERNAME,
   XPath,
 } from './testing';
 import { SaveProfilePictureButton } from '../test/specs/locators/settings';
