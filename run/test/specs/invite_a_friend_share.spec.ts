@@ -1,7 +1,12 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
-import { USERNAME } from '../../types/testing';
+import { AccessibilityId, USERNAME } from '../../types/testing';
+import { PlusButton, SearchButton } from './locators/home';
+import { AccountIDField, CloseButton, InviteAFrienOption, ShareButton } from './locators/start_conversation';
+import { MessageInput } from './locators/conversation';
+import { Accessibility } from '@playwright/test';
+import { EnableButton } from './locators/global';
 
 // TODO assign risk assessment value once PR 16 is merged (assumption: high)
 iosIt('Invite a friend', inviteAFriendiOS);
@@ -12,42 +17,35 @@ async function inviteAFriendiOS(platform: SupportedPlatformsType) {
     // This is a const so that the user.accountID can be used later on 
     const user = await newUser(device, USERNAME.ALICE, platform);
     // Hit the plus button
-    await device.clickOnByAccessibilityID('New conversation button');
+    await device.clickOnElementAll(new PlusButton(device));
     // Select Invite a Friend
-    await device.clickOnByAccessibilityID('Invite friend button');
+    await device.clickOnElementAll(new InviteAFrienOption(device));
     // Check for presence of Account ID field
-    await device.waitForTextElementToBePresent({
-        strategy: 'accessibility id', 
-        selector: 'Account ID'});
+    await device.waitForTextElementToBePresent(new AccountIDField(device));
     // Tap Share
-    await device.clickOnByAccessibilityID('Share button'); 
-    // tap Copy in the native UI
+    await device.clickOnElementAll(new ShareButton(device));
+    // tap Copy in the native UI - delibrately not recording this in the POM
     await device.clickOnByAccessibilityID('doc.on.doc');
     // The share message from the Invite a Friend screen has been copied but there is no way to access clipboard 
     // Therefore we paste the copied message to Note to Self
-    await device.clickOnByAccessibilityID('Back')
-    await device.clickOnByAccessibilityID('X')
-    await device.clickOnByAccessibilityID('Search button');
+    await device.clickOnElementAll(new CloseButton(device));
+    // Access Note to Self through Global Search entry
+    await device.clickOnElementAll(new SearchButton(device));
     await device.clickOnByAccessibilityID('Note to Self');
-    // Long press on Message composition box, select the native Paste option
-    await device.waitForTextElementToBePresent({
-        strategy: 'accessibility id',
-        selector: 'Message input box',
-    });
-    await device.longPress('Message input box');
+    // Long press on Message composition box
+    await device.longPress(new SearchButton(device).build().selector as AccessibilityId);
+    // tap the native Paste UI - deliberately not recording this in the POM
     await device.clickOnElementAll({
         strategy: 'xpath', 
         selector: '//XCUIElementTypeStaticText[@name="Paste"]'
     })
     // Close the Link Preview modal
-    // Accept dialog for link preview
-    await device.clickOnElementAll({
-        strategy: 'accessibility id',
-        selector: 'Enable',
-    });
+    // Enable modal for link previews
+    await device.clickOnElementAll(new EnableButton(device));
     // The share message is retrieved from the message input box and verified whether it contains the user.accountID
-    const retrievedShareMessage = await device.grabTextFromAccessibilityId('Message input box')
-    console.log(`Expecting the Account ID ${user.accountID} to be present in the Invite a Friend message snippet`)
+    const retrieveElement = await device.waitForTextElementToBePresent(new MessageInput(device).build());
+    const retrievedShareMessage = await device.getTextFromElement(retrieveElement)
+    console.log(`Expecting the Account ID ${user.accountID} to be present in the Invite a Friend message snippet`);
     if (retrievedShareMessage.includes(user.accountID)) {
         console.log("The Invite a Friend message snippet contains the user's Account ID")
     }
@@ -62,16 +60,14 @@ async function inviteAFriendAndroid(platform: SupportedPlatformsType) {
     // This is a const so that the user.accountID can be used later on 
     const user = await newUser(device, USERNAME.ALICE, platform);
     // Hit the plus button
-    await device.clickOnByAccessibilityID('New conversation button');
+    await device.clickOnElementAll(new PlusButton(device));
     // Select Invite a Friend
-    await device.clickOnByAccessibilityID('Invite friend button');
+    await device.clickOnElementAll(new InviteAFrienOption(device));
     // Check for presence of Account ID field
-    await device.waitForTextElementToBePresent({
-        strategy: 'accessibility id', 
-        selector: 'Account ID'});
+    await device.waitForTextElementToBePresent(new AccountIDField(device));
     // Tap Share
-    await device.clickOnByAccessibilityID('Share button'); 
-    // Grab text from native UI
+    await device.clickOnElementAll(new ShareButton(device));
+    // Grab text from native Share UI - deliberately not recording this in the POM
     const shareUI = await device.waitForTextElementToBePresent({
         strategy: 'id',
         selector: 'android:id/content_preview_text',

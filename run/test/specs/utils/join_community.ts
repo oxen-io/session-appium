@@ -1,5 +1,6 @@
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { CommunityInput, JoinCommunityButton, JoinCommunityOption } from '../locators';
+import { CommunityInput, JoinCommunityButton } from '../locators';
+import { JoinCommunityOption } from '../locators/start_conversation';
 
 export const joinCommunity = async (
   device: DeviceWrapper,

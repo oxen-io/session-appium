@@ -67,3 +67,12 @@ export class DeleteContactModalConfirm extends LocatorsInterface {
     }
   }
 }
+
+export class EnableButton extends LocatorsInterface {
+  public build() {
+      return {
+          strategy: 'accessibility id',
+          selector: 'Enable',
+      } as const;
+  }
+}

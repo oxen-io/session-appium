@@ -321,8 +321,10 @@ export type AccessibilityId =
   | 'Delete'
   | 'doc.on.doc'
   | 'Search button'
+  | 'Search icon'
   | 'Note to Self'
-  | 'X';
+  | 'X'
+  | 'Close';
 
 export type Id =
   | 'Modal heading'
