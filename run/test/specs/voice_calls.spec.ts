@@ -1,5 +1,5 @@
 import { test } from '@playwright/test';
-import { englishStrippedStri } from '../../localizer/i18n/localizedString';
+import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { ControlMessage } from '../../types/testing';
 import { ExitUserProfile } from './locators';
@@ -37,9 +37,8 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
 
   // Verify config message states message request was accepted
   // "messageRequestsAccepted": "Your message request has been accepted.",
-  const messageRequestsAccepted = englishStrippedStri('messageRequestsAccepted').toString();
+  const messageRequestsAccepted = englishStripped('messageRequestsAccepted').toString();
   await device1.waitForControlMessageToBePresent(messageRequestsAccepted as ControlMessage);
-  await device1.waitForControlMessageToBePresent('Your message request has been accepted.');
   // Phone icon should appear now that conversation has been approved
   await device1.clickOnByAccessibilityID('Call');
   // Enabled voice calls in privacy settings
@@ -99,12 +98,12 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID('End call button');
   // Check for control messages on both devices
   // "callsYouCalled": "You called {name}",
-  const callsYouCalled = englishStrippedStri('callsYouCalled')
+  const callsYouCalled = englishStripped('callsYouCalled')
     .withArgs({ name: userB.userName })
     .toString();
   await device1.waitForControlMessageToBePresent(callsYouCalled as ControlMessage);
   // "callsYouCalled": "You called {name}",
-  const callsCalledYou = englishStrippedStri('callsCalledYou')
+  const callsCalledYou = englishStripped('callsCalledYou')
     .withArgs({ name: userB.userName })
     .toString();
   await device2.waitForControlMessageToBePresent(callsCalledYou as ControlMessage);

@@ -11,7 +11,7 @@ androidIt('Disappearing link message 1:1', disappearingLinkMessage1o1Android);
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after read option';
-const testLink = `https://type-level-typescript.com/objects-and-records`;
+const testLink = `https://getsession.org/`;
 
 async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
