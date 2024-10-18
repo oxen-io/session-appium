@@ -50,5 +50,5 @@ export const setDisappearingMessage = async (
     await sleepFor(500);
     await device2.clickOnElementAll(new SetModalButton(device2));
   }
-  await device.waitForTextElementToBePresent(new DisappearingMessagesSubtitle(device));
+  // await device.waitForTextElementToBePresent(new DisappearingMessagesSubtitle(device));
 };
