@@ -1,6 +1,6 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { BlockedContactsSettings, BlockUserConfirmation } from './locators';
-import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
+import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
 import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';

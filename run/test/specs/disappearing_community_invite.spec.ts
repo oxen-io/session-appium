@@ -7,6 +7,7 @@ import { newContact } from './utils/create_contact';
 import { joinCommunity } from './utils/join_community';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
+import { testCommunityLink, testCommunityName } from './../../constants/community';
 
 iosIt('Disappearing community invite message 1o1', disappearingCommunityInviteMessage1o1Ios);
 androidIt(
@@ -14,8 +15,6 @@ androidIt(
   disappearingCommunityInviteMessage1o1Android
 );
 
-const communityLink = `https://chat.lokinet.dev/testing-all-the-things?public_key=1d7e7f92b1ed3643855c98ecac02fc7274033a3467653f047d6e433540c03f17`;
-const communityName = 'Testing All The Things!';
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
 
@@ -30,7 +29,7 @@ async function disappearingCommunityInviteMessage1o1Ios(platform: SupportedPlatf
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
   // await device1.navigateBack(platform);
   await device1.navigateBack(platform);
-  await joinCommunity(device1, communityLink, communityName);
+  await joinCommunity(device1, testCommunityLink, testCommunityName);
   await device1.clickOnByAccessibilityID('More options');
   await sleepFor(1000);
   await device1.clickOnElementAll(new InviteContactsMenuItem(device1));
@@ -44,7 +43,7 @@ async function disappearingCommunityInviteMessage1o1Ios(platform: SupportedPlatf
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Community invitation',
-    text: communityName,
+    text: testCommunityName,
   });
   // Wait for 30 seconds for message to disappear
   await sleepFor(30000);
@@ -53,13 +52,13 @@ async function disappearingCommunityInviteMessage1o1Ios(platform: SupportedPlatf
       strategy: 'accessibility id',
       selector: 'Message body',
       maxWait: 1000,
-      text: communityName,
+      text: testCommunityName,
     }),
     device1.hasElementBeenDeleted({
       strategy: 'accessibility id',
       selector: 'Message body',
       maxWait: 1000,
-      text: communityName,
+      text: testCommunityName,
     }),
   ]);
   await closeApp(device1, device2);
@@ -77,7 +76,7 @@ async function disappearingCommunityInviteMessage1o1Android(platform: SupportedP
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
 
   await device1.navigateBack(platform);
-  await joinCommunity(device1, communityLink, communityName);
+  await joinCommunity(device1, testCommunityLink, testCommunityName);
   await device1.clickOnByAccessibilityID('More options');
   await device1.clickOnElementAll(new InviteContactsMenuItem(device1));
   await device1.clickOnElementByText({
@@ -90,7 +89,7 @@ async function disappearingCommunityInviteMessage1o1Android(platform: SupportedP
   await device2.waitForTextElementToBePresent({
     strategy: 'id',
     selector: 'network.loki.messenger:id/openGroupTitleTextView',
-    text: communityName,
+    text: testCommunityName,
   });
   // Wait for 30 seconds for message to disappear
   await sleepFor(30000);
@@ -98,13 +97,13 @@ async function disappearingCommunityInviteMessage1o1Android(platform: SupportedP
     strategy: 'accessibility id',
     selector: 'Message body',
     maxWait: 1000,
-    text: communityName,
+    text: testCommunityName,
   });
   await device1.hasElementBeenDeleted({
     strategy: 'accessibility id',
     selector: 'Message body',
     maxWait: 1000,
-    text: communityName,
+    text: testCommunityName,
   });
   await closeApp(device1, device2);
 }

@@ -355,7 +355,7 @@ export class DeviceWrapper {
         attempt++;
         if (attempt >= maxRetries) {
           throw new Error(
-            `Longpress on message: ${textToLookFor} unsuccessful after ${maxRetries} attempts, ${error as string}`
+            `Longpress on message: ${textToLookFor} unsuccessful after ${maxRetries} attempts, ${(error as Error).toString()}`
           );
         }
         console.log(`Longpress attempt ${attempt} failed. Retrying...`);
@@ -591,7 +591,7 @@ export class DeviceWrapper {
       const matching = await this.findAsync(elements, async e => {
         const text = await this.getTextFromElement(e);
         // console.info(`text ${text} lookingfor ${textToLookFor}`);
-        if (text.toLocaleLowerCase().includes(textToLookFor.toLocaleLowerCase())) {
+        if (text.toLowerCase().includes(textToLookFor.toLowerCase())) {
           console.info(`Text found to include ${textToLookFor}`);
         }
         return Boolean(text && text.toLowerCase() === textToLookFor.toLowerCase());
@@ -1160,7 +1160,6 @@ export class DeviceWrapper {
     await this.clickOnByAccessibilityID('Attachments button');
     await sleepFor(100);
     await this.clickOnByAccessibilityID('Images folder');
-    // await this.clickOnByAccessibilityID('Continue');
     await this.clickOnElementAll({
       strategy: 'id',
       selector: 'com.android.permissioncontroller:id/permission_allow_all_button',
@@ -1385,7 +1384,6 @@ export class DeviceWrapper {
     let attempt = 0;
     await this.longPress('New voice message');
     if (this.isAndroid()) {
-      // await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Continue' });
       await this.clickOnElementAll({
         strategy: 'id',
         selector: 'com.android.permissioncontroller:id/permission_allow_foreground_only_button',
