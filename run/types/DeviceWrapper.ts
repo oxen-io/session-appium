@@ -403,7 +403,7 @@ export class DeviceWrapper {
         await sleepFor(1000);
         if (attempt >= maxRetries) {
           if (error instanceof Error) {
-            error.message = `Longpress on conversation: ${userName} unsuccessful after ${maxRetries} attempts, ${error.message}`;
+            error.message = `Longpress on conversation: ${userName} unsuccessful after ${maxRetries} attempts, ${error.toString()}`;
           }
           throw error;
         }
