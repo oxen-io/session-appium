@@ -78,6 +78,7 @@ async function disappearingCommunityInviteMessage1o1Android(platform: SupportedP
   await device1.navigateBack(platform);
   await joinCommunity(device1, testCommunityLink, testCommunityName);
   await device1.clickOnByAccessibilityID('More options');
+  await sleepFor(1000);
   await device1.clickOnElementAll(new InviteContactsMenuItem(device1));
   await device1.clickOnElementByText({
     strategy: 'accessibility id',
