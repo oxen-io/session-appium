@@ -159,6 +159,8 @@ export const en = {
   callsInProgress: 'Call in progress',
   callsIncoming: 'Incoming call from {name}',
   callsIncomingUnknown: 'Incoming call',
+  callsMicrophonePermissionsRequired:
+    "You missed a call from <b>{name}</b> because you haven't granted <b>microphone access</b>.",
   callsMissed: 'Missed Call',
   callsMissedCallFrom: 'Missed call from {name}',
   callsNotificationsRequired:
@@ -506,7 +508,7 @@ export const en = {
     'Would you like to remove <b>{name}</b> and <b>{other_name}</b> from <b>{group_name}</b>?',
   groupRemoveMessages:
     '{count, plural, one [Remove user and their messages] other [Remove users and their messages]}',
-  groupRemoveUserOnly: '{count, plural, one [Remove user ] other [Remove users]}',
+  groupRemoveUserOnly: '{count, plural, one [Remove user] other [Remove users]}',
   groupRemoved: '<b>{name}</b> was removed from the group.',
   groupRemovedMultiple: '<b>{name}</b> and <b>{count} others</b> were removed from the group.',
   groupRemovedTwo: '<b>{name}</b> and <b>{other_name}</b> were removed from the group.',
@@ -747,12 +749,12 @@ export const en = {
   passwordSetDescription: 'Your password has been set. Please keep it safe.',
   paste: 'Paste',
   permissionMusicAudioDenied:
-    '{app_name} needs music and audio access in order to send files, music and audio, but it has been permanently denied. Tap Settings -> Permissions, and turn "Music and audio" on.',
+    '{app_name} needs music and audio access in order to send files, music and audio, but it has been permanently denied. Tap Settings → Permissions, and turn "Music and audio" on.',
   permissionsAppleMusic: '{app_name} needs to use Apple Music to play media attachments.',
   permissionsAutoUpdate: 'Auto Update',
   permissionsAutoUpdateDescription: 'Automatically check for updates on startup.',
   permissionsCameraDenied:
-    '{app_name} needs camera access to take photos and videos, but it has been permanently denied. Tap Settings -> Permissions, and turn "Camera" on.',
+    '{app_name} needs camera access to take photos and videos, but it has been permanently denied. Tap Settings → Permissions, and turn "Camera" on.',
   permissionsFaceId: 'The screen lock feature on {app_name} uses Face ID.',
   permissionsKeepInSystemTray: 'Keep in System Tray',
   permissionsKeepInSystemTrayDescription:
@@ -761,7 +763,7 @@ export const en = {
     '{app_name} needs photo library access to continue. You can enable access in the iOS settings.',
   permissionsMicrophone: 'Microphone',
   permissionsMicrophoneAccessRequired:
-    '{app_name} needs microphone access to make calls and send audio messages, but it has been permanently denied. Tap settings -> Permissions, and turn "Microphone" on.',
+    '{app_name} needs microphone access to make calls and send audio messages, but it has been permanently denied. Tap settings → Permissions, and turn "Microphone" on.',
   permissionsMicrophoneAccessRequiredDesktop:
     "You can enable microphone access in {app_name}'s privacy settings",
   permissionsMicrophoneAccessRequiredIos:
@@ -771,9 +773,9 @@ export const en = {
     '{app_name} needs music and audio access in order to send files, music and audio.',
   permissionsRequired: 'Permission Required',
   permissionsStorageDenied:
-    '{app_name} needs photo library access so you can send photos and videos, but it has been permanently denied. Tap Settings -> Permissions, and turn "Photos and videos" on.',
+    '{app_name} needs photo library access so you can send photos and videos, but it has been permanently denied. Tap Settings → Permissions, and turn "Photos and videos" on.',
   permissionsStorageDeniedLegacy:
-    '{app_name} needs storage access so you can send and save attachments. Tap Settings -> Permissions, and turn "Storage" on.',
+    '{app_name} needs storage access so you can send and save attachments. Tap Settings → Permissions, and turn "Storage" on.',
   permissionsStorageSave: '{app_name} needs storage access to save attachments and media.',
   permissionsStorageSaveDenied:
     '{app_name} needs storage access to save photos and videos, but it has been permanently denied. Please continue to app settings, select "Permissions", and enable "Storage".',
