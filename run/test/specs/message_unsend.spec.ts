@@ -3,7 +3,7 @@ import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, openAppTwoDevices, closeApp } from './utils/open_app';
 
-bothPlatformsIt('Unsend message', 'medium', unsendMessage);
+bothPlatformsIt('Unsend message', 'high', unsendMessage);
 
 async function unsendMessage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
