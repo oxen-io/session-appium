@@ -80,3 +80,12 @@ export class ShareButton extends LocatorsInterface {
         } as const;
     }
 }
+
+export class CopyButton extends LocatorsInterface {
+  public build() {
+      return {
+          strategy: 'accessibility id',
+          selector: 'Copy button',
+      } as const;
+  }
+}

@@ -357,4 +357,5 @@ export type Id =
   | 'Image picker'
   | 'network.loki.messenger:id/action_apply'
   | 'Save'
-  | 'android:id/content_preview_text';
+  | 'android:id/content_preview_text'
+  | 'network.loki.messenger:id/search_result_title';
