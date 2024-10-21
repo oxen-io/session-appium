@@ -1470,7 +1470,7 @@ export class DeviceWrapper {
       // Select file
       const profilePicture = await this.doesElementExist({
         strategy: 'accessibility id',
-        selector: `profile_picture.jpg, 27.75 kB, May 1, 1999`,
+        selector: `profile_picture.jpg, 27.75 kB, May 1, 1998`,
         maxWait: 5000,
       });
       // If no image, push file to this
@@ -1486,7 +1486,7 @@ export class DeviceWrapper {
       }
       await this.clickOnElementAll({
         strategy: 'accessibility id',
-        selector: 'profile_picture.jpg, 27.75 kB, May 1, 1999',
+        selector: 'profile_picture.jpg, 27.75 kB, May 1, 1998',
       });
       await this.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop');
     }

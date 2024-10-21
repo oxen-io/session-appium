@@ -33,7 +33,14 @@ async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
 
 async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
-  const pixelHexColour = '04cbfe';
+  let expectedPixelHexColour: string;
+  if (platform === 'android') {
+    expectedPixelHexColour = 'cbfeff';
+  } else if (platform === 'ios') {
+    expectedPixelHexColour = '04cbfe';
+  } else {
+    throw new Error('Platform not supported');
+  }
   // Create new user
   await newUser(device, 'Alice', platform);
   // Click on settings/avatar
@@ -46,12 +53,12 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   // Waiting for the image to change in the UI
   await sleepFor(10000);
   const base64 = await device.getElementScreenshot(el.ELEMENT);
-  const pixelColor = await parseDataImage(base64);
-  console.log('Hex value of pixel is:', pixelColor);
-  if (pixelColor === pixelHexColour) {
+  const actualPixelColor = await parseDataImage(base64);
+  console.log('Hex value of pixel is:', actualPixelColor);
+  if (actualPixelColor === expectedPixelHexColour) {
     console.log('Colour is correct');
   } else {
-    throw new Error("Colour isn't 04cbfe, it is: " + pixelColor);
+    throw new Error(`Colour isn't ${expectedPixelHexColour}, it is: ` + actualPixelColor);
   }
   await closeApp(device);
 }

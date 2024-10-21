@@ -331,8 +331,9 @@ export class InviteContactsMenuItem extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
-          selector: 'Invite Contacts',
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/title',
+          text: 'Invite Contacts',
         };
       case 'ios':
         return {
