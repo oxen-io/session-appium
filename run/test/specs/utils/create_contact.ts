@@ -51,8 +51,8 @@ const retryMsgSentForBanner = async (
     messageRequest = element !== null;
 
     if (!messageRequest) {
-      await device1.sendMessage('Retry');
       console.log(`Retrying message request`);
+      await device1.sendMessage('Retry');
       await sleepFor(5000);
     } else {
       console.log('Found message request: No need for retry');
