@@ -772,9 +772,9 @@ export class DeviceWrapper {
       if (currentWait >= maxWaitMSec) {
         if (text) {
           throw new Error(`Waited for too long looking for '${selector}' and '${text}`);
-        } else {
-          throw new Error(`Waited for too long looking for '${selector}'`);
         }
+          throw new Error(`Waited for too long looking for '${selector}'`);
+        
       }
       if (text) {
         console.log(`'${selector}' and '${text}' has been found`);
