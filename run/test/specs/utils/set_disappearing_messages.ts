@@ -2,7 +2,6 @@ import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { ConversationType, DISAPPEARING_TIMES, MergedOptions } from '../../../types/testing';
 import {
   DisappearingMessagesMenuOption,
-  DisappearingMessagesSubtitle,
   FollowSettingsButton,
   SetDisappearMessagesButton,
   SetModalButton,
@@ -34,6 +33,8 @@ export const setDisappearingMessage = async (
     } else {
       await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.ONE_DAY);
     }
+  } else if (enforcedType === 'Group' && timerType === 'Disappear after send option') {
+    await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.OFF);
   } else {
     await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.ONE_DAY);
   }

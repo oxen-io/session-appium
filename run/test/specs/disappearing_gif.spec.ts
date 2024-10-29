@@ -32,7 +32,7 @@ async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID('Untrusted attachment message');
   await sleepFor(100);
   // Click on 'download'
-  await device2.clickOnByAccessibilityID('Download media');
+  await device2.clickOnElementAll(new DownloadMediaButton(device2));
   // Wait for 30 seconds
   await sleepFor(30000);
   // Check if GIF has been deleted on both devices

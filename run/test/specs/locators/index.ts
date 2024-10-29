@@ -407,7 +407,7 @@ export class BlockUserConfirmationModal extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Confirm block',
+          selector: 'Block',
         };
     }
   }
@@ -470,7 +470,7 @@ export class DeleteMesssageRequestConfirmation extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Confirm delete',
+          selector: 'Delete',
         };
       case 'android':
         return {
@@ -509,7 +509,7 @@ export class DownloadMediaButton extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Download media',
+          selector: 'Download',
         };
     }
   }

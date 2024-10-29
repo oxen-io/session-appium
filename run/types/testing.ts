@@ -76,6 +76,7 @@ export enum DISAPPEARING_TIMES {
   ONE_DAY = '1 day',
   ONE_WEEK = '1 week',
   TWO_WEEKS = '2 weeks',
+  OFF = 'Off',
 }
 
 export type DisappearOpts1o1 = [
