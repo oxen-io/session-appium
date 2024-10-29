@@ -1,4 +1,5 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
+import { runOnlyOnAndroid, runOnlyOnIOS } from './utils';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
@@ -20,12 +21,20 @@ async function linkDevice(platform: SupportedPlatformsType) {
   // Verify username and session ID match
   await device2.clickOnByAccessibilityID('User settings');
   // Check username
-
-  await device2.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Username',
-    text: userA.userName,
-  });
+  await runOnlyOnIOS(platform, () =>
+    device2.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Username',
+      text: userA.userName,
+    })
+  );
+  await runOnlyOnAndroid(platform, () =>
+    device2.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Display name',
+      text: userA.userName,
+    })
+  );
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'Account ID',

@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-var-requires */
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 import { defineConfig } from '@playwright/test';
 import { toNumber } from 'lodash';
 

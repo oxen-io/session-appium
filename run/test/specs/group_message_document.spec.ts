@@ -1,33 +1,49 @@
-import { androidIt } from '../../types/sessionIt';
+import { androidIt, iosIt } from '../../types/sessionIt';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-// ios("Send document to group", sendDocumentGroupiOS);
+iosIt('Send document to group', sendDocumentGroupiOS);
 androidIt('Send document to group', sendDocumentGroupAndroid);
-// async function sendDocumentGroupiOS(platform: SupportedPlatformsType) {
-//   const testGroupName = "Message checks for groups";
-//   const { device1, device2, device3 } = await openAppThreeDevices(platform);
-//   // Create users A, B and C
-//   const [userA, userB, userC] = await Promise.all([
-//     newUser(device1, "Alice", platform),
-//     newUser(device2, "Bob", platform),
-//     newUser(device3, "Charlie", platform),
-//   ]);
 
-//   // Create contact between User A and User B
-//   await createGroup(
-//     platform,
-//     device1,
-//     userA,
-//     device2,
-//     userB,
-//     device3,
-//     userC,
-//     testGroupName
-//   );
-// }
+async function sendDocumentGroupiOS(platform: SupportedPlatformsType) {
+  const testGroupName = 'Message checks for groups';
+  const { device1, device2, device3 } = await openAppThreeDevices(platform);
+  // Create users A, B and C
+  const [userA, userB, userC] = await Promise.all([
+    newUser(device1, 'Alice', platform),
+    newUser(device2, 'Bob', platform),
+    newUser(device3, 'Charlie', platform),
+  ]);
+  const testMessage = 'Testing-document-1';
+  const replyMessage = `Replying to document from ${userA.userName}`;
+
+  // Create contact between User A and User B
+  await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
+  await device1.sendDocument();
+  await Promise.all([
+    device2.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Message body',
+      text: testMessage,
+    }),
+    device3.waitForTextElementToBePresent({
+      strategy: 'accessibility id',
+      selector: 'Message body',
+      text: testMessage,
+    }),
+  ]);
+  await device2.longPressMessage(testMessage);
+  await device2.clickOnByAccessibilityID('Reply to message');
+  await device2.sendMessage(replyMessage);
+  await device1.waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Message body',
+    text: replyMessage,
+  });
+  await closeApp(device1, device2, device3);
+}
 
 async function sendDocumentGroupAndroid(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';
@@ -41,7 +57,7 @@ async function sendDocumentGroupAndroid(platform: SupportedPlatformsType) {
   // Create contact between User A and User B
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   const replyMessage = `Replying to document from ${userA.userName} in ${testGroupName}`;
-  await device1.sendDocument(platform);
+  await device1.sendDocument();
   // Reply to message
   await sleepFor(1000);
   // Check document appears in both device 2 and 3's screen

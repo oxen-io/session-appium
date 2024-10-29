@@ -1,3 +1,4 @@
+import { DISAPPEARING_TIMES } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { sleepFor } from './utils';
 
@@ -9,15 +10,13 @@ import { setDisappearingMessage } from './utils/set_disappearing_messages';
 iosIt('Disappearing link to group', disappearingLinkMessageGroup);
 androidIt('Disappearing link to group', disappearingLinkMessageGroup);
 
-// bothPlatformsIt(
-//   "Send disappearing link to group",
-//   disappearingLinkMessageGroup
-// );
+const timerType = 'Disappear after send option';
+const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 
 async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   const testGroupName = 'Test group';
-  const testLink = `https://type-level-typescript.com/objects-and-records`;
+  const testLink = `https://getsession.org/`;
   // Create user A and user B
   const [userA, userB, userC] = await Promise.all([
     newUser(device1, 'Alice', platform),
@@ -25,7 +24,7 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
     newUser(device3, 'Charlie', platform),
   ]);
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
-  await setDisappearingMessage(platform, device1, ['Group', 'Disappear after send option']);
+  await setDisappearingMessage(platform, device1, ['Group', timerType, time]);
   // await device1.navigateBack(platform);
   // Send a link
   await device1.inputText(testLink, {

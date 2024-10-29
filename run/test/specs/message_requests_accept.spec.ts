@@ -1,5 +1,6 @@
+import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { runOnlyOnIOS } from './utils';
+import { ControlMessage } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
@@ -26,8 +27,16 @@ async function acceptRequest(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID('Message request');
   // Bob clicks accept button on device 2 (original device)
   await device2.clickOnByAccessibilityID('Accept message request');
-  // Verify config message for Alice 'Your message request has been accepted'
-  await device1.waitForControlMessageToBePresent('Your message request has been accepted.');
+  // Check control message for message request acceptance
+  // "messageRequestsAccepted": "Your message request has been accepted.",
+  const messageRequestsAccepted = englishStripped('messageRequestsAccepted').toString();
+  const messageRequestYouHaveAccepted = englishStripped('messageRequestYouHaveAccepted')
+    .withArgs({ name: userA.userName })
+    .toString();
+  await Promise.all([
+    device1.waitForControlMessageToBePresent(messageRequestsAccepted as ControlMessage),
+    device2.waitForControlMessageToBePresent(messageRequestYouHaveAccepted as ControlMessage),
+  ]);
   // Check conversation list for new contact (user A)
   await device2.navigateBack(platform);
   await Promise.all([

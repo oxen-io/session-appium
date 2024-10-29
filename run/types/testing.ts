@@ -1,4 +1,3 @@
-import { LocatorsInterface } from '../test/specs/locators';
 import { DeviceWrapper } from './DeviceWrapper';
 
 export type User = {
@@ -107,23 +106,25 @@ export type StrategyExtractionObj =
 
 export type DisappearingControlMessage =
   | `You set disappearing message time to ${DMTimeOption}`
-  | `${string} set disappearing message time to ${DMTimeOption}`
-  | `${string} has set messages to disappear ${DMTimeOption} after they have been ${DisappearActions}.`
-  | `You set messages to disappear ${DMTimeOption} after they have been ${DisappearActions}.`;
+  | `You set messages to disappear ${DMTimeOption} after they have been ${DisappearActions}.`
+  | `${Username} set disappearing message time to ${DMTimeOption}`
+  | `${Username} has set messages to disappear ${DMTimeOption} after they have been ${DisappearActions}.`;
 
 export type ControlMessage =
   | 'Your message request has been accepted.'
-  | `${string} called you`
-  | `Called ${string}`
-  | `You called ${string}`
+  | `You have accepted the message request from ${Username}.`
+  | `${Username} called you`
+  | `Called ${Username}`
+  | `You called ${Username}`
   | 'You created a new group.'
-  | `${string} has left the group.`
-  | `${string} left the group.`
-  | `${string} renamed the group to: ${string}`
-  | `Title is now '${string}'.`
-  | `You renamed the group to ${string}`
-  | `${string} joined the group.`
-  | `You added ${string} to the group.`;
+  | `${Username} has left the group.`
+  | `${Username} left the group.`
+  | `${Username} joined the group.`
+  | `You added ${Username} to the group.`
+  | `You have no messages from ${string}. Send a message to start the conversation!`
+  | `Group name is now ${string}.`
+  | 'You will be able to send voice messages and attachments once the recipient has approved this message request.'
+  | 'Sending a message to this user will automatically accept their message request and reveal your Account ID.';
 
 export type XPath =
   | `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout`
@@ -136,7 +137,8 @@ export type XPath =
   | `//XCUIElementTypeSwitch[@name="Read Receipts, Send read receipts in one-to-one chats."]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.ScrollView/androidx.viewpager.widget.ViewPager/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.FrameLayout[1]`
   | `//XCUIElementTypeAlert//*//XCUIElementTypeButton`
-  | `(//XCUIElementTypeImage[@name="gif cell"])[1]`;
+  | `(//XCUIElementTypeImage[@name="gif cell"])[1]`
+  | `//XCUIElementTypeCell[@name="${string}"]`;
 
 export type AccessibilityId =
   | 'Create account button'
@@ -144,6 +146,7 @@ export type AccessibilityId =
   | 'Session ID generated'
   | 'Session id input box'
   | 'Enter display name'
+  | 'Display name'
   | 'Continue'
   | 'Slow mode notifications button'
   | 'Continue with settings'
@@ -204,12 +207,13 @@ export type AccessibilityId =
   | 'Edit group'
   | 'Group name text field'
   | 'OK'
+  | 'Okay'
   | 'Cancel'
   | 'Apply changes'
   | 'Apply'
   | 'Conversation list item'
+  | 'Invite Contacts'
   | 'Add members'
-  | 'Add Members'
   | 'Done'
   | 'Control message'
   | 'Configuration message'
@@ -252,7 +256,7 @@ export type AccessibilityId =
   | 'Allow Full Access'
   | 'Photo, May 01, 1999, 7:00 AM'
   | 'profile_picture.jpg, 27.75 kB, May 2, 1999'
-  | 'profile_picture.jpg, 27.75 kB, May 1, 1999'
+  | 'profile_picture.jpg, 27.75 kB, May 1, 1998'
   | 'Photo taken on May 2, 1999 7:00:00 AM'
   | 'Photo, 01 May 1998, 7:00 am'
   | '1967-05-05 21:00:00 +0000'

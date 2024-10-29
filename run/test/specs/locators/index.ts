@@ -32,7 +32,7 @@ export class TickButton extends LocatorsInterface {
   public build() {
     switch (this.platform) {
       case 'android':
-        return { strategy: 'accessibility id', selector: 'Apply' } as const;
+        return { strategy: 'accessibility id', selector: 'Set' } as const;
       case 'ios':
         return { strategy: 'accessibility id', selector: 'Done' } as const;
     }
@@ -74,6 +74,23 @@ export class EditGroup extends LocatorsInterface {
   }
 }
 
+export class EditGroupName extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Group name text field',
+        } as const;
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Group name',
+        } as const;
+    }
+  }
+}
+
 export class PrivacyButton extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -96,7 +113,7 @@ export class ReadReceiptsButton extends LocatorsInterface {
         return {
           strategy: 'id',
           selector: 'android:id/summary',
-          text: 'Send read receipts in one-to-one chats.',
+          text: 'Show read receipts for all messages you send and receive.',
         } as const;
       case 'ios':
         return {
@@ -124,7 +141,24 @@ export class ExitUserProfile extends LocatorsInterface {
   }
 }
 
-export class Username extends LocatorsInterface {
+export class UsernameSettings extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Display name',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Username',
+        } as const;
+    }
+  }
+}
+
+export class UsernameInput extends LocatorsInterface {
   public build() {
     switch (this.platform) {
       case 'android':
@@ -197,8 +231,8 @@ export class ChangeProfilePictureButton extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
-          selector: 'Upload',
+          strategy: 'id',
+          selector: 'Image picker',
         };
       case 'ios':
         return {
@@ -222,3 +256,302 @@ export class ImagePermissionsModalAllow extends LocatorsInterface {
     }
   }
 }
+
+export class JoinCommunityOption extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Join community button',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Join Community',
+        };
+    }
+  }
+}
+
+export class JoinCommunityButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Join community button',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Join',
+        };
+    }
+  }
+}
+
+export class CommunityInput extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Community input',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Enter Community URL',
+        };
+    }
+  }
+}
+
+export class InviteContactsButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/title',
+          text: 'Invite Contacts',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Invite Contacts',
+        };
+    }
+  }
+}
+
+export class InviteContactsMenuItem extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/title',
+          text: 'Invite Contacts',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Invite Contacts',
+        };
+    }
+  }
+}
+
+export class LeaveGroupButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: `network.loki.messenger:id/title`,
+          text: 'Leave group',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Leave group',
+        };
+    }
+  }
+}
+
+export class DeleteMessageConfirmation extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Delete just for me',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Delete for me',
+        };
+    }
+  }
+}
+
+export class LeaveGroup extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: `network.loki.messenger:id/title`,
+          text: 'Leave group',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Leave group',
+        };
+    }
+  }
+}
+
+export class BlockUserConfirmation extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Confirm block',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Confirm block',
+        };
+    }
+  }
+}
+export class BlockedContactsSettings extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Blocked contacts',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Blocked Contacts',
+        };
+    }
+  }
+}
+
+export class DeclineMessageRequestButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Decline message request',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Delete message request',
+        };
+    }
+  }
+}
+
+export class DeleteMessageRequestButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: `android:id/title`,
+          text: 'Delete',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Delete',
+        };
+    }
+  }
+}
+
+export class DeleteMesssageRequestConfirmation extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Confirm delete',
+        };
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Delete',
+        };
+    }
+  }
+}
+
+export class RevealRecoveryPhraseButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Reveal recovery phrase button',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Continue',
+        };
+    }
+  }
+}
+
+// TODO update StrategyExtractionObj to include Locator class
+// export class PendingMessageRequestControlMessage extends LocatorsInterface {
+//   public build(): StrategyExtractionObj {
+//     switch (this.platform) {
+//       case 'android':
+//         return {
+//           strategy: 'id',
+//           selector: 'network.loki.messenger:id/textSendAfterApproval',
+//           text: 'You will be able to send voice messages and attachments once the recipient has approved this message request.',
+//         };
+//       case 'ios':
+//         return {
+//           strategy: 'accessibility id',
+//           selector: 'Control message',
+//           text: 'You will be able to send voice messages and attachments once the recipient has approved this message request.',
+//         };
+//     }
+//   }
+// }
+
+// export class MessageRequestAcceptedDescriptionControlMessage extends LocatorsInterface {
+//   public build(): StrategyExtractionObj {
+//     switch (this.platform) {
+//       case 'ios':
+//         return {
+//           strategy: 'accessibility id',
+//           selector: 'Control message',
+//           text: 'Sending a message to this user will automatically accept their message request and reveal your Account ID.',
+//         };
+//       case 'android':
+//         return {
+//           strategy: 'id',
+//           selector: 'network.loki.messenger:id/sendAcceptsTextView',
+//           text: 'Sending a message to this user will automatically accept their message request and reveal your Account ID.',
+//         };
+//     }
+//   }
+// }
+
+// export class MessageReadStatus extends LocatorsInterface {
+//   public build(): StrategyExtractionObj {
+//     switch (this.platform) {
+//       case 'android':
+//         return {
+//           strategy: 'id',
+//           selector: 'network.loki.messenger:id/messageStatusTextView',
+//           text: 'Read',
+//         };
+//       case 'ios':
+//         return {
+//           strategy: 'accessibility id',
+//           selector: 'Message sent status: Read',
+//         };
+//     }
+//   }
+// }

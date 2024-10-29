@@ -1,11 +1,10 @@
 import { test } from '@playwright/test';
 import { DISAPPEARING_TIMES } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { DMTimeOption } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
-import { SupportedPlatformsType, openAppTwoDevices, closeApp } from './utils/open_app';
+import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
 test.describe('Disappearing call test', () => {
@@ -13,21 +12,19 @@ test.describe('Disappearing call test', () => {
   androidIt('Disappearing call message 1o1', disappearingCallMessage1o1Android, true);
 });
 
+const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
+const timerType = 'Disappear after send option';
+
 async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const time: DMTimeOption = DISAPPEARING_TIMES.ONE_MINUTE;
+
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, 'Alice', platform),
     newUser(device2, 'Bob', platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(
-    platform,
-    device1,
-    ['1:1', 'Disappear after read option', time],
-    device2
-  );
+  await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
   // await device1.navigateBack(platform);
   await device1.clickOnByAccessibilityID('Call');
   // Enabled voice calls in privacy settings
@@ -62,14 +59,14 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID('Call');
   // Answer call on device 2
   await device2.clickOnByAccessibilityID('Answer call');
-  // Wait 10 seconds
+  // Wait 30 seconds
   // Hang up
   await device1.clickOnByAccessibilityID('End call button');
   // Check for config message 'Called User B' on device 1
   await device1.waitForControlMessageToBePresent(`You called ${userB.userName}`);
   await device1.waitForControlMessageToBePresent(`${userA.userName} called you`);
-  // Wait 10 seconds for control message to be deleted
-  await sleepFor(10000);
+  // Wait 30 seconds for control message to be deleted
+  await sleepFor(30000);
   await device1.hasElementBeenDeleted({
     strategy: 'accessibility id',
     selector: 'Control message',
@@ -87,29 +84,23 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType) {
 
 async function disappearingCallMessage1o1Android(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const time: DMTimeOption = DISAPPEARING_TIMES.THIRTY_SECONDS;
+  const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, 'Alice', platform),
     newUser(device2, 'Bob', platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(
-    platform,
-    device1,
-    ['1:1', 'Disappear after send option', time],
-    device2
-  );
+  await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
 
-  await device1.navigateBack(platform);
+  // await device1.navigateBack(platform);
   await device1.clickOnByAccessibilityID('Call');
   // Enabled voice calls in privacy settings
   await device1.waitForTextElementToBePresent({
-    strategy: 'id',
-    selector: 'android:id/button1',
+    strategy: 'accessibility id',
+    selector: 'Settings',
   });
 
-  await device1.clickOnElementById('android:id/button1');
   // Scroll to bottom of page to voice and video calls
   await sleepFor(1000);
   await device1.scrollDown();

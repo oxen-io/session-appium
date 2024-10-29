@@ -1,9 +1,8 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { TickButton } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
-import { SupportedPlatformsType, openAppTwoDevices, closeApp } from './utils/open_app';
+import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
 iosIt('Set nickname', setNicknameIos);
 androidIt('Set nickname', setNicknameAndroid);
@@ -45,7 +44,7 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   // Empty username input
   await device1.deleteText({ strategy: 'accessibility id', selector: 'Username' });
   await device1.inputText(' ', { strategy: 'accessibility id', selector: 'Username' });
-  await await device1.clickOnByAccessibilityID('Done');
+  await device1.clickOnByAccessibilityID('Done');
   // Check in conversation header
   await device1.navigateBack(platform);
   // await sleepFor(500);
@@ -79,7 +78,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Select username to edit
   await device1.clickOnByAccessibilityID('Edit user nickname');
   // Type in nickname
-  await device1.inputText(nickName, { strategy: 'accessibility id', selector: 'Username' });
+  await device1.inputText(nickName, { strategy: 'accessibility id', selector: 'Display name' });
   // Click on tick button
   await device1.clickOnByAccessibilityID('Apply');
   // CLick out of pop up
@@ -102,7 +101,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Click on username to edit
   await device1.clickOnByAccessibilityID('Edit user nickname');
   // Click apply without entering new nickname
-  await device1.clickOnElementAll(new TickButton(device1));
+  await device1.clickOnByAccessibilityID('Apply');
   // Click out of pop up
   await device1.back();
   // Enter conversation to verify change

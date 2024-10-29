@@ -7,8 +7,6 @@ import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/ope
 iosIt('Read status', readStatus);
 androidIt('Read status', readStatus);
 
-// bothPlatformsIt("Read status", readStatus);
-
 async function readStatus(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const [userA, userB] = await Promise.all([
@@ -38,11 +36,6 @@ async function readStatus(platform: SupportedPlatformsType) {
     selector: 'Message body',
     text: testMessage,
   });
-  // await device2.clickOnElementAll({
-  //   strategy: "accessibility id",
-  //   selector: "Message body",
-  //   text: testMessage,
-  // });
   // Check read status on device 1
   await runOnlyOnAndroid(platform, () =>
     device1.waitForTextElementToBePresent({

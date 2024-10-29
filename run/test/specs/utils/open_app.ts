@@ -10,7 +10,7 @@ import { DriverOpts } from 'appium/build/lib/appium';
 import { compact } from 'lodash';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User } from '../../../types/testing';
-import { cleanPermissions } from './before_test_setup';
+import { cleanPermissions } from './permissions';
 import { getAdbFullPath, getAvdManagerFullPath, getEmulatorFullPath } from './binaries';
 import { newUser } from './create_account';
 import { newContact } from './create_contact';
@@ -266,6 +266,7 @@ const openAndroidApp = async (
     ignoreUnimportantViews: false,
     allowInvisibleElements: true,
     enableMultiWindows: true,
+    disableIdLocatorAutocompletion: true,
   });
   return { device: wrappedDevice };
 };

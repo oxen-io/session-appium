@@ -1,3 +1,4 @@
+import { DISAPPEARING_TIMES } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -7,6 +8,9 @@ import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
 iosIt('Disappearing GIF to group', disappearingGifMessageGroup);
 androidIt('Disappearing GIF to group', disappearingGifMessageGroup);
+
+const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
+const timerType = 'Disappear after send option';
 
 async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
   const testGroupName = 'Disappear after sent test';
@@ -19,8 +23,7 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
     newUser(device3, 'Charlie', platform),
   ]);
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
-  await setDisappearingMessage(platform, device1, ['Group', 'Disappear after send option']);
-  // await device1.navigateBack(platform);
+  await setDisappearingMessage(platform, device1, ['Group', timerType, time]);
   // Click on attachments button
   await device1.sendGIF(testMessage);
   if (platform === 'ios') {

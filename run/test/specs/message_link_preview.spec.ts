@@ -9,7 +9,7 @@ androidIt('Send link 1:1', sendLinkAndroid);
 
 async function sendLinkIos(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const testLink = `https://type-level-typescript.com/objects-and-records`;
+  const testLink = `https://getsession.org/`;
   // Create two users
   const [userA, userB] = await Promise.all([
     newUser(device1, 'Alice', platform),
@@ -61,7 +61,7 @@ async function sendLinkIos(platform: SupportedPlatformsType) {
 
 async function sendLinkAndroid(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const testLink = `https://type-level-typescript.com/objects-and-records`;
+  const testLink = `https://getsession.org/`;
   // Create two users
   const [userA, userB] = await Promise.all([
     newUser(device1, 'Alice', platform),
@@ -79,7 +79,6 @@ async function sendLinkAndroid(platform: SupportedPlatformsType) {
     strategy: 'accessibility id',
     selector: 'Enable',
   });
-  // await device1.clickOnByAccessibilityID("Enable");
   // No preview on first send
   await device1.clickOnByAccessibilityID('Send message button');
   await device1.waitForTextElementToBePresent({

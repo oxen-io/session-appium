@@ -1,9 +1,13 @@
-import { iosIt } from '../../types/sessionIt';
-import { sleepFor } from './utils';
+import { englishStripped } from '../../localizer/i18n/localizedString';
+import { androidIt, iosIt } from '../../types/sessionIt';
+import { AccessibilityId } from '../../types/testing';
+import { DeleteMessageRequestButton, DeleteMesssageRequestConfirmation } from './locators';
+import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
-import { SupportedPlatformsType, openAppTwoDevices, closeApp } from './utils/open_app';
+import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-iosIt('Delete request', deleteRequest);
+iosIt('Delete message request', deleteRequest);
+androidIt('Delete message request', deleteRequest);
 
 async function deleteRequest(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
@@ -17,12 +21,17 @@ async function deleteRequest(platform: SupportedPlatformsType) {
   // Bob clicks on message request banner
   await device2.clickOnByAccessibilityID('Message requests banner');
   // Swipe left on ios
-  await device2.swipeLeftAny('Message request');
-
-  await device2.clickOnByAccessibilityID('Delete');
+  await runOnlyOnIOS(platform, () => device2.swipeLeftAny('Message request'));
+  await runOnlyOnAndroid(platform, () => device2.longPress('Message request'));
+  await device2.clickOnElementAll(new DeleteMessageRequestButton(device2));
   await sleepFor(1000);
-  await device2.clickOnByAccessibilityID('Confirm delete');
-  await device2.findElement('accessibility id', 'No pending message requests');
+  await device2.clickOnElementAll(new DeleteMesssageRequestConfirmation(device2));
+  // "messageRequestsNonePending": "No pending message requests",
+  const messageRequestsNonePending = englishStripped('messageRequestsNonePending').toString();
+  await device2.waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: messageRequestsNonePending as AccessibilityId,
+  });
 
   await closeApp(device1, device2);
 }
