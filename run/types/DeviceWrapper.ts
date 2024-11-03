@@ -785,9 +785,9 @@ export class DeviceWrapper {
       if (currentWait >= maxWaitMSec) {
         if (text) {
           throw new Error(`Waited for too long looking for '${locator.selector}' and '${text}`);
-        } else {
-          throw new Error(`Waited for too long looking for '${locator.selector}'`);
         }
+        throw new Error(`Waited for too long looking for '${locator.selector}'`);
+        
           throw new Error(`Waited for too long looking for '${selector}'`);
         
       }
