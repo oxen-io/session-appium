@@ -1,5 +1,5 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { InviteContacts } from './locators';
+import { InviteContactsButton } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -27,7 +27,7 @@ async function sendCommunityInvitationIos(platform: SupportedPlatformsType) {
   await joinCommunity(device1, communityLink, communityName);
   await device1.clickOnByAccessibilityID('More options');
   await sleepFor(500);
-  await device1.clickOnElementAll(new InviteContacts(device1));
+  await device1.clickOnElementAll(new InviteContactsButton(device1));
   await device1.clickOnElementByText({
     strategy: 'accessibility id',
     selector: 'Contact',
@@ -58,7 +58,7 @@ async function sendCommunityInviteMessageAndroid(platform: SupportedPlatformsTyp
   // Wait for community to load
   // Add user B to community
   await device1.clickOnByAccessibilityID('More options', 5000);
-  await device1.clickOnElementAll(new InviteContacts(device1));
+  await device1.clickOnElementAll(new InviteContactsButton(device1));
   await device1.clickOnElementByText({
     strategy: 'accessibility id',
     selector: 'Contact',

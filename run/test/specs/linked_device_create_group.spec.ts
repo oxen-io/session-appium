@@ -1,4 +1,4 @@
-import { localize } from '../../localizer/i18n/localizedString';
+import { englishStrippedStri } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { ControlMessage } from '../../types/testing';
 import { ApplyChanges, EditGroup, EditGroupName } from './locators';
@@ -46,9 +46,8 @@ async function linkedGroup(platform: SupportedPlatformsType) {
   await device1.clickOnElementAll(new ApplyChanges(device1));
   // If ios click back to match android (which goes back to conversation screen)
   // Check config message for changed name (different on ios and android)
-  const groupNameNew = localize('groupNameNew')
+  const groupNameNew = englishStrippedStri('groupNameNew')
     .withArgs({ group_name: newGroupName })
-    .strip()
     .toString();
   // Config message is "Group now is now {group_name}"
   await device1.waitForControlMessageToBePresent(groupNameNew as ControlMessage);

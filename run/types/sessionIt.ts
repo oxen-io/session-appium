@@ -20,7 +20,7 @@ export function androidIt(
 ) {
   const testName = `${title} android`;
   if (shouldSkip) {
-    test.skip(testName, async () => {
+    test.skip(testName, () => {
       console.info(`\n\n==========> Skipping "${testName}"\n\n`);
     });
   } else {
@@ -39,7 +39,7 @@ export function iosIt(
   const testName = `${title} ios`;
 
   if (shouldSkip) {
-    test.skip(testName, async () => {
+    test.skip(testName, () => {
       console.info(`\n\n==========> Skipping "${testName}"\n\n`);
     });
   } else {

@@ -1,8 +1,8 @@
-import { localize } from '../../localizer/i18n/localizedString';
+import { englishStrippedStri } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { AccessibilityId } from '../../types/testing';
 import { DeclineMessageRequestButton, DeleteMesssageRequestConfirmation } from './locators';
-import { runOnlyOnIOS, sleepFor } from './utils';
+import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
@@ -44,7 +44,7 @@ async function declineRequest(platform: SupportedPlatformsType) {
     selector: 'New conversation button',
   });
   // "messageRequestsNonePending": "No pending message requests",
-  const messageRequestsNonePending = localize('messageRequestsNonePending').strip().toString();
+  const messageRequestsNonePending = englishStrippedStri('messageRequestsNonePending').toString();
   await device3.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: messageRequestsNonePending as AccessibilityId,

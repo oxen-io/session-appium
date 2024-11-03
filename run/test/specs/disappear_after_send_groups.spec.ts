@@ -1,6 +1,7 @@
-import { localize } from '../../localizer/i18n/localizedString';
+import { DISAPPEARING_TIMES } from '../../constants';
+import { englishStrippedStri } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { DisappearActions, DisappearingControlMessage, DMTimeOption } from '../../types/testing';
+import { DisappearActions, DisappearingControlMessage } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
@@ -13,7 +14,7 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   const testGroupName = 'Disappear after send test';
   const testMessage = 'Testing disappear after sent in groups';
   const controlMode: DisappearActions = 'sent';
-  const time: DMTimeOption = '30 seconds';
+  const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
@@ -25,19 +26,15 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
 
   await setDisappearingMessage(platform, device1, ['Group', `Disappear after send option`, time]);
-  // await runOnlyOnIOS(platform, () => device1.navigateBack(platform));
   // Get correct control message for You setting disappearing messages
-  const disappearingMessagesSetYou = localize('disappearingMessagesSetYou')
+  const disappearingMessagesSetYou = englishStrippedStri('disappearingMessagesSetYou')
     .withArgs({ time, disappearing_messages_type: controlMode })
-    .strip()
     .toString();
   // Get correct control message for userA setting disappearing messages
-  const disappearingMessagesSetControl = localize('disappearingMessagesSet')
+  const disappearingMessagesSetControl = englishStrippedStri('disappearingMessagesSet')
     .withArgs({ name: userA.userName, time, disappearing_messages_type: controlMode })
-    .strip()
     .toString();
   // Check control message is correct on device 2
-
   await Promise.all([
     device1.disappearingControlMessage(disappearingMessagesSetYou as DisappearingControlMessage),
     device2.disappearingControlMessage(
@@ -61,7 +58,7 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
       text: testMessage,
     }),
   ]);
-  // Wait for 10 or 30 seconds
+  // Wait for 30 seconds
   await sleepFor(30000);
   // Check for test messages (should be deleted)
   await Promise.all([

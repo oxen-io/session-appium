@@ -1,6 +1,6 @@
 import { DISAPPEARING_TIMES } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { DMTimeOption } from '../../types/testing';
+import { DownloadMediaButton } from './locators';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -10,7 +10,7 @@ import { setDisappearingMessage } from './utils/set_disappearing_messages';
 iosIt('Disappearing video message 1:1', disappearingVideoMessage1o1);
 androidIt('Disappearing video message 1:1', disappearingVideoMessage1o1);
 
-const time: DMTimeOption = DISAPPEARING_TIMES.THIRTY_SECONDS;
+const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
 const testMessage = 'Testing disappearing messages for videos';
 
@@ -26,7 +26,7 @@ async function disappearingVideoMessage1o1(platform: SupportedPlatformsType) {
   await runOnlyOnIOS(platform, () => device1.sendVideoiOS(testMessage));
   await runOnlyOnAndroid(platform, () => device1.sendVideoAndroid());
   await device2.clickOnByAccessibilityID('Untrusted attachment message', 5000);
-  await device2.clickOnByAccessibilityID('Download media');
+  await device2.clickOnElementAll(new DownloadMediaButton(device2));
   await runOnlyOnIOS(platform, () =>
     device2.waitForTextElementToBePresent({
       strategy: 'accessibility id',

@@ -1,6 +1,5 @@
 import { DISAPPEARING_TIMES } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { DMTimeOption } from '../../types/testing';
 import { sleepFor } from './utils';
 
 import { newUser } from './utils/create_account';
@@ -12,7 +11,7 @@ iosIt('Disappearing link to group', disappearingLinkMessageGroup);
 androidIt('Disappearing link to group', disappearingLinkMessageGroup);
 
 const timerType = 'Disappear after send option';
-const time: DMTimeOption = DISAPPEARING_TIMES.THIRTY_SECONDS;
+const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 
 async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);

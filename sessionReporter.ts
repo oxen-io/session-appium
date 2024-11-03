@@ -11,9 +11,9 @@ import type {
 import chalk from 'chalk';
 import { Dictionary, groupBy, isString, mean, sortBy } from 'lodash';
 
-import dotenv from 'dotenv';
+// import dotenv from 'dotenv';
 
-dotenv.config();
+// dotenv.config();
 
 type TestAndResult = { test: TestCase; result: TestResult };
 

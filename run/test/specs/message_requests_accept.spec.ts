@@ -1,7 +1,6 @@
-import { localize } from '../../localizer/i18n/localizedString';
+import { englishStrippedStri } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { ControlMessage } from '../../types/testing';
-import { runOnlyOnIOS } from './utils';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
@@ -28,12 +27,11 @@ async function acceptRequest(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID('Message request');
   // Bob clicks accept button on device 2 (original device)
   await device2.clickOnByAccessibilityID('Accept message request');
- // Check control message for message request acceptance
+  // Check control message for message request acceptance
   // "messageRequestsAccepted": "Your message request has been accepted.",
-  const messageRequestsAccepted = localize('messageRequestsAccepted').strip().toString();
-  const messageRequestYouHaveAccepted = localize('messageRequestYouHaveAccepted')
+  const messageRequestsAccepted = englishStrippedStri('messageRequestsAccepted').toString();
+  const messageRequestYouHaveAccepted = englishStrippedStri('messageRequestYouHaveAccepted')
     .withArgs({ name: userA.userName })
-    .strip()
     .toString();
   await Promise.all([
     device1.waitForControlMessageToBePresent(messageRequestsAccepted as ControlMessage),

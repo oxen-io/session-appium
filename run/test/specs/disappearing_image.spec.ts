@@ -1,6 +1,6 @@
 import { DISAPPEARING_TIMES } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { DMTimeOption } from '../../types/testing';
+import { DownloadMediaButton } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -10,7 +10,7 @@ import { setDisappearingMessage } from './utils/set_disappearing_messages';
 iosIt('Disappearing image message 1:1', disappearingImageMessage1o1);
 androidIt('Disappearing image message 1:1', disappearingImageMessage1o1);
 
-const time: DMTimeOption = DISAPPEARING_TIMES.THIRTY_SECONDS;
+const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
 const testMessage = 'Testing disappearing messages for images';
 
@@ -27,7 +27,7 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType) {
   await device1.sendImage(platform, testMessage);
   await device2.clickOnByAccessibilityID('Untrusted attachment message');
   // User B - Click on 'download'
-  await device2.clickOnByAccessibilityID('Download media', 5000);
+  await device2.clickOnElementAll(new DownloadMediaButton(device2));
   // Wait for 30 seconds
   await sleepFor(30000);
   await Promise.all([

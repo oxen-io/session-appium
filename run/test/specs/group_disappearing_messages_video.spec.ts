@@ -1,6 +1,5 @@
 import { DISAPPEARING_TIMES } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { DMTimeOption } from '../../types/testing';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
@@ -10,7 +9,7 @@ import { setDisappearingMessage } from './utils/set_disappearing_messages';
 iosIt('Disappearing video to group', disappearingVideoMessageGroup);
 androidIt('Disappearing video to group', disappearingVideoMessageGroup);
 
-const time: DMTimeOption = DISAPPEARING_TIMES.THIRTY_SECONDS;
+const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
 
 async function disappearingVideoMessageGroup(platform: SupportedPlatformsType) {

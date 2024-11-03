@@ -1,7 +1,7 @@
-import { localize } from '../../localizer/i18n/localizedString';
+import { englishStrippedStri } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { ControlMessage } from '../../types/testing';
-import { ApplyChanges, EditGroup, InviteContacts } from './locators';
+import { ApplyChanges, EditGroup, InviteContactsButton, InviteContactsMenuItem } from './locators';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -49,7 +49,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   await device1.clickOnElementAll(new EditGroup(device1));
   await sleepFor(1000);
   // Add contact to group
-  await device1.clickOnElementAll(new InviteContacts(device1));
+  await device1.clickOnElementAll(new InviteContactsMenuItem(device1));
   // Select new user
   const addedContact = await device1.clickOnElementAll({
     strategy: 'accessibility id',
@@ -58,7 +58,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   });
   if (!addedContact && platform === 'android') {
     await device1.navigateBack(platform);
-    await device1.clickOnElementAll(new InviteContacts(device1));
+    await device1.clickOnElementAll(new InviteContactsButton(device1));
     await device1.selectByText('Contact', userD.userName);
   }
   // Click done/apply
@@ -68,10 +68,10 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   await device1.clickOnElementAll(new ApplyChanges(device1));
   // Check control message
   // "legacyGroupMemberNew": "<b>{name}</b> joined the group.",
-  const legacyGroupMemberNew = localize('legacyGroupMemberNew')
+  const legacyGroupMemberNew = englishStrippedStri('legacyGroupMemberNew')
     .withArgs({ name: userD.userName })
-    .strip()
     .toString();
+
   await device1.waitForControlMessageToBePresent(legacyGroupMemberNew as ControlMessage);
   // await Promise.all([
   //   device1.waitForControlMessageToBePresent(`${userD.userName} joined the group.`),
@@ -87,7 +87,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   );
   // Android supports You
   // "legacyGroupMemberYouNew": "<b>You</b> joined the group.",
-  const legacyGroupMemberYouNew = localize('legacyGroupMemberYouNew').strip().toString();
+  const legacyGroupMemberYouNew = englishStrippedStri('legacyGroupMemberYouNew').toString();
   await runOnlyOnAndroid(platform, () =>
     device4.waitForControlMessageToBePresent(legacyGroupMemberYouNew as ControlMessage)
   );

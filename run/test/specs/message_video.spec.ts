@@ -1,4 +1,5 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
+import { DownloadMediaButton } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -26,7 +27,7 @@ async function sendVideoIos(platform: SupportedPlatformsType) {
   // User B - Click on untrusted attachment message
   await device2.clickOnByAccessibilityID('Untrusted attachment message', 15000);
   // User B - Click on 'download'
-  await device2.clickOnByAccessibilityID('Download media', 5000);
+  await device2.clickOnElementAll(new DownloadMediaButton(device2));
   // Reply to message
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
@@ -64,11 +65,7 @@ async function sendVideoAndroid(platform: SupportedPlatformsType) {
     maxWait: 10000,
   });
   // User B - Click on 'download'
-  await device2.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'Download media',
-  });
-  // Reply to message
+  await device2.clickOnElementAll(new DownloadMediaButton(device2));
   await device2.waitForTextElementToBePresent({
     strategy: 'id',
     selector: 'network.loki.messenger:id/play_overlay',
