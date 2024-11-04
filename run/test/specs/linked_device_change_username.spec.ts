@@ -101,12 +101,6 @@ async function changeUsernameLinkedAndroid(platform: SupportedPlatformsType) {
     selector: 'User settings',
   });
 
-  await device2.clickOnElementAll(new ExitUserProfile(device2));
-  await device2.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'User settings',
-  });
-
   await Promise.all([
     device1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
