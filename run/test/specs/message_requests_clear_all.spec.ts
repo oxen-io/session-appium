@@ -1,4 +1,4 @@
-import { englishStrippedStri } from '../../localizer/i18n/localizedString';
+import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { AccessibilityId, USERNAME } from '../../types/testing';
 import { sleepFor } from './utils';
@@ -26,7 +26,7 @@ async function clearAllRequests(platform: SupportedPlatformsType) {
   await sleepFor(1000);
   await device2.clickOnByAccessibilityID('Clear');
   // "messageRequestsNonePending": "No pending message requests",
-  const messageRequestsNonePending = englishStrippedStri('messageRequestsNonePending').toString();
+  const messageRequestsNonePending = englishStripped('messageRequestsNonePending').toString();
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: messageRequestsNonePending as AccessibilityId,

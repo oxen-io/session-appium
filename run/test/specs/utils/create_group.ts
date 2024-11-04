@@ -1,4 +1,4 @@
-import { englishStrippedStri } from '../../../localizer/i18n/localizedString';
+import { englishStripped } from '../../../localizer/i18n/localizedString';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { Group, GROUPNAME, User } from '../../../types/testing';
 import { newContact } from './create_contact';
@@ -75,9 +75,6 @@ export const createGroup = async (
     ]);
   }
   // TODO: need to change once Android have updated their control messages
-  const groupNoMessages = englishStrippedStri('groupNoMessages')
-    .withArgs({ group_name: group.userName })
-    .toString();
   if (platform === 'android') {
     await device1.waitForControlMessageToBePresent(groupNoMessages);
     const legacyGroupMemberYouNew = englishStrippedStri('legacyGroupMemberYouNew').toString();

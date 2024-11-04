@@ -59,7 +59,7 @@ async function changeProfilePictureAndroid(platform: SupportedPlatformsType) {
   if (actualPixelColor === expectedPixelHexColour) {
     console.log('Colour is correct');
   } else {
-    throw new Error("Colour isn't 04cbfe, it is: " + actualPixelColor);
+    throw new Error(`Colour isn't ${expectedPixelHexColour}, it is: ` + actualPixelColor);
   }
   await closeApp(device);
 }

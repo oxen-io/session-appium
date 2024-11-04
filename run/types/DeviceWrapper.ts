@@ -358,7 +358,7 @@ export class DeviceWrapper {
         attempt++;
         if (attempt >= maxRetries) {
           throw new Error(
-            `Longpress on message: ${textToLookFor} unsuccessful after ${maxRetries} attempts, ${error as string}`
+            `Longpress on message: ${textToLookFor} unsuccessful after ${maxRetries} attempts, ${(error as Error).toString()}`
           );
         }
         console.log(`Longpress attempt ${attempt} failed. Retrying...`);
@@ -406,7 +406,7 @@ export class DeviceWrapper {
         await sleepFor(1000);
         if (attempt >= maxRetries) {
           if (error instanceof Error) {
-            error.message = `Longpress on conversation: ${userName} unsuccessful after ${maxRetries} attempts, ${error.message}`;
+            error.message = `Longpress on conversation: ${userName} unsuccessful after ${maxRetries} attempts, ${error.toString()}`;
           }
           throw error;
         }
@@ -594,7 +594,7 @@ export class DeviceWrapper {
       const matching = await this.findAsync(elements, async e => {
         const text = await this.getTextFromElement(e);
         // console.info(`text ${text} lookingfor ${textToLookFor}`);
-        if (text.toLocaleLowerCase().includes(textToLookFor.toLocaleLowerCase())) {
+        if (text.toLowerCase().includes(textToLookFor.toLowerCase())) {
           console.info(`Text found to include ${textToLookFor}`);
         }
         return Boolean(text && text.toLowerCase() === textToLookFor.toLowerCase());
@@ -801,10 +801,10 @@ export class DeviceWrapper {
 
       if (currentWait >= maxWaitMSec) {
         if (text) {
-          throw new Error(`Waited for too long looking for ${locator.selector} and '${text}`);
-        } else {
-          throw new Error(`Waited for too long looking for ${locator.selector}`);
+          throw new Error(`Waited for too long looking for '${selector}' and '${text}`);
         }
+          throw new Error(`Waited for too long looking for '${selector}'`);
+        
       }
       if (text) {
         console.log(`'${locator.selector}' and '${text}' has been found`);
@@ -1195,7 +1195,6 @@ export class DeviceWrapper {
     await this.clickOnByAccessibilityID('Attachments button');
     await sleepFor(100);
     await this.clickOnByAccessibilityID('Images folder');
-    // await this.clickOnByAccessibilityID('Continue');
     await this.clickOnElementAll({
       strategy: 'id',
       selector: 'com.android.permissioncontroller:id/permission_allow_all_button',
@@ -1420,7 +1419,6 @@ export class DeviceWrapper {
     let attempt = 0;
     await this.longPress('New voice message');
     if (this.isAndroid()) {
-      // await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Continue' });
       await this.clickOnElementAll({
         strategy: 'id',
         selector: 'com.android.permissioncontroller:id/permission_allow_foreground_only_button',

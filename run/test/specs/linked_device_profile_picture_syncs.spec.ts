@@ -5,6 +5,7 @@ import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { parseDataImage } from './utils/check_colour';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
+
 iosIt('Avatar restored', avatarRestored);
 androidIt('Avatar restored', avatarRestored);
 
