@@ -408,3 +408,4 @@ export type Id =
   | 'network.loki.messenger:id/openGroupTitleTextView'
   | 'Image picker'
   | 'network.loki.messenger:id/action_apply';
+  | 'Error message';
