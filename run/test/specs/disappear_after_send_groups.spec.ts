@@ -1,4 +1,3 @@
-import { DISAPPEARING_TIMES } from '../../constants';
 import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { DisappearActions, DISAPPEARING_TIMES, USERNAME } from '../../types/testing';

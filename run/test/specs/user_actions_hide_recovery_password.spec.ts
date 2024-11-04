@@ -1,4 +1,4 @@
-import { englishStrippedStri } from '../../localizer/i18n/localizedString';
+import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ModalDescription, ModalHeading } from './locators/global';
@@ -9,8 +9,8 @@ import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/ope
 iosIt('Hide recovery password', hideRecoveryPassword);
 androidIt('Hide recovery password', hideRecoveryPassword);
 
-const expectedHeading = englishStrippedStri('recoveryPasswordHidePermanently').toString();
-const expectedDescription = englishStrippedStri(
+const expectedHeading = englishStripped('recoveryPasswordHidePermanently').toString();
+const expectedDescription = englishStripped(
   'recoveryPasswordHidePermanentlyDescription1'
 ).toString();
 

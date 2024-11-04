@@ -787,9 +787,6 @@ export class DeviceWrapper {
           throw new Error(`Waited for too long looking for '${locator.selector}' and '${text}`);
         }
         throw new Error(`Waited for too long looking for '${locator.selector}'`);
-        
-          throw new Error(`Waited for too long looking for '${selector}'`);
-        
       }
       if (text) {
         console.log(`'${locator.selector}' and '${text}' has been found`);
