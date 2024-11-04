@@ -1,6 +1,6 @@
 import { englishStrippedStri } from '../../../localizer/i18n/localizedString';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { ControlMessage, Group, GroupName, User } from '../../../types/testing';
+import { Group, GROUPNAME, User } from '../../../types/testing';
 import { newContact } from './create_contact';
 import { SupportedPlatformsType } from './open_app';
 
@@ -12,7 +12,7 @@ export const createGroup = async (
   userTwo: User,
   device3: DeviceWrapper,
   userThree: User,
-  userName: GroupName
+  userName: GROUPNAME
 ): Promise<Group> => {
   const group: Group = { userName, userOne, userTwo, userThree };
 
@@ -79,12 +79,12 @@ export const createGroup = async (
     .withArgs({ group_name: group.userName })
     .toString();
   if (platform === 'android') {
-    await device1.waitForControlMessageToBePresent(groupNoMessages as ControlMessage);
+    await device1.waitForControlMessageToBePresent(groupNoMessages);
     const legacyGroupMemberYouNew = englishStrippedStri('legacyGroupMemberYouNew').toString();
     // Check control message 'You joined the group'
     await Promise.all([
-      device2.waitForControlMessageToBePresent(legacyGroupMemberYouNew as ControlMessage),
-      device3.waitForControlMessageToBePresent(legacyGroupMemberYouNew as ControlMessage),
+      device2.waitForControlMessageToBePresent(legacyGroupMemberYouNew),
+      device3.waitForControlMessageToBePresent(legacyGroupMemberYouNew),
     ]);
   }
   // Send message from User A to group to verify all working

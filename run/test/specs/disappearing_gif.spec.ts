@@ -1,5 +1,5 @@
-import { DISAPPEARING_TIMES } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
+import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
 import { DownloadMediaButton } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -19,8 +19,8 @@ async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType) {
   const testMessage = "Testing disappearing messages for GIF's";
   // Create user A and user B
   const [userA, userB] = await Promise.all([
-    newUser(device1, 'Alice', platform),
-    newUser(device2, 'Bob', platform),
+    newUser(device1, USERNAME.ALICE, platform),
+    newUser(device2, USERNAME.BOB, platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
@@ -32,7 +32,7 @@ async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID('Untrusted attachment message');
   await sleepFor(100);
   // Click on 'download'
-  await device2.clickOnByAccessibilityID('Download media');
+  await device2.clickOnElementAll(new DownloadMediaButton(device2));
   // Wait for 30 seconds
   await sleepFor(30000);
   // Check if GIF has been deleted on both devices
@@ -56,8 +56,8 @@ async function disappearingGifMessage1o1Android(platform: SupportedPlatformsType
 
   // Create user A and user B
   const [userA, userB] = await Promise.all([
-    newUser(device1, 'Alice', platform),
-    newUser(device2, 'Bob', platform),
+    newUser(device1, USERNAME.ALICE, platform),
+    newUser(device2, USERNAME.BOB, platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);

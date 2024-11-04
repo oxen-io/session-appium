@@ -1,6 +1,6 @@
 import { englishStrippedStri } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { ControlMessage } from '../../types/testing';
+import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
@@ -15,8 +15,8 @@ async function acceptRequest(platform: SupportedPlatformsType) {
   // Open app
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create two users
-  const userA = await newUser(device1, 'Alice', platform);
-  const userB = await linkedDevice(device2, device3, 'Bob', platform);
+  const userA = await newUser(device1, USERNAME.ALICE, platform);
+  const userB = await linkedDevice(device2, device3, USERNAME.BOB, platform);
 
   // Send message from Alice to Bob
   await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
@@ -34,8 +34,8 @@ async function acceptRequest(platform: SupportedPlatformsType) {
     .withArgs({ name: userA.userName })
     .toString();
   await Promise.all([
-    device1.waitForControlMessageToBePresent(messageRequestsAccepted as ControlMessage),
-    device2.waitForControlMessageToBePresent(messageRequestYouHaveAccepted as ControlMessage),
+    device1.waitForControlMessageToBePresent(messageRequestsAccepted),
+    device2.waitForControlMessageToBePresent(messageRequestYouHaveAccepted),
   ]);
   // Check conversation list for new contact (user A)
   await device2.navigateBack(platform);

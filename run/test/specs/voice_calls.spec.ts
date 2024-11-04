@@ -1,7 +1,7 @@
 import { test } from '@playwright/test';
 import { englishStrippedStri } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { ControlMessage } from '../../types/testing';
+import { USERNAME } from '../../types/testing';
 import { ExitUserProfile } from './locators';
 import { newUser } from './utils/create_account';
 import { runOnlyOnAndroid, sleepFor } from './utils/index';
@@ -16,8 +16,8 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and User B
   const [userA, userB] = await Promise.all([
-    newUser(device1, 'Alice', platform),
-    newUser(device2, 'Bob', platform),
+    newUser(device1, USERNAME.ALICE, platform),
+    newUser(device2, USERNAME.BOB, platform),
   ]);
   await device1.sendNewMessage(userB, 'Testing calls');
   // Look for phone icon (shouldnt be there)
@@ -38,7 +38,7 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   // Verify config message states message request was accepted
   // "messageRequestsAccepted": "Your message request has been accepted.",
   const messageRequestsAccepted = englishStrippedStri('messageRequestsAccepted').toString();
-  await device1.waitForControlMessageToBePresent(messageRequestsAccepted as ControlMessage);
+  await device1.waitForControlMessageToBePresent(messageRequestsAccepted);
   await device1.waitForControlMessageToBePresent('Your message request has been accepted.');
   // Phone icon should appear now that conversation has been approved
   await device1.clickOnByAccessibilityID('Call');
@@ -102,12 +102,12 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   const callsYouCalled = englishStrippedStri('callsYouCalled')
     .withArgs({ name: userB.userName })
     .toString();
-  await device1.waitForControlMessageToBePresent(callsYouCalled as ControlMessage);
+  await device1.waitForControlMessageToBePresent(callsYouCalled);
   // "callsYouCalled": "You called {name}",
   const callsCalledYou = englishStrippedStri('callsCalledYou')
     .withArgs({ name: userB.userName })
     .toString();
-  await device2.waitForControlMessageToBePresent(callsCalledYou as ControlMessage);
+  await device2.waitForControlMessageToBePresent(callsCalledYou);
   // Excellent
   await closeApp(device1, device2);
 }
@@ -117,8 +117,8 @@ async function voiceCallAndroid(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and User B
   const [userA, userB] = await Promise.all([
-    newUser(device1, 'Alice', platform),
-    newUser(device2, 'Bob', platform),
+    newUser(device1, USERNAME.ALICE, platform),
+    newUser(device2, USERNAME.BOB, platform),
   ]);
   await device1.sendNewMessage(userB, 'Testing calls');
   // Look for phone icon (shouldnt be there)

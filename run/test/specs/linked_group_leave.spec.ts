@@ -1,6 +1,6 @@
 import { englishStrippedStri } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { ControlMessage } from '../../types/testing';
+import { USERNAME } from '../../types/testing';
 import { LeaveGroup } from './locators';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -16,11 +16,11 @@ androidIt('Leave group linked device', leaveGroupLinkedDevice);
 async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
   const testGroupName = 'Leave group linked device';
   const { device1, device2, device3, device4 } = await openAppFourDevices(platform);
-  const userC = await linkedDevice(device3, device4, 'Charlie', platform);
+  const userC = await linkedDevice(device3, device4, USERNAME.CHARLIE, platform);
   // Create users A, B and C
   const [userA, userB] = await Promise.all([
-    newUser(device1, 'Alice', platform),
-    newUser(device2, 'Bob', platform),
+    newUser(device1, USERNAME.ALICE, platform),
+    newUser(device2, USERNAME.BOB, platform),
   ]);
 
   // Create group with user A, user B and User C
@@ -43,8 +43,8 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
     .toString();
 
   await Promise.all([
-    device2.waitForControlMessageToBePresent(groupMemberLeft as ControlMessage),
-    device1.waitForControlMessageToBePresent(groupMemberLeft as ControlMessage),
+    device2.waitForControlMessageToBePresent(groupMemberLeft),
+    device1.waitForControlMessageToBePresent(groupMemberLeft),
   ]);
 
   await closeApp(device1, device2, device3, device4);

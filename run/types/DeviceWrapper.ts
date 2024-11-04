@@ -10,25 +10,27 @@ import {
   LocatorsInterface,
   PrivacyButton,
   ReadReceiptsButton,
-  SaveProfilePictureButton,
 } from '../../run/test/specs/locators';
 import { IOS_XPATHS } from '../constants';
+import { englishStrippedStri, TokenString } from '../localizer/i18n/localizedString';
+import { LocalizerDictionary } from '../localizer/Localizer';
+import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
 import { clickOnCoordinates, sleepFor } from '../test/specs/utils';
 import { getAdbFullPath } from '../test/specs/utils/binaries';
 import { SupportedPlatformsType } from '../test/specs/utils/open_app';
 import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/specs/utils/utilities';
 import {
   AccessibilityId,
-  ControlMessage,
-  DMTimeOption,
-  DisappearingControlMessage,
+  DISAPPEARING_TIMES,
   Group,
+  Id,
   InteractionPoints,
   Strategy,
   StrategyExtractionObj,
   User,
   XPath,
 } from './testing';
+import { SaveProfilePictureButton } from '../test/specs/locators/settings';
 
 export type Coordinates = {
   x: number;
@@ -235,7 +237,7 @@ export class DeviceWrapper {
   }
 
   public async clickOnElementAll(
-    args: ({ text?: string; maxWait?: number } & StrategyExtractionObj) | LocatorsInterface
+    args: { text?: string; maxWait?: number } & (StrategyExtractionObj | LocatorsInterface)
   ) {
     let el: null | AppiumNextElementType = null;
     let locator: StrategyExtractionObj & { text?: string; maxWait?: number };
@@ -277,13 +279,13 @@ export class DeviceWrapper {
     await this.click(el.ELEMENT);
   }
 
-  public async clickOnElementById(id: string) {
+  public async clickOnElementById(id: Id) {
     await this.waitForTextElementToBePresent({ strategy: 'id', selector: id });
     const el = await this.findElement('id', id);
     await this.click(el.ELEMENT);
   }
 
-  public async clickOnTextElementById(id: string, text: string) {
+  public async clickOnTextElementById(id: Id, text: string) {
     const el = await this.findTextElementArrayById(id, text);
     await this.waitForTextElementToBePresent({
       strategy: 'id',
@@ -553,7 +555,7 @@ export class DeviceWrapper {
   }
 
   public async findTextElementArrayById(
-    id: string,
+    id: Id,
     textToLookFor: string
   ): Promise<AppiumNextElementType> {
     const elementArray = await this.findElements('id', id);
@@ -641,40 +643,56 @@ export class DeviceWrapper {
     return message;
   }
 
-  public async doesElementExist({
-    strategy,
-    selector,
-    text,
-    maxWait,
-  }: { text?: string; maxWait?: number } & StrategyExtractionObj) {
+  public async doesElementExist(
+    args: { text?: string; maxWait?: number } & (StrategyExtractionObj | LocatorsInterface)
+  ) {
+    const { text, maxWait } = args;
     const beforeStart = Date.now();
     const maxWaitMSec = maxWait || 30000;
     const waitPerLoop = 100;
     let element: AppiumNextElementType | null = null;
+    let locator: StrategyExtractionObj & { text?: string; maxWait?: number };
+    if (args instanceof LocatorsInterface) {
+      locator = args.build();
+    } else {
+      locator = args as StrategyExtractionObj & {
+        text?: string;
+        maxWait?: number;
+      };
+    }
+
     while (element === null) {
       try {
         if (!text) {
-          element = await this.findElement(strategy, selector);
+          element = await this.findElement(locator.strategy, locator.selector);
         } else {
-          const els = await this.findElements(strategy, selector);
+          const els = await this.findElements(locator.strategy, locator.selector);
           element = await this.findMatchingTextInElementArray(els, text);
           if (element) {
-            console.log(`${strategy}: ${selector} with matching text ${text} found`);
+            console.log(
+              `${locator.strategy}: ${locator.selector} with matching text ${text} found`
+            );
           } else {
-            console.log(`Couldn't find ${text} with matching ${strategy}: ${selector}`);
+            console.log(
+              `Couldn't find ${text} with matching ${locator.strategy}: ${locator.selector}`
+            );
           }
         }
       } catch (e: any) {
-        console.info(`doesElementExist failed with`, e.message, `${strategy} ${selector}`);
+        console.info(
+          `doesElementExist failed with`,
+          e.message,
+          `${locator.strategy} ${locator.selector}`
+        );
       }
       if (!element) {
         await sleepFor(waitPerLoop);
       }
       if (beforeStart + maxWaitMSec <= Date.now()) {
-        console.log(selector, " doesn't exist, time expired");
+        console.log(locator.selector, " doesn't exist, time expired");
         break;
       } else {
-        console.log(selector, "Doesn't exist but retrying");
+        console.log(locator.selector, "Doesn't exist but retrying");
       }
     }
 
@@ -735,34 +753,45 @@ export class DeviceWrapper {
   }
   // WAIT FOR FUNCTIONS
 
-  public async waitForTextElementToBePresent({
-    strategy,
-    selector,
-    text,
-    maxWait,
-  }: {
-    text?: string;
-    maxWait?: number;
-  } & StrategyExtractionObj): Promise<AppiumNextElementType> {
+  public async waitForTextElementToBePresent(
+    args: {
+      text?: string;
+      maxWait?: number;
+    } & (StrategyExtractionObj | LocatorsInterface)
+  ): Promise<AppiumNextElementType> {
     let el: null | AppiumNextElementType = null;
+    let locator: StrategyExtractionObj & { text?: string; maxWait?: number };
+
+    const { text, maxWait } = args;
+
+    if (args instanceof LocatorsInterface) {
+      locator = args.build();
+    } else {
+      locator = args as StrategyExtractionObj & {
+        text?: string;
+        maxWait?: number;
+      };
+    }
     const maxWaitMSec: number = typeof maxWait === 'number' ? maxWait : 60000;
     let currentWait = 0;
     const waitPerLoop = 100;
     while (el === null) {
       try {
         if (text) {
-          console.log(`Waiting for ${strategy}: '${selector}' to be present with ${text}`);
-          const els = await this.findElements(strategy, selector);
+          console.log(
+            `Waiting for ${locator.strategy}: '${locator.selector}' to be present with ${text}`
+          );
+          const els = await this.findElements(locator.strategy, locator.selector);
           el = await this.findMatchingTextInElementArray(els, text);
         } else {
-          console.log(`Waiting for '${strategy}' and '${selector}' to be present`);
-          el = await this.findElement(strategy, selector);
+          console.log(`Waiting for ${locator.strategy} and ${locator.selector} to be present`);
+          el = await this.findElement(locator.strategy, locator.selector);
         }
       } catch (e: any) {
         console.info(
           'waitForTextElementToBePresent threw: ',
           e.message,
-          `${strategy}: '${selector}'`
+          `${locator.strategy}: '${locator.selector}'`
         );
       }
       if (!el) {
@@ -772,22 +801,22 @@ export class DeviceWrapper {
 
       if (currentWait >= maxWaitMSec) {
         if (text) {
-          throw new Error(`Waited for too long looking for '${selector}' and '${text}`);
+          throw new Error(`Waited for too long looking for ${locator.selector} and '${text}`);
         } else {
-          throw new Error(`Waited for too long looking for '${selector}'`);
+          throw new Error(`Waited for too long looking for ${locator.selector}`);
         }
       }
       if (text) {
-        console.log(`'${selector}' and '${text}' has been found`);
+        console.log(`'${locator.selector}' and '${text}' has been found`);
       } else {
-        console.log(`'${selector}' has been found`);
+        console.log(`'${locator.selector}' has been found`);
       }
     }
     return el;
   }
 
   public async waitForControlMessageToBePresent(
-    text: ControlMessage,
+    text: string,
     maxWait?: number
   ): Promise<AppiumNextElementType> {
     let el: null | AppiumNextElementType = null;
@@ -816,7 +845,7 @@ export class DeviceWrapper {
   }
 
   public async disappearingControlMessage(
-    text: DisappearingControlMessage,
+    text: string,
     maxWait?: number
   ): Promise<AppiumNextElementType> {
     let el: null | AppiumNextElementType = null;
@@ -843,6 +872,7 @@ export class DeviceWrapper {
     console.log(`Control message ${text} has been found`);
     return el;
   }
+
   // TODO
   public async waitForLoadingMedia() {
     let loadingAnimation: AppiumNextElementType | null = null;
@@ -974,13 +1004,13 @@ export class DeviceWrapper {
     await this.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Conversation list item',
-      text: receiver.userName,
+      text: String(receiver.userName),
     });
     await sleepFor(100);
     await this.clickOnElementAll({
       strategy: 'accessibility id',
       selector: 'Conversation list item',
-      text: receiver.userName,
+      text: String(receiver.userName),
     });
     console.log(`${sender.userName} + " sent message to ${receiver.userName}`);
     await this.sendMessage(message);
@@ -1052,28 +1082,32 @@ export class DeviceWrapper {
     return this.toShared().getAttribute(attribute, elementId);
   }
 
-  public async disappearRadioButtonSelectediOS(timeOption: DMTimeOption) {
-    const radioButton = await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: `${timeOption} - Radio`,
-    });
-    const attr = await this.getAttribute('value', radioButton.ELEMENT);
-    if (attr === 'selected') {
-      console.log('Great success - default time is correct');
+  public async disappearRadioButtonSelected(
+    platform: SupportedPlatformsType,
+    timeOption: DISAPPEARING_TIMES
+  ) {
+    if (platform === 'ios') {
+      const radioButton = await this.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: `${timeOption} - Radio`,
+      });
+      const attr = await this.getAttribute('value', radioButton.ELEMENT);
+      if (attr === 'selected') {
+        console.log('Great success - default time is correct');
+      } else {
+        throw new Error('Dammit - default time was not correct');
+      }
     } else {
-      throw new Error('Dammit - default time was not correct');
-    }
-  }
-  public async disappearRadioButtonSelectedAndroid(timeOption: DMTimeOption) {
-    const radioButton = await this.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: timeOption,
-    });
-    const attr = await this.getAttribute('selected', radioButton.ELEMENT);
-    if (attr) {
-      console.log('Great success - default time is correct');
-    } else {
-      throw new Error('Dammit - default time was not correct');
+      const radioButton = await this.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: timeOption,
+      });
+      const attr = await this.getAttribute('selected', radioButton.ELEMENT);
+      if (attr) {
+        console.log('Great success - default time is correct');
+      } else {
+        throw new Error('Dammit - default time was not correct');
+      }
     }
   }
 
@@ -1473,7 +1507,7 @@ export class DeviceWrapper {
       // Select file
       const profilePicture = await this.doesElementExist({
         strategy: 'accessibility id',
-        selector: `profile_picture.jpg, 27.75 kB, May 1, 1999`,
+        selector: `profile_picture.jpg, 27.75 kB, May 1, 1998`,
         maxWait: 5000,
       });
       // If no image, push file to this
@@ -1486,10 +1520,16 @@ export class DeviceWrapper {
           `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/profile_picture.jpg' /sdcard/Download/`,
           true
         );
+        await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Show roots' });
+        await this.clickOnElementAll({
+          strategy: 'id',
+          selector: 'android:id/title',
+          text: 'Downloads',
+        });
       }
       await this.clickOnElementAll({
         strategy: 'accessibility id',
-        selector: 'profile_picture.jpg, 27.75 kB, May 1, 1999',
+        selector: 'profile_picture.jpg, 27.75 kB, May 1, 1998',
       });
       await this.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop');
     }
@@ -1726,6 +1766,66 @@ export class DeviceWrapper {
       defaultActiveApplication: activeAppInfo.bundleId,
     });
     return;
+  }
+
+  public async checkModalStrings(
+    expectedStringHeading: TokenString<LocalizerDictionary>,
+    expectedStringDescription: TokenString<LocalizerDictionary>,
+    oldModalAndroid?: boolean
+    // args?: { [key: string]: string | number }
+  ) {
+    // Check modal heading is correct
+    function replaceBrWithCRLF(input: string): string {
+      // return input.replace(/<br\s*\/?>/gi, '\nCR LF');
+      return input.replace(/\n/gi, '');
+    }
+    const expectedHeading = englishStrippedStri(expectedStringHeading).toString();
+    let elHeading;
+    // Some modals in Android haven't been updated to compose yet therefore need different locators
+    if (!oldModalAndroid) {
+      elHeading = await this.waitForTextElementToBePresent(new ModalHeading(this));
+    } else {
+      elHeading = await this.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: 'Modal heading',
+      });
+    }
+    const actualHeading = await this.getTextFromElement(elHeading);
+    if (expectedHeading === actualHeading) {
+      console.log('Modal heading is correct');
+    } else {
+      throw new Error(
+        `Modal heading is incorrect. Expected heading: ${expectedHeading}, Actual heading: ${actualHeading}`
+      );
+    }
+    // Now check modal description
+    // let expectedDescription;
+    const expectedDescription = englishStrippedStri(expectedStringDescription).toString();
+    // if (!args) {
+    // } else {
+    //   expectedDescription = englishStrippedStri(expectedStringDescription)
+    //     .withArgs(args as any)
+    //     .toString();
+    // }
+    let elDescription;
+    if (!oldModalAndroid) {
+      elDescription = await this.waitForTextElementToBePresent(new ModalDescription(this));
+    } else {
+      elDescription = await this.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: 'Modal description',
+      });
+    }
+    const actualDescription = await this.getTextFromElement(elDescription);
+    // Need to format the ACTUAL description that comes back from device to match
+    const formattedDescription = replaceBrWithCRLF(actualDescription);
+    if (expectedDescription === formattedDescription) {
+      console.log('Modal description is correct');
+    } else {
+      throw new Error(
+        `Modal description is incorrect. Expected description: ${expectedDescription}, Actual description: ${formattedDescription}`
+      );
+    }
   }
 
   /* === all the utilities function ===  */

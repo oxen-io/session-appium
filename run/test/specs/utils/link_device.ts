@@ -3,12 +3,12 @@ import { newUser } from './create_account';
 import { SupportedPlatformsType } from './open_app';
 
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { Username } from '../../../types/testing';
+import { USERNAME } from '../../../types/testing';
 
 export const linkedDevice = async (
   device1: DeviceWrapper,
   device2: DeviceWrapper,
-  userName: Username,
+  userName: USERNAME,
   platform: SupportedPlatformsType
 ) => {
   const user = await newUser(device1, userName, platform);

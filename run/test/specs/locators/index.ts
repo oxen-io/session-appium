@@ -407,7 +407,7 @@ export class BlockUserConfirmationModal extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Confirm block',
+          selector: 'Block',
         };
     }
   }
@@ -470,7 +470,7 @@ export class DeleteMesssageRequestConfirmation extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Confirm delete',
+          selector: 'Delete',
         };
       case 'android':
         return {
@@ -498,23 +498,6 @@ export class RevealRecoveryPhraseButton extends LocatorsInterface {
   }
 }
 
-export class SaveProfilePictureButton extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'id',
-          selector: 'Save',
-        };
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Save',
-        };
-    }
-  }
-}
-
 export class DownloadMediaButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -526,7 +509,7 @@ export class DownloadMediaButton extends LocatorsInterface {
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Download media',
+          selector: 'Download',
         };
     }
   }

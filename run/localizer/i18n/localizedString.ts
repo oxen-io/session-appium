@@ -16,7 +16,7 @@ type PluralString = `{${PluralKey}, plural, one [${RawString}] other [${RawStrin
 
 type GenericLocalizedDictionary = Record<string, RawString | PluralString>;
 
-type TokenString<Dict extends GenericLocalizedDictionary> = keyof Dict extends string
+export type TokenString<Dict extends GenericLocalizedDictionary> = keyof Dict extends string
   ? keyof Dict
   : never;
 
@@ -148,23 +148,23 @@ export class LocalizedStringBuilder<
     this.token = token;
   }
 
-  public toString(): string {
+  public toString<LocalizedString = Dict[T]>(): LocalizedString {
     try {
       if (this.renderStringAsToken) {
-        return this.token;
+        return this.token as unknown as LocalizedString;
       }
 
       const rawString = this.getRawString();
       const str = isStringWithArgs(rawString) ? this.formatStringWithArgs(rawString) : rawString;
 
       if (this.isStripped) {
-        return this.postProcessStrippedString(str);
+        return this.postProcessStrippedString(str) as LocalizedString;
       }
 
-      return str;
+      return str as LocalizedString;
     } catch (error) {
       i18nLog(error);
-      return this.token;
+      return this.token as unknown as LocalizedString;
     }
   }
 
