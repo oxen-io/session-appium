@@ -347,3 +347,4 @@ export type Id =
   | 'Image picker'
   | 'network.loki.messenger:id/action_apply'
   | 'Save';
+  | 'Error message';
