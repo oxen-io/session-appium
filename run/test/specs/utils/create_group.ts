@@ -1,6 +1,6 @@
 import { englishStripped } from '../../../localizer/i18n/localizedString';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { ControlMessage, Group, GroupName, User } from '../../../types/testing';
+import { ControlMessage, Group, GROUPNAME, User } from '../../../types/testing';
 import { newContact } from './create_contact';
 import { SupportedPlatformsType } from './open_app';
 
@@ -12,7 +12,7 @@ export const createGroup = async (
   userTwo: User,
   device3: DeviceWrapper,
   userThree: User,
-  userName: GroupName
+  userName: GROUPNAME
 ): Promise<Group> => {
   const group: Group = { userName, userOne, userTwo, userThree };
 

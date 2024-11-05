@@ -1,4 +1,5 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
+import { USERNAME } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
@@ -13,9 +14,9 @@ async function sendLinkGroupiOS(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
-    newUser(device1, 'Alice', platform),
-    newUser(device2, 'Bob', platform),
-    newUser(device3, 'Charlie', platform),
+    newUser(device1, USERNAME.ALICE, platform),
+    newUser(device2, USERNAME.BOB, platform),
+    newUser(device3, USERNAME.CHARLIE, platform),
   ]);
   const replyMessage = `Replying to link from ${userA.userName} in group ${testGroupName}`;
   // Create contact between User A and User B
@@ -72,9 +73,9 @@ async function sendLinkGroupAndroid(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
-    newUser(device1, 'Alice', platform),
-    newUser(device2, 'Bob', platform),
-    newUser(device3, 'Charlie', platform),
+    newUser(device1, USERNAME.ALICE, platform),
+    newUser(device2, USERNAME.BOB, platform),
+    newUser(device3, USERNAME.CHARLIE, platform),
   ]);
   // Create contact between User A and User B
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);

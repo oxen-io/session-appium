@@ -1,4 +1,5 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
+import { USERNAME } from '../../types/testing';
 import { ExitUserProfile, TickButton, UsernameInput, UsernameSettings } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -10,7 +11,7 @@ androidIt('Change username', changeUsernameAndroid);
 async function changeUsernameiOS(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
 
-  const userA = await newUser(device, 'Alice', platform);
+  const userA = await newUser(device, USERNAME.ALICE, platform);
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
   await device.clickOnByAccessibilityID('User settings');
@@ -52,7 +53,7 @@ async function changeUsernameiOS(platform: SupportedPlatformsType) {
 async function changeUsernameAndroid(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
 
-  const userA = await newUser(device, 'Alice', platform);
+  const userA = await newUser(device, USERNAME.ALICE, platform);
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
   await device.clickOnByAccessibilityID('User settings');

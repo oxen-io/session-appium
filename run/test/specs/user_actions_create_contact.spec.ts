@@ -1,4 +1,5 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
+import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
@@ -9,8 +10,8 @@ androidIt('Create contact android', createContact);
 
 async function createContact(platform: SupportedPlatformsType) {
   const [device1, device2, device3] = await openAppMultipleDevices(platform, 3);
-  const userA = await linkedDevice(device1, device3, 'Alice', platform);
-  const userB = await newUser(device2, 'Bob', platform);
+  const userA = await linkedDevice(device1, device3, USERNAME.ALICE, platform);
+  const userB = await newUser(device2, USERNAME.BOB, platform);
 
   await newContact(platform, device1, userA, device2, userB);
   await device1.navigateBack(platform);

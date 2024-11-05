@@ -1,11 +1,6 @@
 import { englishStripped } from '../../../localizer/i18n/localizedString';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import {
-  DisappearActions,
-  DisappearingControlMessage,
-  DMTimeOption,
-  User,
-} from '../../../types/testing';
+import { DisappearActions, DISAPPEARING_TIMES, User } from '../../../types/testing';
 import { SupportedPlatformsType } from './open_app';
 
 export const checkDisappearingControlMessage = async (
@@ -14,7 +9,7 @@ export const checkDisappearingControlMessage = async (
   userB: User,
   device1: DeviceWrapper,
   device2: DeviceWrapper,
-  time: DMTimeOption,
+  time: DISAPPEARING_TIMES,
   mode: DisappearActions
 ) => {
   // Two control messages to check - You have set and other user has set
@@ -32,25 +27,19 @@ export const checkDisappearingControlMessage = async (
   // Check device 1
   if (platform === 'android') {
     await Promise.all([
-      device1.disappearingControlMessage(disappearingMessagesSetYou as DisappearingControlMessage),
-      device1.disappearingControlMessage(
-        disappearingMessagesSetUserB as DisappearingControlMessage
-      ),
+      device1.disappearingControlMessage(disappearingMessagesSetYou),
+      device1.disappearingControlMessage(disappearingMessagesSetUserB),
     ]);
     // Check device 2
     await Promise.all([
-      device2.disappearingControlMessage(disappearingMessagesSetYou as DisappearingControlMessage),
-      device2.disappearingControlMessage(
-        disappearingMessagesSetUserA as DisappearingControlMessage
-      ),
+      device2.disappearingControlMessage(disappearingMessagesSetYou),
+      device2.disappearingControlMessage(disappearingMessagesSetUserA),
     ]);
   }
   if (platform === 'ios') {
     await Promise.all([
-      device1.disappearingControlMessage(disappearingMessagesSetYou as DisappearingControlMessage),
-      device2.disappearingControlMessage(
-        disappearingMessagesSetUserA as DisappearingControlMessage
-      ),
+      device1.disappearingControlMessage(disappearingMessagesSetYou),
+      device2.disappearingControlMessage(disappearingMessagesSetUserA),
     ]);
   }
 };

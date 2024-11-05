@@ -1,4 +1,5 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
+import { USERNAME } from '../../types/testing';
 import { BlockedContactsSettings, BlockUser, BlockUserConfirmation } from './locators';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -13,9 +14,9 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
   //Open three devices and creates two contacts (Alice and Bob)
   // Alice has linked device (1 and 3)
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
-  const userA = await linkedDevice(device1, device3, 'Alice', platform);
+  const userA = await linkedDevice(device1, device3, USERNAME.ALICE, platform);
 
-  const userB = await newUser(device2, 'Bob', platform);
+  const userB = await newUser(device2, USERNAME.BOB, platform);
 
   await newContact(platform, device1, userA, device2, userB);
   // Block contact

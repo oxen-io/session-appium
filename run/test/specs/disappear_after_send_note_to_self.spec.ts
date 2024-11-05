@@ -1,6 +1,5 @@
-import { DISAPPEARING_TIMES } from '../../constants';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { DisappearActions } from '../../types/testing';
+import { DisappearActions, DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
@@ -12,7 +11,7 @@ androidIt('Disappear after send note to self', disappearAfterSendNoteToSelf);
 async function disappearAfterSendNoteToSelf(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
   const testMessage = `Testing disappearing messages in Note to Self`;
-  const userA = await newUser(device, 'Alice', platform);
+  const userA = await newUser(device, USERNAME.ALICE, platform);
   const controlMode: DisappearActions = 'sent';
   const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   // Send message to self to bring up Note to Self conversation

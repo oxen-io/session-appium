@@ -1,4 +1,5 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
+import { USERNAME } from '../../types/testing';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { parseDataImage } from './utils/check_colour';
 import { linkedDevice } from './utils/link_device';
@@ -17,7 +18,7 @@ async function avatarRestored(platform: SupportedPlatformsType) {
   } else {
     throw new Error('Platform not supported');
   }
-  await linkedDevice(device1, device2, 'Alice', platform);
+  await linkedDevice(device1, device2, USERNAME.ALICE, platform);
   await device1.uploadProfilePicture();
   await sleepFor(5000);
   // Wait for change

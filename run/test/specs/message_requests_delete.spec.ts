@@ -1,6 +1,6 @@
 import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { AccessibilityId } from '../../types/testing';
+import { AccessibilityId, USERNAME } from '../../types/testing';
 import { DeleteMessageRequestButton, DeleteMesssageRequestConfirmation } from './locators';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -12,8 +12,8 @@ androidIt('Delete message request', deleteRequest);
 async function deleteRequest(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   const [userA, userB] = await Promise.all([
-    newUser(device1, 'Alice', platform),
-    newUser(device2, 'Bob', platform),
+    newUser(device1, USERNAME.ALICE, platform),
+    newUser(device2, USERNAME.BOB, platform),
   ]);
   // Send message from Alice to Bob
   await device1.sendNewMessage(userB, `${userA.userName} to ${userB.userName}`);
