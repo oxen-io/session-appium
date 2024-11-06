@@ -34,7 +34,13 @@ export const setDisappearingMessage = async (
       await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.ONE_DAY);
     }
   } else if (enforcedType === 'Group' && timerType === 'Disappear after send option') {
-    await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.OFF);
+    if (platform === 'ios') {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.OFF_IOS);
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.OFF_ANDROID);
+    }
   } else {
     await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.ONE_DAY);
   }

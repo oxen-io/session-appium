@@ -76,7 +76,8 @@ export enum DISAPPEARING_TIMES {
   ONE_DAY = '1 day',
   ONE_WEEK = '1 week',
   TWO_WEEKS = '2 weeks',
-  OFF = 'Off',
+  OFF_IOS = 'Off',
+  OFF_ANDROID = 'Disable disappearing messages',
 }
 
 export type DisappearOpts1o1 = [
@@ -314,7 +315,8 @@ export type AccessibilityId =
   | 'Yes'
   | 'Disappearing messages type and time'
   | 'Confirm'
-  | 'Delete';
+  | 'Delete'
+  | 'Delete on this device only';
 
 export type Id =
   | 'Modal heading'
@@ -346,4 +348,5 @@ export type Id =
   | 'network.loki.messenger:id/openGroupTitleTextView'
   | 'Image picker'
   | 'network.loki.messenger:id/action_apply'
-  | 'Save';
+  | 'Save'
+  | 'Delete';

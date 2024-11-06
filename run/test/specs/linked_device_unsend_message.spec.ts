@@ -1,5 +1,7 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import { DeleteMessageConfirmationModal, DeleteMessageForEveryone } from './locators';
+import { runOnlyOnAndroid } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
@@ -37,17 +39,47 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
   // Select delete
   await device1.clickOnByAccessibilityID('Delete message');
   // Select delete for everyone
-  await device1.clickOnByAccessibilityID('Delete for everyone');
-  await device2.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'Deleted message',
-  });
-  // Check linked device for deleted message
-  await device3.hasElementBeenDeleted({
-    strategy: 'accessibility id',
-    selector: 'Message body',
-    text: sentMessage,
-  });
+  await device1.clickOnElementAll(new DeleteMessageForEveryone(device1));
+  await runOnlyOnAndroid(platform, () =>
+    device1.clickOnElementAll(new DeleteMessageConfirmationModal(device1))
+  );
+  if (platform === 'android') {
+    await Promise.all([
+      device1.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: 'Deleted message',
+        maxWait: 8000,
+      }),
+      device2.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: 'Deleted message',
+        maxWait: 8000,
+      }),
+      device3.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: 'Deleted message',
+        maxWait: 8000,
+      }),
+    ]);
+  } else {
+    await Promise.all([
+      device1.hasElementBeenDeleted({
+        strategy: 'accessibility id',
+        selector: 'Message body',
+        text: sentMessage,
+      }),
+      device2.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: 'Deleted message',
+        maxWait: 8000,
+      }),
+      device3.hasElementBeenDeleted({
+        strategy: 'accessibility id',
+        selector: 'Message body',
+        text: sentMessage,
+      }),
+    ]);
+  }
   // Close app
   await closeApp(device1, device2, device3);
 }

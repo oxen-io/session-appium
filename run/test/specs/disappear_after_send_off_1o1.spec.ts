@@ -64,10 +64,10 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType) {
   const disappearingMessagesTurnedOffYou = englishStrippedStri(
     'disappearingMessagesTurnedOffYou'
   ).toString();
-  // Check USER B'S CONTROL MESSAGE
   const disappearingMessagesTurnedOff = englishStrippedStri('disappearingMessagesTurnedOff')
-    .withArgs({ name: userA.userName })
-    .toString();
+  .withArgs({ name: userA.userName })
+  .toString();
+  // Check USER B'S CONTROL MESSAGE
   await Promise.all([
     device1.disappearingControlMessage(disappearingMessagesTurnedOffYou),
     device2.disappearingControlMessage(disappearingMessagesTurnedOff),
@@ -77,8 +77,8 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType) {
   await device2.clickOnElementAll(new FollowSettingsButton(device2));
   await sleepFor(500);
   await device2.checkModalStrings(
-    'disappearingMessagesFollowSetting',
-    'disappearingMessagesFollowSettingOff',
+    englishStrippedStri('disappearingMessagesFollowSetting').toString(),
+    englishStrippedStri('disappearingMessagesFollowSettingOff').toString(),
     true
   );
   await device2.clickOnElementAll({ strategy: 'accessibility id', selector: 'Confirm' });

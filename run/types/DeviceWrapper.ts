@@ -1769,17 +1769,14 @@ export class DeviceWrapper {
   }
 
   public async checkModalStrings(
-    expectedStringHeading: TokenString<LocalizerDictionary>,
-    expectedStringDescription: TokenString<LocalizerDictionary>,
+    expectedStringHeading: string,
+    expectedStringDescription: string,
     oldModalAndroid?: boolean
-    // args?: { [key: string]: string | number }
   ) {
     // Check modal heading is correct
     function replaceBrWithCRLF(input: string): string {
-      // return input.replace(/<br\s*\/?>/gi, '\nCR LF');
       return input.replace(/\n/gi, '');
     }
-    const expectedHeading = englishStrippedStri(expectedStringHeading).toString();
     let elHeading;
     // Some modals in Android haven't been updated to compose yet therefore need different locators
     if (!oldModalAndroid) {
@@ -1791,22 +1788,14 @@ export class DeviceWrapper {
       });
     }
     const actualHeading = await this.getTextFromElement(elHeading);
-    if (expectedHeading === actualHeading) {
+    if (expectedStringHeading === actualHeading) {
       console.log('Modal heading is correct');
     } else {
       throw new Error(
-        `Modal heading is incorrect. Expected heading: ${expectedHeading}, Actual heading: ${actualHeading}`
+        `Modal heading is incorrect. Expected heading: ${expectedStringHeading}, Actual heading: ${actualHeading}`
       );
     }
-    // Now check modal description
-    // let expectedDescription;
-    const expectedDescription = englishStrippedStri(expectedStringDescription).toString();
-    // if (!args) {
-    // } else {
-    //   expectedDescription = englishStrippedStri(expectedStringDescription)
-    //     .withArgs(args as any)
-    //     .toString();
-    // }
+
     let elDescription;
     if (!oldModalAndroid) {
       elDescription = await this.waitForTextElementToBePresent(new ModalDescription(this));
@@ -1819,11 +1808,11 @@ export class DeviceWrapper {
     const actualDescription = await this.getTextFromElement(elDescription);
     // Need to format the ACTUAL description that comes back from device to match
     const formattedDescription = replaceBrWithCRLF(actualDescription);
-    if (expectedDescription === formattedDescription) {
+    if (expectedStringDescription === formattedDescription) {
       console.log('Modal description is correct');
     } else {
       throw new Error(
-        `Modal description is incorrect. Expected description: ${expectedDescription}, Actual description: ${formattedDescription}`
+        `Modal description is incorrect. Expected description: ${expectedStringDescription}, Actual description: ${formattedDescription}`
       );
     }
   }

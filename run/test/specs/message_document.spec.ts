@@ -1,7 +1,7 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DownloadMediaButton } from './locators';
-import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
+ import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';

@@ -1,3 +1,4 @@
+import { englishStrippedStri } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DeleteContactModalConfirm } from './locators/global';
@@ -35,7 +36,13 @@ async function deleteContact(platform: SupportedPlatformsType) {
   await runOnlyOnIOS(platform, () => device1.swipeLeft('Conversation list item', userB.userName));
   await runOnlyOnAndroid(platform, () => device1.longPressConversation(userB.userName));
   await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Delete' });
-  // await device1.checkModalStrings('conversationsDelete', 'conversationsDeleteDescription');
+  await device1.checkModalStrings(
+    englishStrippedStri('conversationsDelete').toString(),
+    englishStrippedStri('conversationsDeleteDescription')
+      .withArgs({ name: userB.userName })
+      .toString(),
+    true
+  );
   await device1.clickOnElementAll(new DeleteContactModalConfirm(device1));
   await Promise.all([
     device1.doesElementExist({
