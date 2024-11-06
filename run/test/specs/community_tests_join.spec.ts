@@ -1,16 +1,12 @@
-import { test } from '@playwright/test';
 import { testCommunityLink, testCommunityName } from '../../constants/community';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { joinCommunity } from './utils/join_community';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 import { runOnlyOnIOS } from './utils';
 
-test.describe('Community tests', () => {
-  iosIt('Join community test', joinCommunityTest);
-  androidIt('Join community test', joinCommunityTest);
-});
+bothPlatformsIt('Join community test', 'high', joinCommunityTest);
 
 async function joinCommunityTest(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

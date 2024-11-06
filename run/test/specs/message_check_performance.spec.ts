@@ -1,13 +1,10 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, openAppTwoDevices } from './utils/open_app';
 
-iosIt('Check performance', checkPerformance);
-androidIt('Check performance', checkPerformance);
-
-// bothPlatformsIt("Check performance", checkPerformance);
+bothPlatformsIt('Check performance', 'undefined', checkPerformance);
 
 async function checkPerformance(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

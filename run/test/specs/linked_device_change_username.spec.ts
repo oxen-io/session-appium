@@ -5,8 +5,8 @@ import { sleepFor } from './utils';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-iosIt('Change username linked device', changeUsernameLinkediOS);
-androidIt('Change username linked device', changeUsernameLinkedAndroid);
+iosIt('Change username linked device', 'medium', changeUsernameLinkediOS);
+androidIt('Change username linked device', 'medium', changeUsernameLinkedAndroid);
 
 async function changeUsernameLinkediOS(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

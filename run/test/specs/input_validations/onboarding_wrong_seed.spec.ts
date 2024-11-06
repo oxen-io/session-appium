@@ -3,7 +3,7 @@ import { AccountRestoreButton, SeedPhraseInput, ContinueButton, ErrorMessage } f
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 import { localize } from '../../../localizer/i18n/localizedString';
 
-bothPlatformsIt('Onboarding wrong seed', onboardingIncorrectSeed);
+bothPlatformsIt('Onboarding wrong seed', 'low', onboardingIncorrectSeed);
 
 // the seed phrase is too long but contains only valid mnemonics which triggers the generic error 
 const wrongSeed = 'ruby bakery illness push rift reef nabbing bawled hope ruby silk lobster hope ruby ruby ruby'

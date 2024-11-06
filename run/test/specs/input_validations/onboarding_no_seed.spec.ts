@@ -3,7 +3,7 @@ import { AccountRestoreButton, SeedPhraseInput, ContinueButton, ErrorMessage} fr
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 import { localize } from '../../../localizer/i18n/localizedString';
 
-bothPlatformsIt('Onboarding no seed', onboardingNoSeed);
+bothPlatformsIt('Onboarding no seed', 'low', onboardingNoSeed);
 
 const emptySeed = '';
 // the expected error is 'Recovery Password not long enough' which is represented by the following localized string

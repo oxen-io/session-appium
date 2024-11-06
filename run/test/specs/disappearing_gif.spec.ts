@@ -6,8 +6,8 @@ import { newContact } from './utils/create_contact';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-iosIt('Disappearing GIF message 1:1', disappearingGifMessage1o1Ios);
-androidIt('Disappearing GIF message 1:1', disappearingGifMessage1o1Android);
+iosIt('Disappearing GIF message 1:1', 'low', disappearingGifMessage1o1Ios);
+androidIt('Disappearing GIF message 1:1', 'low', disappearingGifMessage1o1Android);
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';

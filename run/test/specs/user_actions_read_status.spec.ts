@@ -1,12 +1,11 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils/index';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-iosIt('Read status', readStatus);
-androidIt('Read status', readStatus);
+bothPlatformsIt('Read status', 'medium', readStatus);
 
 async function readStatus(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

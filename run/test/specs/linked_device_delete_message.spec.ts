@@ -1,4 +1,4 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DeleteMessageConfirmation } from './locators';
 import { newUser } from './utils/create_account';
@@ -6,8 +6,7 @@ import { newContact } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-iosIt('Deleted message linked device', deletedMessageLinkedDevice);
-androidIt('Deleted message linked device', deletedMessageLinkedDevice);
+bothPlatformsIt('Deleted message linked device', 'high', deletedMessageLinkedDevice);
 
 async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);

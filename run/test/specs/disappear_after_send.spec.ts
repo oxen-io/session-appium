@@ -1,5 +1,4 @@
-
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { DisappearActions, DISAPPEARING_TIMES, DisappearModes, USERNAME } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -8,8 +7,7 @@ import { checkDisappearingControlMessage } from './utils/disappearing_control_me
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-iosIt('Disappear after send', disappearAfterSend);
-androidIt('Disappear after send', disappearAfterSend);
+bothPlatformsIt('Disappear after send', 'high', disappearAfterSend);
 
 async function disappearAfterSend(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

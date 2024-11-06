@@ -5,8 +5,8 @@ import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppOnPlatformSingleDevice } from './utils/open_app';
 
-iosIt('Change username', changeUsernameiOS);
-androidIt('Change username', changeUsernameAndroid);
+iosIt('Change username', 'medium', changeUsernameiOS);
+androidIt('Change username', 'medium', changeUsernameAndroid);
 
 async function changeUsernameiOS(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);

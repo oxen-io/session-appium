@@ -3,7 +3,7 @@ import { AccountRestoreButton, SeedPhraseInput, ContinueButton, ErrorMessage } f
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 import { localize } from '../../../localizer/i18n/localizedString';
 
-bothPlatformsIt('Onboarding incorrect seed', onboardingIncorrectSeed);
+bothPlatformsIt('Onboarding incorrect seed', 'low', onboardingIncorrectSeed);
 
 // the word 'zork' is not on the mnemonic word list which triggers the expected error
 const incorrectSeed = 'ruby bakery illness push rift reef nabbing bawled hope zork silk lobster hope'

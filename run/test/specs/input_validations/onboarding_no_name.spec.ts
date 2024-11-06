@@ -3,7 +3,7 @@ import { CreateAccountButton, DisplayNameInput, ContinueButton, ErrorMessage} fr
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 import { localize } from '../../../localizer/i18n/localizedString';
 
-bothPlatformsIt('Onboarding no name', onboardingNoName);
+bothPlatformsIt('Onboarding no name', 'low', onboardingNoName);
 
 const emptyName = '';
 // the expected error is 'Please enter a display name' which is represented by the following localized string

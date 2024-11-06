@@ -4,8 +4,8 @@ import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-iosIt('Send video to group', sendVideoGroupiOS);
-androidIt('Send video to group', sendVideoGroupAndroid);
+iosIt('Send video to group', 'medium', sendVideoGroupiOS);
+androidIt('Send video to group', 'medium', sendVideoGroupAndroid);
 
 async function sendVideoGroupiOS(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';

@@ -6,8 +6,8 @@ import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-iosIt('Disappearing link message 1:1', disappearingLinkMessage1o1Ios);
-androidIt('Disappearing link message 1:1', disappearingLinkMessage1o1Android);
+iosIt('Disappearing link message 1:1', 'low', disappearingLinkMessage1o1Ios);
+androidIt('Disappearing link message 1:1', 'low', disappearingLinkMessage1o1Android);
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after read option';

@@ -4,8 +4,8 @@ import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, openAppTwoDevices, closeApp } from './utils/open_app';
 
-iosIt('Send long message 1:1', sendLongMessageIos);
-androidIt('Send long message 1:1', sendLongMessageAndroid);
+iosIt('Send long message 1:1', 'low', sendLongMessageIos);
+androidIt('Send long message 1:1', 'low', sendLongMessageAndroid);
 
 async function sendLongMessageIos(platform: SupportedPlatformsType) {
   const longText =

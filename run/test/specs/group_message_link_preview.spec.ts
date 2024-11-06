@@ -5,8 +5,8 @@ import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-iosIt('Send link to group', sendLinkGroupiOS);
-androidIt('Send link to group', sendLinkGroupAndroid);
+iosIt('Send link to group', 'high', sendLinkGroupiOS);
+androidIt('Send link to group', 'high', sendLinkGroupAndroid);
 
 async function sendLinkGroupiOS(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';
