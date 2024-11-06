@@ -1,15 +1,22 @@
-import { LocatorsInterface } from '../test/specs/locators';
 import { DeviceWrapper } from './DeviceWrapper';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- Used in docstring
+import { en } from '../localizer/locales';
+
 export type User = {
-  userName: Username;
+  userName: USERNAME;
   accountID: string;
   recoveryPhrase: string;
 };
 
-export type Username = 'Alice' | 'Bob' | 'Charlie' | 'Dracula';
+export enum USERNAME {
+  ALICE = 'Alice',
+  BOB = 'Bob',
+  CHARLIE = 'Charlie',
+  DRACULA = 'Dracula',
+}
 
-export type GroupName =
+export type GROUPNAME =
   | 'Test group'
   | 'Mentions test group'
   | 'Message checks for groups'
@@ -23,7 +30,7 @@ export type GroupName =
   | 'Disappear after sent test';
 
 export type Group = {
-  userName: GroupName;
+  userName: GROUPNAME;
   userOne: User;
   userTwo: User;
   userThree: User;
@@ -56,38 +63,49 @@ export type ConversationType = '1:1' | 'Group' | 'Community' | 'Note to Self';
 
 export type DisappearModes = 'read' | 'send';
 export type DisappearActions = 'read' | 'sent';
-export type DMTimeOption =
-  | '5 seconds'
-  | '10 seconds'
-  | '30 seconds'
-  | '1 minute'
-  | '5 minutes'
-  | '30 minutes'
-  | '1 hour'
-  | '12 hours'
-  | '1 day'
-  | '1 week'
-  | '2 weeks'
-  | 'Off';
+
+enum DISAPPEARING_ACTIONS {
+  READ = 'read',
+  SENT = 'sent',
+}
+
+export enum DISAPPEARING_TIMES {
+  FIVE_SECONDS = '5 seconds',
+  TEN_SECONDS = '10 seconds',
+  THIRTY_SECONDS = '30 seconds',
+  ONE_MINUTE = '1 minute',
+  FIVE_MINUTES = '5 minutes',
+  THIRTY_MINUTES = '30 minutes',
+  ONE_HOUR = '1 hour',
+  TWELVE_HOURS = '12 hours',
+  ONE_DAY = '1 day',
+  ONE_WEEK = '1 week',
+  TWO_WEEKS = '2 weeks',
+}
 
 export type DisappearOpts1o1 = [
   '1:1',
   `Disappear after ${DisappearModes} option` | `Disappear after ${DisappearModes} option`,
-  DMTimeOption?,
+  DISAPPEARING_TIMES,
 ];
 
 export type DisappearOptsGroup = [
   'Group' | 'Note to Self',
   `Disappear after ${DisappearModes} option`,
-  DMTimeOption?,
+  DISAPPEARING_TIMES,
 ];
 
 export type MergedOptions = DisappearOpts1o1 | DisappearOptsGroup;
 
 export type StrategyExtractionObj =
   | {
-      strategy: Extract<Strategy, 'id' | 'class name'>;
+      strategy: Extract<Strategy, 'class name'>;
       selector: string;
+      text?: string;
+    }
+  | {
+      strategy: Extract<Strategy, 'id'>;
+      selector: Id;
       text?: string;
     }
   | {
@@ -102,35 +120,76 @@ export type StrategyExtractionObj =
     }
   | {
       strategy: Extract<Strategy, 'DMTimeOption'>;
-      selector: DMTimeOption;
+      selector: DISAPPEARING_TIMES;
     };
 
-export type DisappearingControlMessage =
-  | `You set disappearing message time to ${DMTimeOption}`
-  | `You set messages to disappear ${DMTimeOption} after they have been ${DisappearActions}.`
-  | `${Username} set disappearing message time to ${DMTimeOption}`
-  | `${Username} has set messages to disappear ${DMTimeOption} after they have been ${DisappearActions}.`;
+/** @see {@link en.disappearingMessagesSetYou} */
+const disappearingMessagesSetYou = Object.values(DISAPPEARING_ACTIONS).flatMap(action =>
+  Object.values(DISAPPEARING_TIMES).map(
+    time => `You set messages to disappear ${time} after they have been ${action}.` as const
+  )
+);
+
+/** @see {@link en.disappearingMessagesTurnedOffYou} */
+const disappearingMessagesTurnedOffYou =
+  'You turned off disappearing messages. Messages you send will no longer disappear.' as const;
+
+/** @see {@link en.disappearingMessagesTurnedOffYouGroup} */
+const disappearingMessagesTurnedOffYouGroup = 'You turned off disappearing messages.' as const;
+
+/** @see {@link en.disappearingMessagesSet} */
+const disappearingMessagesSet = Object.values(DISAPPEARING_ACTIONS).flatMap(action =>
+  Object.values(DISAPPEARING_TIMES).flatMap(time =>
+    Object.values(USERNAME).map(
+      name =>
+        `${name} has set messages to disappear ${time} after they have been ${action}.` as const
+    )
+  )
+);
+
+/** @see {@link en.disappearingMessagesTurnedOff} */
+const disappearingMessagesTurnedOff = Object.values(USERNAME).map(
+  name =>
+    `${name} has turned disappearing messages off. Messages they send will no longer disappear.` as const
+);
+
+const disappearingControlMessages = [
+  ...disappearingMessagesSetYou,
+  disappearingMessagesTurnedOffYou,
+  disappearingMessagesTurnedOffYouGroup,
+  ...disappearingMessagesSet,
+  ...disappearingMessagesTurnedOff,
+] as const;
+
+export type DisappearingControlMessage = (typeof disappearingControlMessages)[number];
+
+export const isDisappearingControlMessage = (
+  message: string
+): message is DisappearingControlMessage =>
+  disappearingControlMessages.includes(message as DisappearingControlMessage);
 
 export type ControlMessage =
   | 'Your message request has been accepted.'
-  | `You have accepted the message request from ${Username}.`
-  | `${Username} called you`
-  | `Called ${Username}`
-  | `You called ${Username}`
+  | `You have accepted the message request from ${USERNAME}.`
+  | `${USERNAME} called you`
+  | `Called ${USERNAME}`
+  | `You called ${USERNAME}`
   | 'You created a new group.'
-  | `${Username} has left the group.`
-  | `${Username} left the group.`
-  | `${Username} joined the group.`
-  | `You added ${Username} to the group.`
+  | `${USERNAME} has left the group.`
+  | `${USERNAME} left the group.`
+  | `${USERNAME} joined the group.`
+  | `You added ${USERNAME} to the group.`
   | `You have no messages from ${string}. Send a message to start the conversation!`
   | `Group name is now ${string}.`
   | 'You will be able to send voice messages and attachments once the recipient has approved this message request.'
   | 'Sending a message to this user will automatically accept their message request and reveal your Account ID.';
 
+export type ModalStrings = 'Hide Recovery Password Permanently';
+
 export type XPath =
   | `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout`
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.TabHost/android.widget.LinearLayout/android.widget.FrameLayout/androidx.viewpager.widget.ViewPager/android.widget.RelativeLayout/android.widget.GridView/android.widget.LinearLayout/android.widget.LinearLayout[2]`
-  | `//*[./*[@name='${DMTimeOption}']]/*[2]`
+  | `//*[./*[@name='${DISAPPEARING_TIMES}']]/*[2]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.FrameLayout[2]/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.LinearLayout[5]/android.widget.RelativeLayout/android.widget.TextView[2]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.ScrollView/androidx.viewpager.widget.ViewPager/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.FrameLayout[1]/android.widget.ImageView`
   | `//XCUIElementTypeStaticText[@name="Videos"]`
@@ -139,7 +198,8 @@ export type XPath =
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.ScrollView/androidx.viewpager.widget.ViewPager/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView/android.widget.FrameLayout[1]`
   | `//XCUIElementTypeAlert//*//XCUIElementTypeButton`
   | `(//XCUIElementTypeImage[@name="gif cell"])[1]`
-  | `//XCUIElementTypeCell[@name="${string}"]`;
+  | `//XCUIElementTypeCell[@name="${string}"]`
+  | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/androidx.appcompat.widget.LinearLayoutCompat/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.TextView[2]`;
 
 export type AccessibilityId =
   | 'Create account button'
@@ -257,7 +317,7 @@ export type AccessibilityId =
   | 'Allow Full Access'
   | 'Photo, May 01, 1999, 7:00 AM'
   | 'profile_picture.jpg, 27.75 kB, May 2, 1999'
-  | 'profile_picture.jpg, 27.75 kB, May 1, 1999'
+  | 'profile_picture.jpg, 27.75 kB, May 1, 1998'
   | 'Photo taken on May 2, 1999 7:00:00 AM'
   | 'Photo, 01 May 1998, 7:00 am'
   | '1967-05-05 21:00:00 +0000'
@@ -303,15 +363,52 @@ export type AccessibilityId =
   | 'Follow Setting'
   | 'Set'
   | 'Allow Full Access'
-  | DMTimeOption
-  | `${DMTimeOption} - Radio`
+  | DISAPPEARING_TIMES
+  | 'Off'
+  | `${DISAPPEARING_TIMES} - Radio`
   | 'Loading animation'
   | 'Recovery password container'
   | 'Copy button'
   | 'space'
   | 'Recovery password input'
   | 'Read Receipts - Switch'
+  | 'Recovery password menu item'
+  | 'Hide recovery password button'
+  | 'Hide Recovery Password Permanently'
+  | 'Modal heading'
+  | 'Modal description'
+  | 'Continue button'
   | 'Error message';
+
+export type Id =
+  | 'Modal heading'
+  | 'Modal description'
+  | 'Continue button'
+  | 'android:id/summary'
+  | 'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
+  | 'com.android.permissioncontroller:id/permission_deny_button'
+  | 'Privacy'
+  | 'network.loki.messenger:id/scrollToBottomButton'
+  | 'android:id/text1'
+  | 'android:id/title'
+  | 'com.android.permissioncontroller:id/permission_allow_button'
+  | 'network.loki.messenger:id/mediapicker_image_item_thumbnail'
+  | 'network.loki.messenger:id/mediapicker_folder_item_thumbnail'
+  | 'com.android.permissioncontroller:id/permission_allow_all_button'
+  | 'network.loki.messenger:id/thumbnail_load_indicator'
+  | 'Select All'
+  | 'network.loki.messenger:id/crop_image_menu_crop'
+  | 'network.loki.messenger:id/endCallButton'
+  | 'network.loki.messenger:id/acceptCallButton'
+  | `network.loki.messenger:id/title`
+  | 'network.loki.messenger:id/messageStatusTextView'
+  | 'network.loki.messenger:id/play_overlay'
+  | 'network.loki.messenger:id/sendAcceptsTextView'
+  | 'network.loki.messenger:id/textSendAfterApproval'
+  | 'network.loki.messenger:id/linkPreviewView'
+  | 'network.loki.messenger:id/openGroupTitleTextView'
+  | 'Image picker'
+  | 'network.loki.messenger:id/action_apply';
 
 export type testRisk = 
   | 'high' 

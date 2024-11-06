@@ -148,23 +148,23 @@ export class LocalizedStringBuilder<
     this.token = token;
   }
 
-  public toString(): string {
+  public toString<LocalizedString = Dict[T]>(): LocalizedString {
     try {
       if (this.renderStringAsToken) {
-        return this.token;
+        return this.token as unknown as LocalizedString;
       }
 
       const rawString = this.getRawString();
       const str = isStringWithArgs(rawString) ? this.formatStringWithArgs(rawString) : rawString;
 
       if (this.isStripped) {
-        return this.postProcessStrippedString(str);
+        return this.postProcessStrippedString(str) as LocalizedString;
       }
 
-      return str;
+      return str as LocalizedString;
     } catch (error) {
       i18nLog(error);
-      return this.token;
+      return this.token as unknown as LocalizedString;
     }
   }
 
@@ -295,4 +295,8 @@ export function localizeFromOld<T extends TokenString<LocalizerDictionary>>(
   args: StringArgsRecord<LocalizerDictionary[T]>
 ) {
   return new LocalizedStringBuilder<LocalizerDictionary, T>(token).withArgs(args);
+}
+
+export function englishStripped<T extends TokenString<LocalizerDictionary>>(token: T) {
+  return localize(token).strip().forceEnglish();
 }

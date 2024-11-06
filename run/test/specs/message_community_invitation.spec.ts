@@ -1,4 +1,5 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
+import { USERNAME } from '../../types/testing';
 import { InviteContactsButton } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -16,8 +17,8 @@ async function sendCommunityInvitationIos(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create two users
   const [userA, userB] = await Promise.all([
-    newUser(device1, 'Alice', platform),
-    newUser(device2, 'Bob', platform),
+    newUser(device1, USERNAME.ALICE, platform),
+    newUser(device2, USERNAME.BOB, platform),
   ]);
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
@@ -46,8 +47,8 @@ async function sendCommunityInviteMessageAndroid(platform: SupportedPlatformsTyp
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create two users
   const [userA, userB] = await Promise.all([
-    newUser(device1, 'Alice', platform),
-    newUser(device2, 'Bob', platform),
+    newUser(device1, USERNAME.ALICE, platform),
+    newUser(device2, USERNAME.BOB, platform),
   ]);
   // Create contact
   await newContact(platform, device1, userA, device2, userB);

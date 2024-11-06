@@ -1,6 +1,5 @@
-import { DISAPPEARING_TIMES } from '../../constants';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { DMTimeOption } from '../../types/testing';
+import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
@@ -9,7 +8,7 @@ import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
 bothPlatformsIt('Disappearing GIF to group', 'low', disappearingGifMessageGroup);
 
-const time: DMTimeOption = DISAPPEARING_TIMES.THIRTY_SECONDS;
+const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
 
 async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
@@ -18,9 +17,9 @@ async function disappearingGifMessageGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create user A and user B
   const [userA, userB, userC] = await Promise.all([
-    newUser(device1, 'Alice', platform),
-    newUser(device2, 'Bob', platform),
-    newUser(device3, 'Charlie', platform),
+    newUser(device1, USERNAME.ALICE, platform),
+    newUser(device2, USERNAME.BOB, platform),
+    newUser(device3, USERNAME.CHARLIE, platform),
   ]);
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   await setDisappearingMessage(platform, device1, ['Group', timerType, time]);

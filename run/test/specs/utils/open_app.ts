@@ -9,8 +9,8 @@ import { XCUITestDriverOpts } from 'appium-xcuitest-driver/build/lib/driver';
 import { DriverOpts } from 'appium/build/lib/appium';
 import { compact } from 'lodash';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { User } from '../../../types/testing';
-import { cleanPermissions } from './before_test_setup';
+import { User, USERNAME } from '../../../types/testing';
+import { cleanPermissions } from './permissions';
 import { getAdbFullPath, getAvdManagerFullPath, getEmulatorFullPath } from './binaries';
 import { newUser } from './create_account';
 import { newContact } from './create_contact';
@@ -37,8 +37,8 @@ export const createBasicTestEnvironment = async (
   closeApp(): Promise<void>;
 }> => {
   const [device1, device2, device3] = await openAppMultipleDevices(platform, 3);
-  const userA = await linkedDevice(device1, device3, 'Alice', platform);
-  const userB = await newUser(device2, 'Bob', platform);
+  const userA = await linkedDevice(device1, device3, USERNAME.ALICE, platform);
+  const userB = await newUser(device2, USERNAME.BOB, platform);
   await newContact(platform, device1, userA, device2, userB);
   const closeApp = async (): Promise<void> => {
     await Promise.all([compact([device1, device2, device3]).map(d => d.deleteSession())]);
@@ -54,8 +54,8 @@ export const createBasicTestEnvironment = async (
 
 export const setUp1o1TestEnvironment = async (platform: SupportedPlatformsType) => {
   const [device1, device2, device3] = await openAppMultipleDevices(platform, 3);
-  const userA = await linkedDevice(device1, device3, 'Alice', platform);
-  const userB = await newUser(device2, 'Bob', platform);
+  const userA = await linkedDevice(device1, device3, USERNAME.ALICE, platform);
+  const userB = await newUser(device2, USERNAME.BOB, platform);
   await newContact(platform, device1, userA, device2, userB);
 
   return { device1, device2, device3, userA, userB };

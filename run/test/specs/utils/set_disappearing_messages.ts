@@ -1,8 +1,8 @@
-import { DISAPPEARING_TIMES } from '../../../constants';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { ConversationType, MergedOptions } from '../../../types/testing';
+import { ConversationType, DISAPPEARING_TIMES, MergedOptions } from '../../../types/testing';
+import { DisappearingMessagesMenuOption } from '../locators';
 import { SupportedPlatformsType } from './open_app';
-import { runOnlyOnAndroid, runOnlyOnIOS } from './run_on';
+import { runOnlyOnIOS } from './run_on';
 import { sleepFor } from './sleep_for';
 export const setDisappearingMessage = async (
   platform: SupportedPlatformsType,
@@ -14,14 +14,7 @@ export const setDisappearingMessage = async (
   await device.clickOnByAccessibilityID('More options');
   // Wait for UI to load conversation options menu
   await sleepFor(500);
-  await runOnlyOnIOS(platform, () => device.clickOnByAccessibilityID('Disappearing Messages'));
-  await runOnlyOnAndroid(platform, () =>
-    device.clickOnElementAll({
-      strategy: 'id',
-      selector: `network.loki.messenger:id/title`,
-      text: 'Disappearing messages',
-    })
-  );
+  await device.clickOnElementAll(new DisappearingMessagesMenuOption(device));
   if (enforcedType === '1:1') {
     await device.clickOnByAccessibilityID(timerType);
   }
@@ -29,15 +22,14 @@ export const setDisappearingMessage = async (
     strategy: 'accessibility id',
     selector: DISAPPEARING_TIMES.ONE_DAY,
   });
-  if (platform === 'ios' && timerType === 'Disappear after read option') {
+  if (timerType === 'Disappear after read option') {
     if (enforcedType === '1:1' || enforcedType === 'Note to Self') {
-      await device.disappearRadioButtonSelectediOS(DISAPPEARING_TIMES.TWELVE_HOURS);
-
+      await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.TWELVE_HOURS);
     } else {
-      await device.disappearRadioButtonSelectediOS(DISAPPEARING_TIMES.ONE_DAY);
+      await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.ONE_DAY);
     }
   } else {
-    await device.disappearRadioButtonSelectedAndroid(DISAPPEARING_TIMES.ONE_DAY);
+    await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.ONE_DAY);
   }
 
   await device.clickOnElementAll({

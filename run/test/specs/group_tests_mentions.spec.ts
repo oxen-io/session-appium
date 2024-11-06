@@ -1,4 +1,5 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
+import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
@@ -9,9 +10,9 @@ async function mentionsForGroups(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
-    newUser(device1, 'Alice', platform),
-    newUser(device2, 'Bob', platform),
-    newUser(device3, 'Charlie', platform),
+    newUser(device1, USERNAME.ALICE, platform),
+    newUser(device2, USERNAME.BOB, platform),
+    newUser(device3, USERNAME.CHARLIE, platform),
   ]);
   const testGroupName = 'Mentions test group';
   // Create contact between User A and User B

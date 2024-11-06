@@ -1,6 +1,6 @@
-import { localize } from '../../localizer/i18n/localizedString';
+import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { ControlMessage } from '../../types/testing';
+import { ControlMessage, USERNAME } from '../../types/testing';
 import { runOnlyOnAndroid, runOnlyOnIOS } from './utils';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
@@ -12,8 +12,8 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create two users
   const [userA, userB] = await Promise.all([
-    newUser(device1, 'Alice', platform),
-    newUser(device2, 'Bob', platform),
+    newUser(device1, USERNAME.ALICE, platform),
+    newUser(device2, USERNAME.BOB, platform),
   ]);
   const testMessage = `${userA.userName} to ${userB.userName}`;
   // Send message from Alice to Bob
@@ -29,9 +29,9 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
   await device1.scrollDown();
   await device1.clickOnByAccessibilityID('Next');
   //messageRequestPendingDescription: "You will be able to send voice messages and attachments once the recipient has approved this message request."
-  const messageRequestPendingDescription = localize('messageRequestPendingDescription')
-    .strip()
-    .toString();
+  const messageRequestPendingDescription = englishStripped(
+    'messageRequestPendingDescription'
+  ).toString();
   await runOnlyOnIOS(platform, () =>
     device1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
@@ -68,9 +68,9 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID('Message request');
   // Check control message warning of sending message request reply
   // "messageRequestsAcceptDescription": "Sending a message to this user will automatically accept their message request and reveal your Account ID."
-  const messageRequestsAcceptDescription = localize('messageRequestsAcceptDescription')
-    .strip()
-    .toString();
+  const messageRequestsAcceptDescription = englishStripped(
+    'messageRequestsAcceptDescription'
+  ).toString();
   await runOnlyOnIOS(platform, () =>
     device2.waitForControlMessageToBePresent(messageRequestsAcceptDescription as ControlMessage)
   );
@@ -85,10 +85,9 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
   await device2.sendMessage(`${userB.userName} to ${userA.userName}`);
   // Check control message for message request acceptance
   // "messageRequestsAccepted": "Your message request has been accepted.",
-  const messageRequestsAccepted = localize('messageRequestsAccepted').strip().toString();
-  const messageRequestYouHaveAccepted = localize('messageRequestYouHaveAccepted')
+  const messageRequestsAccepted = englishStripped('messageRequestsAccepted').strip().toString();
+  const messageRequestYouHaveAccepted = englishStripped('messageRequestYouHaveAccepted')
     .withArgs({ name: userA.userName })
-    .strip()
     .toString();
   await Promise.all([
     device1.waitForControlMessageToBePresent(messageRequestsAccepted as ControlMessage),

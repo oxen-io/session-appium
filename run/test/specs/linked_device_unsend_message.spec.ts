@@ -1,4 +1,5 @@
-import { androidIt, bothPlatformsIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
+import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
@@ -9,9 +10,9 @@ bothPlatformsIt('Unsent message syncs', 'medium', unSendMessageLinkedDevice);
 async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
 
-  const userA = await linkedDevice(device1, device3, 'Alice', platform);
+  const userA = await linkedDevice(device1, device3, USERNAME.ALICE, platform);
 
-  const userB = await newUser(device2, 'Bob', platform);
+  const userB = await newUser(device2, USERNAME.BOB, platform);
 
   await newContact(platform, device1, userA, device2, userB);
   // Send message from user a to user b

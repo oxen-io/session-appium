@@ -1,5 +1,5 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { DisappearModes, DMTimeOption } from '../../types/testing';
+import { DISAPPEARING_TIMES, DisappearModes, USERNAME } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -13,12 +13,12 @@ async function disappearAfterRead(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   // Create user A and user B
   const [userA, userB] = await Promise.all([
-    newUser(device1, 'Alice', platform),
-    newUser(device2, 'Bob', platform),
+    newUser(device1, USERNAME.ALICE, platform),
+    newUser(device2, USERNAME.BOB, platform),
   ]);
   const testMessage = 'Checking disappear after read is working';
   const mode: DisappearModes = 'read';
-  const time: DMTimeOption = '30 seconds';
+  const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // Click conversation options menu (three dots)

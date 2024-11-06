@@ -1,4 +1,5 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
+import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, openAppTwoDevices, closeApp } from './utils/open_app';
@@ -10,8 +11,8 @@ async function unsendMessage(platform: SupportedPlatformsType) {
 
   // Create two users
   const [userA, userB] = await Promise.all([
-    newUser(device1, 'Alice', platform),
-    newUser(device2, 'Bob', platform),
+    newUser(device1, USERNAME.ALICE, platform),
+    newUser(device2, USERNAME.BOB, platform),
   ]);
   // Create contact
   await newContact(platform, device1, userA, device2, userB);

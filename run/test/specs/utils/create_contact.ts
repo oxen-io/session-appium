@@ -1,5 +1,5 @@
-import { runOnlyOnAndroid, sleepFor } from '.';
-import { localize } from '../../../localizer/i18n/localizedString';
+import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from '.';
+import { englishStripped } from '../../../localizer/i18n/localizedString';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { ControlMessage, User } from '../../../types/testing';
 import { SupportedPlatformsType } from './open_app';
@@ -14,7 +14,7 @@ export const newContact = async (
   await device1.sendNewMessage(Bob, `${Alice.userName} to ${Bob.userName}`);
   // Click on message request folder
   await sleepFor(100);
-  await retryMsgSentForBanner(platform, device1, device2, 30000);
+  await runOnlyOnIOS(platform, () => retryMsgSentForBanner(platform, device1, device2, 30000));
   await device2.clickOnByAccessibilityID('Message requests banner');
   await device2.clickOnByAccessibilityID('Message request');
   await runOnlyOnAndroid(platform, () =>
@@ -24,7 +24,7 @@ export const newContact = async (
   await device2.sendMessage(`Reply-message-${Bob.userName}-to-${Alice.userName}`);
   // Verify config message states message request was accepted
   // "messageRequestsAccepted": "Your message request has been accepted.",
-  const messageRequestsAccepted = localize('messageRequestsAccepted').strip().toString();
+  const messageRequestsAccepted = englishStripped('messageRequestsAccepted').toString();
   await device1.waitForControlMessageToBePresent(messageRequestsAccepted as ControlMessage);
   await device1.waitForControlMessageToBePresent('Your message request has been accepted.');
 
@@ -40,10 +40,6 @@ const retryMsgSentForBanner = async (
 ) => {
   const startTime = Date.now();
   let messageRequest: boolean | null = false;
-  if (platform !== 'ios') {
-    console.log('not ios: retry functionality not needed');
-    return;
-  }
 
   while (!messageRequest && Date.now() - startTime < timeout) {
     const element = await device2.doesElementExist({
@@ -55,8 +51,8 @@ const retryMsgSentForBanner = async (
     messageRequest = element !== null;
 
     if (!messageRequest) {
-      await device1.sendMessage('Retry');
       console.log(`Retrying message request`);
+      await device1.sendMessage('Retry');
       await sleepFor(5000);
     } else {
       console.log('Found message request: No need for retry');

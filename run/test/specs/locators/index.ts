@@ -331,8 +331,9 @@ export class InviteContactsMenuItem extends LocatorsInterface {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'accessibility id',
-          selector: 'Invite Contacts',
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/title',
+          text: 'Invite Contacts',
         };
       case 'ios':
         return {
@@ -493,6 +494,24 @@ export class RevealRecoveryPhraseButton extends LocatorsInterface {
         return {
           strategy: 'accessibility id',
           selector: 'Continue',
+        };
+    }
+  }
+}
+
+export class DisappearingMessagesMenuOption extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: `network.loki.messenger:id/title`,
+          text: 'Disappearing messages',
+        };
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Disappearing Messages',
         };
     }
   }

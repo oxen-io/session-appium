@@ -1,4 +1,5 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
+import { USERNAME } from '../../types/testing';
 import { ExitUserProfile, TickButton, UsernameInput, UsernameSettings } from './locators';
 import { sleepFor } from './utils';
 import { linkedDevice } from './utils/link_device';
@@ -10,7 +11,7 @@ androidIt('Change username linked device', 'medium', changeUsernameLinkedAndroid
 async function changeUsernameLinkediOS(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
 
-  const userA = await linkedDevice(device1, device2, 'Alice', platform);
+  const userA = await linkedDevice(device1, device2, USERNAME.ALICE, platform);
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
   await Promise.all([
@@ -62,7 +63,7 @@ async function changeUsernameLinkediOS(platform: SupportedPlatformsType) {
 async function changeUsernameLinkedAndroid(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
 
-  const userA = await linkedDevice(device1, device2, 'Alice', platform);
+  const userA = await linkedDevice(device1, device2, USERNAME.ALICE, platform);
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
   await Promise.all([

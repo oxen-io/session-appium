@@ -1,6 +1,6 @@
-import { localize } from '../../localizer/i18n/localizedString';
+import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
-import { ControlMessage } from '../../types/testing';
+import { ControlMessage, USERNAME } from '../../types/testing';
 import { ApplyChanges, EditGroup, EditGroupName } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -13,11 +13,11 @@ bothPlatformsIt('Create group and change name syncs', 'high', linkedGroup);
 async function linkedGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3, device4 } = await openAppFourDevices(platform);
 
-  const userA = await linkedDevice(device1, device2, 'Alice', platform);
+  const userA = await linkedDevice(device1, device2, USERNAME.ALICE, platform);
 
   const [userB, userC] = await Promise.all([
-    newUser(device3, 'Bob', platform),
-    newUser(device4, 'Charlie', platform),
+    newUser(device3, USERNAME.BOB, platform),
+    newUser(device4, USERNAME.CHARLIE, platform),
   ]);
   const testGroupName = 'Linked device group';
   const newGroupName = 'New group name';
@@ -45,9 +45,8 @@ async function linkedGroup(platform: SupportedPlatformsType) {
   await device1.clickOnElementAll(new ApplyChanges(device1));
   // If ios click back to match android (which goes back to conversation screen)
   // Check config message for changed name (different on ios and android)
-  const groupNameNew = localize('groupNameNew')
+  const groupNameNew = englishStripped('groupNameNew')
     .withArgs({ group_name: newGroupName })
-    .strip()
     .toString();
   // Config message is "Group now is now {group_name}"
   await device1.waitForControlMessageToBePresent(groupNameNew as ControlMessage);

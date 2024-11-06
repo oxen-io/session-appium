@@ -19,23 +19,17 @@ async function onboardingNoName(platform:SupportedPlatformsType) {
   await device.inputText(emptyName, new DisplayNameInput(device));
   // Trigger the validation by pressing Continue
   await device.clickOnElementAll(new ContinueButton(device));
-  // TODO: once the error text is available as the accessibility label, the entire if condition can be removed
-  if (platform === 'ios') {
-    // Wait for an error message to come up - the actual text is currently not exposed to Appium on iOS
-    await device.waitForTextElementToBePresent(new ErrorMessage(device).build());
-  } else {
-    // Wait for, and fetch the error text on Android
-    const error = await device.waitForTextElementToBePresent(new ErrorMessage(device).build());
-    const errorMessage = await device.getTextFromElement(error);
-    console.log(`The error message is "${errorMessage}"`);
-    console.log(`The expected error is "${expectedError}"`);
-    // Compare the fetched text with the expected 'Please enter a display name' string
-    if (errorMessage ===  expectedError) {
-      console.log('The observed error message matches the expected');
-    }
-    else {
-      throw new Error ('The observed error message does not match the expected');
-    }
-  } 
+  // Wait for, and fetch the error text
+  const error = await device.waitForTextElementToBePresent(new ErrorMessage(device).build());
+  const errorMessage = await device.getTextFromElement(error);
+  console.log(`The error message is "${errorMessage}"`);
+  console.log(`The expected error is "${expectedError}"`);
+  // Compare the fetched text with the expected 'Please enter a display name' string
+  if (errorMessage ===  expectedError) {
+    console.log('The observed error message matches the expected');
+  }
+  else {
+    throw new Error ('The observed error message does not match the expected');
+  }
   await closeApp(device);
 }
