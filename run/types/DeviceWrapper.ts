@@ -1792,6 +1792,7 @@ export class DeviceWrapper {
       console.log('Modal heading is correct');
     } else {
       throw new Error(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `Modal heading is incorrect. Expected heading: ${expectedHeading}, Actual heading: ${actualHeading}`
       );
     }
@@ -1820,6 +1821,7 @@ export class DeviceWrapper {
       console.log('Modal description is correct');
     } else {
       throw new Error(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `Modal description is incorrect. Expected description: ${expectedDescription}, Actual description: ${formattedDescription}`
       );
     }
