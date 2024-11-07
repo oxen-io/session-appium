@@ -75,9 +75,12 @@ export const createGroup = async (
     ]);
   }
   // TODO: need to change once Android have updated their control messages
+  const groupNoMessages = englishStripped('groupNoMessages')
+    .withArgs({ group_name: group.userName })
+    .toString();
   if (platform === 'android') {
     await device1.waitForControlMessageToBePresent(groupNoMessages);
-    const legacyGroupMemberYouNew = englishStrippedStri('legacyGroupMemberYouNew').toString();
+    const legacyGroupMemberYouNew = englishStripped('legacyGroupMemberYouNew').toString();
     // Check control message 'You joined the group'
     await Promise.all([
       device2.waitForControlMessageToBePresent(legacyGroupMemberYouNew),

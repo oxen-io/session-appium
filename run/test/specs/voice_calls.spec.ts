@@ -37,7 +37,7 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
 
   // Verify config message states message request was accepted
   // "messageRequestsAccepted": "Your message request has been accepted.",
-  const messageRequestsAccepted = englishStrippedStri('messageRequestsAccepted').toString();
+  const messageRequestsAccepted = englishStripped('messageRequestsAccepted').toString();
   await device1.waitForControlMessageToBePresent(messageRequestsAccepted);
   await device1.waitForControlMessageToBePresent('Your message request has been accepted.');
   // Phone icon should appear now that conversation has been approved

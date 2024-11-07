@@ -1,4 +1,4 @@
-import { englishStrippedStri } from '../../localizer/i18n/localizedString';
+import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import {
   DisappearActions,
@@ -61,11 +61,11 @@ async function disappearAfterSendOff1o1(platform: SupportedPlatformsType) {
   await runOnlyOnIOS(platform, () => device1.navigateBack(platform));
   // Check control message for turning off disappearing messages
   // Check USER A'S CONTROL MESSAGE on device 1 and 3 (linked device)
-  const disappearingMessagesTurnedOffYou = englishStrippedStri(
+  const disappearingMessagesTurnedOffYou = englishStripped(
     'disappearingMessagesTurnedOffYou'
   ).toString();
   // Check USER B'S CONTROL MESSAGE
-  const disappearingMessagesTurnedOff = englishStrippedStri('disappearingMessagesTurnedOff')
+  const disappearingMessagesTurnedOff = englishStripped('disappearingMessagesTurnedOff')
     .withArgs({ name: userA.userName })
     .toString();
   await Promise.all([

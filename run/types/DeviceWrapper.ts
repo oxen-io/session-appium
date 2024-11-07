@@ -12,7 +12,7 @@ import {
   ReadReceiptsButton,
 } from '../../run/test/specs/locators';
 import { IOS_XPATHS } from '../constants';
-import { englishStrippedStri, TokenString } from '../localizer/i18n/localizedString';
+import { englishStripped, TokenString } from '../localizer/i18n/localizedString';
 import { LocalizerDictionary } from '../localizer/Localizer';
 import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
 import { clickOnCoordinates, sleepFor } from '../test/specs/utils';
@@ -801,10 +801,9 @@ export class DeviceWrapper {
 
       if (currentWait >= maxWaitMSec) {
         if (text) {
-          throw new Error(`Waited for too long looking for '${selector}' and '${text}`);
+          throw new Error(`Waited for too long looking for '${locator.selector}' and '${text}`);
         }
-          throw new Error(`Waited for too long looking for '${selector}'`);
-        
+        throw new Error(`Waited for too long looking for '${locator.selector}'`);
       }
       if (text) {
         console.log(`'${locator.selector}' and '${text}' has been found`);
@@ -1777,7 +1776,7 @@ export class DeviceWrapper {
       // return input.replace(/<br\s*\/?>/gi, '\nCR LF');
       return input.replace(/\n/gi, '');
     }
-    const expectedHeading = englishStrippedStri(expectedStringHeading).toString();
+    const expectedHeading = englishStripped(expectedStringHeading).toString();
     let elHeading;
     // Some modals in Android haven't been updated to compose yet therefore need different locators
     if (!oldModalAndroid) {
@@ -1798,10 +1797,10 @@ export class DeviceWrapper {
     }
     // Now check modal description
     // let expectedDescription;
-    const expectedDescription = englishStrippedStri(expectedStringDescription).toString();
+    const expectedDescription = englishStripped(expectedStringDescription).toString();
     // if (!args) {
     // } else {
-    //   expectedDescription = englishStrippedStri(expectedStringDescription)
+    //   expectedDescription = englishStripped(expectedStringDescription)
     //     .withArgs(args as any)
     //     .toString();
     // }

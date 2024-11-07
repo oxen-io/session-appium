@@ -314,7 +314,8 @@ export type AccessibilityId =
   | 'Yes'
   | 'Disappearing messages type and time'
   | 'Confirm'
-  | 'Delete';
+  | 'Delete'
+  | 'Error message';
 
 export type Id =
   | 'Modal heading'
@@ -346,5 +347,5 @@ export type Id =
   | 'network.loki.messenger:id/openGroupTitleTextView'
   | 'Image picker'
   | 'network.loki.messenger:id/action_apply'
-  | 'Save';
+  | 'Save'
   | 'Error message';
