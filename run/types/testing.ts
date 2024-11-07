@@ -377,7 +377,15 @@ export type AccessibilityId =
   | 'Hide Recovery Password Permanently'
   | 'Modal heading'
   | 'Modal description'
-  | 'Continue button';
+  | 'Continue button'
+  | 'Open URL'
+  | 'Error message'
+  | 'Terms of Service'
+  | 'Terms of service button'
+  | 'Privacy Policy'
+  | 'Privacy policy button'
+  | 'TabBarItemTitle'
+  | 'URL';
 
 export type Id =
   | 'Modal heading'
@@ -407,5 +415,6 @@ export type Id =
   | 'network.loki.messenger:id/linkPreviewView'
   | 'network.loki.messenger:id/openGroupTitleTextView'
   | 'Image picker'
-  | 'network.loki.messenger:id/action_apply';
-  | 'Error message';
+  | 'network.loki.messenger:id/action_apply'
+  | 'com.android.chrome:id/url_bar';
+
