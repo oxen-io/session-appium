@@ -37,7 +37,7 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
 
   // Verify config message states message request was accepted
   // "messageRequestsAccepted": "Your message request has been accepted.",
-  const messageRequestsAccepted = englishStrippedStri('messageRequestsAccepted').toString();
+  const messageRequestsAccepted = englishStripped('messageRequestsAccepted').toString();
   await device1.waitForControlMessageToBePresent(messageRequestsAccepted);
   await device1.waitForControlMessageToBePresent('Your message request has been accepted.');
   // Phone icon should appear now that conversation has been approved
@@ -67,7 +67,7 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID('OK');
   // Enable voice calls on device 2 for User B
   // Need to navigate out of conversation for user to have full contact actions (calls icon, etc)
-  await device2.navigateBack(platform);
+  await device2.navigateBack();
   await device2.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'Conversation list item',

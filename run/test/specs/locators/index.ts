@@ -382,20 +382,13 @@ export class LeaveGroup extends LocatorsInterface {
 
 export class BlockUserConfirmationModal extends LocatorsInterface {
   public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Block',
-        };
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Block',
-        };
-    }
+    return {
+      strategy: 'accessibility id',
+      selector: 'Block',
+    } as const;
   }
 }
+
 export class BlockedContactsSettings extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -450,18 +443,10 @@ export class DeleteMessageRequestButton extends LocatorsInterface {
 
 export class DeleteMesssageRequestConfirmation extends LocatorsInterface {
   public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Delete',
-        };
-      case 'android':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Delete',
-        };
-    }
+    return {
+      strategy: 'accessibility id',
+      selector: 'Delete',
+    };
   }
 }
 
@@ -484,18 +469,10 @@ export class RevealRecoveryPhraseButton extends LocatorsInterface {
 
 export class DownloadMediaButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Download',
-        };
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Download',
-        };
-    }
+    return {
+      strategy: 'accessibility id',
+      selector: 'Download',
+    };
   }
 }
 

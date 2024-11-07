@@ -12,7 +12,7 @@ import {
   ReadReceiptsButton,
 } from '../../run/test/specs/locators';
 import { IOS_XPATHS } from '../constants';
-import { englishStrippedStri, TokenString } from '../localizer/i18n/localizedString';
+import { englishStripped, TokenString } from '../localizer/i18n/localizedString';
 import { LocalizerDictionary } from '../localizer/Localizer';
 import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
 import { clickOnCoordinates, sleepFor } from '../test/specs/utils';
@@ -30,7 +30,7 @@ import {
   User,
   XPath,
 } from './testing';
-import { SaveProfilePictureButton } from '../test/specs/locators/settings';
+import { SaveProfilePictureButton, UserSettings } from '../test/specs/locators/settings';
 
 export type Coordinates = {
   x: number;
@@ -801,10 +801,9 @@ export class DeviceWrapper {
 
       if (currentWait >= maxWaitMSec) {
         if (text) {
-          throw new Error(`Waited for too long looking for '${selector}' and '${text}`);
+          throw new Error(`Waited for too long looking for '${locator.selector}' and '${text}`);
         }
-          throw new Error(`Waited for too long looking for '${selector}'`);
-        
+        throw new Error(`Waited for too long looking for '${locator.selector}'`);
       }
       if (text) {
         console.log(`'${locator.selector}' and '${text}' has been found`);
@@ -1004,13 +1003,13 @@ export class DeviceWrapper {
     await this.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Conversation list item',
-      text: String(receiver.userName),
+      text: receiver.userName,
     });
     await sleepFor(100);
     await this.clickOnElementAll({
       strategy: 'accessibility id',
       selector: 'Conversation list item',
-      text: String(receiver.userName),
+      text: receiver.userName,
     });
     console.log(`${sender.userName} + " sent message to ${receiver.userName}`);
     await this.sendMessage(message);
@@ -1103,11 +1102,10 @@ export class DeviceWrapper {
         selector: timeOption,
       });
       const attr = await this.getAttribute('selected', radioButton.ELEMENT);
-      if (attr) {
-        console.log('Great success - default time is correct');
-      } else {
+      if (!attr) {
         throw new Error('Dammit - default time was not correct');
       }
+      console.log('Great success - default time is correct');
     }
   }
 
@@ -1463,9 +1461,9 @@ export class DeviceWrapper {
 
   public async uploadProfilePicture() {
     const spongebobsBirthday = '199805010700.00';
-    await this.clickOnByAccessibilityID('User settings');
+    await this.clickOnElementAll(new UserSettings(this));
     // Click on Profile picture
-    await this.clickOnByAccessibilityID('User settings');
+    await this.clickOnElementAll(new UserSettings(this));
     await this.clickOnElementAll(new ChangeProfilePictureButton(this));
     if (this.isIOS()) {
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
@@ -1635,10 +1633,18 @@ export class DeviceWrapper {
 
   public async scrollToBottom(platform: SupportedPlatformsType) {
     if (platform === 'android') {
-      await this.clickOnElementAll({
+      const scrollButton = await this.doesElementExist({
         strategy: 'id',
         selector: 'network.loki.messenger:id/scrollToBottomButton',
       });
+      if (scrollButton) {
+        await this.clickOnElementAll({
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/scrollToBottomButton',
+        });
+      } else {
+        console.info('Scroll button not visible');
+      }
     } else {
       await this.clickOnElementAll({
         strategy: 'accessibility id',
@@ -1647,8 +1653,8 @@ export class DeviceWrapper {
     }
   }
 
-  public async navigateBack(platform: SupportedPlatformsType) {
-    if (platform === 'ios') {
+  public async navigateBack() {
+    if (this.isIOS()) {
       await this.clickOnByAccessibilityID('Back');
     } else {
       await this.clickOnByAccessibilityID('Navigate up');
@@ -1657,15 +1663,15 @@ export class DeviceWrapper {
 
   /* ======= Settings functions =========*/
 
-  public async turnOnReadReceipts(platform: SupportedPlatformsType) {
-    await this.navigateBack(platform);
+  public async turnOnReadReceipts() {
+    await this.navigateBack();
     await sleepFor(100);
-    await this.clickOnByAccessibilityID('User settings');
+    await this.clickOnElementAll(new UserSettings(this));
     await sleepFor(500);
     await this.clickOnElementAll(new PrivacyButton(this));
     await sleepFor(2000);
     await this.clickOnElementAll(new ReadReceiptsButton(this));
-    await this.navigateBack(platform);
+    await this.navigateBack();
     await sleepFor(100);
     await this.clickOnElementAll(new ExitUserProfile(this));
   }
@@ -1773,11 +1779,11 @@ export class DeviceWrapper {
     // args?: { [key: string]: string | number }
   ) {
     // Check modal heading is correct
-    function replaceBrWithCRLF(input: string): string {
+    function removeNewLines(input: string): string {
       // return input.replace(/<br\s*\/?>/gi, '\nCR LF');
       return input.replace(/\n/gi, '');
     }
-    const expectedHeading = englishStrippedStri(expectedStringHeading).toString();
+    const expectedHeading = englishStripped(expectedStringHeading).toString();
     let elHeading;
     // Some modals in Android haven't been updated to compose yet therefore need different locators
     if (!oldModalAndroid) {
@@ -1793,15 +1799,16 @@ export class DeviceWrapper {
       console.log('Modal heading is correct');
     } else {
       throw new Error(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `Modal heading is incorrect. Expected heading: ${expectedHeading}, Actual heading: ${actualHeading}`
       );
     }
     // Now check modal description
     // let expectedDescription;
-    const expectedDescription = englishStrippedStri(expectedStringDescription).toString();
+    const expectedDescription = englishStripped(expectedStringDescription).toString();
     // if (!args) {
     // } else {
-    //   expectedDescription = englishStrippedStri(expectedStringDescription)
+    //   expectedDescription = englishStripped(expectedStringDescription)
     //     .withArgs(args as any)
     //     .toString();
     // }
@@ -1816,11 +1823,12 @@ export class DeviceWrapper {
     }
     const actualDescription = await this.getTextFromElement(elDescription);
     // Need to format the ACTUAL description that comes back from device to match
-    const formattedDescription = replaceBrWithCRLF(actualDescription);
+    const formattedDescription = removeNewLines(actualDescription);
     if (expectedDescription === formattedDescription) {
       console.log('Modal description is correct');
     } else {
       throw new Error(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `Modal description is incorrect. Expected description: ${expectedDescription}, Actual description: ${formattedDescription}`
       );
     }

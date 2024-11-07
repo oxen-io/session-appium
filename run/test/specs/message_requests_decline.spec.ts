@@ -37,7 +37,7 @@ async function declineRequest(platform: SupportedPlatformsType) {
   await device2.clickOnElementAll(new DeleteMesssageRequestConfirmation(device2));
   // Navigate back to home page
   await sleepFor(100);
-  await device2.navigateBack(platform);
+  await device2.navigateBack();
   // Look for new conversation button to make sure it all worked
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',

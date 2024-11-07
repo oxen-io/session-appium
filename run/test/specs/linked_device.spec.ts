@@ -1,13 +1,12 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import { UserSettings } from './locators/settings';
 import { runOnlyOnAndroid, runOnlyOnIOS } from './utils';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
 iosIt('Link device', linkDevice);
 androidIt('Link device', linkDevice);
-
-// bothPlatformsIt("Link device", linkDevice);
 
 async function linkDevice(platform: SupportedPlatformsType) {
   // Open server and two devices
@@ -20,7 +19,7 @@ async function linkDevice(platform: SupportedPlatformsType) {
     selector: 'Recovery phrase reminder',
   });
   // Verify username and session ID match
-  await device2.clickOnByAccessibilityID('User settings');
+  await device2.clickOnElementAll(new UserSettings(device2));
   // Check username
   await runOnlyOnIOS(platform, () =>
     device2.waitForTextElementToBePresent({

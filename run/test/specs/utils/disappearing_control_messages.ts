@@ -44,7 +44,7 @@ export const checkDisappearingControlMessage = async (
     ]);
   }
   // Check if control messages are syncing from both user A and user B
-  if (linkedDevice && platform === 'android') {
+  if (linkedDevice) {
     await linkedDevice.clickOnElementAll({
       strategy: 'accessibility id',
       selector: 'Conversation list item',
@@ -52,7 +52,5 @@ export const checkDisappearingControlMessage = async (
     });
     await linkedDevice.disappearingControlMessage(disappearingMessagesSetYou);
     await linkedDevice.disappearingControlMessage(disappearingMessagesSetUserB);
-  } else if (linkedDevice && platform === 'ios') {
-    console.log('Control message syncing is not supported on iOS');
   }
 };

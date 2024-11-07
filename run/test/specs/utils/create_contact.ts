@@ -24,7 +24,7 @@ export const newContact = async (
   await device2.sendMessage(`Reply-message-${Bob.userName}-to-${Alice.userName}`);
   // Verify config message states message request was accepted
   // "messageRequestsAccepted": "Your message request has been accepted.",
-  const messageRequestsAccepted = englishStrippedStri('messageRequestsAccepted').toString();
+  const messageRequestsAccepted = englishStripped('messageRequestsAccepted').toString();
   await device1.waitForControlMessageToBePresent(messageRequestsAccepted);
 
   console.info(`${Alice.userName} and ${Bob.userName} are now contacts`);

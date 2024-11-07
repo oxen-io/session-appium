@@ -23,7 +23,7 @@ async function disappearingImageMessageGroup(platform: SupportedPlatformsType) {
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
 
   await setDisappearingMessage(platform, device1, ['Group', timerType, time]);
-  // await device1.navigateBack(platform);
+  // await device1.navigateBack();
   await device1.sendImage(platform, testMessage);
   await Promise.all([
     device2.waitForTextElementToBePresent({

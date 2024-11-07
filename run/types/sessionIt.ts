@@ -18,8 +18,7 @@ export function androidIt(
 ) {
   const testName = `${title} android`;
   if (shouldSkip) {
-    // eslint-disable-next-line @typescript-eslint/require-await
-    test.skip(testName, async () => {
+    test.skip(testName, () => {
       console.info(`\n\n==========> Skipping "${testName}"\n\n`);
     });
   } else {
@@ -38,8 +37,7 @@ export function iosIt(
   const testName = `${title} ios`;
 
   if (shouldSkip) {
-    // eslint-disable-next-line @typescript-eslint/require-await
-    test.skip(testName, async () => {
+    test.skip(testName, () => {
       console.info(`\n\n==========> Skipping "${testName}"\n\n`);
     });
   } else {
@@ -61,8 +59,7 @@ function mobileIt(
 ) {
   const testName = `${title} ${platform}`;
   if (shouldSkip) {
-    // eslint-disable-next-line @typescript-eslint/require-await
-    test.skip(testName, async () => {
+    test.skip(testName, () => {
       console.info(`\n\n==========> Skipping "${testName}"\n\n`);
     });
   } else {
@@ -84,18 +81,6 @@ export function bothPlatformsIt(
   // Define test for iOS
   mobileIt('ios', title, testToRun, shouldSkip);
 }
-
-// export function iosItWithSetup(
-//   title: string,
-//   test: (platform: SupportedPlatformsType) => Promise<void>
-// ) {
-//   const testName = `${title} ios`;
-
-//   return it(testName, async () => {
-//     console.info(`\n\n==========> Running "${testName}"\n\n`);
-//     await test("ios");
-//   });
-// }
 
 // Define the function to accept the title, a setup data object, and a test function that uses this object.
 // export function iosItWithSetup(

@@ -28,11 +28,11 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   // Click apply/done
   await device1.clickOnByAccessibilityID('Done');
   // Check it's changed in heading also
-  await device1.navigateBack(platform);
+  await device1.navigateBack();
   const newNickname = await device1.grabTextFromAccessibilityId('Conversation header name');
   await device1.findMatchingTextAndAccessibilityId('Conversation header name', newNickname);
   // Check in conversation list also
-  await device1.navigateBack(platform);
+  await device1.navigateBack();
   // Save text of conversation list item?
   await sleepFor(1000);
   await device1.findMatchingTextAndAccessibilityId('Conversation list item', nickName);
@@ -47,14 +47,14 @@ async function setNicknameIos(platform: SupportedPlatformsType) {
   await device1.inputText(' ', { strategy: 'accessibility id', selector: 'Username' });
   await device1.clickOnByAccessibilityID('Done');
   // Check in conversation header
-  await device1.navigateBack(platform);
+  await device1.navigateBack();
   // await sleepFor(500);
   const revertedNickname = await device1.grabTextFromAccessibilityId('Conversation header name');
   console.info(`revertedNickname:` + revertedNickname);
   if (revertedNickname !== userB.userName) {
     throw new Error(`revertedNickname doesn't match username`);
   }
-  await device1.navigateBack(platform);
+  await device1.navigateBack();
   // Check in conversation list aswell
   await device1.findMatchingTextAndAccessibilityId('Conversation list item', userB.userName);
   // Close app
@@ -71,7 +71,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   const nickName = 'New nickname';
   await newContact(platform, device1, userA, device2, userB);
   // Go back to conversation list
-  await device1.navigateBack(platform);
+  await device1.navigateBack();
   // Select conversation in list with Bob
   await device1.longPressConversation(userB.userName);
   // Select 'Details' option
@@ -93,7 +93,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Send a message so nickname is updated in conversation list
   await device1.sendMessage('Howdy');
   // Navigate out of conversation
-  await device1.navigateBack(platform);
+  await device1.navigateBack();
   // Change nickname back to original username
   // Long press on contact conversation
   await device1.longPressConversation(nickName);
@@ -118,7 +118,7 @@ async function setNicknameAndroid(platform: SupportedPlatformsType) {
   // Send message to change in conversation list
   await device1.sendMessage('Howdy');
   // Navigate back to list
-  await device1.navigateBack(platform);
+  await device1.navigateBack();
   // Verify name change in list
   // Save text of conversation list item?
   await device1.selectByText('Conversation list item', nickName);

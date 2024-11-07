@@ -324,7 +324,8 @@ export type AccessibilityId =
   | 'Search icon'
   | 'Note to Self'
   | 'X'
-  | 'Close';
+  | 'Close'
+  | 'Error message';
 
 export type Id =
   | 'Modal heading'

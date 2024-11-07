@@ -23,14 +23,10 @@ export class DisappearingMessagesSubtitle extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
-        return {
-          strategy: 'accessibility id',
-          selector: `Disappearing messages type and time`,
-        };
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Disappearing messages type and time',
+          selector: `Disappearing messages type and time`,
         };
     }
   }
@@ -55,12 +51,8 @@ export class DisableDisappearingMessages extends LocatorsInterface {
 export class SetDisappearMessagesButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Set button',
-        } as const;
       case 'android':
+      case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Set button',
@@ -72,12 +64,8 @@ export class SetDisappearMessagesButton extends LocatorsInterface {
 export class SetModalButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Set',
-        } as const;
       case 'android':
+      case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Set',
@@ -89,12 +77,8 @@ export class SetModalButton extends LocatorsInterface {
 export class FollowSettingsButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Follow setting',
-        } as const;
       case 'android':
+      case 'ios':
         return {
           strategy: 'accessibility id',
           selector: 'Follow setting',
