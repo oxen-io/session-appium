@@ -315,7 +315,15 @@ export type AccessibilityId =
   | 'Disappearing messages type and time'
   | 'Confirm'
   | 'Delete'
-  | 'Error message';
+  | 'Error message'
+  | 'Open URL'
+  | 'Terms of Service'
+  | 'Terms of service button'
+  | 'Privacy Policy'
+  | 'Privacy policy button'
+  | 'TabBarItemTitle'
+  | 'URL'
+  | 'Save';
 
 export type Id =
   | 'Modal heading'
@@ -348,4 +356,5 @@ export type Id =
   | 'Image picker'
   | 'network.loki.messenger:id/action_apply'
   | 'Save'
-  | 'Error message';
+  | 'com.android.chrome:id/url_bar';
+
