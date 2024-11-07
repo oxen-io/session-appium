@@ -1003,13 +1003,13 @@ export class DeviceWrapper {
     await this.waitForTextElementToBePresent({
       strategy: 'accessibility id',
       selector: 'Conversation list item',
-      text: String(receiver.userName),
+      text: receiver.userName,
     });
     await sleepFor(100);
     await this.clickOnElementAll({
       strategy: 'accessibility id',
       selector: 'Conversation list item',
-      text: String(receiver.userName),
+      text: receiver.userName,
     });
     console.log(`${sender.userName} + " sent message to ${receiver.userName}`);
     await this.sendMessage(message);
@@ -1102,11 +1102,10 @@ export class DeviceWrapper {
         selector: timeOption,
       });
       const attr = await this.getAttribute('selected', radioButton.ELEMENT);
-      if (attr) {
-        console.log('Great success - default time is correct');
-      } else {
+      if (!attr) {
         throw new Error('Dammit - default time was not correct');
       }
+      console.log('Great success - default time is correct');
     }
   }
 
@@ -1634,10 +1633,18 @@ export class DeviceWrapper {
 
   public async scrollToBottom(platform: SupportedPlatformsType) {
     if (platform === 'android') {
-      await this.clickOnElementAll({
+      const scrollButton = await this.doesElementExist({
         strategy: 'id',
         selector: 'network.loki.messenger:id/scrollToBottomButton',
       });
+      if (scrollButton) {
+        await this.clickOnElementAll({
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/scrollToBottomButton',
+        });
+      } else {
+        console.info('Scroll button not visible');
+      }
     } else {
       await this.clickOnElementAll({
         strategy: 'accessibility id',
