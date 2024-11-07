@@ -30,7 +30,7 @@ import {
   User,
   XPath,
 } from './testing';
-import { SaveProfilePictureButton } from '../test/specs/locators/settings';
+import { SaveProfilePictureButton, UserSettings } from '../test/specs/locators/settings';
 
 export type Coordinates = {
   x: number;
@@ -1461,9 +1461,9 @@ export class DeviceWrapper {
 
   public async uploadProfilePicture() {
     const spongebobsBirthday = '199805010700.00';
-    await this.clickOnByAccessibilityID('User settings');
+    await this.clickOnElementAll(new UserSettings(this));
     // Click on Profile picture
-    await this.clickOnByAccessibilityID('User settings');
+    await this.clickOnElementAll(new UserSettings(this));
     await this.clickOnElementAll(new ChangeProfilePictureButton(this));
     if (this.isIOS()) {
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
@@ -1653,8 +1653,8 @@ export class DeviceWrapper {
     }
   }
 
-  public async navigateBack(platform: SupportedPlatformsType) {
-    if (platform === 'ios') {
+  public async navigateBack() {
+    if (this.isIOS()) {
       await this.clickOnByAccessibilityID('Back');
     } else {
       await this.clickOnByAccessibilityID('Navigate up');
@@ -1663,15 +1663,15 @@ export class DeviceWrapper {
 
   /* ======= Settings functions =========*/
 
-  public async turnOnReadReceipts(platform: SupportedPlatformsType) {
-    await this.navigateBack(platform);
+  public async turnOnReadReceipts() {
+    await this.navigateBack();
     await sleepFor(100);
-    await this.clickOnByAccessibilityID('User settings');
+    await this.clickOnElementAll(new UserSettings(this));
     await sleepFor(500);
     await this.clickOnElementAll(new PrivacyButton(this));
     await sleepFor(2000);
     await this.clickOnElementAll(new ReadReceiptsButton(this));
-    await this.navigateBack(platform);
+    await this.navigateBack();
     await sleepFor(100);
     await this.clickOnElementAll(new ExitUserProfile(this));
   }
@@ -1779,7 +1779,7 @@ export class DeviceWrapper {
     // args?: { [key: string]: string | number }
   ) {
     // Check modal heading is correct
-    function replaceBrWithCRLF(input: string): string {
+    function removeNewLines(input: string): string {
       // return input.replace(/<br\s*\/?>/gi, '\nCR LF');
       return input.replace(/\n/gi, '');
     }
@@ -1823,7 +1823,7 @@ export class DeviceWrapper {
     }
     const actualDescription = await this.getTextFromElement(elDescription);
     // Need to format the ACTUAL description that comes back from device to match
-    const formattedDescription = replaceBrWithCRLF(actualDescription);
+    const formattedDescription = removeNewLines(actualDescription);
     if (expectedDescription === formattedDescription) {
       console.log('Modal description is correct');
     } else {

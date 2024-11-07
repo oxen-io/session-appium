@@ -21,14 +21,14 @@ export const createGroup = async (
   const userCMessage = `${userThree.userName} to ${userName}`;
   // Create contact between User A and User B
   await newContact(platform, device1, userOne, device2, userTwo);
-  await device1.navigateBack(platform);
+  await device1.navigateBack();
   await newContact(platform, device1, userOne, device3, userThree);
-  await device2.navigateBack(platform);
+  await device2.navigateBack();
   // Create contact between User A and User C
   // Exit conversation back to list
-  await device1.navigateBack(platform);
+  await device1.navigateBack();
   // Exit conversation back to list
-  await device3.navigateBack(platform);
+  await device3.navigateBack();
   // Click plus button
   await device1.clickOnByAccessibilityID('New conversation button');
   // Select Closed Group option

@@ -24,7 +24,7 @@ async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType) {
   ]);
   await newContact(platform, device1, userA, device2, userB);
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
-  // await device1.navigateBack(platform);
+  // await device1.navigateBack();
   // Click on attachments button
   await device1.sendGIF(testMessage);
   // Check if the 'Tap to download media' config appears

@@ -44,7 +44,7 @@ export const setDisappearingMessage = async (
     selector: timerDuration,
   });
   await device.clickOnElementAll(new SetDisappearMessagesButton(device));
-  await runOnlyOnIOS(platform, () => device.navigateBack(platform));
+  await runOnlyOnIOS(platform, () => device.navigateBack());
   await sleepFor(1000);
   if (device2) {
     await device2.clickOnElementAll(new FollowSettingsButton(device2));

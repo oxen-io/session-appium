@@ -20,7 +20,7 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // Navigate back to conversation list
-  await device1.navigateBack(platform);
+  await device1.navigateBack();
   // on ios swipe left on conversation
   await device1.longPressConversation(userB.userName);
   await sleepFor(1000);

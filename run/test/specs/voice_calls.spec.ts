@@ -67,7 +67,7 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID('OK');
   // Enable voice calls on device 2 for User B
   // Need to navigate out of conversation for user to have full contact actions (calls icon, etc)
-  await device2.navigateBack(platform);
+  await device2.navigateBack();
   await device2.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'Conversation list item',
