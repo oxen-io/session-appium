@@ -23,7 +23,7 @@ async function sendImageCommunityiOS(platform: SupportedPlatformsType) {
     newUser(device2, USERNAME.BOB, platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await Promise.all([device1.navigateBack(platform), device2.navigateBack(platform)]);
+  await Promise.all([device1.navigateBack(), device2.navigateBack()]);
   await joinCommunity(device1, testCommunityLink, testCommunityName);
   await joinCommunity(device2, testCommunityLink, testCommunityName);
   await Promise.all([device1.scrollToBottom(platform), device2.scrollToBottom(platform)]);
@@ -44,7 +44,7 @@ async function sendImageCommunityAndroid(platform: SupportedPlatformsType) {
   ]);
   // await newContact(platform, device1, userA, device2, userB);
   const replyMessage = `Replying to image from ${userA.userName} in community ${testCommunityName} + ${time}`;
-  // await Promise.all([device1.navigateBack(platform), device2.navigateBack(platform)]);
+  // await Promise.all([device1.navigateBack(), device2.navigateBack()]);
   await Promise.all([
     joinCommunity(device1, testCommunityLink, testCommunityName),
     joinCommunity(device2, testCommunityLink, testCommunityName),

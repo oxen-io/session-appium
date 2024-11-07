@@ -1,6 +1,6 @@
 import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { ControlMessage, USERNAME } from '../../types/testing';
+import { USERNAME } from '../../types/testing';
 import { ApplyChanges, EditGroup, InviteContactsButton, InviteContactsMenuItem } from './locators';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -33,10 +33,10 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     testGroupName
   );
   const userD = await newUser(device4, USERNAME.DRACULA, platform);
-  await device1.navigateBack(platform);
+  await device1.navigateBack();
   await newContact(platform, device1, userA, device4, userD);
   // Exit to conversation list
-  await device1.navigateBack(platform);
+  await device1.navigateBack();
   // Select group conversation in list
   await device1.clickOnElementAll({
     strategy: 'accessibility id',
@@ -57,7 +57,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     text: userD.userName,
   });
   if (!addedContact && platform === 'android') {
-    await device1.navigateBack(platform);
+    await device1.navigateBack();
     await device1.clickOnElementAll(new InviteContactsButton(device1));
     await device1.selectByText('Contact', userD.userName);
   }
@@ -72,25 +72,24 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     .withArgs({ name: userD.userName })
     .toString();
 
-  await device1.waitForControlMessageToBePresent(legacyGroupMemberNew as ControlMessage);
-  // TODO create a function to truncate account ID (xxx...xxx)
+  await device1.waitForControlMessageToBePresent(legacyGroupMemberNew);
   // await Promise.all([
   //   device1.waitForControlMessageToBePresent(`${userD.userName} joined the group.`),
   // device2.waitForControlMessageToBePresent(`${userD.accountID} joined the group.`),
   // device3.waitForControlMessageToBePresent(`${userD.accountID} joined the group.`),
   // ]);
-  await device4.navigateBack(platform);
+  await device4.navigateBack();
   await device4.selectByText('Conversation list item', group.userName);
   // Check control message on device 2 and 3
   // Check for control message on device 4 (iOS doesn't support You)
   await runOnlyOnIOS(platform, () =>
-    device4.waitForControlMessageToBePresent(legacyGroupMemberNew as ControlMessage)
+    device4.waitForControlMessageToBePresent(legacyGroupMemberNew)
   );
   // Android supports You
   // "legacyGroupMemberYouNew": "<b>You</b> joined the group.",
   const legacyGroupMemberYouNew = englishStripped('legacyGroupMemberYouNew').toString();
   await runOnlyOnAndroid(platform, () =>
-    device4.waitForControlMessageToBePresent(legacyGroupMemberYouNew as ControlMessage)
+    device4.waitForControlMessageToBePresent(legacyGroupMemberYouNew)
   );
 
   await closeApp(device1, device2, device3, device4);

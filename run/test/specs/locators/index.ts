@@ -397,22 +397,15 @@ export class LeaveGroup extends LocatorsInterface {
   }
 }
 
-export class BlockUserConfirmation extends LocatorsInterface {
+export class BlockUserConfirmationModal extends LocatorsInterface {
   public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Confirm block',
-        };
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Confirm block',
-        };
-    }
+    return {
+      strategy: 'accessibility id',
+      selector: 'Block',
+    } as const;
   }
 }
+
 export class BlockedContactsSettings extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -467,18 +460,10 @@ export class DeleteMessageRequestButton extends LocatorsInterface {
 
 export class DeleteMesssageRequestConfirmation extends LocatorsInterface {
   public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Confirm delete',
-        };
-      case 'android':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Delete',
-        };
-    }
+    return {
+      strategy: 'accessibility id',
+      selector: 'Delete',
+    };
   }
 }
 
@@ -499,24 +484,31 @@ export class RevealRecoveryPhraseButton extends LocatorsInterface {
   }
 }
 
-export class DisappearingMessagesMenuOption extends LocatorsInterface {
+export class DownloadMediaButton extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    return {
+      strategy: 'accessibility id',
+      selector: 'Download',
+    };
+  }
+}
+
+export class SetDisappearMessagesButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
         return {
-          strategy: 'id',
-          selector: `network.loki.messenger:id/title`,
-          text: 'Disappearing messages',
-        };
+          strategy: 'accessibility id',
+          selector: 'Set',
+        } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Disappearing Messages',
-        };
+          selector: 'Set button',
+        } as const;
     }
   }
 }
-
 // TODO update StrategyExtractionObj to include Locator class
 // export class PendingMessageRequestControlMessage extends LocatorsInterface {
 //   public build(): StrategyExtractionObj {

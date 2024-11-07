@@ -1,5 +1,6 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
+import { DownloadMediaButton } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -26,7 +27,7 @@ async function disappearingImageMessage1o1(platform: SupportedPlatformsType) {
   await device1.sendImage(platform, testMessage);
   await device2.clickOnByAccessibilityID('Untrusted attachment message');
   // User B - Click on 'download'
-  await device2.clickOnByAccessibilityID('Download media', 5000);
+  await device2.clickOnElementAll(new DownloadMediaButton(device2));
   // Wait for 30 seconds
   await sleepFor(30000);
   await Promise.all([
