@@ -3,7 +3,7 @@ import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 import { AccessibilityId, USERNAME } from '../../types/testing';
 import { PlusButton, SearchButton } from './locators/home';
-import { AccountIDField, CloseButton, InviteAFrienOption, ShareButton } from './locators/start_conversation';
+import { AccountIDField, CloseButton, InviteAFriendOption, ShareButton } from './locators/start_conversation';
 import { MessageInput } from './locators/conversation';
 import { EnableButton } from './locators/global';
 import { NoteToSelfOption } from './locators/global_search';
@@ -20,7 +20,7 @@ async function inviteAFriend(platform: SupportedPlatformsType) {
     // Hit the plus button
     await device.clickOnElementAll(new PlusButton(device));
     // Select Invite a Friend
-    await device.clickOnElementAll(new InviteAFrienOption(device));
+    await device.clickOnElementAll(new InviteAFriendOption(device));
     // Check for presence of Account ID field
     await device.waitForTextElementToBePresent(new AccountIDField(device));
     // Tap Share

@@ -36,7 +36,7 @@ export class JoinCommunityOption extends LocatorsInterface {
     }
   }
 
-export class InviteAFrienOption extends LocatorsInterface {
+export class InviteAFriendOption extends LocatorsInterface {
     public build() {
         return {
             strategy: 'accessibility id',
