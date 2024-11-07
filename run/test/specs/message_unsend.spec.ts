@@ -1,14 +1,11 @@
+import { englishStrippedStri } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import {
-  DeleteMessageConfirmationModal,
-  DeleteMessageForEveryone,
-  DeleteMessageLocally,
-} from './locators';
+import { DeleteMessageConfirmationModal, DeleteMessageForEveryone } from './locators';
 import { runOnlyOnAndroid } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
-import { SupportedPlatformsType, openAppTwoDevices, closeApp } from './utils/open_app';
+import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
 iosIt('Unsend message', unsendMessage);
 androidIt('Unsend message', unsendMessage);
@@ -34,6 +31,13 @@ async function unsendMessage(platform: SupportedPlatformsType) {
   await device1.longPressMessage(sentMessage);
   // Select Delete icon
   await device1.clickOnByAccessibilityID('Delete message');
+  // Check modal is correct
+  await runOnlyOnAndroid(platform, () =>
+    device1.checkModalStrings(
+      englishStrippedStri('deleteMessage').withArgs({ count: 1 }).toString(),
+      englishStrippedStri('deleteMessageConfirm').toString()
+    )
+  );
   // Select 'Delete for me and User B'
   await device1.clickOnElementAll(new DeleteMessageForEveryone(device1));
   // Select 'Delete' on Android

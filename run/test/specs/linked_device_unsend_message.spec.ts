@@ -1,3 +1,4 @@
+import { englishStrippedStri } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DeleteMessageConfirmationModal, DeleteMessageForEveryone } from './locators';
@@ -12,11 +13,8 @@ androidIt('Unsent message syncs', unSendMessageLinkedDevice);
 
 async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
-
   const userA = await linkedDevice(device1, device3, USERNAME.ALICE, platform);
-
   const userB = await newUser(device2, USERNAME.BOB, platform);
-
   await newContact(platform, device1, userA, device2, userB);
   // Send message from user a to user b
   const sentMessage = await device1.sendMessage('Howdy');
@@ -38,6 +36,12 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
   await device1.longPressMessage(sentMessage);
   // Select delete
   await device1.clickOnByAccessibilityID('Delete message');
+  await runOnlyOnAndroid(platform, () =>
+    device1.checkModalStrings(
+      englishStrippedStri('deleteMessage').withArgs({ count: 1 }).toString(),
+      englishStrippedStri('deleteMessageConfirm').toString()
+    )
+  );
   // Select delete for everyone
   await device1.clickOnElementAll(new DeleteMessageForEveryone(device1));
   await runOnlyOnAndroid(platform, () =>

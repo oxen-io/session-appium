@@ -1,3 +1,4 @@
+import { englishStrippedStri } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DeleteMessageConfirmationModal, DeleteMessageLocally } from './locators';
@@ -30,6 +31,12 @@ async function deleteMessage(platform: SupportedPlatformsType) {
   await device1.longPressMessage(sentMessage);
   // Select Delete icon
   await device1.clickOnByAccessibilityID('Delete message');
+  await runOnlyOnAndroid(platform, () =>
+    device1.checkModalStrings(
+      englishStrippedStri('deleteMessage').withArgs({ count: 1 }).toString(),
+      englishStrippedStri('deleteMessageConfirm').toString()
+    )
+  );
   // Select 'Delete on this device only'
   await device1.clickOnElementAll(new DeleteMessageLocally(device1));
   // Confirm deletion Android only

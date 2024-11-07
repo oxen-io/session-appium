@@ -1,6 +1,5 @@
 import { getFallbackDictionary, getTranslationDictionary } from './translationDictionaries';
 import { en } from '../locales';
-import { getLocale } from './shared';
 import { LOCALE_DEFAULTS } from '../constants';
 import { deSanitizeHtmlTags, sanitizeArgs } from '../component/Localizer';
 import type { LocalizerDictionary } from '../Localizer';
@@ -261,7 +260,7 @@ export class LocalizedStringBuilder<
       }
     }
 
-    const currentLocale = getLocale();
+    const currentLocale = 'en';
     const cardinalRule = new Intl.PluralRules(currentLocale).select(num);
 
     const pluralString = getStringForCardinalRule(str, cardinalRule);

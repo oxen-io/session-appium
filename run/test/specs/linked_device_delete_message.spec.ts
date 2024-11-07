@@ -1,11 +1,7 @@
 import { englishStrippedStri } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import {
-  DeleteMessageConfirmationModal,
-  DeleteMessageForEveryone,
-  DeleteMessageLocally,
-} from './locators';
+import { DeleteMessageConfirmationModal, DeleteMessageLocally } from './locators';
 import { runOnlyOnAndroid, runOnlyOnIOS } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
