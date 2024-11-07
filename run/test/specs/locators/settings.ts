@@ -29,18 +29,10 @@ export class YesButton extends LocatorsInterface {
 
 export class UserSettings extends LocatorsInterface {
   public build() {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'accessibility id',
-          selector: 'User settings',
-        } as const;
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'User settings',
-        } as const;
-    }
+    return {
+      strategy: 'accessibility id',
+      selector: 'User settings',
+    } as const;
   }
 }
 

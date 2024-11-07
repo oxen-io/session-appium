@@ -33,10 +33,10 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     testGroupName
   );
   const userD = await newUser(device4, USERNAME.DRACULA, platform);
-  await device1.navigateBack(platform);
+  await device1.navigateBack();
   await newContact(platform, device1, userA, device4, userD);
   // Exit to conversation list
-  await device1.navigateBack(platform);
+  await device1.navigateBack();
   // Select group conversation in list
   await device1.clickOnElementAll({
     strategy: 'accessibility id',
@@ -57,7 +57,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
     text: userD.userName,
   });
   if (!addedContact && platform === 'android') {
-    await device1.navigateBack(platform);
+    await device1.navigateBack();
     await device1.clickOnElementAll(new InviteContactsButton(device1));
     await device1.selectByText('Contact', userD.userName);
   }
@@ -78,7 +78,7 @@ async function addContactToGroup(platform: SupportedPlatformsType) {
   // device2.waitForControlMessageToBePresent(`${userD.accountID} joined the group.`),
   // device3.waitForControlMessageToBePresent(`${userD.accountID} joined the group.`),
   // ]);
-  await device4.navigateBack(platform);
+  await device4.navigateBack();
   await device4.selectByText('Conversation list item', group.userName);
   // Check control message on device 2 and 3
   // Check for control message on device 4 (iOS doesn't support You)

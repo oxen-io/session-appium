@@ -24,7 +24,7 @@ async function sendCommunityInvitationIos(platform: SupportedPlatformsType) {
   await newContact(platform, device1, userA, device2, userB);
   // Join community on device 1
   // Click on plus button
-  await device1.navigateBack(platform);
+  await device1.navigateBack();
   await joinCommunity(device1, communityLink, communityName);
   await device1.clickOnByAccessibilityID('More options');
   await sleepFor(500);
@@ -54,7 +54,7 @@ async function sendCommunityInviteMessageAndroid(platform: SupportedPlatformsTyp
   await newContact(platform, device1, userA, device2, userB);
   // Join community
   await sleepFor(100);
-  await device1.navigateBack(platform);
+  await device1.navigateBack();
   await joinCommunity(device1, communityLink, communityName);
   // Wait for community to load
   // Add user B to community

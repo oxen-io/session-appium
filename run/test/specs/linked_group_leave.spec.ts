@@ -31,7 +31,7 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
   await device3.clickOnElementAll(new LeaveGroup(device3));
   await device3.clickOnByAccessibilityID('Leave');
 
-  await runOnlyOnAndroid(platform, () => device3.navigateBack(platform));
+  await runOnlyOnAndroid(platform, () => device3.navigateBack());
   // Check for control message
   await sleepFor(5000);
   await runOnlyOnIOS(platform, () =>
