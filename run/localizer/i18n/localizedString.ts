@@ -16,7 +16,7 @@ type PluralString = `{${PluralKey}, plural, one [${RawString}] other [${RawStrin
 
 type GenericLocalizedDictionary = Record<string, RawString | PluralString>;
 
-type TokenString<Dict extends GenericLocalizedDictionary> = keyof Dict extends string
+export type TokenString<Dict extends GenericLocalizedDictionary> = keyof Dict extends string
   ? keyof Dict
   : never;
 

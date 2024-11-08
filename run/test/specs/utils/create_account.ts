@@ -2,6 +2,7 @@ import { runOnlyOnAndroid, sleepFor } from '.';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { User, USERNAME } from '../../../types/testing';
 import { ExitUserProfile, RevealRecoveryPhraseButton } from '../locators';
+import { UserSettings } from '../locators/settings';
 import { SupportedPlatformsType } from './open_app';
 
 export const newUser = async (
@@ -47,8 +48,8 @@ export const newUser = async (
   const recoveryPhrase = await device.grabTextFromAccessibilityId('Recovery password container');
   console.log(`${userName}s recovery phrase is "${recoveryPhrase}"`);
   // Exit Modal
-  await device.navigateBack(platform);
-  await device.clickOnByAccessibilityID('User settings');
+  await device.navigateBack();
+  await device.clickOnElementAll(new UserSettings(device));
   const accountID = await device.grabTextFromAccessibilityId('Account ID');
   await device.clickOnElementAll(new ExitUserProfile(device));
   return { userName, accountID, recoveryPhrase };

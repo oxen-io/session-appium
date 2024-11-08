@@ -3,8 +3,8 @@ import { getAndroidCapabilities, getAndroidUdid } from './capabilities_android';
 import { CapabilitiesIndexType, capabilityIsValid, getIosCapabilities } from './capabilities_ios';
 import { runScriptAndLog } from './utilities';
 
-import AndroidUiautomator2Driver from 'appium-uiautomator2-driver';
 import { XCUITestDriverOpts } from 'appium-xcuitest-driver/build/lib/driver';
+import AndroidUiautomator2Driver from 'appium-uiautomator2-driver';
 
 import { DriverOpts } from 'appium/build/lib/appium';
 import { compact } from 'lodash';

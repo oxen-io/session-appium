@@ -25,7 +25,7 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType) {
   ]);
   await newContact(platform, device1, userA, device2, userB);
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
-  // await device1.navigateBack(platform);
+  // await device1.navigateBack();
   await device1.clickOnByAccessibilityID('Call');
   // Enabled voice calls in privacy settings
   await device1.waitForTextElementToBePresent({
@@ -93,7 +93,7 @@ async function disappearingCallMessage1o1Android(platform: SupportedPlatformsTyp
   await newContact(platform, device1, userA, device2, userB);
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
 
-  // await device1.navigateBack(platform);
+  // await device1.navigateBack();
   await device1.clickOnByAccessibilityID('Call');
   // Enabled voice calls in privacy settings
   await device1.waitForTextElementToBePresent({
