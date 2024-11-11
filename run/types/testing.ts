@@ -359,7 +359,7 @@ export type Id =
   | 'com.android.chrome:id/url_bar';
 
 
-export type testRisk = 
+export type TestRisk = 
   | 'high' 
   | 'medium' 
   | 'low' 
