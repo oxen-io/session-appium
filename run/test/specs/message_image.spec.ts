@@ -6,8 +6,8 @@ import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-iosIt('Send image 1:1', sendImageIos);
-androidIt('Send image 1:1', sendImageAndroid);
+iosIt('Send image 1:1', 'high', sendImageIos);
+androidIt('Send image 1:1', 'high', sendImageAndroid);
 
 async function sendImageIos(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

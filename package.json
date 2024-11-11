@@ -13,7 +13,10 @@
     "test-android": "_TESTING=1 npx playwright test --timeout 300000 ./run/test/**/*.spec.ts --grep android",
     "build-and-test": "yarn tsc && yarn test",
     "test-one-logs": "_TESTING=1  _FORCELOGS=1 npx playwright test --timeout 300000 --retries 0 ./run/test/**/*.spec.ts --grep",
-    "test-parallel": "_TESTING=1 npx playwright test ./run/test/**/*.spec.ts --grep ios"
+    "test-parallel": "_TESTING=1 npx playwright test ./run/test/**/*.spec.ts --grep ios",
+    "test-high-risk-android": "_TESTING=1 npx playwright test --timeout 300000 ./run/test/**/*.spec.ts --grep 'android @high-risk'",
+    "test-high-risk-ios": "_TESTING=1 npx playwright test --timeout 300000 ./run/test/**/*.spec.ts --grep 'ios @high-risk'"
+
   },
   "devDependencies": {
     "@appium/execute-driver-plugin": "^3.0.1",

@@ -1,5 +1,5 @@
 import { englishStripped } from '../../localizer/i18n/localizedString';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import {
   DisappearActions,
   DISAPPEARING_TIMES,
@@ -21,8 +21,7 @@ import { linkedDevice } from './utils/link_device';
 import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-iosIt('Disappear after send off 1:1', disappearAfterSendOff1o1);
-androidIt('Disappear after send off 1:1', disappearAfterSendOff1o1);
+bothPlatformsIt('Disappear after send off 1o1', 'high', disappearAfterSendOff1o1);
 
 async function disappearAfterSendOff1o1(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);

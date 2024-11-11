@@ -315,6 +315,7 @@ export type AccessibilityId =
   | 'Disappearing messages type and time'
   | 'Confirm'
   | 'Delete'
+  | 'Continue button'
   | 'Error message';
 
 export type Id =
@@ -349,3 +350,10 @@ export type Id =
   | 'network.loki.messenger:id/action_apply'
   | 'Save'
   | 'Error message';
+  | 'network.loki.messenger:id/action_apply';
+
+export type testRisk = 
+  | 'high' 
+  | 'medium' 
+  | 'low' 
+  | 'undefined';

@@ -1,14 +1,11 @@
 import { englishStripped } from '../../localizer/i18n/localizedString';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { AccessibilityId, USERNAME } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-iosIt('Message requests clear all', clearAllRequests);
-androidIt('Message requests clear all', clearAllRequests);
-
-// bothPlatformsIt("Message requests clear all", clearAllRequests);
+bothPlatformsIt("Message requests clear all", 'medium', clearAllRequests);
 
 async function clearAllRequests(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
