@@ -49,7 +49,7 @@ async function linkedGroup(platform: SupportedPlatformsType) {
     .withArgs({ group_name: newGroupName })
     .toString();
   // Config message is "Group now is now {group_name}"
-  await device1.waitForControlMessageToBePresent(groupNameNew as ControlMessage);
+  await device1.waitForControlMessageToBePresent(groupNameNew);
 
   // Wait 5 seconds for name to update
   await sleepFor(5000);
@@ -61,9 +61,9 @@ async function linkedGroup(platform: SupportedPlatformsType) {
   });
 
   await Promise.all([
-    device2.waitForControlMessageToBePresent(groupNameNew as ControlMessage),
-    device3.waitForControlMessageToBePresent(groupNameNew as ControlMessage),
-    device4.waitForControlMessageToBePresent(groupNameNew as ControlMessage),
+    device2.waitForControlMessageToBePresent(groupNameNew),
+    device3.waitForControlMessageToBePresent(groupNameNew),
+    device4.waitForControlMessageToBePresent(groupNameNew),
   ]);
 
   await closeApp(device1, device2, device3, device4);

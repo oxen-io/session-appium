@@ -28,7 +28,7 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
   await device3.clickOnElementAll(new LeaveGroup(device3));
   await device3.clickOnByAccessibilityID('Leave');
 
-  await runOnlyOnAndroid(platform, () => device3.navigateBack(platform));
+  await runOnlyOnAndroid(platform, () => device3.navigateBack());
   // Check for control message
   await sleepFor(5000);
   await runOnlyOnIOS(platform, () =>
@@ -40,8 +40,8 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
     .toString();
 
   await Promise.all([
-    device2.waitForControlMessageToBePresent(groupMemberLeft as ControlMessage),
-    device1.waitForControlMessageToBePresent(groupMemberLeft as ControlMessage),
+    device2.waitForControlMessageToBePresent(groupMemberLeft),
+    device1.waitForControlMessageToBePresent(groupMemberLeft),
   ]);
 
   await closeApp(device1, device2, device3, device4);

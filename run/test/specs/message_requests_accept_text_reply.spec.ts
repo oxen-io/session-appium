@@ -72,7 +72,7 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
     'messageRequestsAcceptDescription'
   ).toString();
   await runOnlyOnIOS(platform, () =>
-    device2.waitForControlMessageToBePresent(messageRequestsAcceptDescription as ControlMessage)
+    device2.waitForControlMessageToBePresent(messageRequestsAcceptDescription)
   );
   await runOnlyOnAndroid(platform, () =>
     device2.waitForTextElementToBePresent({
@@ -90,8 +90,8 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
     .withArgs({ name: userA.userName })
     .toString();
   await Promise.all([
-    device1.waitForControlMessageToBePresent(messageRequestsAccepted as ControlMessage),
-    device2.waitForControlMessageToBePresent(messageRequestYouHaveAccepted as ControlMessage),
+    device1.waitForControlMessageToBePresent(messageRequestsAccepted),
+    device2.waitForControlMessageToBePresent(messageRequestYouHaveAccepted),
   ]);
   // Close app
   await closeApp(device1, device2);

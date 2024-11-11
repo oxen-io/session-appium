@@ -20,7 +20,7 @@
 //   const userB = await newUser(device2, "Bob", platform);
 
 //   await newContact(platform, device1, userA, device2, userB);
-//   await device1.navigateBack(platform);
+//   await device1.navigateBack();
 //   // Check username has changed from session id on both device 1 and 3
 //   await Promise.all([
 //     device1.waitForTextElementToBePresent({
@@ -95,7 +95,7 @@
 //     device1.clickOnByAccessibilityID("Apply")
 //   );
 //   await runOnlyOnIOS(platform, () => device1.clickOnByAccessibilityID("Done"));
-//   // await device1.navigateBack(platform);
+//   // await device1.navigateBack();
 //   await runOnlyOnIOS(platform, () =>
 //     device1.clickOnElementAll({
 //       strategy: "accessibility id",

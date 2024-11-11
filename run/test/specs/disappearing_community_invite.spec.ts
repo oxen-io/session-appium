@@ -1,4 +1,3 @@
-
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
 import { InviteContactsMenuItem } from './locators';
@@ -25,8 +24,8 @@ async function disappearingCommunityInviteMessage1o1Ios(platform: SupportedPlatf
   ]);
   await newContact(platform, device1, userA, device2, userB);
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
-  // await device1.navigateBack(platform);
-  await device1.navigateBack(platform);
+  // await device1.navigateBack();
+  await device1.navigateBack();
   await joinCommunity(device1, testCommunityLink, testCommunityName);
   await device1.clickOnByAccessibilityID('More options');
   await sleepFor(1000);
@@ -73,7 +72,7 @@ async function disappearingCommunityInviteMessage1o1Android(platform: SupportedP
 
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
 
-  await device1.navigateBack(platform);
+  await device1.navigateBack();
   await joinCommunity(device1, testCommunityLink, testCommunityName);
   await device1.clickOnByAccessibilityID('More options');
   await sleepFor(1000);

@@ -1,5 +1,6 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
+import { DownloadMediaButton } from './locators';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -23,7 +24,7 @@ async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType) {
   ]);
   await newContact(platform, device1, userA, device2, userB);
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
-  // await device1.navigateBack(platform);
+  // await device1.navigateBack();
   // Click on attachments button
   await device1.sendGIF(testMessage);
   // Check if the 'Tap to download media' config appears
@@ -31,7 +32,7 @@ async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID('Untrusted attachment message');
   await sleepFor(100);
   // Click on 'download'
-  await device2.clickOnByAccessibilityID('Download media');
+  await device2.clickOnElementAll(new DownloadMediaButton(device2));
   // Wait for 30 seconds
   await sleepFor(30000);
   // Check if GIF has been deleted on both devices
@@ -68,7 +69,7 @@ async function disappearingGifMessage1o1Android(platform: SupportedPlatformsType
   // Click on config
   await device2.clickOnByAccessibilityID('Untrusted attachment message');
   // Click on 'download'
-  await device2.clickOnByAccessibilityID('Download media');
+  await device2.clickOnElementAll(new DownloadMediaButton(device2));
   await Promise.all([
     device1.waitForTextElementToBePresent({
       strategy: 'accessibility id',

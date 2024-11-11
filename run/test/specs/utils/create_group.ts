@@ -1,6 +1,6 @@
 import { englishStripped } from '../../../localizer/i18n/localizedString';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { ControlMessage, Group, GROUPNAME, User } from '../../../types/testing';
+import { Group, GROUPNAME, User } from '../../../types/testing';
 import { newContact } from './create_contact';
 import { SupportedPlatformsType } from './open_app';
 
@@ -21,14 +21,14 @@ export const createGroup = async (
   const userCMessage = `${userThree.userName} to ${userName}`;
   // Create contact between User A and User B
   await newContact(platform, device1, userOne, device2, userTwo);
-  await device1.navigateBack(platform);
+  await device1.navigateBack();
   await newContact(platform, device1, userOne, device3, userThree);
-  await device2.navigateBack(platform);
+  await device2.navigateBack();
   // Create contact between User A and User C
   // Exit conversation back to list
-  await device1.navigateBack(platform);
+  await device1.navigateBack();
   // Exit conversation back to list
-  await device3.navigateBack(platform);
+  await device3.navigateBack();
   // Click plus button
   await device1.clickOnByAccessibilityID('New conversation button');
   // Select Closed Group option
@@ -75,16 +75,16 @@ export const createGroup = async (
     ]);
   }
   // TODO: need to change once Android have updated their control messages
+  const groupNoMessages = englishStripped('groupNoMessages')
+    .withArgs({ group_name: group.userName })
+    .toString();
   if (platform === 'android') {
-    const groupNoMessages = englishStripped('groupNoMessages')
-      .withArgs({ group_name: group.userName })
-      .toString();
-    await device1.waitForControlMessageToBePresent(groupNoMessages as ControlMessage);
+    await device1.waitForControlMessageToBePresent(groupNoMessages);
     const legacyGroupMemberYouNew = englishStripped('legacyGroupMemberYouNew').toString();
     // Check control message 'You joined the group'
     await Promise.all([
-      device2.waitForControlMessageToBePresent(legacyGroupMemberYouNew as ControlMessage),
-      device3.waitForControlMessageToBePresent(legacyGroupMemberYouNew as ControlMessage),
+      device2.waitForControlMessageToBePresent(legacyGroupMemberYouNew),
+      device3.waitForControlMessageToBePresent(legacyGroupMemberYouNew),
     ]);
   }
   // Send message from User A to group to verify all working

@@ -1,5 +1,7 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import { ExitUserProfile } from './locators';
+import { UserSettings } from './locators/settings';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { parseDataImage } from './utils/check_colour';
 import { linkedDevice } from './utils/link_device';
@@ -23,35 +25,33 @@ async function avatarRestored(platform: SupportedPlatformsType) {
   // Wait for change
   // Verify change
   // Take screenshot
-  const el = await device1.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'User settings',
-  });
-  await device2.clickOnByAccessibilityID('User settings');
+  const profilePicture = await device1.waitForTextElementToBePresent(new UserSettings(device1));
+  await device2.clickOnElementAll(new UserSettings(device2));
   await runOnlyOnIOS(platform, () => device1.waitForLoadingOnboarding());
   await runOnlyOnAndroid(platform, () => sleepFor(10000));
-  const base64 = await device1.getElementScreenshot(el.ELEMENT);
+  const base64 = await device1.getElementScreenshot(profilePicture.ELEMENT);
   const actualPixelColor = await parseDataImage(base64);
-  // console.log('Base64 value is', base64);
-  console.log('RGB Value of pixel is:', actualPixelColor);
   if (actualPixelColor === expectedPixelHexColour) {
     console.log('Device1: Colour is correct');
   } else {
-    throw new Error("Device1: Colour isn't 04cbfe, it is: " + actualPixelColor);
+    throw new Error(`Device1: Colour isn't ${expectedPixelHexColour}, it is: ` + actualPixelColor);
   }
   console.log('Now checking avatar on linked device');
   // Check avatar on device 2
-  const el2 = await device2.waitForTextElementToBePresent({
-    strategy: 'accessibility id',
-    selector: 'User settings',
-  });
   await sleepFor(3000);
-  const base64A = await device2.getElementScreenshot(el2.ELEMENT);
-  const pixelColorLinked = await parseDataImage(base64A);
-  if (pixelColorLinked === expectedPixelHexColour) {
-    console.log('Device 2: Colour is correct on linked device');
-  } else {
-    console.log(`Device 2: Colour isn't ${expectedPixelHexColour}, it is: `, pixelColorLinked);
+  await device2.clickOnElementAll(new ExitUserProfile(device2));
+  await device2.clickOnElementAll(new UserSettings(device2));
+  const profilePictureLinked = await device2.waitForTextElementToBePresent(
+    new UserSettings(device2)
+  );
+  const base64A = await device2.getElementScreenshot(profilePictureLinked.ELEMENT);
+  const actualPixelColorLinked = await parseDataImage(base64A);
+  if (actualPixelColorLinked !== expectedPixelHexColour) {
+    throw new Error(
+      `Device1: Colour isn't ${expectedPixelHexColour}, it is: ` + actualPixelColorLinked
+    );
   }
+  console.log('Device 2: Colour is correct on linked device');
+
   await closeApp(device1, device2);
 }

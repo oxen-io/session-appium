@@ -1,6 +1,7 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
-import { BlockedContactsSettings, BlockUser, BlockUserConfirmation } from './locators';
+import { BlockedContactsSettings, BlockUser, BlockUserConfirmationModal } from './locators';
+import { UserSettings } from './locators/settings';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -26,11 +27,11 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
   await device1.clickOnElementAll(new BlockUser(device1));
   // Wait for menu to be clickable (Android)
   // Confirm block option
-  await device1.clickOnElementAll(new BlockUserConfirmation(device1));
+  await device1.clickOnElementAll(new BlockUserConfirmationModal(device1));
   // On ios there is an alert that confirms that the user has been blocked
   await sleepFor(1000);
   // On ios, you need to navigate back to conversation screen to confirm block
-  await runOnlyOnIOS(platform, () => device1.navigateBack(platform));
+  await runOnlyOnIOS(platform, () => device1.navigateBack());
   // Look for alert at top of screen (Bob is blocked. Unblock them?)
   // Check device 1 for blocked status
   const blockedStatus = await device1.waitForTextElementToBePresent({
@@ -53,8 +54,8 @@ async function blockUserInConversationOptions(platform: SupportedPlatformsType) 
     console.info('Blocked banner not found');
   }
   // Check settings for blocked user
-  await device1.navigateBack(platform);
-  await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'User settings' });
+  await device1.navigateBack();
+  await device1.clickOnElementAll(new UserSettings(device1));
   await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'Conversations' });
   await device1.clickOnElementAll(new BlockedContactsSettings(device1));
   await runOnlyOnAndroid(platform, () =>

@@ -1,6 +1,6 @@
 import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
-import { ControlMessage, USERNAME } from '../../types/testing';
+import { USERNAME } from '../../types/testing';
 import { ExitUserProfile } from './locators';
 import { newUser } from './utils/create_account';
 import { runOnlyOnAndroid, sleepFor } from './utils/index';
@@ -36,7 +36,8 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   // Verify config message states message request was accepted
   // "messageRequestsAccepted": "Your message request has been accepted.",
   const messageRequestsAccepted = englishStripped('messageRequestsAccepted').toString();
-  await device1.waitForControlMessageToBePresent(messageRequestsAccepted as ControlMessage);
+  await device1.waitForControlMessageToBePresent(messageRequestsAccepted);
+  await device1.waitForControlMessageToBePresent('Your message request has been accepted.');
   // Phone icon should appear now that conversation has been approved
   await device1.clickOnByAccessibilityID('Call');
   // Enabled voice calls in privacy settings
@@ -64,7 +65,7 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID('OK');
   // Enable voice calls on device 2 for User B
   // Need to navigate out of conversation for user to have full contact actions (calls icon, etc)
-  await device2.navigateBack(platform);
+  await device2.navigateBack();
   await device2.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'Conversation list item',
@@ -99,12 +100,12 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   const callsYouCalled = englishStripped('callsYouCalled')
     .withArgs({ name: userB.userName })
     .toString();
-  await device1.waitForControlMessageToBePresent(callsYouCalled as ControlMessage);
+  await device1.waitForControlMessageToBePresent(callsYouCalled);
   // "callsYouCalled": "You called {name}",
   const callsCalledYou = englishStripped('callsCalledYou')
     .withArgs({ name: userB.userName })
     .toString();
-  await device2.waitForControlMessageToBePresent(callsCalledYou as ControlMessage);
+  await device2.waitForControlMessageToBePresent(callsCalledYou);
   // Excellent
   await closeApp(device1, device2);
 }

@@ -12,15 +12,16 @@ import {
   ReadReceiptsButton,
 } from '../../run/test/specs/locators';
 import { IOS_XPATHS } from '../constants';
+import { englishStripped, TokenString } from '../localizer/i18n/localizedString';
+import { LocalizerDictionary } from '../localizer/Localizer';
+import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
 import { clickOnCoordinates, sleepFor } from '../test/specs/utils';
 import { getAdbFullPath } from '../test/specs/utils/binaries';
 import { SupportedPlatformsType } from '../test/specs/utils/open_app';
 import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/specs/utils/utilities';
 import {
   AccessibilityId,
-  ControlMessage,
   DISAPPEARING_TIMES,
-  DisappearingControlMessage,
   Group,
   Id,
   InteractionPoints,
@@ -28,8 +29,8 @@ import {
   StrategyExtractionObj,
   User,
   XPath,
-  isDisappearingControlMessage,
 } from './testing';
+import { SaveProfilePictureButton, UserSettings } from '../test/specs/locators/settings';
 
 export type Coordinates = {
   x: number;
@@ -307,7 +308,7 @@ export class DeviceWrapper {
     }
     await this.click(el.ELEMENT);
   }
-
+// TODO update this function to handle new locator logic 
   public async longPress(accessibilityId: AccessibilityId, text?: string) {
     const el = await this.waitForTextElementToBePresent({
       strategy: 'accessibility id',
@@ -642,40 +643,56 @@ export class DeviceWrapper {
     return message;
   }
 
-  public async doesElementExist({
-    strategy,
-    selector,
-    text,
-    maxWait,
-  }: { text?: string; maxWait?: number } & StrategyExtractionObj) {
+  public async doesElementExist(
+    args: { text?: string; maxWait?: number } & (StrategyExtractionObj | LocatorsInterface)
+  ) {
+    const { text, maxWait } = args;
     const beforeStart = Date.now();
     const maxWaitMSec = maxWait || 30000;
     const waitPerLoop = 100;
     let element: AppiumNextElementType | null = null;
+    let locator: StrategyExtractionObj & { text?: string; maxWait?: number };
+    if (args instanceof LocatorsInterface) {
+      locator = args.build();
+    } else {
+      locator = args as StrategyExtractionObj & {
+        text?: string;
+        maxWait?: number;
+      };
+    }
+
     while (element === null) {
       try {
         if (!text) {
-          element = await this.findElement(strategy, selector);
+          element = await this.findElement(locator.strategy, locator.selector);
         } else {
-          const els = await this.findElements(strategy, selector);
+          const els = await this.findElements(locator.strategy, locator.selector);
           element = await this.findMatchingTextInElementArray(els, text);
           if (element) {
-            console.log(`${strategy}: ${selector} with matching text ${text} found`);
+            console.log(
+              `${locator.strategy}: ${locator.selector} with matching text ${text} found`
+            );
           } else {
-            console.log(`Couldn't find ${text} with matching ${strategy}: ${selector}`);
+            console.log(
+              `Couldn't find ${text} with matching ${locator.strategy}: ${locator.selector}`
+            );
           }
         }
       } catch (e: any) {
-        console.info(`doesElementExist failed with`, e.message, `${strategy} ${selector}`);
+        console.info(
+          `doesElementExist failed with`,
+          e.message,
+          `${locator.strategy} ${locator.selector}`
+        );
       }
       if (!element) {
         await sleepFor(waitPerLoop);
       }
       if (beforeStart + maxWaitMSec <= Date.now()) {
-        console.log(selector, " doesn't exist, time expired");
+        console.log(locator.selector, " doesn't exist, time expired");
         break;
       } else {
-        console.log(selector, "Doesn't exist but retrying");
+        console.log(locator.selector, "Doesn't exist but retrying");
       }
     }
 
@@ -767,7 +784,7 @@ export class DeviceWrapper {
           const els = await this.findElements(locator.strategy, locator.selector);
           el = await this.findMatchingTextInElementArray(els, text);
         } else {
-          console.log(`Waiting for '${locator.strategy}' and '${locator.selector}' to be present`);
+          console.log(`Waiting for ${locator.strategy} and ${locator.selector} to be present`);
           el = await this.findElement(locator.strategy, locator.selector);
         }
       } catch (e: any) {
@@ -798,7 +815,7 @@ export class DeviceWrapper {
   }
 
   public async waitForControlMessageToBePresent(
-    text: ControlMessage,
+    text: string,
     maxWait?: number
   ): Promise<AppiumNextElementType> {
     let el: null | AppiumNextElementType = null;
@@ -830,10 +847,6 @@ export class DeviceWrapper {
     text: string,
     maxWait?: number
   ): Promise<AppiumNextElementType> {
-    if (!isDisappearingControlMessage(text.trim())) {
-      throw new Error(`Text is not a localized string: ${text}`);
-    }
-
     let el: null | AppiumNextElementType = null;
     const maxWaitMSec: number = typeof maxWait === 'number' ? maxWait : 15000;
     let currentWait = 0;
@@ -1448,9 +1461,9 @@ export class DeviceWrapper {
 
   public async uploadProfilePicture() {
     const spongebobsBirthday = '199805010700.00';
-    await this.clickOnByAccessibilityID('User settings');
+    await this.clickOnElementAll(new UserSettings(this));
     // Click on Profile picture
-    await this.clickOnByAccessibilityID('User settings');
+    await this.clickOnElementAll(new UserSettings(this));
     await this.clickOnElementAll(new ChangeProfilePictureButton(this));
     if (this.isIOS()) {
       await this.modalPopup({ strategy: 'accessibility id', selector: 'Allow Full Access' });
@@ -1503,6 +1516,12 @@ export class DeviceWrapper {
           `${getAdbFullPath()} -s emulator-5554 push 'run/test/specs/media/profile_picture.jpg' /sdcard/Download/`,
           true
         );
+        await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Show roots' });
+        await this.clickOnElementAll({
+          strategy: 'id',
+          selector: 'android:id/title',
+          text: 'Downloads',
+        });
       }
       await this.clickOnElementAll({
         strategy: 'accessibility id',
@@ -1510,7 +1529,7 @@ export class DeviceWrapper {
       });
       await this.clickOnElementById('network.loki.messenger:id/crop_image_menu_crop');
     }
-    await this.clickOnElementAll({ strategy: 'accessibility id', selector: 'Save' });
+    await this.clickOnElementAll(new SaveProfilePictureButton(this));
   }
 
   public async getTimeFromDevice(platform: SupportedPlatformsType): Promise<string> {
@@ -1634,8 +1653,8 @@ export class DeviceWrapper {
     }
   }
 
-  public async navigateBack(platform: SupportedPlatformsType) {
-    if (platform === 'ios') {
+  public async navigateBack() {
+    if (this.isIOS()) {
       await this.clickOnByAccessibilityID('Back');
     } else {
       await this.clickOnByAccessibilityID('Navigate up');
@@ -1644,15 +1663,15 @@ export class DeviceWrapper {
 
   /* ======= Settings functions =========*/
 
-  public async turnOnReadReceipts(platform: SupportedPlatformsType) {
-    await this.navigateBack(platform);
+  public async turnOnReadReceipts() {
+    await this.navigateBack();
     await sleepFor(100);
-    await this.clickOnByAccessibilityID('User settings');
+    await this.clickOnElementAll(new UserSettings(this));
     await sleepFor(500);
     await this.clickOnElementAll(new PrivacyButton(this));
     await sleepFor(2000);
     await this.clickOnElementAll(new ReadReceiptsButton(this));
-    await this.navigateBack(platform);
+    await this.navigateBack();
     await sleepFor(100);
     await this.clickOnElementAll(new ExitUserProfile(this));
   }
@@ -1751,6 +1770,65 @@ export class DeviceWrapper {
       defaultActiveApplication: activeAppInfo.bundleId,
     });
     return;
+  }
+
+  public async checkModalStrings(
+    expectedStringHeading: TokenString<LocalizerDictionary>,
+    expectedStringDescription: TokenString<LocalizerDictionary>,
+    oldModalAndroid?: boolean
+    // args?: { [key: string]: string | number }
+  ) {
+    // Check modal heading is correct
+    function removeNewLines(input: string): string {
+      // return input.replace(/<br\s*\/?>/gi, '\nCR LF');
+      return input.replace(/\n/gi, '');
+    }
+    const expectedHeading = englishStripped(expectedStringHeading).toString();
+    let elHeading;
+    // Some modals in Android haven't been updated to compose yet therefore need different locators
+    if (!oldModalAndroid) {
+      elHeading = await this.waitForTextElementToBePresent(new ModalHeading(this));
+    } else {
+      elHeading = await this.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: 'Modal heading',
+      });
+    }
+    const actualHeading = await this.getTextFromElement(elHeading);
+    if (expectedHeading === actualHeading) {
+      console.log('Modal heading is correct');
+    } else {
+      throw new Error(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        `Modal heading is incorrect. Expected heading: ${expectedHeading}, Actual heading: ${actualHeading}`
+      );
+    }
+    // Now check modal description
+    // let expectedDescription;
+    const expectedDescription = englishStripped(expectedStringDescription).toString();
+    // if (!args) {
+    // } else {
+    //   expectedDescription = englishStripped(expectedStringDescription)
+    //     .withArgs(args as any)
+    //     .toString();
+    // }
+    let elDescription;
+    if (!oldModalAndroid) {
+      elDescription = await this.waitForTextElementToBePresent(new ModalDescription(this));
+    } else {
+      elDescription = await this.waitForTextElementToBePresent({
+        strategy: 'accessibility id',
+        selector: 'Modal description',
+      });
+    }
+    const actualDescription = await this.getTextFromElement(elDescription);
+    // Need to format the ACTUAL description that comes back from device to match
+    const formattedDescription = removeNewLines(actualDescription);
+    if (expectedDescription !== formattedDescription) {
+      throw new Error(
+        `Modal description is incorrect. Expected description: ${expectedDescription}, Actual description: ${formattedDescription}`
+      );
+    }
   }
 
   /* === all the utilities function ===  */

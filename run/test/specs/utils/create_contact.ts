@@ -1,7 +1,7 @@
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from '.';
 import { englishStripped } from '../../../localizer/i18n/localizedString';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
-import { ControlMessage, User } from '../../../types/testing';
+import { User } from '../../../types/testing';
 import { SupportedPlatformsType } from './open_app';
 
 export const newContact = async (
@@ -25,8 +25,7 @@ export const newContact = async (
   // Verify config message states message request was accepted
   // "messageRequestsAccepted": "Your message request has been accepted.",
   const messageRequestsAccepted = englishStripped('messageRequestsAccepted').toString();
-  await device1.waitForControlMessageToBePresent(messageRequestsAccepted as ControlMessage);
-  await device1.waitForControlMessageToBePresent('Your message request has been accepted.');
+  await device1.waitForControlMessageToBePresent(messageRequestsAccepted);
 
   console.info(`${Alice.userName} and ${Bob.userName} are now contacts`);
   return { Alice, Bob, device1, device2 };

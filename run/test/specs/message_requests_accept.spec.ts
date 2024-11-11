@@ -31,11 +31,11 @@ async function acceptRequest(platform: SupportedPlatformsType) {
     .withArgs({ name: userA.userName })
     .toString();
   await Promise.all([
-    device1.waitForControlMessageToBePresent(messageRequestsAccepted as ControlMessage),
-    device2.waitForControlMessageToBePresent(messageRequestYouHaveAccepted as ControlMessage),
+    device1.waitForControlMessageToBePresent(messageRequestsAccepted),
+    device2.waitForControlMessageToBePresent(messageRequestYouHaveAccepted),
   ]);
   // Check conversation list for new contact (user A)
-  await device2.navigateBack(platform);
+  await device2.navigateBack();
   await Promise.all([
     device2.waitForTextElementToBePresent({
       strategy: 'accessibility id',

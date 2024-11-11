@@ -17,7 +17,7 @@ async function readStatus(platform: SupportedPlatformsType) {
   await newContact(platform, device1, userA, device2, userB);
   // Go to settings to turn on read status
   // Device 1
-  await Promise.all([device1.turnOnReadReceipts(platform), device2.turnOnReadReceipts(platform)]);
+  await Promise.all([device1.turnOnReadReceipts(), device2.turnOnReadReceipts()]);
   await device1.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'Conversation list item',

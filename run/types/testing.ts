@@ -64,11 +64,6 @@ export type ConversationType = '1:1' | 'Group' | 'Community' | 'Note to Self';
 export type DisappearModes = 'read' | 'send';
 export type DisappearActions = 'read' | 'sent';
 
-enum DISAPPEARING_ACTIONS {
-  READ = 'read',
-  SENT = 'sent',
-}
-
 export enum DISAPPEARING_TIMES {
   FIVE_SECONDS = '5 seconds',
   TEN_SECONDS = '10 seconds',
@@ -81,6 +76,7 @@ export enum DISAPPEARING_TIMES {
   ONE_DAY = '1 day',
   ONE_WEEK = '1 week',
   TWO_WEEKS = '2 weeks',
+  OFF = 'Off',
 }
 
 export type DisappearOpts1o1 = [
@@ -123,69 +119,6 @@ export type StrategyExtractionObj =
       selector: DISAPPEARING_TIMES;
     };
 
-/** @see {@link en.disappearingMessagesSetYou} */
-const disappearingMessagesSetYou = Object.values(DISAPPEARING_ACTIONS).flatMap(action =>
-  Object.values(DISAPPEARING_TIMES).map(
-    time => `You set messages to disappear ${time} after they have been ${action}.` as const
-  )
-);
-
-/** @see {@link en.disappearingMessagesTurnedOffYou} */
-const disappearingMessagesTurnedOffYou =
-  'You turned off disappearing messages. Messages you send will no longer disappear.' as const;
-
-/** @see {@link en.disappearingMessagesTurnedOffYouGroup} */
-const disappearingMessagesTurnedOffYouGroup = 'You turned off disappearing messages.' as const;
-
-/** @see {@link en.disappearingMessagesSet} */
-const disappearingMessagesSet = Object.values(DISAPPEARING_ACTIONS).flatMap(action =>
-  Object.values(DISAPPEARING_TIMES).flatMap(time =>
-    Object.values(USERNAME).map(
-      name =>
-        `${name} has set messages to disappear ${time} after they have been ${action}.` as const
-    )
-  )
-);
-
-/** @see {@link en.disappearingMessagesTurnedOff} */
-const disappearingMessagesTurnedOff = Object.values(USERNAME).map(
-  name =>
-    `${name} has turned disappearing messages off. Messages they send will no longer disappear.` as const
-);
-
-const disappearingControlMessages = [
-  ...disappearingMessagesSetYou,
-  disappearingMessagesTurnedOffYou,
-  disappearingMessagesTurnedOffYouGroup,
-  ...disappearingMessagesSet,
-  ...disappearingMessagesTurnedOff,
-] as const;
-
-export type DisappearingControlMessage = (typeof disappearingControlMessages)[number];
-
-export const isDisappearingControlMessage = (
-  message: string
-): message is DisappearingControlMessage =>
-  disappearingControlMessages.includes(message as DisappearingControlMessage);
-
-export type ControlMessage =
-  | 'Your message request has been accepted.'
-  | `You have accepted the message request from ${USERNAME}.`
-  | `${USERNAME} called you`
-  | `Called ${USERNAME}`
-  | `You called ${USERNAME}`
-  | 'You created a new group.'
-  | `${USERNAME} has left the group.`
-  | `${USERNAME} left the group.`
-  | `${USERNAME} joined the group.`
-  | `You added ${USERNAME} to the group.`
-  | `You have no messages from ${string}. Send a message to start the conversation!`
-  | `Group name is now ${string}.`
-  | 'You will be able to send voice messages and attachments once the recipient has approved this message request.'
-  | 'Sending a message to this user will automatically accept their message request and reveal your Account ID.';
-
-export type ModalStrings = 'Hide Recovery Password Permanently';
-
 export type XPath =
   | `/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout`
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.TabHost/android.widget.LinearLayout/android.widget.FrameLayout/androidx.viewpager.widget.ViewPager/android.widget.RelativeLayout/android.widget.GridView/android.widget.LinearLayout/android.widget.LinearLayout[2]`
@@ -199,7 +132,9 @@ export type XPath =
   | `//XCUIElementTypeAlert//*//XCUIElementTypeButton`
   | `(//XCUIElementTypeImage[@name="gif cell"])[1]`
   | `//XCUIElementTypeCell[@name="${string}"]`
-  | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/androidx.appcompat.widget.LinearLayoutCompat/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.TextView[2]`;
+  | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/androidx.appcompat.widget.LinearLayoutCompat/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.TextView[2]`
+  | `//XCUIElementTypeStaticText[@name="Paste"]`
+  | `//XCUIElementTypeOther[contains(@name, "Hey,")][1]`;
 
 export type AccessibilityId =
   | 'Create account button'
@@ -317,6 +252,7 @@ export type AccessibilityId =
   | 'Allow Full Access'
   | 'Photo, May 01, 1999, 7:00 AM'
   | 'profile_picture.jpg, 27.75 kB, May 2, 1999'
+  | 'profile_picture.jpg, 27.75 kB, May 1, 1999'
   | 'profile_picture.jpg, 27.75 kB, May 1, 1998'
   | 'Photo taken on May 2, 1999 7:00:00 AM'
   | 'Photo, 01 May 1998, 7:00 am'
@@ -360,7 +296,6 @@ export type AccessibilityId =
   | 'Conversation header name'
   | 'Invite'
   | 'Follow setting'
-  | 'Follow Setting'
   | 'Set'
   | 'Allow Full Access'
   | DISAPPEARING_TIMES
@@ -375,15 +310,29 @@ export type AccessibilityId =
   | 'Recovery password menu item'
   | 'Hide recovery password button'
   | 'Hide Recovery Password Permanently'
+  | 'Invite friend button'
+  | 'Share button'
+  | 'Copy'
   | 'Modal heading'
   | 'Modal description'
+  | 'Continue'
+  | 'Yes'
+  | 'Disappearing messages type and time'
+  | 'Confirm'
+  | 'Delete'
+  | 'Search button'
+  | 'Search icon'
+  | 'Note to Self'
+  | 'X'
+  | 'Close'
   | 'Continue button'
   | 'Error message';
 
 export type Id =
   | 'Modal heading'
   | 'Modal description'
-  | 'Continue button'
+  | 'Continue'
+  | 'Yes'
   | 'android:id/summary'
   | 'com.android.permissioncontroller:id/permission_allow_foreground_only_button'
   | 'com.android.permissioncontroller:id/permission_deny_button'
@@ -408,6 +357,11 @@ export type Id =
   | 'network.loki.messenger:id/linkPreviewView'
   | 'network.loki.messenger:id/openGroupTitleTextView'
   | 'Image picker'
+  | 'network.loki.messenger:id/action_apply'
+  | 'Save'
+  | 'android:id/content_preview_text'
+  | 'network.loki.messenger:id/search_result_title';
+  | 'Error message';
   | 'network.loki.messenger:id/action_apply';
 
 export type testRisk = 

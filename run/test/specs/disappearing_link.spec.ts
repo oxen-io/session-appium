@@ -77,7 +77,7 @@ async function disappearingLinkMessage1o1Android(platform: SupportedPlatformsTyp
   ]);
   await newContact(platform, device1, userA, device2, userB);
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
-  // await device1.navigateBack(platform);
+  // await device1.navigateBack();
   // Send a link
   await device1.inputText(testLink, {
     strategy: 'accessibility id',

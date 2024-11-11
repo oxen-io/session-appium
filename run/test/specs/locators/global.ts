@@ -40,13 +40,39 @@ export class ContinueButton extends LocatorsInterface {
       case 'android':
         return {
           strategy: 'id',
-          selector: 'Continue button',
+          selector: 'Continue',
         } as const;
       case 'ios':
         return {
           strategy: 'accessibility id',
-          selector: 'Continue button',
+          selector: 'Continue',
         } as const;
     }
+  }
+}
+
+export class DeleteContactModalConfirm extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Yes',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: 'Delete',
+        } as const;
+    }
+  }
+}
+
+export class EnableLinkPreviewsModalButton extends LocatorsInterface {
+  public build() {
+      return {
+          strategy: 'accessibility id',
+          selector: 'Enable',
+      } as const;
   }
 }

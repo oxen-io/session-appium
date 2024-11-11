@@ -1,5 +1,6 @@
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
+import { DownloadMediaButton } from './locators';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
@@ -21,7 +22,7 @@ async function sendDocument(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID('Untrusted attachment message');
   await sleepFor(500);
   // User B - Click on 'download'
-  await device2.clickOnByAccessibilityID('Download media');
+  await device2.clickOnElementAll(new DownloadMediaButton(device2));
   // Reply to message
 
   await runOnlyOnIOS(platform, () =>
