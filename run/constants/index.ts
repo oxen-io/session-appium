@@ -11,4 +11,6 @@ export const ANDROID_XPATHS: { [key: string]: XPath } = {
 export const IOS_XPATHS: { [key: string]: XPath } = {
   VIDEO_TOGGLE: `//XCUIElementTypeStaticText[@name="Videos"]`,
   FIRST_GIF: `(//XCUIElementTypeImage[@name="gif cell"])[1]`,
+  PASTE: `//XCUIElementTypeStaticText[@name="Paste"]`,
+  INVITE_A_FRIEND_SHARE: `//XCUIElementTypeOther[contains(@name, "Hey,")][1]`,
 };

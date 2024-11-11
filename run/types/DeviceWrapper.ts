@@ -308,7 +308,7 @@ export class DeviceWrapper {
     }
     await this.click(el.ELEMENT);
   }
-
+// TODO update this function to handle new locator logic 
   public async longPress(accessibilityId: AccessibilityId, text?: string) {
     const el = await this.waitForTextElementToBePresent({
       strategy: 'accessibility id',

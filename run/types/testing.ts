@@ -134,6 +134,7 @@ export type XPath =
   | `//XCUIElementTypeCell[@name="${string}"]`
   | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/androidx.appcompat.widget.LinearLayoutCompat/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.TextView[2]`
   | `//XCUIElementTypeStaticText[@name="Paste"]`
+  | `//XCUIElementTypeOther[contains(@name, "Hey,")][1]`;
 
 export type AccessibilityId =
   | 'Create account button'

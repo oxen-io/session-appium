@@ -68,7 +68,7 @@ export class DeleteContactModalConfirm extends LocatorsInterface {
   }
 }
 
-export class EnableButton extends LocatorsInterface {
+export class EnableLinkPreviewsModalButton extends LocatorsInterface {
   public build() {
       return {
           strategy: 'accessibility id',
