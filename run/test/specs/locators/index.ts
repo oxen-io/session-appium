@@ -257,23 +257,6 @@ export class ImagePermissionsModalAllow extends LocatorsInterface {
   }
 }
 
-export class JoinCommunityOption extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Join community button',
-        };
-      case 'ios':
-        return {
-          strategy: 'accessibility id',
-          selector: 'Join Community',
-        };
-    }
-  }
-}
-
 export class JoinCommunityButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {

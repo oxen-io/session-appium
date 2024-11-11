@@ -23,7 +23,6 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType) {
   ]);
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
   await setDisappearingMessage(platform, device1, ['Group', timerType, time]);
-  // await device1.navigateBack();
   // Send a link
   await device1.inputText(testLink, {
     strategy: 'accessibility id',

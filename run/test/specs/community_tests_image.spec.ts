@@ -15,18 +15,18 @@ async function sendImageCommunityiOS(platform: SupportedPlatformsType) {
   const testMessage = 'Testing sending images to communities';
   const testImageMessage = `Image message + ${new Date().getTime()}`;
   // Create user A and user B
-  const [userA, userB] = await Promise.all([
+  const [Alice, Bob] = await Promise.all([
     newUser(device1, USERNAME.ALICE, platform),
     newUser(device2, USERNAME.BOB, platform),
   ]);
-  await newContact(platform, device1, userA, device2, userB);
+  await newContact(platform, device1, Alice, device2, Bob);
   await Promise.all([device1.navigateBack(), device2.navigateBack()]);
   await joinCommunity(device1, testCommunityLink, testCommunityName);
   await joinCommunity(device2, testCommunityLink, testCommunityName);
   await Promise.all([device1.scrollToBottom(platform), device2.scrollToBottom(platform)]);
   await device1.sendMessage(testMessage);
   await device1.sendImage(platform, testImageMessage, true);
-  await device2.replyToMessage(userA, testImageMessage);
+  await device2.replyToMessage(Alice, testImageMessage);
   await closeApp(device1, device2);
 }
 
@@ -35,23 +35,16 @@ async function sendImageCommunityAndroid(platform: SupportedPlatformsType) {
   const time = await device1.getTimeFromDevice(platform);
   const testMessage = `Testing sending images to communities + ${time}`;
   // Create user A and user B
-  const [userA, userB] = await Promise.all([
+  const [Alice] = await Promise.all([
     newUser(device1, USERNAME.ALICE, platform),
     newUser(device2, USERNAME.BOB, platform),
   ]);
-  // await newContact(platform, device1, userA, device2, userB);
-  const replyMessage = `Replying to image from ${userA.userName} in community ${testCommunityName} + ${time}`;
-  // await Promise.all([device1.navigateBack(), device2.navigateBack()]);
+  const replyMessage = `Replying to image from ${Alice.userName} in community ${testCommunityName} + ${time}`;
   await Promise.all([
     joinCommunity(device1, testCommunityLink, testCommunityName),
     joinCommunity(device2, testCommunityLink, testCommunityName),
   ]);
-  // await Promise.all([
-  //   device1.scrollToBottom(platform),
-  //   device2.scrollToBottom(platform),
-  // ]);
   await device1.sendImageWithMessageAndroid(testMessage);
-
   await device2.scrollToBottom(platform);
   await device2.longPressMessage(testMessage);
   await device2.clickOnByAccessibilityID('Reply to message');

@@ -308,7 +308,7 @@ export class DeviceWrapper {
     }
     await this.click(el.ELEMENT);
   }
-
+// TODO update this function to handle new locator logic 
   public async longPress(accessibilityId: AccessibilityId, text?: string) {
     const el = await this.waitForTextElementToBePresent({
       strategy: 'accessibility id',
@@ -1824,11 +1824,8 @@ export class DeviceWrapper {
     const actualDescription = await this.getTextFromElement(elDescription);
     // Need to format the ACTUAL description that comes back from device to match
     const formattedDescription = removeNewLines(actualDescription);
-    if (expectedDescription === formattedDescription) {
-      console.log('Modal description is correct');
-    } else {
+    if (expectedDescription !== formattedDescription) {
       throw new Error(
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `Modal description is incorrect. Expected description: ${expectedDescription}, Actual description: ${formattedDescription}`
       );
     }
