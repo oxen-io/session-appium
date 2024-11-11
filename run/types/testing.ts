@@ -325,6 +325,7 @@ export type AccessibilityId =
   | 'Note to Self'
   | 'X'
   | 'Close'
+  | 'Continue button'
   | 'Error message';
 
 export type Id =
@@ -360,3 +361,11 @@ export type Id =
   | 'Save'
   | 'android:id/content_preview_text'
   | 'network.loki.messenger:id/search_result_title';
+  | 'Error message';
+  | 'network.loki.messenger:id/action_apply';
+
+export type testRisk = 
+  | 'high' 
+  | 'medium' 
+  | 'low' 
+  | 'undefined';

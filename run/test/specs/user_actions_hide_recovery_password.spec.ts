@@ -1,4 +1,5 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { englishStripped } from '../../localizer/i18n/localizedString';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ContinueButton } from './locators/global';
 import {
@@ -10,8 +11,7 @@ import {
 import { linkedDevice } from './utils/link_device';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
 
-iosIt('Hide recovery password', hideRecoveryPassword);
-androidIt('Hide recovery password', hideRecoveryPassword);
+bothPlatformsIt('Hide recovery password', 'medium', hideRecoveryPassword);
 
 async function hideRecoveryPassword(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

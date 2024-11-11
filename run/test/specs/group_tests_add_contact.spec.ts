@@ -1,6 +1,6 @@
 import { englishStripped } from '../../localizer/i18n/localizedString';
-import { androidIt, iosIt } from '../../types/sessionIt';
-import { USERNAME } from '../../types/testing';
+import { bothPlatformsIt,} from '../../types/sessionIt';
+import { ControlMessage, USERNAME } from '../../types/testing';
 import { ApplyChanges, EditGroup, InviteContactsButton, InviteContactsMenuItem } from './locators';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -8,10 +8,7 @@ import { newContact } from './utils/create_contact';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppFourDevices } from './utils/open_app';
 
-iosIt('Add contact to group', addContactToGroup);
-androidIt('Add contact to group', addContactToGroup);
-
-// bothPlatformsIt("Add contact to group", addContactToGroup);
+bothPlatformsIt('Add contact to group', 'high', addContactToGroup);
 
 async function addContactToGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3, device4 } = await openAppFourDevices(platform);

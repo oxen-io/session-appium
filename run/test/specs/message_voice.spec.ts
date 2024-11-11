@@ -1,4 +1,4 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DownloadMediaButton } from './locators';
 import { sleepFor } from './utils';
@@ -6,8 +6,7 @@ import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-iosIt('Send voice message 1:1', sendVoiceMessage);
-androidIt('Send voice message 1:1', sendVoiceMessage);
+bothPlatformsIt('Send voice message 1:1', 'high', sendVoiceMessage);
 
 async function sendVoiceMessage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
