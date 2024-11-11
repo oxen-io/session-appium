@@ -45,7 +45,8 @@ export const en = {
   adminRemovedUser: '<b>{name}</b> was removed as Admin.',
   adminRemovedUserMultiple: '<b>{name}</b> and <b>{count} others</b> were removed as Admin.',
   adminRemovedUserOther: '<b>{name}</b> and <b>{other_name}</b> were removed as Admin.',
-  adminSendingPromotion: 'Sending admin promotion',
+  adminSendingPromotion:
+    '{count, plural, one [Sending admin promotion] other [Sending admin promotions]}',
   adminSettings: 'Admin Settings',
   adminTwoPromotedToAdmin: '<b>{name}</b> and <b>{other_name}</b> were promoted to Admin.',
   andMore: '+{count}',
@@ -159,13 +160,17 @@ export const en = {
   callsInProgress: 'Call in progress',
   callsIncoming: 'Incoming call from {name}',
   callsIncomingUnknown: 'Incoming call',
+  callsMicrophonePermissionsRequired:
+    "You missed a call from <b>{name}</b> because you haven't granted <b>microphone access</b>.",
   callsMissed: 'Missed Call',
   callsMissedCallFrom: 'Missed call from {name}',
   callsNotificationsRequired:
     'Voice and Video Calls require notifications to be enabled in your device system settings.',
   callsPermissionsRequired: 'Call Permissions Required',
   callsPermissionsRequiredDescription:
-    'You can enable the "Voice and Video Calls" permission in Privacy Settings.',
+    'You can enable the "Voice and Video Calls" permission in Privacy Settings. Mobile only.',
+  callsPermissionsRequiredDescription1:
+    'You can enable the "Voice and Video Calls" permission in Permissions Settings.',
   callsReconnecting: 'Reconnecting…',
   callsRinging: 'Ringing...',
   callsSessionCall: '{app_name} Call',
@@ -320,21 +325,23 @@ export const en = {
   deleteAfterMessageDeletionStandardisationMessageDeletionForbidden:
     'You don’t have permission to delete others’ messages',
   deleteMessage: '{count, plural, one [Delete Message] other [Delete Messages]}',
-  deleteMessageConfirm: 'Are you sure you want to delete this message?',
+  deleteMessageConfirm:
+    '{count, plural, one [Are you sure you want to delete this message?] other [Are you sure you want to delete these messages?]}',
   deleteMessageDeleted: '{count, plural, one [Message deleted] other [Messages deleted]}',
   deleteMessageDeletedGlobally: 'This message was deleted',
   deleteMessageDeletedLocally: 'This message was deleted on this device',
   deleteMessageDescriptionDevice:
-    'Are you sure you want to delete this message from this device only?',
+    '{count, plural, one [Are you sure you want to delete this message from this device only?] other [Are you sure you want to delete these messages from this device only?]}',
   deleteMessageDescriptionEveryone: 'Are you sure you want to delete this message for everyone?',
   deleteMessageDeviceOnly: 'Delete on this device only',
   deleteMessageDevicesAll: 'Delete on all my devices',
   deleteMessageEveryone: 'Delete for everyone',
   deleteMessageFailed:
     '{count, plural, one [Failed to delete message] other [Failed to delete messages]}',
-  deleteMessagesConfirm: 'Are you sure you want to delete these messages?',
-  deleteMessagesDescriptionDevice:
-    'Are you sure you want to delete these messages from this device only?',
+  deleteMessageNoteToSelfWarning:
+    '{count, plural, one [This message cannot be deleted from all your devices] other [Some of the messages you have selected cannot be deleted from all your devices]}',
+  deleteMessageWarning:
+    '{count, plural, one [This message cannot be deleted for everyone] other [Some of the messages you have selected cannot be deleted for everyone]}',
   deleteMessagesDescriptionEveryone: 'Are you sure you want to delete these messages for everyone?',
   deleting: 'Deleting',
   developerToolsToggle: 'Toggle Developer Tools',
@@ -392,6 +399,8 @@ export const en = {
   displayNameNew: 'Pick a new display name',
   displayNamePick: 'Pick your display name',
   displayNameSet: 'Set Display Name',
+  displayNameVisible:
+    'Your Display Name is visible to users, groups and communities you interact with.',
   document: 'Document',
   done: 'Done',
   download: 'Download',
@@ -454,13 +463,17 @@ export const en = {
   groupInviteFailedMultiple: 'Failed to invite {name} and {count} others to {group_name}',
   groupInviteFailedTwo: 'Failed to invite {name} and {other_name} to {group_name}',
   groupInviteFailedUser: 'Failed to invite {name} to {group_name}',
-  groupInviteSending: 'Sending invite',
+  groupInviteReinvite:
+    '<b>{name}</b> invited you to rejoin <b>{group_name}</b>, where you are an Admin.',
+  groupInviteReinviteYou: 'You were invited to rejoin <b>{group_name}</b>, where you are an Admin.',
+  groupInviteSending: '{count, plural, one [Sending invite] other [Sending invites]}',
   groupInviteSent: 'Invite sent',
   groupInviteSuccessful: 'Group invite successful',
   groupInviteVersion: 'Users must have the latest release to receive invitations',
   groupInviteYou: '<b>You</b> were invited to join the group.',
   groupInviteYouAndMoreNew: '<b>You</b> and <b>{count} others</b> were invited to join the group.',
   groupInviteYouAndOtherNew: '<b>You</b> and <b>{other_name}</b> were invited to join the group.',
+  groupInviteYouHistory: '<b>You</b> were invited to join the group. Chat history was shared.',
   groupLeave: 'Leave Group',
   groupLeaveDescription: 'Are you sure you want to leave <b>{group_name}</b>?',
   groupLeaveDescriptionAdmin:
@@ -492,6 +505,7 @@ export const en = {
   groupNameEnterShorter: 'Please enter a shorter group name.',
   groupNameNew: 'Group name is now {group_name}.',
   groupNameUpdated: 'Group name updated.',
+  groupNameVisible: 'Group name is visible to all group members.',
   groupNoMessages:
     'You have no messages from <b>{group_name}</b>. Send a message to start the conversation!',
   groupOnlyAdmin:
@@ -506,11 +520,12 @@ export const en = {
     'Would you like to remove <b>{name}</b> and <b>{other_name}</b> from <b>{group_name}</b>?',
   groupRemoveMessages:
     '{count, plural, one [Remove user and their messages] other [Remove users and their messages]}',
-  groupRemoveUserOnly: '{count, plural, one [Remove user ] other [Remove users]}',
+  groupRemoveUserOnly: '{count, plural, one [Remove user] other [Remove users]}',
   groupRemoved: '<b>{name}</b> was removed from the group.',
   groupRemovedMultiple: '<b>{name}</b> and <b>{count} others</b> were removed from the group.',
   groupRemovedTwo: '<b>{name}</b> and <b>{other_name}</b> were removed from the group.',
   groupRemovedYou: 'You were removed from <b>{group_name}</b>.',
+  groupRemovedYouGeneral: 'You were removed from the group.',
   groupRemovedYouMultiple: '<b>You</b> and <b>{count} others</b> were removed from the group.',
   groupRemovedYouTwo: '<b>You</b> and <b>{other_name}</b> were removed from the group.',
   groupSetDisplayPicture: 'Set Group Display Picture',
@@ -645,6 +660,7 @@ export const en = {
   nicknameDescription:
     'Choose a nickname for <b>{name}</b>. This will appear to you in your one-to-one and group conversations.',
   nicknameEnter: 'Enter nickname',
+  nicknameErrorShorter: 'Please enter a shorter nickname',
   nicknameRemove: 'Remove Nickname',
   nicknameSet: 'Set Nickname',
   no: 'No',
@@ -747,12 +763,12 @@ export const en = {
   passwordSetDescription: 'Your password has been set. Please keep it safe.',
   paste: 'Paste',
   permissionMusicAudioDenied:
-    '{app_name} needs music and audio access in order to send files, music and audio, but it has been permanently denied. Tap Settings -> Permissions, and turn "Music and audio" on.',
+    '{app_name} needs music and audio access in order to send files, music and audio, but it has been permanently denied. Tap Settings → Permissions, and turn "Music and audio" on.',
   permissionsAppleMusic: '{app_name} needs to use Apple Music to play media attachments.',
   permissionsAutoUpdate: 'Auto Update',
   permissionsAutoUpdateDescription: 'Automatically check for updates on startup.',
   permissionsCameraDenied:
-    '{app_name} needs camera access to take photos and videos, but it has been permanently denied. Tap Settings -> Permissions, and turn "Camera" on.',
+    '{app_name} needs camera access to take photos and videos, but it has been permanently denied. Tap Settings → Permissions, and turn "Camera" on.',
   permissionsFaceId: 'The screen lock feature on {app_name} uses Face ID.',
   permissionsKeepInSystemTray: 'Keep in System Tray',
   permissionsKeepInSystemTrayDescription:
@@ -761,7 +777,7 @@ export const en = {
     '{app_name} needs photo library access to continue. You can enable access in the iOS settings.',
   permissionsMicrophone: 'Microphone',
   permissionsMicrophoneAccessRequired:
-    '{app_name} needs microphone access to make calls and send audio messages, but it has been permanently denied. Tap settings -> Permissions, and turn "Microphone" on.',
+    '{app_name} needs microphone access to make calls and send audio messages, but it has been permanently denied. Tap settings → Permissions, and turn "Microphone" on.',
   permissionsMicrophoneAccessRequiredDesktop:
     "You can enable microphone access in {app_name}'s privacy settings",
   permissionsMicrophoneAccessRequiredIos:
@@ -771,9 +787,9 @@ export const en = {
     '{app_name} needs music and audio access in order to send files, music and audio.',
   permissionsRequired: 'Permission Required',
   permissionsStorageDenied:
-    '{app_name} needs photo library access so you can send photos and videos, but it has been permanently denied. Tap Settings -> Permissions, and turn "Photos and videos" on.',
+    '{app_name} needs photo library access so you can send photos and videos, but it has been permanently denied. Tap Settings → Permissions, and turn "Photos and videos" on.',
   permissionsStorageDeniedLegacy:
-    '{app_name} needs storage access so you can send and save attachments. Tap Settings -> Permissions, and turn "Storage" on.',
+    '{app_name} needs storage access so you can send and save attachments. Tap Settings → Permissions, and turn "Storage" on.',
   permissionsStorageSave: '{app_name} needs storage access to save attachments and media.',
   permissionsStorageSaveDenied:
     '{app_name} needs storage access to save photos and videos, but it has been permanently denied. Please continue to app settings, select "Permissions", and enable "Storage".',
