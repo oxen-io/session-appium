@@ -1824,11 +1824,8 @@ export class DeviceWrapper {
     const actualDescription = await this.getTextFromElement(elDescription);
     // Need to format the ACTUAL description that comes back from device to match
     const formattedDescription = removeNewLines(actualDescription);
-    if (expectedDescription === formattedDescription) {
-      console.log('Modal description is correct');
-    } else {
+    if (expectedDescription !== formattedDescription) {
       throw new Error(
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `Modal description is incorrect. Expected description: ${expectedDescription}, Actual description: ${formattedDescription}`
       );
     }
