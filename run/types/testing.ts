@@ -320,7 +320,6 @@ export type AccessibilityId =
   | 'Disappearing messages type and time'
   | 'Confirm'
   | 'Delete'
-  | 'doc.on.doc'
   | 'Search button'
   | 'Search icon'
   | 'Note to Self'
