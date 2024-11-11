@@ -1,10 +1,9 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 
-iosIt('Create user', createUser);
-androidIt('Create user', createUser);
+bothPlatformsIt('Create user', 'high', createUser);
 
 async function createUser(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);

@@ -1,5 +1,7 @@
 import { test } from '@playwright/test';
 import { SupportedPlatformsType } from '../test/specs/utils/open_app';
+import { DeviceWrapper } from './DeviceWrapper';
+import { SetupData, testRisk, User } from './testing';
 
 // async function itWithBufferHandling(testNameWithoutPlatform: string, platform: SupportedPlatformsType, testToRun: () => Promise<void>) {
 //   try {
@@ -13,10 +15,11 @@ import { SupportedPlatformsType } from '../test/specs/utils/open_app';
 
 export function androidIt(
   title: string,
+  testRisk: testRisk,
   testToRun: (platform: SupportedPlatformsType) => Promise<void>,
   shouldSkip = false
 ) {
-  const testName = `${title} android`;
+  const testName = `${title} android @${testRisk}-risk`;
   if (shouldSkip) {
     test.skip(testName, () => {
       console.info(`\n\n==========> Skipping "${testName}"\n\n`);
@@ -31,10 +34,11 @@ export function androidIt(
 
 export function iosIt(
   title: string,
+  testRisk: testRisk,
   testToRun: (platform: SupportedPlatformsType) => Promise<void>,
   shouldSkip = false
 ) {
-  const testName = `${title} ios`;
+  const testName = `${title} ios @${testRisk}-risk`;
 
   if (shouldSkip) {
     test.skip(testName, () => {
@@ -54,10 +58,11 @@ export function iosIt(
 function mobileIt(
   platform: SupportedPlatformsType,
   title: string,
+  testRisk: testRisk,
   testToRun: (platform: SupportedPlatformsType) => Promise<void>,
   shouldSkip = false
 ) {
-  const testName = `${title} ${platform}`;
+  const testName = `${title} ${platform} @${testRisk}-risk`;
   if (shouldSkip) {
     test.skip(testName, () => {
       console.info(`\n\n==========> Skipping "${testName}"\n\n`);
@@ -72,14 +77,15 @@ function mobileIt(
 
 export function bothPlatformsIt(
   title: string,
+  testRisk: testRisk, 
   testToRun: (platform: SupportedPlatformsType) => Promise<void>,
   shouldSkip = false
 ) {
   // Define test for Android
-  mobileIt('android', title, testToRun, shouldSkip);
+  mobileIt('android', title, testRisk, testToRun, shouldSkip);
 
   // Define test for iOS
-  mobileIt('ios', title, testToRun, shouldSkip);
+  mobileIt('ios', title, testRisk, testToRun, shouldSkip);
 }
 
 // Define the function to accept the title, a setup data object, and a test function that uses this object.

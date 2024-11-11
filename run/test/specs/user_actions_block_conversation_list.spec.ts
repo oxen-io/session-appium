@@ -6,7 +6,8 @@ import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-androidIt('Block user in conversation list', blockUserInConversationList);
+androidIt('Block user in conversation list', 'high', blockUserInConversationList);
+// bothPlatformsIt("Block user in conversation list", blockUserInConversationList);
 
 async function blockUserInConversationList(platform: SupportedPlatformsType) {
   // Open App

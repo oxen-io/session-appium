@@ -358,3 +358,9 @@ export type Id =
   | 'Save'
   | 'com.android.chrome:id/url_bar';
 
+
+export type testRisk = 
+  | 'high' 
+  | 'medium' 
+  | 'low' 
+  | 'undefined';
