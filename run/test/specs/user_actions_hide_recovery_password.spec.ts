@@ -1,13 +1,12 @@
 import { englishStripped } from '../../localizer/i18n/localizedString';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ModalDescription, ModalHeading } from './locators/global';
 import { HideRecoveryPasswordButton } from './locators/settings';
 import { linkedDevice } from './utils/link_device';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
 
-iosIt('Hide recovery password', hideRecoveryPassword);
-androidIt('Hide recovery password', hideRecoveryPassword);
+bothPlatformsIt('Hide recovery password', 'medium', hideRecoveryPassword);
 
 const expectedHeading = englishStripped('recoveryPasswordHidePermanently').toString();
 const expectedDescription = englishStripped(

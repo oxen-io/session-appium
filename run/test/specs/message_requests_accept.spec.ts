@@ -1,14 +1,11 @@
 import { englishStripped } from '../../localizer/i18n/localizedString';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { ControlMessage, USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-iosIt('Accept message request', acceptRequest);
-androidIt('Accept message request', acceptRequest);
-
-// bothPlatformsIt("Accept message request", acceptRequest);
+bothPlatformsIt("Accept message request", 'high', acceptRequest);
 
 async function acceptRequest(platform: SupportedPlatformsType) {
   // Check 'accept' button

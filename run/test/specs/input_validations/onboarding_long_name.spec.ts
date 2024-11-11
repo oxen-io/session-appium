@@ -3,7 +3,7 @@ import { CreateAccountButton, DisplayNameInput, ContinueButton, ErrorMessage } f
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from '../utils/open_app';
 import { localize } from '../../../localizer/i18n/localizedString';
 
-bothPlatformsIt('Onboarding long name', onboardingLongName);
+bothPlatformsIt('Onboarding long name', 'low', onboardingLongName);
 
 // the libSession limit for display names is 100 bytes - this string is 101 chars (i.e. 101 bytes)
 const tooLongName = 'One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed int';

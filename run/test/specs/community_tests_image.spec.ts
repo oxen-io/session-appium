@@ -6,12 +6,9 @@ import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { joinCommunity } from './utils/join_community';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
-import { test } from '@playwright/test';
 
-test.describe('Community tests', () => {
-  iosIt('Send image to community', sendImageCommunityiOS);
-  androidIt('Send image to community', sendImageCommunityAndroid);
-});
+iosIt('Send image to community','medium', sendImageCommunityiOS);
+androidIt('Send image to community', 'medium', sendImageCommunityAndroid);
 
 async function sendImageCommunityiOS(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

@@ -1,5 +1,4 @@
-
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
 import { newUser } from './utils/create_account';
@@ -7,8 +6,7 @@ import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-iosIt('Disappearing video message 1:1', disappearingVideoMessage1o1);
-androidIt('Disappearing video message 1:1', disappearingVideoMessage1o1);
+bothPlatformsIt('Disappearing video message 1:1', 'low', disappearingVideoMessage1o1);
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';

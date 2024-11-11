@@ -5,8 +5,8 @@ import { parseDataImage } from './utils/check_colour';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppOnPlatformSingleDevice } from './utils/open_app';
 
-iosIt('Change profile picture', changeProfilePictureiOS);
-androidIt('Change profile picture', changeProfilePictureAndroid);
+iosIt('Change profile picture', 'medium', changeProfilePictureiOS);
+androidIt('Change profile picture', 'medium', changeProfilePictureAndroid);
 
 async function changeProfilePictureiOS(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);

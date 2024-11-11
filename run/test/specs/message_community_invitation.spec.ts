@@ -7,8 +7,8 @@ import { newContact } from './utils/create_contact';
 import { joinCommunity } from './utils/join_community';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-iosIt('Send community invitation', sendCommunityInvitationIos);
-androidIt('Send community invitation', sendCommunityInviteMessageAndroid);
+iosIt('Send community invitation', 'medium', sendCommunityInvitationIos);
+androidIt('Send community invitation', 'medium', sendCommunityInviteMessageAndroid);
 
 const communityLink = `https://chat.lokinet.dev/testing-all-the-things?public_key=1d7e7f92b1ed3643855c98ecac02fc7274033a3467653f047d6e433540c03f17`;
 const communityName = 'Testing All The Things!';

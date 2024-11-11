@@ -1,4 +1,3 @@
-import { test } from '@playwright/test';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
 import { sleepFor } from './utils';
@@ -7,10 +6,8 @@ import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-test.describe('Disappearing call test', () => {
-  iosIt('Disappearing call message 1o1', disappearingCallMessage1o1Ios, true);
-  androidIt('Disappearing call message 1o1', disappearingCallMessage1o1Android, true);
-});
+iosIt('Disappearing call message 1o1', 'low', disappearingCallMessage1o1Ios, true);
+androidIt('Disappearing call message 1o1', 'low', disappearingCallMessage1o1Android, true);
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';

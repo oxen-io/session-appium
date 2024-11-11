@@ -377,7 +377,8 @@ export type AccessibilityId =
   | 'Hide Recovery Password Permanently'
   | 'Modal heading'
   | 'Modal description'
-  | 'Continue button';
+  | 'Continue button'
+  | 'Error message';
 
 export type Id =
   | 'Modal heading'
@@ -408,4 +409,9 @@ export type Id =
   | 'network.loki.messenger:id/openGroupTitleTextView'
   | 'Image picker'
   | 'network.loki.messenger:id/action_apply';
-  | 'Error message';
+
+export type testRisk = 
+  | 'high' 
+  | 'medium' 
+  | 'low' 
+  | 'undefined';

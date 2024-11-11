@@ -1,5 +1,5 @@
 import { englishStripped } from '../../localizer/i18n/localizedString';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { AccessibilityId, USERNAME } from '../../types/testing';
 import { DeclineMessageRequestButton, DeleteMesssageRequestConfirmation } from './locators';
 import { sleepFor } from './utils';
@@ -7,8 +7,7 @@ import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-iosIt('Decline message request', declineRequest);
-androidIt('Decline message request', declineRequest);
+bothPlatformsIt('Decline message request', 'high', declineRequest);
 
 async function declineRequest(platform: SupportedPlatformsType) {
   // Check 'decline' button
