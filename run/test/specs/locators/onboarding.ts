@@ -53,8 +53,8 @@ export class TermsOfServiceButton extends LocatorsInterface {
         switch (this.platform) {  
             case 'android':  
                 return {  
-                    strategy: 'accessibility id',  
-                    selector: 'Terms of service button',  
+                    strategy: 'id',  
+                    selector: 'Terms of Service',  
                   } as const;  
             case 'ios':  
                 return {  
@@ -70,8 +70,8 @@ export class PrivacyPolicyButton extends LocatorsInterface {
         switch (this.platform) {  
             case 'android':  
                 return {  
-                    strategy: 'accessibility id',  
-                    selector: 'Privacy policy button',  
+                    strategy: 'id',  
+                    selector: 'Privacy Policy',  
                   } as const;  
             case 'ios':  
                 return {  

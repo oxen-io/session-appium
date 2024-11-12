@@ -370,7 +370,9 @@ export type Id =
   | 'android:id/content_preview_text'
   | 'network.loki.messenger:id/search_result_title'
   | 'network.loki.messenger:id/action_apply'
-  | 'com.android.chrome:id/url_bar';
+  | 'com.android.chrome:id/url_bar'
+  | 'Terms of Service'
+  | 'Privacy Policy';
 
 export type TestRisk = 
   | 'high' 
