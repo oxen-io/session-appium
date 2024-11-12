@@ -3,14 +3,12 @@ import { TermsOfServiceButton, SplashScreenLinks } from './locators/onboarding';
 import { runOnlyOnAndroid, runOnlyOnIOS } from './utils';
 import { closeApp, openAppOnPlatformSingleDevice, SupportedPlatformsType } from './utils/open_app';
 
-// risk assessment for later: high, because of the legal nature of these terms 
-bothPlatformsIt('Onboarding terms of service', onboardingTOS)
-
-const tosURL = 'https://getsession.org/terms-of-service';
-let urlField; 
+bothPlatformsIt('Onboarding terms of service', 'high', onboardingTOS)
 
 async function onboardingTOS(platform: SupportedPlatformsType) {
     const { device } = await openAppOnPlatformSingleDevice(platform);
+    const tosURL = 'https://getsession.org/terms-of-service';
+    let urlField; 
     // Tap the text at the bottom of the splash screen to bring up the TOS/PP links modal
     await device.clickOnElementAll(new SplashScreenLinks(device));
     // Tap Privacy Policy
@@ -30,13 +28,11 @@ async function onboardingTOS(platform: SupportedPlatformsType) {
     const retrievedURL = await device.getTextFromElement(urlField)
     // Add https:// to the retrieved URL if the UI doesn't show it (Chrome doesn't, Safari does)
     const fullRetrievedURL = retrievedURL.startsWith('https://') ? retrievedURL : `https://${retrievedURL}`;
-    console.log(`The URL is "${fullRetrievedURL}"`);
-    console.log(`The expected URL is "${tosURL}"`);
     // Verify that it's the correct URL 
-    if (fullRetrievedURL === tosURL) {
-        console.log("The URLs match.");
-    } else {
+    if (fullRetrievedURL !== tosURL) {
         throw new Error("The retrieved URL does not match the expected.");
+    } else {
+        console.log("The URLs match.");
     }
     // Close browser and app 
     await runOnlyOnIOS(platform, () => device.clickOnCoordinates(42,42)); // I don't like this but nothing else works 
