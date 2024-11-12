@@ -1,13 +1,13 @@
-import { englishStrippedStri } from '../../localizer/i18n/localizedString';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { englishStripped } from '../../localizer/i18n/localizedString';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { DisappearActions, DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
 import { sleepFor } from './utils';
 import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { closeApp, openAppThreeDevices, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
-iosIt('Disappear after send groups', disappearAfterSendGroups);
-androidIt('Disappear after send groups', disappearAfterSendGroups);
+
+bothPlatformsIt('Disappear after send groups', 'high', disappearAfterSendGroups);
 
 async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
   const testGroupName = 'Disappear after send test';
@@ -26,11 +26,11 @@ async function disappearAfterSendGroups(platform: SupportedPlatformsType) {
 
   await setDisappearingMessage(platform, device1, ['Group', `Disappear after send option`, time]);
   // Get correct control message for You setting disappearing messages
-  const disappearingMessagesSetYou = englishStrippedStri('disappearingMessagesSetYou')
+  const disappearingMessagesSetYou = englishStripped('disappearingMessagesSetYou')
     .withArgs({ time, disappearing_messages_type: controlMode })
     .toString();
   // Get correct control message for userA setting disappearing messages
-  const disappearingMessagesSetControl = englishStrippedStri('disappearingMessagesSet')
+  const disappearingMessagesSetControl = englishStripped('disappearingMessagesSet')
     .withArgs({ name: userA.userName, time, disappearing_messages_type: controlMode })
     .toString();
   // Check control message is correct on device 1, 2 and 3

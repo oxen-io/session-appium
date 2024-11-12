@@ -1,5 +1,5 @@
-import { englishStrippedStri } from '../../localizer/i18n/localizedString';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { englishStripped } from '../../localizer/i18n/localizedString';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ContinueButton } from './locators/global';
 import {
@@ -11,13 +11,12 @@ import {
 import { linkedDevice } from './utils/link_device';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
 
-iosIt('Hide recovery password', hideRecoveryPassword);
-androidIt('Hide recovery password', hideRecoveryPassword);
+bothPlatformsIt('Hide recovery password', 'medium', hideRecoveryPassword);
 
 async function hideRecoveryPassword(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
   await linkedDevice(device1, device2, USERNAME.ALICE, platform);
-  await device1.clickOnElementAll({ strategy: 'accessibility id', selector: 'User settings' });
+  await device1.clickOnElementAll(new UserSettings(device1));
   await device1.scrollDown();
   await device1.clickOnElementAll({
     strategy: 'accessibility id',
@@ -27,15 +26,15 @@ async function hideRecoveryPassword(platform: SupportedPlatformsType) {
   // Wait for modal to appear
   // Check modal is correct
   await device1.checkModalStrings(
-    englishStrippedStri('recoveryPasswordHidePermanently').toString(),
-    englishStrippedStri('recoveryPasswordHidePermanentlyDescription1').toString()
+    englishStripped('recoveryPasswordHidePermanently').toString(),
+    englishStripped('recoveryPasswordHidePermanentlyDescription1').toString()
   );
   // Click on continue
   await device1.clickOnElementAll(new ContinueButton(device1));
   // Check confirmation modal
   await device1.checkModalStrings(
-    englishStrippedStri('recoveryPasswordHidePermanently').toString(),
-    englishStrippedStri('recoveryPasswordHidePermanentlyDescription2').toString()
+    englishStripped('recoveryPasswordHidePermanently').toString(),
+    englishStripped('recoveryPasswordHidePermanentlyDescription2').toString()
   );
   // Click on Yes
   await device1.clickOnElementAll(new YesButton(device1));

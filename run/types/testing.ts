@@ -133,7 +133,9 @@ export type XPath =
   | `//XCUIElementTypeAlert//*//XCUIElementTypeButton`
   | `(//XCUIElementTypeImage[@name="gif cell"])[1]`
   | `//XCUIElementTypeCell[@name="${string}"]`
-  | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/androidx.appcompat.widget.LinearLayoutCompat/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.TextView[2]`;
+  | `/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/androidx.appcompat.widget.LinearLayoutCompat/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.TextView[2]`
+  | `//XCUIElementTypeStaticText[@name="Paste"]`
+  | `//XCUIElementTypeOther[contains(@name, "Hey,")][1]`;
 
 export type AccessibilityId =
   | 'Create account button'
@@ -309,6 +311,9 @@ export type AccessibilityId =
   | 'Recovery password menu item'
   | 'Hide recovery password button'
   | 'Hide Recovery Password Permanently'
+  | 'Invite friend button'
+  | 'Share button'
+  | 'Copy'
   | 'Modal heading'
   | 'Modal description'
   | 'Continue'
@@ -316,7 +321,14 @@ export type AccessibilityId =
   | 'Disappearing messages type and time'
   | 'Confirm'
   | 'Delete'
-  | 'Delete on this device only';
+  | 'Delete on this device only'
+  | 'Search button'
+  | 'Search icon'
+  | 'Note to Self'
+  | 'X'
+  | 'Close'
+  | 'Continue button'
+  | 'Error message';
 
 export type Id =
   | 'Modal heading'
@@ -349,4 +361,10 @@ export type Id =
   | 'Image picker'
   | 'network.loki.messenger:id/action_apply'
   | 'Save'
-  | 'Delete';
+  | 'Delete'
+  | 'android:id/content_preview_text'
+  | 'network.loki.messenger:id/search_result_title'
+  | 'Error message'
+  | 'network.loki.messenger:id/action_apply';
+
+export type testRisk = 'high' | 'medium' | 'low' | 'undefined';

@@ -7,8 +7,8 @@ import { newContact } from './utils/create_contact';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-iosIt('Disappearing GIF message 1:1', disappearingGifMessage1o1Ios);
-androidIt('Disappearing GIF message 1:1', disappearingGifMessage1o1Android);
+iosIt('Disappearing GIF message 1:1', 'low', disappearingGifMessage1o1Ios);
+androidIt('Disappearing GIF message 1:1', 'low', disappearingGifMessage1o1Android);
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after send option';
@@ -24,7 +24,7 @@ async function disappearingGifMessage1o1Ios(platform: SupportedPlatformsType) {
   ]);
   await newContact(platform, device1, userA, device2, userB);
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
-  // await device1.navigateBack(platform);
+  // await device1.navigateBack();
   // Click on attachments button
   await device1.sendGIF(testMessage);
   // Check if the 'Tap to download media' config appears

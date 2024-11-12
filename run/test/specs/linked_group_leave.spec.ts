@@ -1,5 +1,5 @@
-import { englishStrippedStri } from '../../localizer/i18n/localizedString';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { englishStripped } from '../../localizer/i18n/localizedString';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { LeaveGroup } from './locators';
 import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
@@ -8,10 +8,7 @@ import { createGroup } from './utils/create_group';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppFourDevices } from './utils/open_app';
 
-iosIt('Leave group linked device', leaveGroupLinkedDevice);
-androidIt('Leave group linked device', leaveGroupLinkedDevice);
-
-// bothPlatformsIt("Leave group linked device", leaveGroupLinkedDevice);
+bothPlatformsIt('Leave group linked device', 'high', leaveGroupLinkedDevice);
 
 async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
   const testGroupName = 'Leave group linked device';
@@ -31,14 +28,14 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
   await device3.clickOnElementAll(new LeaveGroup(device3));
   await device3.clickOnByAccessibilityID('Leave');
 
-  await runOnlyOnAndroid(platform, () => device3.navigateBack(platform));
+  await runOnlyOnAndroid(platform, () => device3.navigateBack());
   // Check for control message
   await sleepFor(5000);
   await runOnlyOnIOS(platform, () =>
     device4.hasTextElementBeenDeleted('Conversation list item', testGroupName)
   );
   // Create control message for user leaving group
-  const groupMemberLeft = englishStrippedStri('groupMemberLeft')
+  const groupMemberLeft = englishStripped('groupMemberLeft')
     .withArgs({ name: userC.userName })
     .toString();
 

@@ -1,14 +1,11 @@
-import { englishStrippedStri } from '../../localizer/i18n/localizedString';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { englishStripped } from '../../localizer/i18n/localizedString';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-iosIt('Accept message request', acceptRequest);
-androidIt('Accept message request', acceptRequest);
-
-// bothPlatformsIt("Accept message request", acceptRequest);
+bothPlatformsIt('Accept message request', 'high', acceptRequest);
 
 async function acceptRequest(platform: SupportedPlatformsType) {
   // Check 'accept' button
@@ -29,8 +26,8 @@ async function acceptRequest(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID('Accept message request');
   // Check control message for message request acceptance
   // "messageRequestsAccepted": "Your message request has been accepted.",
-  const messageRequestsAccepted = englishStrippedStri('messageRequestsAccepted').toString();
-  const messageRequestYouHaveAccepted = englishStrippedStri('messageRequestYouHaveAccepted')
+  const messageRequestsAccepted = englishStripped('messageRequestsAccepted').toString();
+  const messageRequestYouHaveAccepted = englishStripped('messageRequestYouHaveAccepted')
     .withArgs({ name: userA.userName })
     .toString();
   await Promise.all([
@@ -38,7 +35,7 @@ async function acceptRequest(platform: SupportedPlatformsType) {
     device2.waitForControlMessageToBePresent(messageRequestYouHaveAccepted),
   ]);
   // Check conversation list for new contact (user A)
-  await device2.navigateBack(platform);
+  await device2.navigateBack();
   await Promise.all([
     device2.waitForTextElementToBePresent({
       strategy: 'accessibility id',

@@ -1,12 +1,11 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppMultipleDevices } from './utils/open_app';
 
-iosIt('Create contact ios', createContact);
-androidIt('Create contact android', createContact);
+bothPlatformsIt('Create contact', 'high', createContact);
 
 async function createContact(platform: SupportedPlatformsType) {
   const [device1, device2, device3] = await openAppMultipleDevices(platform, 3);
@@ -14,8 +13,8 @@ async function createContact(platform: SupportedPlatformsType) {
   const userB = await newUser(device2, USERNAME.BOB, platform);
 
   await newContact(platform, device1, userA, device2, userB);
-  await device1.navigateBack(platform);
-  await device2.navigateBack(platform);
+  await device1.navigateBack();
+  await device2.navigateBack();
   // Check username has changed from session id on both device 1 and 3
   await Promise.all([
     device1.waitForTextElementToBePresent({

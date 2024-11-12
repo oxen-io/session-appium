@@ -1,12 +1,11 @@
-import { englishStrippedStri } from '../../localizer/i18n/localizedString';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { englishStripped } from '../../localizer/i18n/localizedString';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { runOnlyOnAndroid, runOnlyOnIOS } from './utils';
 import { newUser } from './utils/create_account';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-iosIt('Accept message request with text', acceptRequestWithText);
-androidIt('Accept message request with text', acceptRequestWithText);
+bothPlatformsIt('Accept message request with text', 'high', acceptRequestWithText);
 
 async function acceptRequestWithText(platform: SupportedPlatformsType) {
   // Check accept request by sending text message
@@ -30,7 +29,7 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
   await device1.scrollDown();
   await device1.clickOnByAccessibilityID('Next');
   //messageRequestPendingDescription: "You will be able to send voice messages and attachments once the recipient has approved this message request."
-  const messageRequestPendingDescription = englishStrippedStri(
+  const messageRequestPendingDescription = englishStripped(
     'messageRequestPendingDescription'
   ).toString();
   await runOnlyOnIOS(platform, () =>
@@ -69,7 +68,7 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID('Message request');
   // Check control message warning of sending message request reply
   // "messageRequestsAcceptDescription": "Sending a message to this user will automatically accept their message request and reveal your Account ID."
-  const messageRequestsAcceptDescription = englishStrippedStri(
+  const messageRequestsAcceptDescription = englishStripped(
     'messageRequestsAcceptDescription'
   ).toString();
   await runOnlyOnIOS(platform, () =>
@@ -86,8 +85,8 @@ async function acceptRequestWithText(platform: SupportedPlatformsType) {
   await device2.sendMessage(`${userB.userName} to ${userA.userName}`);
   // Check control message for message request acceptance
   // "messageRequestsAccepted": "Your message request has been accepted.",
-  const messageRequestsAccepted = englishStrippedStri('messageRequestsAccepted').strip().toString();
-  const messageRequestYouHaveAccepted = englishStrippedStri('messageRequestYouHaveAccepted')
+  const messageRequestsAccepted = englishStripped('messageRequestsAccepted').strip().toString();
+  const messageRequestYouHaveAccepted = englishStripped('messageRequestYouHaveAccepted')
     .withArgs({ name: userA.userName })
     .toString();
   await Promise.all([

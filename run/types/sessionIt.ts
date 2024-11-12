@@ -1,5 +1,6 @@
 import { test } from '@playwright/test';
 import { SupportedPlatformsType } from '../test/specs/utils/open_app';
+import { testRisk } from './testing';
 
 // async function itWithBufferHandling(testNameWithoutPlatform: string, platform: SupportedPlatformsType, testToRun: () => Promise<void>) {
 //   try {
@@ -13,13 +14,13 @@ import { SupportedPlatformsType } from '../test/specs/utils/open_app';
 
 export function androidIt(
   title: string,
+  testRisk: testRisk,
   testToRun: (platform: SupportedPlatformsType) => Promise<void>,
   shouldSkip = false
 ) {
-  const testName = `${title} android`;
+  const testName = `${title} android @${testRisk}-risk`;
   if (shouldSkip) {
-    // eslint-disable-next-line @typescript-eslint/require-await
-    test.skip(testName, async () => {
+    test.skip(testName, () => {
       console.info(`\n\n==========> Skipping "${testName}"\n\n`);
     });
   } else {
@@ -32,14 +33,14 @@ export function androidIt(
 
 export function iosIt(
   title: string,
+  testRisk: testRisk,
   testToRun: (platform: SupportedPlatformsType) => Promise<void>,
   shouldSkip = false
 ) {
-  const testName = `${title} ios`;
+  const testName = `${title} ios @${testRisk}-risk`;
 
   if (shouldSkip) {
-    // eslint-disable-next-line @typescript-eslint/require-await
-    test.skip(testName, async () => {
+    test.skip(testName, () => {
       console.info(`\n\n==========> Skipping "${testName}"\n\n`);
     });
   } else {
@@ -56,13 +57,13 @@ export function iosIt(
 function mobileIt(
   platform: SupportedPlatformsType,
   title: string,
+  testRisk: testRisk,
   testToRun: (platform: SupportedPlatformsType) => Promise<void>,
   shouldSkip = false
 ) {
-  const testName = `${title} ${platform}`;
+  const testName = `${title} ${platform} @${testRisk}-risk`;
   if (shouldSkip) {
-    // eslint-disable-next-line @typescript-eslint/require-await
-    test.skip(testName, async () => {
+    test.skip(testName, () => {
       console.info(`\n\n==========> Skipping "${testName}"\n\n`);
     });
   } else {
@@ -75,27 +76,16 @@ function mobileIt(
 
 export function bothPlatformsIt(
   title: string,
+  testRisk: testRisk,
   testToRun: (platform: SupportedPlatformsType) => Promise<void>,
   shouldSkip = false
 ) {
   // Define test for Android
-  mobileIt('android', title, testToRun, shouldSkip);
+  mobileIt('android', title, testRisk, testToRun, shouldSkip);
 
   // Define test for iOS
-  mobileIt('ios', title, testToRun, shouldSkip);
+  mobileIt('ios', title, testRisk, testToRun, shouldSkip);
 }
-
-// export function iosItWithSetup(
-//   title: string,
-//   test: (platform: SupportedPlatformsType) => Promise<void>
-// ) {
-//   const testName = `${title} ios`;
-
-//   return it(testName, async () => {
-//     console.info(`\n\n==========> Running "${testName}"\n\n`);
-//     await test("ios");
-//   });
-// }
 
 // Define the function to accept the title, a setup data object, and a test function that uses this object.
 // export function iosItWithSetup(

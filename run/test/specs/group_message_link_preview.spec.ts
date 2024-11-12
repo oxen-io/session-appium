@@ -5,12 +5,12 @@ import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-iosIt('Send link to group', sendLinkGroupiOS);
-androidIt('Send link to group', sendLinkGroupAndroid);
+iosIt('Send link to group', 'high', sendLinkGroupiOS);
+androidIt('Send link to group', 'high', sendLinkGroupAndroid);
 
 async function sendLinkGroupiOS(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';
-  const testLink = `https://type-level-typescript.com/objects-and-records`;
+  const testLink = `https://getsession.org/`;
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
   // Create users A, B and C
   const [userA, userB, userC] = await Promise.all([
@@ -79,7 +79,7 @@ async function sendLinkGroupAndroid(platform: SupportedPlatformsType) {
   ]);
   // Create contact between User A and User B
   await createGroup(platform, device1, userA, device2, userB, device3, userC, testGroupName);
-  const testLink = `https://type-level-typescript.com/objects-and-records`;
+  const testLink = `https://getsession.org/`;
   // Send a link
   await device1.inputText(testLink, {
     strategy: 'accessibility id',

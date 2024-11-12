@@ -1,4 +1,4 @@
-import { englishStrippedStri } from '../../localizer/i18n/localizedString';
+import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DeleteMessageConfirmationModal, DeleteMessageLocally } from './locators';
@@ -7,8 +7,8 @@ import { newUser } from './utils/create_account';
 import { createGroup } from './utils/create_group';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-iosIt('Delete message in group', deleteMessageGroup);
-androidIt('Delete message in group', deleteMessageGroup);
+iosIt('Delete message in group', 'high', deleteMessageGroup);
+androidIt('Delete message in group', 'high', deleteMessageGroup);
 
 async function deleteMessageGroup(platform: SupportedPlatformsType) {
   const testGroupName = 'Message checks for groups';
@@ -41,8 +41,8 @@ async function deleteMessageGroup(platform: SupportedPlatformsType) {
   // Check modal is correct
   await runOnlyOnAndroid(platform, () =>
     device1.checkModalStrings(
-      englishStrippedStri('deleteMessage').withArgs({ count: 1 }).toString(),
-      englishStrippedStri('deleteMessageConfirm').toString()
+      englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
+      englishStripped('deleteMessageConfirm').toString()
     )
   );
   // Select 'Delete for me'

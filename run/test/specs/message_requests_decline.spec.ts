@@ -1,5 +1,5 @@
-import { englishStrippedStri } from '../../localizer/i18n/localizedString';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { englishStripped } from '../../localizer/i18n/localizedString';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { AccessibilityId, USERNAME } from '../../types/testing';
 import { DeclineMessageRequestButton, DeleteMesssageRequestConfirmation } from './locators';
 import { sleepFor } from './utils';
@@ -7,8 +7,7 @@ import { newUser } from './utils/create_account';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-iosIt('Decline message request', declineRequest);
-androidIt('Decline message request', declineRequest);
+bothPlatformsIt('Decline message request', 'high', declineRequest);
 
 async function declineRequest(platform: SupportedPlatformsType) {
   // Check 'decline' button
@@ -37,14 +36,14 @@ async function declineRequest(platform: SupportedPlatformsType) {
   await device2.clickOnElementAll(new DeleteMesssageRequestConfirmation(device2));
   // Navigate back to home page
   await sleepFor(100);
-  await device2.navigateBack(platform);
+  await device2.navigateBack();
   // Look for new conversation button to make sure it all worked
   await device2.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: 'New conversation button',
   });
   // "messageRequestsNonePending": "No pending message requests",
-  const messageRequestsNonePending = englishStrippedStri('messageRequestsNonePending').toString();
+  const messageRequestsNonePending = englishStripped('messageRequestsNonePending').toString();
   await device3.waitForTextElementToBePresent({
     strategy: 'accessibility id',
     selector: messageRequestsNonePending as AccessibilityId,

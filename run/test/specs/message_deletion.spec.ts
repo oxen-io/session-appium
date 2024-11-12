@@ -1,5 +1,5 @@
-import { englishStrippedStri } from '../../localizer/i18n/localizedString';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { englishStripped } from '../../localizer/i18n/localizedString';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DeleteMessageConfirmationModal, DeleteMessageLocally } from './locators';
 import { runOnlyOnAndroid, runOnlyOnIOS } from './utils';
@@ -7,8 +7,7 @@ import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-iosIt('Delete message locally', deleteMessage);
-androidIt('Delete message locally', deleteMessage);
+bothPlatformsIt('Delete message locally', 'high', deleteMessage);
 
 async function deleteMessage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
@@ -33,8 +32,8 @@ async function deleteMessage(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID('Delete message');
   await runOnlyOnAndroid(platform, () =>
     device1.checkModalStrings(
-      englishStrippedStri('deleteMessage').withArgs({ count: 1 }).toString(),
-      englishStrippedStri('deleteMessageConfirm').toString()
+      englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
+      englishStripped('deleteMessageConfirm').toString()
     )
   );
   // Select 'Delete on this device only'

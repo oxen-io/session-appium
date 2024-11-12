@@ -6,12 +6,12 @@ import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-iosIt('Disappearing link message 1:1', disappearingLinkMessage1o1Ios);
-androidIt('Disappearing link message 1:1', disappearingLinkMessage1o1Android);
+iosIt('Disappearing link message 1:1', 'low', disappearingLinkMessage1o1Ios);
+androidIt('Disappearing link message 1:1', 'low', disappearingLinkMessage1o1Android);
 
 const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
 const timerType = 'Disappear after read option';
-const testLink = `https://type-level-typescript.com/objects-and-records`;
+const testLink = `https://getsession.org/`;
 
 async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
@@ -77,7 +77,7 @@ async function disappearingLinkMessage1o1Android(platform: SupportedPlatformsTyp
   ]);
   await newContact(platform, device1, userA, device2, userB);
   await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
-  // await device1.navigateBack(platform);
+  // await device1.navigateBack();
   // Send a link
   await device1.inputText(testLink, {
     strategy: 'accessibility id',
@@ -86,6 +86,8 @@ async function disappearingLinkMessage1o1Android(platform: SupportedPlatformsTyp
   // Accept dialog for link preview
   await device1.clickOnByAccessibilityID('Enable');
   // No preview on first send
+  // Wait for preview to load
+  await sleepFor(1000);
   await device1.clickOnByAccessibilityID('Send message button');
   await device1.waitForTextElementToBePresent({
     strategy: 'accessibility id',

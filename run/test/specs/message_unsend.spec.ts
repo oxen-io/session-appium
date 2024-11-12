@@ -1,5 +1,5 @@
-import { englishStrippedStri } from '../../localizer/i18n/localizedString';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { englishStripped } from '../../localizer/i18n/localizedString';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DeleteMessageConfirmationModal, DeleteMessageForEveryone } from './locators';
 import { runOnlyOnAndroid } from './utils';
@@ -7,8 +7,7 @@ import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-iosIt('Unsend message', unsendMessage);
-androidIt('Unsend message', unsendMessage);
+bothPlatformsIt('Unsend message', 'high', unsendMessage);
 
 async function unsendMessage(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
@@ -34,8 +33,8 @@ async function unsendMessage(platform: SupportedPlatformsType) {
   // Check modal is correct
   await runOnlyOnAndroid(platform, () =>
     device1.checkModalStrings(
-      englishStrippedStri('deleteMessage').withArgs({ count: 1 }).toString(),
-      englishStrippedStri('deleteMessageConfirm').toString()
+      englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
+      englishStripped('deleteMessageConfirm').toString()
     )
   );
   // Select 'Delete for me and User B'

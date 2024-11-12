@@ -5,12 +5,12 @@ import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, openAppTwoDevices, closeApp } from './utils/open_app';
 
-iosIt('Send link 1:1', sendLinkIos);
-androidIt('Send link 1:1', sendLinkAndroid);
+iosIt('Send link 1:1', 'high', sendLinkIos);
+androidIt('Send link 1:1', 'high', sendLinkAndroid);
 
 async function sendLinkIos(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const testLink = `https://type-level-typescript.com/objects-and-records`;
+  const testLink = `https://getsession.org/`;
   // Create two users
   const [userA, userB] = await Promise.all([
     newUser(device1, USERNAME.ALICE, platform),
@@ -62,7 +62,7 @@ async function sendLinkIos(platform: SupportedPlatformsType) {
 
 async function sendLinkAndroid(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const testLink = `https://type-level-typescript.com/objects-and-records`;
+  const testLink = `https://getsession.org/`;
   // Create two users
   const [userA, userB] = await Promise.all([
     newUser(device1, USERNAME.ALICE, platform),

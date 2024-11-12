@@ -1,4 +1,3 @@
-import { test } from '@playwright/test';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { DISAPPEARING_TIMES, USERNAME } from '../../types/testing';
 import { sleepFor } from './utils';
@@ -7,27 +6,23 @@ import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 import { setDisappearingMessage } from './utils/set_disappearing_messages';
 
-test.describe('Disappearing call test', () => {
-  iosIt('Disappearing call message 1o1', disappearingCallMessage1o1Ios, true);
-  androidIt('Disappearing call message 1o1', disappearingCallMessage1o1Android, true);
-});
+iosIt('Disappearing call message 1o1', 'low', disappearingCallMessage1o1Ios, true);
+androidIt('Disappearing call message 1o1', 'low', disappearingCallMessage1o1Android, true);
+
+const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
+const timerType = 'Disappear after send option';
 
 async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
-  const time = DISAPPEARING_TIMES.THIRTY_SECONDS;
+
   // Create user A and user B
   const [userA, userB] = await Promise.all([
     newUser(device1, USERNAME.ALICE, platform),
     newUser(device2, USERNAME.BOB, platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(
-    platform,
-    device1,
-    ['1:1', 'Disappear after read option', time],
-    device2
-  );
-  // await device1.navigateBack(platform);
+  await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
+  // await device1.navigateBack();
   await device1.clickOnByAccessibilityID('Call');
   // Enabled voice calls in privacy settings
   await device1.waitForTextElementToBePresent({
@@ -67,7 +62,7 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType) {
   // Check for config message 'Called User B' on device 1
   await device1.waitForControlMessageToBePresent(`You called ${userB.userName}`);
   await device1.waitForControlMessageToBePresent(`${userA.userName} called you`);
-  // Wait 10 seconds for control message to be deleted
+  // Wait 30 seconds for control message to be deleted
   await sleepFor(30000);
   await device1.hasElementBeenDeleted({
     strategy: 'accessibility id',
@@ -93,14 +88,9 @@ async function disappearingCallMessage1o1Android(platform: SupportedPlatformsTyp
     newUser(device2, USERNAME.BOB, platform),
   ]);
   await newContact(platform, device1, userA, device2, userB);
-  await setDisappearingMessage(
-    platform,
-    device1,
-    ['1:1', 'Disappear after send option', time],
-    device2
-  );
+  await setDisappearingMessage(platform, device1, ['1:1', timerType, time], device2);
 
-  // await device1.navigateBack(platform);
+  // await device1.navigateBack();
   await device1.clickOnByAccessibilityID('Call');
   // Enabled voice calls in privacy settings
   await device1.waitForTextElementToBePresent({

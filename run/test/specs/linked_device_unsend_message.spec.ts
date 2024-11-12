@@ -1,5 +1,5 @@
-import { englishStrippedStri } from '../../localizer/i18n/localizedString';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { englishStripped } from '../../localizer/i18n/localizedString';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DeleteMessageConfirmationModal, DeleteMessageForEveryone } from './locators';
 import { runOnlyOnAndroid } from './utils';
@@ -8,8 +8,7 @@ import { newContact } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppThreeDevices } from './utils/open_app';
 
-iosIt('Unsent message syncs', unSendMessageLinkedDevice);
-androidIt('Unsent message syncs', unSendMessageLinkedDevice);
+bothPlatformsIt('Unsent message syncs', 'medium', unSendMessageLinkedDevice);
 
 async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
   const { device1, device2, device3 } = await openAppThreeDevices(platform);
@@ -38,8 +37,8 @@ async function unSendMessageLinkedDevice(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID('Delete message');
   await runOnlyOnAndroid(platform, () =>
     device1.checkModalStrings(
-      englishStrippedStri('deleteMessage').withArgs({ count: 1 }).toString(),
-      englishStrippedStri('deleteMessageConfirm').toString()
+      englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
+      englishStripped('deleteMessageConfirm').toString()
     )
   );
   // Select delete for everyone

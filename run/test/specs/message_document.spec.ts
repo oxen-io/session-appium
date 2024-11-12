@@ -1,4 +1,4 @@
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DownloadMediaButton } from './locators';
  import { runOnlyOnAndroid, runOnlyOnIOS, sleepFor } from './utils';
@@ -6,8 +6,7 @@ import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-iosIt('Send document 1:1', sendDocument);
-androidIt('Send document 1:1', sendDocument);
+bothPlatformsIt('Send document 1:1', 'high', sendDocument);
 
 async function sendDocument(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);

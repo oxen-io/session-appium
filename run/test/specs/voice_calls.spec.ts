@@ -1,5 +1,4 @@
-import { test } from '@playwright/test';
-import { englishStrippedStri } from '../../localizer/i18n/localizedString';
+import { englishStripped } from '../../localizer/i18n/localizedString';
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ExitUserProfile } from './locators';
@@ -7,10 +6,9 @@ import { newUser } from './utils/create_account';
 import { runOnlyOnAndroid, sleepFor } from './utils/index';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-test.describe('Calls test', () => {
-  androidIt('Voice calls', voiceCallAndroid, true);
-  iosIt('Voice calls', voiceCallIos, true);
-});
+androidIt('Voice calls', 'high', voiceCallAndroid, true);
+iosIt('Voice calls', 'high', voiceCallIos, true);
+
 async function voiceCallIos(platform: SupportedPlatformsType) {
   // Open app
   const { device1, device2 } = await openAppTwoDevices(platform);
@@ -37,7 +35,7 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
 
   // Verify config message states message request was accepted
   // "messageRequestsAccepted": "Your message request has been accepted.",
-  const messageRequestsAccepted = englishStrippedStri('messageRequestsAccepted').toString();
+  const messageRequestsAccepted = englishStripped('messageRequestsAccepted').toString();
   await device1.waitForControlMessageToBePresent(messageRequestsAccepted);
   await device1.waitForControlMessageToBePresent('Your message request has been accepted.');
   // Phone icon should appear now that conversation has been approved
@@ -67,7 +65,7 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID('OK');
   // Enable voice calls on device 2 for User B
   // Need to navigate out of conversation for user to have full contact actions (calls icon, etc)
-  await device2.navigateBack(platform);
+  await device2.navigateBack();
   await device2.clickOnElementAll({
     strategy: 'accessibility id',
     selector: 'Conversation list item',
@@ -99,12 +97,12 @@ async function voiceCallIos(platform: SupportedPlatformsType) {
   await device1.clickOnByAccessibilityID('End call button');
   // Check for control messages on both devices
   // "callsYouCalled": "You called {name}",
-  const callsYouCalled = englishStrippedStri('callsYouCalled')
+  const callsYouCalled = englishStripped('callsYouCalled')
     .withArgs({ name: userB.userName })
     .toString();
   await device1.waitForControlMessageToBePresent(callsYouCalled);
   // "callsYouCalled": "You called {name}",
-  const callsCalledYou = englishStrippedStri('callsCalledYou')
+  const callsCalledYou = englishStripped('callsCalledYou')
     .withArgs({ name: userB.userName })
     .toString();
   await device2.waitForControlMessageToBePresent(callsCalledYou);

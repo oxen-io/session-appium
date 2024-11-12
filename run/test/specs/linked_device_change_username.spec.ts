@@ -1,12 +1,13 @@
 import { androidIt, iosIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ExitUserProfile, TickButton, UsernameInput, UsernameSettings } from './locators';
+import { UserSettings } from './locators/settings';
 import { sleepFor } from './utils';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-iosIt('Change username linked device', changeUsernameLinkediOS);
-androidIt('Change username linked device', changeUsernameLinkedAndroid);
+iosIt('Change username linked device', 'medium', changeUsernameLinkediOS);
+androidIt('Change username linked device', 'medium', changeUsernameLinkedAndroid);
 
 async function changeUsernameLinkediOS(platform: SupportedPlatformsType) {
   const { device1, device2 } = await openAppTwoDevices(platform);
@@ -15,8 +16,8 @@ async function changeUsernameLinkediOS(platform: SupportedPlatformsType) {
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
   await Promise.all([
-    device1.clickOnByAccessibilityID('User settings'),
-    device2.clickOnByAccessibilityID('User settings'),
+    device1.clickOnElementAll(new UserSettings(device1)),
+    device2.clickOnElementAll(new UserSettings(device2)),
   ]);
   // select username
   await device1.clickOnElementAll(new UsernameSettings(device1));
@@ -41,10 +42,7 @@ async function changeUsernameLinkediOS(platform: SupportedPlatformsType) {
     throw new Error('Username change unsuccessful');
   }
   await device1.clickOnElementAll(new ExitUserProfile(device1));
-  await device1.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'User settings',
-  });
+  await device1.clickOnElementAll(new UserSettings(device1));
   await Promise.all([
     device1.waitForTextElementToBePresent({
       strategy: 'accessibility id',
@@ -67,8 +65,8 @@ async function changeUsernameLinkedAndroid(platform: SupportedPlatformsType) {
   const newUsername = 'Alice in chains';
   // click on settings/profile avatar
   await Promise.all([
-    device1.clickOnByAccessibilityID('User settings'),
-    device2.clickOnByAccessibilityID('User settings'),
+    device1.clickOnElementAll(new UserSettings(device1)),
+    device2.clickOnElementAll(new UserSettings(device2)),
   ]);
   // select username
   await device1.clickOnElementAll(new UsernameSettings(device1));
@@ -91,16 +89,10 @@ async function changeUsernameLinkedAndroid(platform: SupportedPlatformsType) {
     throw new Error('Username change unsuccessful');
   }
   await device1.clickOnElementAll(new ExitUserProfile(device1));
-  await device1.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'User settings',
-  });
+  await device1.clickOnElementAll(new UserSettings(device1));
 
   await device2.clickOnElementAll(new ExitUserProfile(device2));
-  await device2.clickOnElementAll({
-    strategy: 'accessibility id',
-    selector: 'User settings',
-  });
+  await device2.clickOnElementAll(new UserSettings(device2));
 
   await Promise.all([
     device1.waitForTextElementToBePresent({

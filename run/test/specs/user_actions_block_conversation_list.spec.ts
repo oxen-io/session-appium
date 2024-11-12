@@ -6,7 +6,8 @@ import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
 
-androidIt('Block user in conversation list', blockUserInConversationList);
+androidIt('Block user in conversation list', 'high', blockUserInConversationList);
+// bothPlatformsIt("Block user in conversation list", blockUserInConversationList);
 
 async function blockUserInConversationList(platform: SupportedPlatformsType) {
   // Open App
@@ -20,7 +21,7 @@ async function blockUserInConversationList(platform: SupportedPlatformsType) {
   // Create contact
   await newContact(platform, device1, userA, device2, userB);
   // Navigate back to conversation list
-  await device1.navigateBack(platform);
+  await device1.navigateBack();
   // on ios swipe left on conversation
   await device1.longPressConversation(userB.userName);
   await sleepFor(1000);

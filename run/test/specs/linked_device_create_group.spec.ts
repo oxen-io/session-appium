@@ -1,5 +1,5 @@
-import { englishStrippedStri } from '../../localizer/i18n/localizedString';
-import { androidIt, iosIt } from '../../types/sessionIt';
+import { englishStripped } from '../../localizer/i18n/localizedString';
+import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { ApplyChanges, EditGroup, EditGroupName } from './locators';
 import { sleepFor } from './utils';
@@ -8,8 +8,7 @@ import { createGroup } from './utils/create_group';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppFourDevices } from './utils/open_app';
 
-iosIt('Create group and change name syncs', linkedGroup);
-androidIt('Create group and change name syncs', linkedGroup);
+bothPlatformsIt('Create group and change name syncs', 'high', linkedGroup);
 
 async function linkedGroup(platform: SupportedPlatformsType) {
   const { device1, device2, device3, device4 } = await openAppFourDevices(platform);
@@ -46,7 +45,7 @@ async function linkedGroup(platform: SupportedPlatformsType) {
   await device1.clickOnElementAll(new ApplyChanges(device1));
   // If ios click back to match android (which goes back to conversation screen)
   // Check config message for changed name (different on ios and android)
-  const groupNameNew = englishStrippedStri('groupNameNew')
+  const groupNameNew = englishStripped('groupNameNew')
     .withArgs({ group_name: newGroupName })
     .toString();
   // Config message is "Group now is now {group_name}"
