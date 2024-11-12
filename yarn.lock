@@ -2018,7 +2018,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"appium-xcuitest-driver@npm:^7.24.0":
+"appium-xcuitest-driver@npm:^7.26.0":
   version: 7.29.1
   resolution: "appium-xcuitest-driver@npm:7.29.1"
   dependencies:
@@ -6748,7 +6748,7 @@ __metadata:
     "@wdio/types": "npm:^8.1.2"
     appium: "npm:^2.4.1"
     appium-uiautomator2-driver: "patch:appium-uiautomator2-driver@npm%3A3.7.3#~/patches/appium-uiautomator2-driver-npm-3.7.3-24e944f6c5.patch"
-    appium-xcuitest-driver: "npm:^7.24.0"
+    appium-xcuitest-driver: "npm:^7.26.0"
     dotenv: "npm:^16.4.5"
     eslint: "npm:^8.33.0"
     lodash: "npm:^4.17.21"

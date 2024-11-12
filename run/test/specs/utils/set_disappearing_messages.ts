@@ -35,10 +35,8 @@ export const setDisappearingMessage = async (
     }
   } else if (enforcedType === 'Group' && timerType === 'Disappear after send option') {
     if (platform === 'ios') {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.OFF_IOS);
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await device.disappearRadioButtonSelected(platform, DISAPPEARING_TIMES.OFF_ANDROID);
     }
   } else {
