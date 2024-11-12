@@ -367,4 +367,4 @@ export type Id =
   | 'Error message'
   | 'network.loki.messenger:id/action_apply';
 
-export type testRisk = 'high' | 'medium' | 'low' | 'undefined';
+export type testRisk = 'high' | 'medium' | 'low' | undefined;
