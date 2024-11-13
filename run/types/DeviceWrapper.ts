@@ -495,8 +495,8 @@ export class DeviceWrapper {
             maxWait: 1000,
           });
           success = true;
-        } catch (e) {
-          console.info(`Retrying long press and select all, attempt ${retries + 1}`, e);
+        } catch (error) {
+          console.info(`Retrying long press and select all, attempt ${retries + 1}`);
         }
       } else {
         await this.longClick(el, 2000);
@@ -693,8 +693,8 @@ export class DeviceWrapper {
             );
           }
         }
-      } catch (e) {
-        console.info(`doesElementExist failed with`, e, `${locator.strategy} ${locator.selector}`);
+      } catch (e: any) {
+        console.info(`doesElementExist failed with`, `${locator.strategy} ${locator.selector}`);
       }
       if (!element) {
         await sleepFor(waitPerLoop);
@@ -732,7 +732,7 @@ export class DeviceWrapper {
           console.log(`Element has been found, waiting for deletion`);
         } catch (e) {
           element = undefined;
-          console.log(`Element has been deleted, great success`, e);
+          console.log(`Element has been deleted, great success`);
         }
       } else {
         try {
@@ -744,7 +744,7 @@ export class DeviceWrapper {
           console.log(`Text element has been found, waiting for deletion`);
         } catch (e) {
           element = undefined;
-          console.log(`Text element has been deleted, great success`, e);
+          console.log(`Text element has been deleted, great success`);
         }
       }
     } while (Date.now() - start <= maxWait && element);
@@ -755,8 +755,8 @@ export class DeviceWrapper {
     try {
       await this.findMatchingTextAndAccessibilityId(accessibilityId, text);
       throw new Error(fakeError);
-    } catch (e) {
-      if (e === fakeError) {
+    } catch (e: any) {
+      if (e.message === fakeError) {
         throw e;
       }
     }
@@ -798,10 +798,9 @@ export class DeviceWrapper {
           console.log(`Waiting for ${locator.strategy} and ${locator.selector} to be present`);
           el = await this.findElement(locator.strategy, locator.selector);
         }
-      } catch (e) {
+      } catch (e: any) {
         console.info(
           'waitForTextElementToBePresent threw: ',
-          e,
           `${locator.strategy}: '${locator.selector}'`
         );
       }
@@ -838,8 +837,8 @@ export class DeviceWrapper {
         console.log(`Waiting for control message to be present with ${text}`);
         const els = await this.findElements('accessibility id', 'Control message');
         el = await this.findMatchingTextInElementArray(els, text);
-      } catch (e) {
-        console.info('waitForControlMessageToBePresent threw: ', e);
+      } catch (e: any) {
+        console.info('waitForControlMessageToBePresent threw: ', e.message);
       }
       if (!el) {
         await sleepFor(waitPerLoop);
@@ -899,8 +898,8 @@ export class DeviceWrapper {
           await sleepFor(100);
           console.info('Loading animation was found, waiting for it to be gone');
         }
-      } catch (e) {
-        console.log('Loading animation not found', e);
+      } catch (e: any) {
+        console.log('Loading animation not found');
         loadingAnimation = null;
       }
     } while (loadingAnimation);
@@ -922,8 +921,8 @@ export class DeviceWrapper {
           await sleepFor(500);
           console.info('Loading animation was found, waiting for it to be gone');
         }
-      } catch (e) {
-        console.log('Loading animation not found', e);
+      } catch (e: any) {
+        console.log('Loading animation not found');
         loadingAnimation = null;
       }
     } while (loadingAnimation);
@@ -1550,7 +1549,7 @@ export class DeviceWrapper {
       timeString = time.toString();
       console.log(`Device time: ${timeString}`);
     } catch (e) {
-      console.log(`Couldn't get time from device, ${e}`);
+      console.log(`Couldn't get time from device`);
     }
     return timeString;
   }
