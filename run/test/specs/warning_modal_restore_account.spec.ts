@@ -13,7 +13,7 @@ async function warningModalRestoreAccount(platform: SupportedPlatformsType) {
     await device.clickOnElementAll(new ContinueButton(device));
     // Checking that we're on the Message Notifications screen
     await device.doesElementExist(new SlowModeRadio(device).build());
-    // Pressing Back on the Message Notifications screen 
+    // Pressing Back on the Message Notifications screen to trigger the Warning modal
     await device.clickOnElementAll(new BackButton(device));
     await device.checkModalStrings(
         'warning', 

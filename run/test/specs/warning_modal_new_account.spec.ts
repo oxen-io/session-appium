@@ -17,6 +17,7 @@ async function warningModalNewAccount(platform: SupportedPlatformsType) {
     await device.clickOnElementAll(new BackButton(device));
     // Verifying that pressing Back from the Message Notifications screen does not bring up a modal but instead shows the Display Name input field
     await device.doesElementExist(new DisplayNameInput(device));
+    // Pressing Back on the Display Name screen to trigger the Warning modal
     await device.clickOnElementAll(new BackButton(device));
     await device.checkModalStrings(
         'warning', 
