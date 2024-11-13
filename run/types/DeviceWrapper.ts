@@ -192,7 +192,7 @@ export class DeviceWrapper {
     return this.toShared().getPageSource();
   }
 
-  /* === all the device-specifc function ===  */
+  /* === all the device-specific function ===  */
 
   // ELEMENT INTERACTION
 
@@ -495,7 +495,7 @@ export class DeviceWrapper {
             maxWait: 1000,
           });
           success = true;
-        } catch (error) {
+        } catch (error: any) {
           console.info(`Retrying long press and select all, attempt ${retries + 1}`);
         }
       } else {
@@ -608,7 +608,7 @@ export class DeviceWrapper {
     if (elements && elements.length) {
       const matching = await this.findAsync(elements, async e => {
         const text = await this.getTextFromElement(e);
-        // console.info(`text ${text} lookingfor ${textToLookFor}`);
+        // console.info(`text ${text} looking for ${textToLookFor}`);
         if (text.toLowerCase().includes(textToLookFor.toLowerCase())) {
           console.info(`Text found to include ${textToLookFor}`);
         }
@@ -730,7 +730,7 @@ export class DeviceWrapper {
           });
           await sleepFor(100);
           console.log(`Element has been found, waiting for deletion`);
-        } catch (e) {
+        } catch (e: any) {
           element = undefined;
           console.log(`Element has been deleted, great success`);
         }
@@ -1808,7 +1808,6 @@ export class DeviceWrapper {
       console.log('Modal heading is correct');
     } else {
       throw new Error(
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `Modal heading is incorrect. Expected heading: ${expectedHeading}, Actual heading: ${actualHeading}`
       );
     }

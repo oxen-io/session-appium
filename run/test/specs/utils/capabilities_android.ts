@@ -86,10 +86,7 @@ function getAllCaps() {
   return emulatorCaps;
 }
 
-export function getAndroidCapabilities(
-  capabilitiesIndex: CapabilitiesIndexType
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): W3CCapabilities {
+export function getAndroidCapabilities(capabilitiesIndex: CapabilitiesIndexType): W3CCapabilities {
   const allCaps = getAllCaps();
   if (capabilitiesIndex >= allCaps.length) {
     throw new Error(`Asked invalid android capability index: ${capabilitiesIndex}`);

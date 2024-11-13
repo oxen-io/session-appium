@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { getAndroidCapabilities, getAndroidUdid } from './capabilities_android';
 import { CapabilitiesIndexType, capabilityIsValid, getIosCapabilities } from './capabilities_ios';
 import { runScriptAndLog } from './utilities';
@@ -236,7 +235,6 @@ const openAndroidApp = async (
   const capabilities = getAndroidCapabilities(actualCapabilitiesIndex);
   console.log(
     `Android App Full Path: ${
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       getAndroidCapabilities(actualCapabilitiesIndex)['alwaysMatch']['appium:app'] as any
     }`
   );
