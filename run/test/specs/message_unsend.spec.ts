@@ -2,7 +2,6 @@ import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DeleteMessageConfirmationModal, DeleteMessageForEveryone } from './locators';
-import { runOnlyOnAndroid } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { SupportedPlatformsType, closeApp, openAppTwoDevices } from './utils/open_app';
@@ -31,18 +30,18 @@ async function unsendMessage(platform: SupportedPlatformsType) {
   // Select Delete icon
   await device1.clickOnByAccessibilityID('Delete message');
   // Check modal is correct
-  await runOnlyOnAndroid(platform, () =>
-    device1.checkModalStrings(
+  await device1
+    .onAndroid()
+    .checkModalStrings(
       englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
       englishStripped('deleteMessageConfirm').toString()
-    )
-  );
+    );
+
   // Select 'Delete for me and User B'
   await device1.clickOnElementAll(new DeleteMessageForEveryone(device1));
   // Select 'Delete' on Android
-  await runOnlyOnAndroid(platform, () =>
-    device1.clickOnElementAll(new DeleteMessageConfirmationModal(device1))
-  );
+  await device1.onAndroid().clickOnElementAll(new DeleteMessageConfirmationModal(device1));
+
   // Check for 'deleted message' message
   if (platform === 'android') {
     await Promise.all([

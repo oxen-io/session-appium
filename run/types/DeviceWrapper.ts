@@ -2,6 +2,7 @@ import { W3CCapabilities } from '@wdio/types/build/Capabilities';
 import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
 import { XCUITestDriver } from 'appium-xcuitest-driver/build/lib/driver';
 import { isArray, isEmpty } from 'lodash';
+import * as sinon from 'sinon';
 import {
   ChangeProfilePictureButton,
   ExitUserProfile,
@@ -49,6 +50,20 @@ export class DeviceWrapper {
   constructor(device: AndroidUiautomator2Driver | XCUITestDriver, udid: string) {
     this.device = device;
     this.udid = udid;
+  }
+
+  public onIOS() {
+    if (this.isIOS()) {
+      return this;
+    }
+    return sinon.createStubInstance(DeviceWrapper) as DeviceWrapper;
+  }
+
+  public onAndroid() {
+    if (this.isAndroid()) {
+      return this;
+    }
+    return sinon.createStubInstance(DeviceWrapper) as DeviceWrapper;
   }
 
   /**  === all the shared actions ===  */
