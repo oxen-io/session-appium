@@ -329,9 +329,7 @@ export type AccessibilityId =
   | 'Error message'
   | 'Open URL'
   | 'Terms of Service'
-  | 'Terms of service button'
   | 'Privacy Policy'
-  | 'Privacy policy button'
   | 'TabBarItemTitle'
   | 'URL'
   | 'Save';
