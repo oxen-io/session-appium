@@ -2,7 +2,6 @@ import { englishStripped } from '../../localizer/i18n/localizedString';
 import { bothPlatformsIt } from '../../types/sessionIt';
 import { USERNAME } from '../../types/testing';
 import { DeleteMessageConfirmationModal, DeleteMessageLocally } from './locators';
-import { runOnlyOnAndroid, runOnlyOnIOS } from './utils';
 import { newUser } from './utils/create_account';
 import { newContact } from './utils/create_contact';
 import { linkedDevice } from './utils/link_device';
@@ -31,28 +30,26 @@ async function deletedMessageLinkedDevice(platform: SupportedPlatformsType) {
   await device1.longPressMessage(sentMessage);
   // Select delete
   await device1.clickOnByAccessibilityID('Delete message');
-  await runOnlyOnAndroid(platform, () =>
-    device1.checkModalStrings(
+  await device1
+    .onAndroid()
+    .checkModalStrings(
       englishStripped('deleteMessage').withArgs({ count: 1 }).toString(),
       englishStripped('deleteMessageConfirm').toString()
-    )
-  );
+    );
+
   // Select delete for everyone
   await device1.clickOnElementAll(new DeleteMessageLocally(device1));
   // Confirm deletion Android only
-  await runOnlyOnAndroid(platform, () =>
-    device1.clickOnElementAll(new DeleteMessageConfirmationModal(device1))
-  );
+  await device1.onAndroid().clickOnElementAll(new DeleteMessageConfirmationModal(device1));
+
   // Check linked device for deleted message
-  await runOnlyOnIOS(platform, () =>
-    device1.hasTextElementBeenDeleted('Message body', sentMessage)
-  );
-  await runOnlyOnAndroid(platform, () =>
-    device1.waitForTextElementToBePresent({
-      strategy: 'accessibility id',
-      selector: 'Deleted message',
-    })
-  );
+  await device1.onIOS().hasTextElementBeenDeleted('Message body', sentMessage);
+
+  await device1.onAndroid().waitForTextElementToBePresent({
+    strategy: 'accessibility id',
+    selector: 'Deleted message',
+  });
+
   // Check device 2 and 3 for no change
   await Promise.all([
     device2.waitForTextElementToBePresent({
