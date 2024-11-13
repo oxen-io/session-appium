@@ -33,7 +33,7 @@ export const newUser = async (
   await sleepFor(5000);
 
   await device.checkPermissions('Allow');
-  console.warn('lookedfor Allow permission');
+  console.warn('looked for Allow permission');
   await sleepFor(1000);
   // Click on 'continue' button to open recovery phrase modal
   await device.waitForTextElementToBePresent({
@@ -41,9 +41,9 @@ export const newUser = async (
     selector: 'Reveal recovery phrase button',
   });
   await device.clickOnElementAll(new RevealRecoveryPhraseButton(device));
-  //Save recovery passwprd
+  //Save recovery password
   await device.clickOnByAccessibilityID('Recovery password container');
-  await runOnlyOnAndroid(platform, () => device.clickOnByAccessibilityID('Copy button'));
+  await device.onAndroid().clickOnByAccessibilityID('Copy button'));
   // Save recovery phrase as variable
   const recoveryPhrase = await device.grabTextFromAccessibilityId('Recovery password container');
   console.log(`${userName}s recovery phrase is "${recoveryPhrase}"`);

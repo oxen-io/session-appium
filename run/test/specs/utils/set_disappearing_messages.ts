@@ -7,7 +7,6 @@ import {
   SetModalButton,
 } from '../locators/disappearing_messages';
 import { SupportedPlatformsType } from './open_app';
-import { runOnlyOnIOS } from './run_on';
 import { sleepFor } from './sleep_for';
 export const setDisappearingMessage = async (
   platform: SupportedPlatformsType,
@@ -48,7 +47,7 @@ export const setDisappearingMessage = async (
     selector: timerDuration,
   });
   await device.clickOnElementAll(new SetDisappearMessagesButton(device));
-  await runOnlyOnIOS(platform, () => device.navigateBack());
+  await device.onIOS().navigateBack();
   await sleepFor(1000);
   if (device2) {
     await device2.clickOnElementAll(new FollowSettingsButton(device2));
