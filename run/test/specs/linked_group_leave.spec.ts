@@ -8,7 +8,7 @@ import { createGroup } from './utils/create_group';
 import { linkedDevice } from './utils/link_device';
 import { SupportedPlatformsType, closeApp, openAppFourDevices } from './utils/open_app';
 
-bothPlatformsIt("Leave group linked device", 'high', leaveGroupLinkedDevice);
+bothPlatformsIt('Leave group linked device', 'high', leaveGroupLinkedDevice);
 
 async function leaveGroupLinkedDevice(platform: SupportedPlatformsType) {
   const testGroupName = 'Leave group linked device';

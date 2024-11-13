@@ -77,7 +77,7 @@ function mobileIt(
 
 export function bothPlatformsIt(
   title: string,
-  testRisk: TestRisk, 
+  testRisk: TestRisk,
   testToRun: (platform: SupportedPlatformsType) => Promise<void>,
   shouldSkip = false
 ) {

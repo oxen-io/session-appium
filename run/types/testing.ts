@@ -376,8 +376,4 @@ export type Id =
   | 'network.loki.messenger:id/back_button'
   | 'Quit';
 
-export type TestRisk = 
-  | 'high' 
-  | 'medium' 
-  | 'low' 
-  | 'undefined';
+export type TestRisk = 'high' | 'medium' | 'low' | 'undefined';
