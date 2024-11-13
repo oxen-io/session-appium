@@ -37,7 +37,7 @@ async function sendDocument(platform: SupportedPlatformsType) {
   });
 
   await device2.onIOS().longPressMessage(testMessage);
-  await device2.onAndroid().longPress('Document'));
+  await device2.onAndroid().longPress('Document');
   await device2.clickOnByAccessibilityID('Reply to message');
   await device2.sendMessage(replyMessage);
   await device1.waitForTextElementToBePresent({

@@ -21,7 +21,7 @@ async function deleteRequest(platform: SupportedPlatformsType) {
   await device2.clickOnByAccessibilityID('Message requests banner');
   // Swipe left on ios
   await device2.onIOS().swipeLeftAny('Message request');
-  await device2.onAndroid().longPress('Message request'));
+  await device2.onAndroid().longPress('Message request');
   await device2.clickOnElementAll(new DeleteMessageRequestButton(device2));
   await sleepFor(1000);
   await device2.clickOnElementAll(new DeleteMesssageRequestConfirmation(device2));

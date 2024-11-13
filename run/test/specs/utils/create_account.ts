@@ -43,7 +43,7 @@ export const newUser = async (
   await device.clickOnElementAll(new RevealRecoveryPhraseButton(device));
   //Save recovery password
   await device.clickOnByAccessibilityID('Recovery password container');
-  await device.onAndroid().clickOnByAccessibilityID('Copy button'));
+  await device.onAndroid().clickOnByAccessibilityID('Copy button');
   // Save recovery phrase as variable
   const recoveryPhrase = await device.grabTextFromAccessibilityId('Recovery password container');
   console.log(`${userName}s recovery phrase is "${recoveryPhrase}"`);
