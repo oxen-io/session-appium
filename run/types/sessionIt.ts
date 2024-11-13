@@ -18,7 +18,7 @@ export function androidIt(
   testToRun: (platform: SupportedPlatformsType) => Promise<void>,
   shouldSkip = false
 ) {
-  const testName = `${title} android @${testRisk}-risk`;
+  const testName = `${title} android @${testRisk ?? 'default'}-risk`;
   if (shouldSkip) {
     test.skip(testName, () => {
       console.info(`\n\n==========> Skipping "${testName}"\n\n`);
@@ -37,7 +37,7 @@ export function iosIt(
   testToRun: (platform: SupportedPlatformsType) => Promise<void>,
   shouldSkip = false
 ) {
-  const testName = `${title} ios @${testRisk}-risk`;
+  const testName = `${title} ios @${testRisk ?? 'default'}-risk`;
 
   if (shouldSkip) {
     test.skip(testName, () => {
@@ -61,7 +61,7 @@ function mobileIt(
   testToRun: (platform: SupportedPlatformsType) => Promise<void>,
   shouldSkip = false
 ) {
-  const testName = `${title} ${platform} @${testRisk}-risk`;
+  const testName = `${title} ${platform} @${testRisk ?? 'default'}-risk`;
   if (shouldSkip) {
     test.skip(testName, () => {
       console.info(`\n\n==========> Skipping "${testName}"\n\n`);
