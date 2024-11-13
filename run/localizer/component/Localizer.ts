@@ -3,13 +3,6 @@ export const supportedFormattingTags = ['b', 'i', 'u', 's', 'br', 'span'];
 /** NOTE: self-closing tags must also be listed in {@link supportedFormattingTags} */
 // const supportedSelfClosingFormattingTags = ['br'];
 
-// function createSupportedFormattingTagsRegex() {
-//   return new RegExp(
-//     `<(?:${supportedFormattingTags.join('|')})>.*?</(?:${supportedFormattingTags.join('|')})>|<(?:${supportedSelfClosingFormattingTags.join('|')})\\/>`,
-//     'g'
-//   );
-// }
-
 /**
  * Replaces all html tag identifiers with their escaped equivalents
  * @param str The string to sanitize
