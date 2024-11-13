@@ -26,7 +26,7 @@ export class ChromeUseWithoutAnAccount extends LocatorsInterface {
                 return {
                     strategy: 'id', 
                     selector: 'com.android.chrome:id/signin_fre_dismiss_button',
-                    maxWait: 2000,
+                    maxWait: 500,
                 } as const;
             case 'ios': 
                 throw new Error('Unsupported platform')
