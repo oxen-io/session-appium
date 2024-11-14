@@ -12,13 +12,13 @@ on:
 
       RISK:
         description: 'risks to target'
-        required: true
+        required: false
         type: choice
         options:
           - 'high-risk'
           - 'medium-risk'
           - 'low-risk'
-        default: 'high-risk'
+          - ''
 
       APPIUM_REPO:
         description: 'appium repo to checkout'
@@ -58,6 +58,16 @@ on:
       #     - '4'
       #   default: '1'
 
+      PLAYWRIGHT_RETRIES_COUNT:
+        description: 'retries of failing tests to do at most'
+        required: true
+        type: choice
+        options:
+          - '0'
+          - '1'
+          - '2'
+        default: '0'
+
       PRINT_FAILED_TEST_LOGS:
         description: 'print failed test logs (1 to enable)'
         required: true
@@ -66,7 +76,6 @@ on:
           - '0'
           - '1'
         default: '0'
-
       PRINT_ONGOING_TEST_LOGS:
         description: 'print ongoing test logs (1 to enable)'
         required: true
@@ -88,7 +97,7 @@ jobs:
       APPIUM_ADB_FULL_PATH: '/opt/android/platform-tools/adb'
       ANDROID_SDK_ROOT: '/opt/android'
       PLAYWRIGHT_WORKERS_COUNT: 1
-      PLAYWRIGHT_RETRIES_COUNT: 0
+      PLAYWRIGHT_RETRIES_COUNT: ${{ github.event.inputs.PLAYWRIGHT_RETRIES_COUNT }}
       PRINT_FAILED_TEST_LOGS: ${{ github.event.inputs.PRINT_FAILED_TEST_LOGS }}
       PRINT_ONGOING_TEST_LOGS: ${{ github.event.inputs.PRINT_ONGOING_TEST_LOGS }}
       IOS_APP_PATH_PREFIX: 'just_not_empty'
