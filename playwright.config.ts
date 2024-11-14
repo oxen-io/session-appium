@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @typescript-eslint/no-var-requires */
-
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -9,6 +6,7 @@ import { toNumber } from 'lodash';
 
 const useSessionReporter = true;
 // NOTE: without this, the wrong source map is loaded and the stacktraces are all wrong
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 require('source-map-support').install = () => {};
 
 export default defineConfig({
