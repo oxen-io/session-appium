@@ -370,8 +370,4 @@ export type Id =
   | 'com.android.chrome:id/signin_fre_dismiss_button'
   | 'com.android.chrome:id/negative_button';
 
-export type TestRisk = 
-  | 'high' 
-  | 'medium' 
-  | 'low' 
-  | 'undefined';
+export type TestRisk = 'high' | 'medium' | 'low' | undefined;
