@@ -7,7 +7,7 @@ export default tseslint.config(
     files: ['**/*.{ts,tsx,cts,mts,js,cjs,mjs}'],
   },
   {
-    ignores: ['**/node_modules/**', '.yarn/', 'eslint.config.mjs', 'run/**/*.js'],
+    ignores: ['**/node_modules/**', '.yarn/', 'eslint.config.mjs', 'run/**/*.js', 'avd/'],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked, // see https://typescript-eslint.io/getting-started/typed-linting/
