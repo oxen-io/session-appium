@@ -255,16 +255,7 @@ export class DeviceWrapper {
     args: { text?: string; maxWait?: number } & (StrategyExtractionObj | LocatorsInterface)
   ) {
     let el: null | AppiumNextElementType = null;
-    let locator: StrategyExtractionObj & { text?: string; maxWait?: number };
-
-    if (args instanceof LocatorsInterface) {
-      locator = args.build();
-    } else {
-      locator = args as StrategyExtractionObj & {
-        text?: string;
-        maxWait?: number;
-      };
-    }
+    const locator = args instanceof LocatorsInterface ? args.build() : args;
 
     el = await this.waitForTextElementToBePresent({ ...locator });
     await this.click(el.ELEMENT);
@@ -468,15 +459,7 @@ export class DeviceWrapper {
     args: ({ text?: string; maxWait?: number } & StrategyExtractionObj) | LocatorsInterface
   ) {
     let el: null | AppiumNextElementType = null;
-    let locator: StrategyExtractionObj & { text?: string; maxWait?: number };
-    if (args instanceof LocatorsInterface) {
-      locator = args.build();
-    } else {
-      locator = args as StrategyExtractionObj & {
-        text?: string;
-        maxWait?: number;
-      };
-    }
+    const locator = args instanceof LocatorsInterface ? args.build() : args;
 
     el = await this.waitForTextElementToBePresent({ ...locator });
 
@@ -666,15 +649,7 @@ export class DeviceWrapper {
     const maxWaitMSec = maxWait || 30000;
     const waitPerLoop = 100;
     let element: AppiumNextElementType | null = null;
-    let locator: StrategyExtractionObj & { text?: string; maxWait?: number };
-    if (args instanceof LocatorsInterface) {
-      locator = args.build();
-    } else {
-      locator = args as StrategyExtractionObj & {
-        text?: string;
-        maxWait?: number;
-      };
-    }
+    const locator = args instanceof LocatorsInterface ? args.build() : args;
 
     while (element === null) {
       try {
@@ -771,18 +746,10 @@ export class DeviceWrapper {
     } & (StrategyExtractionObj | LocatorsInterface)
   ): Promise<AppiumNextElementType> {
     let el: null | AppiumNextElementType = null;
-    let locator: StrategyExtractionObj & { text?: string; maxWait?: number };
+    const locator = args instanceof LocatorsInterface ? args.build() : args;
 
     const { text, maxWait } = args;
 
-    if (args instanceof LocatorsInterface) {
-      locator = args.build();
-    } else {
-      locator = args as StrategyExtractionObj & {
-        text?: string;
-        maxWait?: number;
-      };
-    }
     const maxWaitMSec: number = typeof maxWait === 'number' ? maxWait : 60000;
     let currentWait = 0;
     const waitPerLoop = 100;
@@ -1066,16 +1033,7 @@ export class DeviceWrapper {
     args: ({ maxWait?: number } & StrategyExtractionObj) | LocatorsInterface
   ) {
     let el: null | AppiumNextElementType = null;
-    let locator: StrategyExtractionObj & { text?: string; maxWait?: number };
-
-    if (args instanceof LocatorsInterface) {
-      locator = args.build();
-    } else {
-      locator = args as StrategyExtractionObj & {
-        text?: string;
-        maxWait?: number;
-      };
-    }
+    const locator = args instanceof LocatorsInterface ? args.build() : args;
 
     console.log('Locator being used:', locator);
 
