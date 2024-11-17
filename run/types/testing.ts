@@ -326,8 +326,7 @@ export type AccessibilityId =
   | 'Privacy Policy'
   | 'Privacy policy button'
   | 'TabBarItemTitle'
-  | 'URL'
-  | 'Save';
+  | 'URL';
 
 export type Id =
   | 'Modal heading'
@@ -363,15 +362,10 @@ export type Id =
   | 'Delete'
   | 'android:id/content_preview_text'
   | 'network.loki.messenger:id/search_result_title'
-  | 'network.loki.messenger:id/action_apply'
   | 'com.android.chrome:id/url_bar'
   | 'Terms of Service'
   | 'Privacy Policy'
   | 'com.android.chrome:id/signin_fre_dismiss_button'
   | 'com.android.chrome:id/negative_button';
 
-export type TestRisk = 
-  | 'high' 
-  | 'medium' 
-  | 'low' 
-  | 'undefined';
+export type TestRisk = 'high' | 'medium' | 'low' | undefined;
