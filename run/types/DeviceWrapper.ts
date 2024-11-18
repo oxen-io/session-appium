@@ -13,10 +13,10 @@ import {
   ReadReceiptsButton,
 } from '../../run/test/specs/locators';
 import { IOS_XPATHS } from '../constants';
-import { englishStripped, TokenString } from '../localizer/i18n/localizedString';
-import { LocalizerDictionary } from '../localizer/Localizer';
 import { ModalDescription, ModalHeading } from '../test/specs/locators/global';
+import { SaveProfilePictureButton, UserSettings } from '../test/specs/locators/settings';
 import { clickOnCoordinates, sleepFor } from '../test/specs/utils';
+import { getAdbFullPath } from '../test/specs/utils/binaries';
 import { SupportedPlatformsType } from '../test/specs/utils/open_app';
 import { isDeviceAndroid, isDeviceIOS, runScriptAndLog } from '../test/specs/utils/utilities';
 import {
@@ -30,8 +30,6 @@ import {
   User,
   XPath,
 } from './testing';
-import { SaveProfilePictureButton, UserSettings } from '../test/specs/locators/settings';
-import { getAdbFullPath } from '../test/specs/utils/binaries';
 
 export type Coordinates = {
   x: number;
