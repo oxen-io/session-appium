@@ -6,7 +6,7 @@ import { PlusButton } from './locators/home';
 import { AccountIDField, InviteAFriendOption, ShareButton } from './locators/start_conversation';
 import { IOS_XPATHS } from '../../constants';
 
-bothPlatformsIt('Invite a friend', 'high', inviteAFriend);
+bothPlatformsIt('Invite a friend', 'medium', inviteAFriend);
 
 async function inviteAFriend(platform: SupportedPlatformsType) {
   const { device } = await openAppOnPlatformSingleDevice(platform);
