@@ -1741,16 +1741,15 @@ export class DeviceWrapper {
   }
 
   public async checkModalStrings(
-    expectedStringHeading: TokenString<LocalizerDictionary>,
-    expectedStringDescription: TokenString<LocalizerDictionary>,
+    expectedHeading: string,
+    expectedDescription: string,
     oldModalAndroid?: boolean
   ) {
     // Check modal heading is correct
     function removeNewLines(input: string): string {
-      // return input.replace(/<br\s*\/?>/gi, '\nCR LF');
       return input.replace(/\n/gi, '');
     }
-    const expectedHeading = englishStripped(expectedStringHeading).toString();
+
     let elHeading;
     // Some modals in Android haven't been updated to compose yet therefore need different locators
     if (!oldModalAndroid) {
@@ -1762,7 +1761,7 @@ export class DeviceWrapper {
       });
     }
     const actualHeading = await this.getTextFromElement(elHeading);
-    if (expectedStringHeading === actualHeading) {
+    if (expectedHeading === actualHeading) {
       console.log('Modal heading is correct');
     } else {
       throw new Error(
@@ -1770,14 +1769,6 @@ export class DeviceWrapper {
       );
     }
     // Now check modal description
-    // let expectedDescription;
-    const expectedDescription = englishStripped(expectedStringDescription).toString();
-    // if (!args) {
-    // } else {
-    //   expectedDescription = englishStripped(expectedStringDescription)
-    //     .withArgs(args as any)
-    //     .toString();
-    // }
     let elDescription;
     if (!oldModalAndroid) {
       elDescription = await this.waitForTextElementToBePresent(new ModalDescription(this));
@@ -1792,7 +1783,7 @@ export class DeviceWrapper {
     const formattedDescription = removeNewLines(actualDescription);
     if (expectedDescription !== formattedDescription) {
       throw new Error(
-        `Modal description is incorrect. Expected description: ${expectedStringDescription}, Actual description: ${formattedDescription}`
+        `Modal description is incorrect. Expected description: ${expectedDescription}, Actual description: ${formattedDescription}`
       );
     }
   }
