@@ -1794,6 +1794,8 @@ export class DeviceWrapper {
       throw new Error(
         `Modal description is incorrect. Expected description: ${expectedStringDescription}, Actual description: ${formattedDescription}`
       );
+    } else {
+      console.log('Modal description is correct');
     }
   }
 
